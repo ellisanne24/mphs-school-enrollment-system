@@ -38,6 +38,7 @@ import javax.swing.table.TableCellRenderer;
 import model.PresentGradeLevel;
 import model.Student;
 import component_renderers.JTableRenderer_Payment;
+import controller.payment.DisplayPaymentFormController;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.RegistrationDaoImpl;
 import daoimpl.SchoolFeesDaoImpl;
@@ -77,12 +78,17 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     private final FeeDaoImpl feeDaoImpl = new FeeDaoImpl();
     private final SchoolFeesDaoImpl schoolFeesDaoImpl = new SchoolFeesDaoImpl();
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
+    private DisplayPaymentFormController displayPaymentFormController;
     
     private int studentId;
     private final Image studentPhoto;
     
     public PaymentAndAssessmentForm() {
         initComponents();
+        displayPaymentFormController = new DisplayPaymentFormController(
+                jtfStudentID, jcmbSchoolYearFrom, jtblBalanceBreakdown, jcmbDiscount, jcmbPaymentTerm);
+        jbtnPaySelected.addActionListener(displayPaymentFormController);
+        
         guiManager.setGUIComponentRenderers();
         guiManager.setGUIComponentModels();
         guiManager.setGUIComponentProperties();
@@ -577,10 +583,10 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
 
     jlblCurrentSchoolYear.setText("SY");
     jlblCurrentSchoolYear.addInputMethodListener(new java.awt.event.InputMethodListener() {
-        public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-        }
         public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
             jlblCurrentSchoolYearInputMethodTextChanged(evt);
+        }
+        public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
         }
     });
     jlblCurrentSchoolYear.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -870,11 +876,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Control"));
 
     jbtnPaySelected.setText("Pay Selected");
-    jbtnPaySelected.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jbtnPaySelectedActionPerformed(evt);
-        }
-    });
     jPanel9.add(jbtnPaySelected);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1602,7 +1603,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             Student aStudent = studentDaoImpl.getStudentById(aStudentId);
             
             if (aStudent.getRegistration().exists()) {
-                System.out.println("Exists @ jtfStudentIDKeyPressed");
                 PresentGradeLevel presentGradeLevel = aStudent.getPresentGradeLevel();
                 int aGradeLevelId = gradeLevelDaoImpl.getId(presentGradeLevel);
                 
@@ -1636,7 +1636,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
                     aTuitionFee.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
                     
                     
-                    guiManager.resetForm();
+//                    guiManager.resetForm();
                     FeeCollectionLoader feeCollectionLoader = new FeeCollectionLoader(aStudent,aSchoolFee, aTuitionFee);
                     feeCollectionLoader.setForm();
                     feeCollectionLoader.setSchoolFees();
@@ -1698,98 +1698,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     private void jtfStudentIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfStudentIDActionPerformed
 
     }//GEN-LAST:event_jtfStudentIDActionPerformed
-
-    private void jbtnPaySelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnPaySelectedActionPerformed
-        if (jtblBalanceBreakdown.getSelectedRow() > -1) {
-            int aSchoolYearStart = Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString());
-            int aSchoolYearId = schoolYearDaoImpl.getId(aSchoolYearStart);
-            int aStudentId = this.getStudentId();
-
-            Discount discount = null;
-            PaymentTerm paymentTerm = new PaymentTerm();
-            SchoolYear schoolYear = schoolYearDaoImpl.getById(aSchoolYearId);
-            TuitionFee tuitionFee = new TuitionFee();
-            Particulars particulars = new Particulars();
-            List<BalanceBreakDownFee> balanceBreakDownFeeList = new ArrayList<>();
-            Student student = studentDaoImpl.getStudentById(aStudentId);
-            int gradeLevelId = gradeLevelDaoImpl.getId(student.getPresentGradeLevel());
-            SchoolFees schoolFees = schoolFeesDaoImpl.get(gradeLevelId);
-            
-            int[] selectedRows = jtblBalanceBreakdown.getSelectedRows();
-            int jtblBalanceColumn = 2;
-            double particularSum = 0;
-            for (int i = 0; i < selectedRows.length; i++) {
-                try {
-                    NumberFormat nf = NumberFormat.getInstance();
-                    double balanceAmount = nf.parse(jtblBalanceBreakdown.getValueAt(selectedRows[i], jtblBalanceColumn).toString().trim()).doubleValue();
-                    if (balanceAmount > 0) {
-                        String description = "" + jtblBalanceBreakdown.getValueAt(selectedRows[i], 0);
-                        double amount = nf.parse(jtblBalanceBreakdown.getValueAt(selectedRows[i], 1).toString()).doubleValue();
-                        double balance = nf.parse(jtblBalanceBreakdown.getValueAt(selectedRows[i], 2).toString()).doubleValue();
-                        
-                        BalanceBreakDownFee balanceFeeToPay = new BalanceBreakDownFee();
-                        balanceFeeToPay.setDescription(description);
-                        balanceFeeToPay.setAmount(amount);
-                        balanceFeeToPay.setBalance(balance);
-                        balanceFeeToPay.setStudentId(aStudentId);
-                        balanceFeeToPay.setSchoolYearId(aSchoolYearId);
-                        
-                        balanceBreakDownFeeList.add(balanceFeeToPay);
-                        particularSum += balance;
-                        particulars.setBalanceBreakDownFees(balanceBreakDownFeeList);
-                        particulars.setBalanceSum(particularSum);
-                    }
-                } catch (ParseException ex) {
-                    ex.printStackTrace();
-                    Logger.getLogger(PaymentAndAssessmentForm.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
-//            boolean feesAreZero = particulars.getBalanceBreakDownFees().size() <= 0;
-//            boolean hasRemainingBalance = particulars.getBalanceBreakDownFees().size() > 0;
-//            if (feesAreZero) {
-//                JOptionPane.showMessageDialog(null,"All fees are already paid.");
-//            }else if(hasRemainingBalance){
-//                paymentTerm.setPaymentTerm(jcmbPaymentTerm.getSelectedItem().toString().trim());
-//                paymentTerm.setId(paymentTermDaoImpl.getId(jcmbPaymentTerm.getSelectedItem().toString().trim()));
-//            }
-            
-            if (!tuitionFeeDaoImpl.get(aStudentId, aSchoolYearId).exists()) {
-                System.out.print("TuitionFee doesn't exist\n");
-                if (jcmbDiscount.getSelectedIndex() > -1) {
-                    String discountName = jcmbDiscount.getSelectedItem().toString().trim();
-                    int discountId = discountDaoImpl.getId(discountName);
-                    discount = discountDaoImpl.get(discountId);
-                }
-                paymentTerm.setName(jcmbPaymentTerm.getSelectedItem().toString().trim());
-                paymentTerm.setPaymentTermId(paymentTermDaoImpl.getId(jcmbPaymentTerm.getSelectedItem().toString().trim()));
-                
-                tuitionFee.setExists(false);
-                tuitionFee.setDiscount(discount);
-                tuitionFee.setPaymentTerm(paymentTerm);
-                tuitionFee.setTotalPaid(0.00);
-                tuitionFee.setSum(schoolFees.getSum());
-                tuitionFee.setBalance(schoolFees.getSum());
-                TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(tuitionFee, schoolFees);
-                System.out.println("At Pay Selected Action Performed: ");
-                tuitionFee.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
-                tuitionFee.setSchoolYear(schoolYear);
-                tuitionFee.setStudent(student);
-                
-                
-                PaySelectedForm psf = new PaySelectedForm(particulars, tuitionFee);
-                psf.setPreferredSize(new Dimension(540, 450));
-                psf.pack();
-                psf.setLocationRelativeTo(null);
-                psf.setVisible(true);
-            }else{
-                TuitionFee t = tuitionFeeDaoImpl.get(studentId, aSchoolYearId);
-                t.setExists(true);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Please select an item to pay.");
-        }
-    }//GEN-LAST:event_jbtnPaySelectedActionPerformed
 
     private void jcmbSchoolYearFromItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbSchoolYearFromItemStateChanged
         jcmbSchoolYearTo.setSelectedIndex(jcmbSchoolYearFrom.getSelectedIndex());

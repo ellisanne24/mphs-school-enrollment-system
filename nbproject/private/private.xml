@@ -5,15 +5,16 @@
         <group>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/model/Period.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/payment/PaymentAndAssessmentForm.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/grades/GradingGui.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/model/PaymentTerm.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/model/Particulars.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/grades/GradesRecord.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/controller/payment/DisplayPaymentForm.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/daoimpl/EnrollmentDaoImpl.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/login/LoginForm.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/mphs/ProgramDriver.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/daoimpl/PaymentTermDaoImpl.java</file>
             <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/model/TuitionFee.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/container/TopContainer.java</file>
         </group>
     </open-files>
 </project-private>

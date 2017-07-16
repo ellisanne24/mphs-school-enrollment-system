@@ -1155,9 +1155,6 @@
                                               <Properties>
                                                 <Property name="text" type="java.lang.String" value="Pay Selected"/>
                                               </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtnPaySelectedActionPerformed"/>
-                                              </Events>
                                             </Component>
                                           </SubComponents>
                                         </Container>

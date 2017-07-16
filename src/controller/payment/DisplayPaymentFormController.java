@@ -41,7 +41,7 @@ import static view.payment.PaymentAndAssessmentForm.jtblBalanceBreakdown;
  *
  * @author John Ferdinand Antonio
  */
-public class DisplayPaymentForm implements ActionListener {
+public class DisplayPaymentFormController implements ActionListener {
 
     SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
     private JTextField jtfStudentId;
@@ -50,7 +50,7 @@ public class DisplayPaymentForm implements ActionListener {
     private JComboBox jcmbPaymentTerm;
     private JTable jtblBalanceBreakDown;
 
-    public DisplayPaymentForm(JTextField jtfStudentId, JComboBox jcmbSchoolYearFrom, JTable jtblBalanceBreakDown,
+    public DisplayPaymentFormController(JTextField jtfStudentId, JComboBox jcmbSchoolYearFrom, JTable jtblBalanceBreakDown,
             JComboBox jcmbDiscount, JComboBox jcmbPaymentTerm) {
         this.jtfStudentId = jtfStudentId;
         this.jcmbSchoolYearFrom = jcmbSchoolYearFrom;
