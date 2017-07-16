@@ -5,7 +5,7 @@
  */
 package component_renderers;
 
-import component_utility.JTableGUIUtil;
+import component_utility.JTableUtil;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -21,7 +21,7 @@ public class JTableRenderer_Students  extends DefaultTableCellRenderer{
     {
         Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
         
-        JTableGUIUtil.setCellsAlignment(table, SwingConstants.CENTER);
+        JTableUtil.setCellsAlignment(table, SwingConstants.CENTER);
         
         return cellComponent;
     }

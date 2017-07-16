@@ -360,9 +360,11 @@ public class FeeDaoImpl implements IFee {
         String SQLa = "{CALL addFee(?,?,?,?)}";
         String SQLb = "{CALL assignFee(?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            
+            con.setAutoCommit(false);
+            
             try (CallableStatement csa = con.prepareCall(SQLa);
                     CallableStatement csb = con.prepareCall(SQLb);) {
-                con.setAutoCommit(false);
 
                 FeeCategory feeCategory = fee.getFeeCategory();
                 int feeCategoryId = fcdi.getFeeCategoryId(feeCategory);
@@ -379,15 +381,15 @@ public class FeeDaoImpl implements IFee {
                     Double feeAmount = entry.getValue();
 
                     int aGradeLevelId = gldi.getId(level);
-                    System.out.println(aGradeLevelId + "," + feeAmount);
-                    csb.setInt(1, feeId);
-                    csb.setDouble(2, feeAmount);
-                    csb.setInt(3, aGradeLevelId);
-                    csb.setInt(4, fee.getSchoolYear().getSchoolYearId());
+                    csb.setInt(1, feeId); System.out.println("Fee ID: "+feeId);
+                    csb.setDouble(2, feeAmount); System.out.println("Fee Amount: "+feeAmount);
+                    csb.setInt(3, aGradeLevelId); System.out.println("Fee Grade Level Id: "+feeId);
+                    csb.setInt(4, fee.getSchoolYear().getSchoolYearId()); 
+                    System.out.println("SchoolYear Id: "+fee.getSchoolYear().getSchoolYearId());
+                    
                     csb.executeUpdate();
                 }
-
-                con.commit();
+                 con.commit();
             } catch (SQLException e) {
                 con.rollback();
                 isAdded = false;

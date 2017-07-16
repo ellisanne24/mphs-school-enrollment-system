@@ -1,6 +1,6 @@
 package view.user;
 
-import component_utility.JPanelGUIUtil;
+import component_utility.JPanelUtil;
 import database_utility.DBType;
 import database_utility.DBUtil;
 import java.awt.CardLayout;
@@ -19,13 +19,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import component_utility.ImageGUIUtil;
+import component_utility.ImageUtil;
 
 public class UsersGUI extends javax.swing.JPanel {
 
     String mode = "";
     
-    JPanelGUIUtil fm = new JPanelGUIUtil();
+    JPanelUtil fm = new JPanelUtil();
     
     String HOME = "Home";
     String ADMIN = "Administration";
@@ -1361,9 +1361,9 @@ public class UsersGUI extends javax.swing.JPanel {
     }
     
     private void resetAllFieldsDefaultState(){
-        List<Component> userInfoFields = JPanelGUIUtil.getComponentsAsList(userBasicInfoPanel);
-        List<Component> userPhotoPanelFields = JPanelGUIUtil.getComponentsAsList(userProfilePicPanel);
-        List<Component> settingsForPanel = JPanelGUIUtil.getComponentsAsList(settingstButtonPanel);
+        List<Component> userInfoFields = JPanelUtil.getComponentsAsList(userBasicInfoPanel);
+        List<Component> userPhotoPanelFields = JPanelUtil.getComponentsAsList(userProfilePicPanel);
+        List<Component> settingsForPanel = JPanelUtil.getComponentsAsList(settingstButtonPanel);
             for(Component c : userInfoFields){
                 c.setEnabled(false);
                 if(c instanceof JTextField){
@@ -1523,7 +1523,7 @@ public class UsersGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteUserButtonActionPerformed
 
     private void updatePhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePhotoButtonActionPerformed
-       ImageGUIUtil im = new ImageGUIUtil();
+       ImageUtil im = new ImageUtil();
 
         JFileChooser file = new JFileChooser();
         file.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -1713,7 +1713,7 @@ public class UsersGUI extends javax.swing.JPanel {
     private void saveUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveUserButtonActionPerformed
         List myList = fm.getComponentsAsList(userBasicInfoPanel);
         
-        if(fm.areFieldsEmpty(myList) == false) 
+        if(fm.hasEmptyTextField(myList) == false) 
         {
             int confirmAddUser = 
                 JOptionPane.showConfirmDialog(null,"Save changes?","Confirm",JOptionPane.YES_NO_OPTION);
@@ -1741,13 +1741,13 @@ public class UsersGUI extends javax.swing.JPanel {
        List reports          = fm.getComponentsAsList(reportsPermissionsCheckBoxPanel);
        List sections         = fm.getComponentsAsList(sectionsPermissionsCheckBoxPanel);  
        
-//       fm.clearJCheckBox(home);               fm.clearJCheckBox(adminPermissions);  
-//       fm.clearJCheckBox(adminCurriculum);    fm.clearJCheckBox(adminDiscounts);
-//       fm.clearJCheckBox(adminSections);      fm.clearJCheckBox(adminUsers);
-//       fm.clearJCheckBox(adminSchedule);      fm.clearJCheckBox(adminYrLevel);
-//       fm.clearJCheckBox(payment);            fm.clearJCheckBox(registration);
-//       fm.clearJCheckBox(students);           fm.clearJCheckBox(faculty);
-//       fm.clearJCheckBox(reports);            fm.clearJCheckBox(sections);
+//       fm.uncheckCheckBoxes(home);               fm.uncheckCheckBoxes(adminPermissions);  
+//       fm.uncheckCheckBoxes(adminCurriculum);    fm.uncheckCheckBoxes(adminDiscounts);
+//       fm.uncheckCheckBoxes(adminSections);      fm.uncheckCheckBoxes(adminUsers);
+//       fm.uncheckCheckBoxes(adminSchedule);      fm.uncheckCheckBoxes(adminYrLevel);
+//       fm.uncheckCheckBoxes(payment);            fm.uncheckCheckBoxes(registration);
+//       fm.uncheckCheckBoxes(students);           fm.uncheckCheckBoxes(faculty);
+//       fm.uncheckCheckBoxes(reports);            fm.uncheckCheckBoxes(sections);
     }
     
     private void enableAllPermissionsCheckBoxes(){
@@ -1791,13 +1791,13 @@ public class UsersGUI extends javax.swing.JPanel {
        List reports          = fm.getComponentsAsList(reportsPermissionsCheckBoxPanel);
        List sections         = fm.getComponentsAsList(sectionsPermissionsCheckBoxPanel);  
        
-       fm.disableJCheckBox(home);               fm.disableJCheckBox(adminPermissions);  
-       fm.disableJCheckBox(adminCurriculum);    fm.disableJCheckBox(adminDiscounts);
-       fm.disableJCheckBox(adminSections);      fm.disableJCheckBox(adminUsers);
-       fm.disableJCheckBox(adminSchedule);      fm.disableJCheckBox(adminYrLevel);
-       fm.disableJCheckBox(payment);            fm.disableJCheckBox(registration);
-       fm.disableJCheckBox(students);           fm.disableJCheckBox(faculty);
-       fm.disableJCheckBox(reports);            fm.disableJCheckBox(sections);
+       fm.disableCheckBoxes(home);               fm.disableCheckBoxes(adminPermissions);  
+       fm.disableCheckBoxes(adminCurriculum);    fm.disableCheckBoxes(adminDiscounts);
+       fm.disableCheckBoxes(adminSections);      fm.disableCheckBoxes(adminUsers);
+       fm.disableCheckBoxes(adminSchedule);      fm.disableCheckBoxes(adminYrLevel);
+       fm.disableCheckBoxes(payment);            fm.disableCheckBoxes(registration);
+       fm.disableCheckBoxes(students);           fm.disableCheckBoxes(faculty);
+       fm.disableCheckBoxes(reports);            fm.disableCheckBoxes(sections);
     }
     
     private void profileTypeComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_profileTypeComboBoxItemStateChanged
@@ -1817,31 +1817,31 @@ public class UsersGUI extends javax.swing.JPanel {
            List sections         = fm.getComponentsAsList(sectionsPermissionsCheckBoxPanel);  
         
         if( (evt.getItem().equals("Administrator")) && (usersList.isSelectionEmpty() == true) ){
-           fm.setJCheckBoxSelected(home);               fm.setJCheckBoxSelected(adminPermissions);  
-           fm.setJCheckBoxSelected(adminCurriculum);    fm.setJCheckBoxSelected(adminDiscounts);
-           fm.setJCheckBoxSelected(adminSections);      fm.setJCheckBoxSelected(adminUsers);
-           fm.setJCheckBoxSelected(adminSchedule);      fm.setJCheckBoxSelected(adminYrLevel);
-           fm.setJCheckBoxSelected(payment);            fm.setJCheckBoxSelected(registration);
-           fm.setJCheckBoxSelected(students);           fm.setJCheckBoxSelected(faculty);
-           fm.setJCheckBoxSelected(reports);            fm.setJCheckBoxSelected(sections);
+           fm.checkCheckBoxes(home);               fm.checkCheckBoxes(adminPermissions);  
+           fm.checkCheckBoxes(adminCurriculum);    fm.checkCheckBoxes(adminDiscounts);
+           fm.checkCheckBoxes(adminSections);      fm.checkCheckBoxes(adminUsers);
+           fm.checkCheckBoxes(adminSchedule);      fm.checkCheckBoxes(adminYrLevel);
+           fm.checkCheckBoxes(payment);            fm.checkCheckBoxes(registration);
+           fm.checkCheckBoxes(students);           fm.checkCheckBoxes(faculty);
+           fm.checkCheckBoxes(reports);            fm.checkCheckBoxes(sections);
            settingsComboBox.setSelectedItem(ADMIN);
        }
        else if( (evt.getItem().toString().equals("Faculty Member")) && (usersList.isSelectionEmpty() == true) ){
            deselectAllPermissionsCheckBoxes();
            settingsComboBox.setSelectedItem(FACULTY);
-           fm.setJCheckBoxSelected(home);   fm.setJCheckBoxSelected(faculty); 
+           fm.checkCheckBoxes(home);   fm.checkCheckBoxes(faculty); 
        }
        else if( (evt.getItem().toString().equals("Registrar")) && (usersList.isSelectionEmpty() == true) ){
            deselectAllPermissionsCheckBoxes();
            CardLayout cl = (CardLayout)(cardContainerPanel.getLayout());
            settingsComboBox.setSelectedItem(REGISTRATION);
-           fm.setJCheckBoxSelected(home);   fm.setJCheckBoxSelected(registration); 
+           fm.checkCheckBoxes(home);   fm.checkCheckBoxes(registration); 
        }
        else if( (evt.getItem().toString().equals("Accountant")) && (usersList.isSelectionEmpty() == true) ){
            deselectAllPermissionsCheckBoxes();
            CardLayout cl = (CardLayout)(cardContainerPanel.getLayout());
            settingsComboBox.setSelectedItem(PAYMENT);
-           fm.setJCheckBoxSelected(home);   fm.setJCheckBoxSelected(payment); 
+           fm.checkCheckBoxes(home);   fm.checkCheckBoxes(payment); 
        }
        else if( (evt.getItem().toString().equals("None Selected")) && (usersList.isSelectionEmpty() == true) ){
            deselectAllPermissionsCheckBoxes();

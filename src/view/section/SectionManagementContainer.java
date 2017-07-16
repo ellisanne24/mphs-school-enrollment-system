@@ -4,7 +4,7 @@ import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
 import component_model_loader.GradeLevelML;
-import component_utility.JTableGUIUtil;
+import component_utility.JTableUtil;
 import component_model_loader.SchoolYearML;
 import component_model_loader.SectionML;
 import component_renderers.JComboBoxRenderer_GradeLevel;
@@ -1094,7 +1094,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         }
         if (evt.getSource().equals(tblAssign)) {
             if (evt.getClickCount() == 2) {
-                JTableGUIUtil jtm = new JTableGUIUtil();
+                JTableUtil jtm = new JTableUtil();
                 jtm.copyTableData(tblAssign, tblAssign2);
 //                jtm.passStudentToSectionList(tblAssign, tblAssign2);
             }

@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
-import component_utility.ImageGUIUtil;
+import component_utility.ImageUtil;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -1100,8 +1100,8 @@ public class StudentInformationJDialog extends javax.swing.JDialog {
             jtblRegformSchedule.setShowHorizontalLines(false);
             jtblRegformSchedule.setShowVerticalLines(false);
             
-            schoolLogo = new ImageGUIUtil().getRenderedImageForJPanel("assets/logo.jpg", jpnlLogo);
-            studentPhoto = new ImageGUIUtil().getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlStudentPhoto);
+            schoolLogo = new ImageUtil().getRenderedImageForJPanel("assets/logo.jpg", jpnlLogo);
+            studentPhoto = new ImageUtil().getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlStudentPhoto);
         }
     }
     

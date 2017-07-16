@@ -4,7 +4,7 @@ import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import component_utility.JTableGUIUtil;
+import component_utility.JTableUtil;
 import daoimpl.SchoolYearDaoImpl;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -516,7 +516,7 @@ public class UpdateCurriculumGUI extends javax.swing.JDialog {
             addSubjectJbtn.setEnabled(true);
         }
         if (evt.getClickCount() == 2) {
-            JTableGUIUtil jtm = new JTableGUIUtil();
+            JTableUtil jtm = new JTableUtil();
             jtm.copyTableData(subjectsListJtbl, curriculumSubjectsJtbl);
         }
     }//GEN-LAST:event_subjectsListJtblMouseClicked
@@ -557,7 +557,7 @@ public class UpdateCurriculumGUI extends javax.swing.JDialog {
 
                     //Remove rows on curriculum subjects when year level is changed
                     DefaultTableModel curcSubjTblModel = (DefaultTableModel) curriculumSubjectsJtbl.getModel();
-                    JTableGUIUtil.deleteAllRows(curcSubjTblModel);
+                    JTableUtil.deleteAllRows(curcSubjTblModel);
 
                     //enable the save button because changes were made on year level
                     updateCurriculumJbtn.setEnabled(true);

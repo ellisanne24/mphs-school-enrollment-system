@@ -9,8 +9,8 @@ import calendar_utility.CalendarUtil;
 import daoimpl.EnrollmentDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import component_model_loader.CalendarML;
-import component_utility.JPanelGUIUtil;
-import component_utility.JSpinnerGUIUtil;
+import component_utility.JPanelUtil;
+import component_utility.JSpinnerUtil;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.sql.Date;
@@ -86,7 +86,7 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         jsprSchoolYearTo.setModel(schoolYearToModel);
         JSpinner.NumberEditor schoolYearToEditor = new JSpinner.NumberEditor(jsprSchoolYearTo, "#");
         jsprSchoolYearTo.setEditor(schoolYearToEditor);
-        JSpinnerGUIUtil.setDisabledForegroundColorTo(jsprSchoolYearTo, Color.BLACK);
+        JSpinnerUtil.setDisabledForegroundColorTo(jsprSchoolYearTo, Color.BLACK);
 
         //JSpinner Class Hours
         SpinnerNumberModel classHoursModel = new SpinnerNumberModel(0, 0, 5000, 1);
@@ -2605,7 +2605,7 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         schoolYear.setYearFrom(Integer.parseInt(jsprSchoolYearFrom.getValue().toString()));
         schoolYear.setYearTo(Integer.parseInt(jsprSchoolYearTo.getValue().toString()));
 
-        if (JPanelGUIUtil.hasNullComboBox(jpnlSchoolYearSchedule)) {
+        if (JPanelUtil.hasNullComboBox(jpnlSchoolYearSchedule)) {
             JOptionPane.showMessageDialog(null, "Please fill out all drop down.");
         } else {
             // SCHOOL YEAR START DATE
@@ -2631,7 +2631,7 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
             schoolYear.setEnd_date(endDate);
         }
 
-        if (JPanelGUIUtil.hasNullComboBox(jpnlEnrollmentSchedule)) {
+        if (JPanelUtil.hasNullComboBox(jpnlEnrollmentSchedule)) {
             JOptionPane.showMessageDialog(null, "Please fill out all drop down.");
         } else {
             // SCHOOL YEAR ENROLLMENT OPENING DATE
@@ -2664,10 +2664,10 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         }
         // SEMESTERS    
         List<Quarter> quarterList = new ArrayList<>();
-        if (JPanelGUIUtil.hasNullComboBox(jpnlFirstQuarterSchedule)
-                || (JPanelGUIUtil.hasNullComboBox(jpnlSecondQuarterSchedule))
-                || (JPanelGUIUtil.hasNullComboBox(jpnlThirdQuarterSchedule))
-                || (JPanelGUIUtil.hasNullComboBox(jpnlFourthQuarterSchedule))) {
+        if (JPanelUtil.hasNullComboBox(jpnlFirstQuarterSchedule)
+                || (JPanelUtil.hasNullComboBox(jpnlSecondQuarterSchedule))
+                || (JPanelUtil.hasNullComboBox(jpnlThirdQuarterSchedule))
+                || (JPanelUtil.hasNullComboBox(jpnlFourthQuarterSchedule))) {
             JOptionPane.showMessageDialog(null, "Fill out all drop down.");
         } else {
             quarterList.add(getFirstQuarterSchedule());

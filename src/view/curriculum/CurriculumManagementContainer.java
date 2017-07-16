@@ -4,7 +4,7 @@ package view.curriculum;
 import component_editor.JSpinnerEditor_Curriculum;
 import component_model_loader.CurriculumML;
 import component_model_loader.GradeLevelML;
-import component_utility.JTableGUIUtil;
+import component_utility.JTableUtil;
 import component_model_loader.SchoolYearML;
 import component_renderers.JComboBoxRenderer_GradeLevel;
 import daoimpl.CurriculumDaoImpl;
@@ -797,7 +797,7 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
         }
         if (evt.getSource().equals(subjectsListJtbl)) {
             if (evt.getClickCount() == 2) {
-                JTableGUIUtil jtm = new JTableGUIUtil();
+                JTableUtil jtm = new JTableUtil();
                 jtm.copyTableData(subjectsListJtbl, curriculumSubjectsJtbl);
             }
         }

@@ -9,7 +9,7 @@ import calendar_utility.CalendarUtil;
 import daoimpl.CredentialDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import component_model_loader.CredentialML;
-import component_utility.JPanelGUIUtil;
+import component_utility.JPanelUtil;
 import component_model_loader.SchoolYearML;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -370,8 +370,8 @@ public class CredentialForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void resetCreateCredentialFormPanel(){
-        JPanelGUIUtil.clearJCheckBox(jpnlGradeLevelSelection);
-        JPanelGUIUtil.disableAllJCheckBox(jpnlGradeLevelSelection);
+        JPanelUtil.uncheckCheckBoxes(jpnlGradeLevelSelection);
+        JPanelUtil.disableAllJCheckBox(jpnlGradeLevelSelection);
         jTextField1.setText("");
         jtaCredentialDescription.setText(null);
     }
@@ -480,7 +480,7 @@ public class CredentialForm extends javax.swing.JPanel {
 
     private void jcbKindergartenCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbKindergartenCtgItemStateChanged
         if(jcbKindergartenCtg.isSelected()){
-            JPanelGUIUtil.clearJCheckBox(jpnlGradeLevelSelection);
+            JPanelUtil.uncheckCheckBoxes(jpnlGradeLevelSelection);
             jcbKindergarten.setSelected(true);
         }else{
             jcbKindergarten.setSelected(false);

@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import daoimpl.ScheduleDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl_OLD;
-import component_utility.JSpinnerGUIUtil;
+import component_utility.JSpinnerUtil;
 import component_renderers.JComboBoxRenderer_GradeLevel;
 
 
@@ -46,10 +46,10 @@ public class CreateSchedule extends javax.swing.JPanel {
         }
 
         private void setGUIComponentModels() {
-            jsprStartTime.setModel(JSpinnerGUIUtil.getADateModel());
-            jsprStartTime.setEditor(JSpinnerGUIUtil.getEditorInTimeFormat(jsprStartTime));
-            jsprEndTime.setModel(JSpinnerGUIUtil.getADateModel());
-            jsprEndTime.setEditor(JSpinnerGUIUtil.getEditorInTimeFormat(jsprEndTime));
+            jsprStartTime.setModel(JSpinnerUtil.getADateModel());
+            jsprStartTime.setEditor(JSpinnerUtil.getEditorInTimeFormat(jsprStartTime));
+            jsprEndTime.setModel(JSpinnerUtil.getADateModel());
+            jsprEndTime.setEditor(JSpinnerUtil.getEditorInTimeFormat(jsprEndTime));
         }
     }
     

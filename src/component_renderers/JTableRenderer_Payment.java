@@ -5,7 +5,7 @@
  */
 package component_renderers;
 
-import component_utility.JTableGUIUtil;
+import component_utility.JTableUtil;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -27,7 +27,7 @@ public class JTableRenderer_Payment extends DefaultTableCellRenderer{
     {
         Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
         
-        JTableGUIUtil.setCellsAlignment(table, SwingConstants.CENTER);
+        JTableUtil.setCellsAlignment(table, SwingConstants.CENTER);
         
 //        this.setHorizontalAlignment(SwingConstants.CENTER);
 //        for(int colIndex=1; colIndex < table.getModel().getColumnCount(); colIndex++){

@@ -7,7 +7,7 @@ package view.schedule;
 
 import daoimpl.ScheduleDaoImpl;
 import component_model_loader.GradeLevelML;
-import component_utility.JSpinnerGUIUtil;
+import component_utility.JSpinnerUtil;
 import component_model_loader.SchoolYearML;
 import component_model_loader.SectionML;
 import java.awt.Color;
@@ -49,10 +49,10 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
         }
 
         private void setGUIComponentModels() {
-            jsprStartTime.setModel(JSpinnerGUIUtil.getADateModel());
-            jsprStartTime.setEditor(JSpinnerGUIUtil.getEditorInTimeFormat(jsprStartTime));
-            jsprEndTime.setModel(JSpinnerGUIUtil.getADateModel());
-            jsprEndTime.setEditor(JSpinnerGUIUtil.getEditorInTimeFormat(jsprEndTime));
+            jsprStartTime.setModel(JSpinnerUtil.getADateModel());
+            jsprStartTime.setEditor(JSpinnerUtil.getEditorInTimeFormat(jsprStartTime));
+            jsprEndTime.setModel(JSpinnerUtil.getADateModel());
+            jsprEndTime.setEditor(JSpinnerUtil.getEditorInTimeFormat(jsprEndTime));
         }
     }
     

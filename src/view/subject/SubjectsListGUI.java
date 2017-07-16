@@ -4,7 +4,7 @@ import view.subject.UpdateSubjectGUI;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import daoimpl.SchoolYearDaoImpl;
-import component_utility.JTableGUIUtil;
+import component_utility.JTableUtil;
 
 public class SubjectsListGUI extends javax.swing.JPanel {
 
@@ -14,7 +14,7 @@ public class SubjectsListGUI extends javax.swing.JPanel {
         
 //        schoolYearStartJcb.setModel(sy.getAllStart());
 //        schoolYearEndJcb.setModel(sy.getAllEnd());
-        JTableGUIUtil.setCellsAlignment(subjectsListJtbl, SwingConstants.LEFT);
+        JTableUtil.setCellsAlignment(subjectsListJtbl, SwingConstants.LEFT);
     }
 
     @SuppressWarnings("unchecked")

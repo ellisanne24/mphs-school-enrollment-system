@@ -5,20 +5,20 @@
  */
 package view.container;
 
-import view.fees.FeesManagementContainer;
+import view.fees.FeesSetting;
 import view.rooms.RoomsContainer;
 import view.schedule.ScheduleManagementContainer;
 import view.faculty.NewFaculty;
 import view.curriculum.CurriculumManagementContainer;
 
-import view.payment.PaymentSchedule;
+import view.paymentsetting.PaymentScheduleSettings;
 import view.schoolyear.SchoolYearManagementContainer;
 import view.subject.SubjectManagementContainer;
 import daoimpl.CredentialDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import component_model_loader.CredentialML;
-import component_utility.JPanelGUIUtil;
+import component_utility.JPanelUtil;
 import component_model_loader.NavigationImpl;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
@@ -467,7 +467,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         jtpManagementTabbedPane.addTab("Faculty", jspFacultyManagement);
 
-        jpnlPayment.setLayout(new java.awt.BorderLayout());
+        jpnlPayment.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(jpnlPayment);
 
         jtpManagementTabbedPane.addTab("Payment", jScrollPane1);
@@ -509,7 +509,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     }
     
     private void addPaymentSchedule(){
-        PaymentSchedule ps = new PaymentSchedule();
+        PaymentScheduleSettings ps = new PaymentScheduleSettings();
         jpnlPayment.add(ps);
     }
     
@@ -553,7 +553,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     break;
                 case 6:
                     jpnlFeesAndDiscountsManagement.removeAll();
-                    jpnlFeesAndDiscountsManagement.add(new FeesManagementContainer());
+                    jpnlFeesAndDiscountsManagement.add(new FeesSetting());
                     jtpManagementTabbedPane.repaint();
                     break;
                 default:
@@ -568,7 +568,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private void jcbKindergartenCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbKindergartenCtgItemStateChanged
         if(jcbKindergartenCtg.isSelected()){
-            JPanelGUIUtil.clearJCheckBox(jpnlGradeLevelSelection);
+            JPanelUtil.uncheckCheckBoxes(jpnlGradeLevelSelection);
             jcbKindergarten.setSelected(true);
         }else{
             jcbKindergarten.setSelected(false);
@@ -608,8 +608,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jcbJuniorHighCtgItemStateChanged
 
     private void resetCreateCredentialFormPanel(){
-        JPanelGUIUtil.clearJCheckBox(jpnlGradeLevelSelection);
-        JPanelGUIUtil.disableAllJCheckBox(jpnlGradeLevelSelection);
+        JPanelUtil.uncheckCheckBoxes(jpnlGradeLevelSelection);
+        JPanelUtil.disableAllJCheckBox(jpnlGradeLevelSelection);
         jtfCredentialName.setText("");
         jtaCredentialDescription.setText(null);
     }
@@ -715,7 +715,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             jcbElementaryCtg.setEnabled(true);
             jcbJuniorHighCtg.setEnabled(true);
             jcbKindergartenCtg.setEnabled(true);
-            JPanelGUIUtil.enableJCheckBox(jpnlGradeLevelSelection);
+            JPanelUtil.enableCheckBoxes(jpnlGradeLevelSelection);
         }
     }//GEN-LAST:event_jtfCredentialNameKeyPressed
 

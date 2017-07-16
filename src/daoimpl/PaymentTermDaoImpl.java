@@ -74,7 +74,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
     public List<PaymentTerm> getAllActive() {
         List<PaymentTerm> list = new ArrayList<>();
         String SQLa = "{CALL getAllActivePaymentTerms()}";
-        String SQLb = "{CALL getPaymentTermPeriodsById(?)}";
+        String SQLb = "{CALL `getPeriodsByPaymentTermId`(?)}";
         
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement csa = con.prepareCall(SQLa);

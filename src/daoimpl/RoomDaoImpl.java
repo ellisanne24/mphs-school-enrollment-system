@@ -5,6 +5,7 @@
  */
 package daoimpl;
 
+import dao.IRoom;
 import database_utility.DBType;
 import database_utility.DBUtil;
 import java.sql.CallableStatement;
@@ -17,107 +18,123 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import daoimpl.LoginDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
+import java.util.ArrayList;
+import java.util.List;
+import model.Room;
 
 /**
  *
  * @author Acer
  */
+public class RoomDaoImpl implements IRoom {
 
-public class RoomDaoImpl {
-    private String roomName_No;
-    private String buildingName_No;
-    private int capacity;
-    private int syYearFrom;
-    private int syYearTo;
-    
-    public RoomDaoImpl(String aRoomName_No, String aBldgName_No, int aCapacity, int aSyYearFrom, int aSyYearTo){
-        roomName_No = aRoomName_No;
-        buildingName_No = aBldgName_No;
-        capacity = aCapacity;
-        syYearFrom = aSyYearFrom;
-        syYearTo = aSyYearTo;
-    }
-    
-    public Boolean add(){
-        boolean isSuccessful = true;
-        String SQL = "{CALL addRoom(?,?,?,?,?)}";
+    @Override
+    public boolean addRoom(Room aRoom) {
+        boolean isAdded;
+        String SQL = "{CALL addRoom(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString( 1,roomName_No);
-            cs.setString( 2,buildingName_No);
-            cs.setInt( 3,capacity);
-            cs.setInt(5,LoginDaoImpl.getUserId() );
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, aRoom.getRoomName());
+            cs.setString(2, aRoom.getBuildingName());
+            cs.setString(3, aRoom.getCapacity());
             cs.executeUpdate();
+            isAdded = true;
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error. \n"+e.getMessage()+"\n"+e.getCause());
-            isSuccessful = false;
+            isAdded = false;
+            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
         }
-        return isSuccessful;
+        return isAdded;
     }
-    
-    public static DefaultTableModel getAll(JTable aJTable){
-        DefaultTableModel myModel = (DefaultTableModel) aJTable.getModel();
-        myModel.setRowCount(0);
-        String SQL = "{CALL getAllRoomInformation()}";
+
+    @Override
+    public List<Room> getRoomInfo() {
+        List<Room> list = new ArrayList();
+        String SQL = "{CALL getRooms}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    String myRoomNameOrNum = rs.getString("room_name_or_num");
-                    String myBldgNameOrNo = rs.getString("bldg_name_or_num");
-                    int myCapacity = rs.getInt("capacity");
-                    String myAddedBy = rs.getString("addedBy");
-                    String myDateAdded = rs.getString("dateAdded");
-                    String myLastEditedBy = rs.getString("lastEditedBy");
-                    String myDateLastEdited = rs.getString("dateLastEdited");
-                    
-                    myModel.addRow(new Object[]{myRoomNameOrNum,myBldgNameOrNo,myCapacity,myAddedBy,myDateAdded,myLastEditedBy,myDateLastEdited} );
+                CallableStatement cs = con.prepareCall(SQL);) {
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Room room = new Room();
+                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setDateCreated(rs.getString("date_created"));
+                    room.setStatus(rs.getBoolean("status"));
+                    list.add(room);
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error. \n"+e.getMessage()+"\n"+e.getCause());
+            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
         }
-        return myModel;
+        return list;
     }
-    
-    public static DefaultComboBoxModel getAll(){
-        DefaultComboBoxModel myModel = new DefaultComboBoxModel();
-        String SQL = "{CALL getAllRoomInformation()}";
+
+    @Override
+    public boolean updateRoom(Room aRoom) {
+
+        boolean isUpdated;
+        String SQL = "{CALL updateRooms(?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    String myRoomNameOrNum = rs.getString("room_name_or_num");
-                    String myBldgNameOrNo = rs.getString("bldg_name_or_num");
-                    int myCapacity = rs.getInt("capacity");
-                    String myAddedBy = rs.getString("addedBy");
-                    String myDateAdded = rs.getString("dateAdded");
-                    String myLastEditedBy = rs.getString("lastEditedBy");
-                    String myDateLastEdited = rs.getString("dateLastEdited");
-                    
-                    myModel.addElement( myRoomNameOrNum);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, aRoom.getRoom_id());
+            cs.setString(2, aRoom.getRoomName());
+            cs.setString(3, aRoom.getBuildingName());
+            cs.setString(4, aRoom.getCapacity());
+            cs.setBoolean(5, aRoom.getStatus());
+            cs.executeUpdate();
+            isUpdated = true;
+        } catch (SQLException e) {
+            isUpdated = false;
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
+        return isUpdated;
+    }
+
+    @Override
+    public Room getRoomByID(int aRoomID) {
+        Room room = new Room();
+        String SQL = "{CALL getRoomsInfoByID(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, aRoomID);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setStatus(rs.getBoolean("status"));
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error. \n"+e.getMessage()+"\n"+e.getCause());
+            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
-        return myModel;
+        return room;
     }
-    
-    public static int getId(String aRoomNameOrNum){
-        int myRoomId = 0;
-        String SQL = "{CALL getRoomId(?)}";
+
+    @Override
+    public int getRoomID(String roomName, String BuildingName, String capacity) {
+        int roomID = 0;
+        String SQL = "{CALL getRoomID}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1,aRoomNameOrNum);
-            try(ResultSet rs  = cs.executeQuery();){
-                while(rs.next()){
-                    myRoomId = rs.getInt("id");
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, roomName);
+            cs.setString(2, BuildingName);
+            cs.setString(3, capacity);
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    roomID = rs.getInt("room_id");
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error. \n"+e.getMessage()+"\n"+e.getCause());
+            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
-        return myRoomId;
+        return roomID;
     }
+
 }

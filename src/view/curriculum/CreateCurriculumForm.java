@@ -6,7 +6,7 @@ import java.util.Arrays;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import component_utility.JTableGUIUtil;
+import component_utility.JTableUtil;
 import component_model_loader.CurriculumML;
 import component_model_loader.GradeLevelML;
 import component_model_loader.SchoolYearML;
@@ -417,7 +417,7 @@ public class CreateCurriculumForm extends javax.swing.JPanel {
         }
         if (evt.getSource().equals(subjectsListJtbl)) {
             if (evt.getClickCount() == 2) {
-                JTableGUIUtil jtm = new JTableGUIUtil();
+                JTableUtil jtm = new JTableUtil();
                 jtm.copyTableData(subjectsListJtbl, curriculumSubjectsJtbl);
             }
         }

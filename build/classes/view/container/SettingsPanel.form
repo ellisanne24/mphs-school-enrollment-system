@@ -618,7 +618,7 @@
           <SubComponents>
             <Container class="javax.swing.JPanel" name="jpnlPayment">
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
             </Container>
           </SubComponents>
         </Container>

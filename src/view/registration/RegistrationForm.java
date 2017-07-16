@@ -8,7 +8,7 @@ import java.awt.Color;
 import javax.swing.ComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import component_utility.JPanelGUIUtil;
+import component_utility.JPanelUtil;
 import daoimpl.PaymentTermDaoImpl;
 import daoimpl.RegistrationDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
@@ -1316,12 +1316,12 @@ public class RegistrationForm extends javax.swing.JPanel {
 
     
     private void resetRegistrationForm(){
-        JPanelGUIUtil.clearFields(jpnlStudentType);
-        JPanelGUIUtil.clearFields(jpnlStudentInformation);
-        JPanelGUIUtil.clearFields(jpnlHomeAddress);
-        JPanelGUIUtil.clearFields(jpnlParentInfo);
-        JPanelGUIUtil.clearFields(jpnlGuardianInfo);
-        JPanelGUIUtil.clearFields(jpnlSchoolLastAttended);
+        JPanelUtil.clearFields(jpnlStudentType);
+        JPanelUtil.clearFields(jpnlStudentInformation);
+        JPanelUtil.clearFields(jpnlHomeAddress);
+        JPanelUtil.clearFields(jpnlParentInfo);
+        JPanelUtil.clearFields(jpnlGuardianInfo);
+        JPanelUtil.clearFields(jpnlSchoolLastAttended);
     }
     
     private void jtbnClearRegistrationFieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtbnClearRegistrationFieldsActionPerformed

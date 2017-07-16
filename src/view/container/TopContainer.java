@@ -3,15 +3,15 @@ package view.container;
 import view.enrollment.EnrollmentPanel;
 import view.user.Accounts;
 import view.registration.RegistrationForm;
-import view.payment.PaymentsPanel;
+//import view.payment.PaymentsPanel;
 import calendar_utility.CalendarUtil;
 import layout_utility.CardLayoutUtil;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import daoimpl.LoginDaoImpl;
-import component_utility.ImageGUIUtil;
+import component_utility.ImageUtil;
+import component_utility.JInternalFrameUtil;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -20,6 +20,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import threads.SchoolYearLoaderThread;
 import view.grades.GradesRecord;
+import view.payment.PaymentAndAssessmentForm;
 
 public class TopContainer extends javax.swing.JFrame{
 
@@ -140,12 +141,6 @@ public class TopContainer extends javax.swing.JFrame{
         }
     };
     iconsContainer = new javax.swing.JPanel();
-    jpnlExitIcon = new javax.swing.JPanel(){
-        public void paintComponent(Graphics g){
-            super.repaint();
-            g.drawImage(imageExitIcon, 0, 0, getWidth(),getHeight(),this);
-        }
-    };
     jpnlSchoolYear = new javax.swing.JPanel();
     jlblCurrentSchoolYear = new javax.swing.JLabel();
     jpnlBody = new javax.swing.JPanel();
@@ -303,7 +298,7 @@ public class TopContainer extends javax.swing.JFrame{
     jlblHelloUserNameText = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Enrollment System");
     setBounds(new java.awt.Rectangle(0, 0, 0, 0));
     setMinimumSize(new java.awt.Dimension(800, 600));
@@ -349,23 +344,6 @@ public class TopContainer extends javax.swing.JFrame{
     iconsContainer.setOpaque(false);
     iconsContainer.setPreferredSize(new java.awt.Dimension(200, 75));
     iconsContainer.setLayout(new java.awt.GridBagLayout());
-
-    jpnlExitIcon.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    jpnlExitIcon.setPreferredSize(new java.awt.Dimension(50, 50));
-    jpnlExitIcon.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jpnlExitIconMouseClicked(evt);
-        }
-    });
-    jpnlExitIcon.setLayout(new java.awt.GridBagLayout());
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.ipadx = 50;
-    gridBagConstraints.ipady = 50;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 3);
-    iconsContainer.add(jpnlExitIcon, gridBagConstraints);
-
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 0;
@@ -925,19 +903,18 @@ public class TopContainer extends javax.swing.JFrame{
         }
 
         private void prepareImageBackgrounds() {
-            imageHeader = new ImageGUIUtil().getRenderedImageForJPanel("assets/headerNoText.jpg", jpnlHeader);
-            imageSchoolLogo = new ImageGUIUtil().getRenderedImageForJPanel("assets/LaunchPadBg.jpg", jpnlLaunchPad);
-            imageExitIcon = new ImageGUIUtil().getRenderedImageForJPanel("assets/exit.jpg", jpnlExitIcon);
-            imageReports = new ImageGUIUtil().getRenderedImageForJPanel("assets/reportsNoText.jpg", jpnlReportsButton);
-            imageRegistration = new ImageGUIUtil().getRenderedImageForJPanel("assets/registrationNoText.jpg", jpnlRegistrationButton);
-            imageEnrollment = new ImageGUIUtil().getRenderedImageForJPanel("assets/enrollmentNoText.jpg", jpnlEnrollmentButton);
-            imageGrades = new ImageGUIUtil().getRenderedImageForJPanel("assets/gradesNoText.jpg", jpnlGradesButton);
-            imageManagement = new ImageGUIUtil().getRenderedImageForJPanel("assets/managementNoText.jpg", jpnlManagementButton);
-            imageAccounts = new ImageGUIUtil().getRenderedImageForJPanel("assets/accountsNoText.jpg", jpnlAccountsButton);
-            imagePayments = new ImageGUIUtil().getRenderedImageForJPanel("assets/paymentsNotext.jpg", jpnlPaymentButton);
-            imageCalendar = new ImageGUIUtil().getRenderedImageForJPanel("assets/calendarNoText.jpg", jpnlCalendar);
-            imageUser = new ImageGUIUtil().getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlUserImage);
-            imageIconHome = new ImageGUIUtil().getResourceAsImageIcon("/assets/home.png", 20, 20);
+            imageHeader = new ImageUtil().getRenderedImageForJPanel("assets/headerNoText.jpg", jpnlHeader);
+            imageSchoolLogo = new ImageUtil().getRenderedImageForJPanel("assets/LaunchPadBg.jpg", jpnlLaunchPad);
+            imageReports = new ImageUtil().getRenderedImageForJPanel("assets/reportsNoText.jpg", jpnlReportsButton);
+            imageRegistration = new ImageUtil().getRenderedImageForJPanel("assets/registrationNoText.jpg", jpnlRegistrationButton);
+            imageEnrollment = new ImageUtil().getRenderedImageForJPanel("assets/enrollmentNoText.jpg", jpnlEnrollmentButton);
+            imageGrades = new ImageUtil().getRenderedImageForJPanel("assets/gradesNoText.jpg", jpnlGradesButton);
+            imageManagement = new ImageUtil().getRenderedImageForJPanel("assets/managementNoText.jpg", jpnlManagementButton);
+            imageAccounts = new ImageUtil().getRenderedImageForJPanel("assets/accountsNoText.jpg", jpnlAccountsButton);
+            imagePayments = new ImageUtil().getRenderedImageForJPanel("assets/paymentsNotext.jpg", jpnlPaymentButton);
+            imageCalendar = new ImageUtil().getRenderedImageForJPanel("assets/calendarNoText.jpg", jpnlCalendar);
+            imageUser = new ImageUtil().getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlUserImage);
+            imageIconHome = new ImageUtil().getResourceAsImageIcon("/assets/home.png", 20, 20);
         }
 
     }
@@ -945,14 +922,6 @@ public class TopContainer extends javax.swing.JFrame{
     public static void flipCardToLaunchPad() {
         CardLayoutUtil.flipCardTo(cardContainer, jpnlLaunchPad);
     }
-
-    private void jpnlExitIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlExitIconMouseClicked
-        int choice
-                = JOptionPane.showConfirmDialog(null, "Exit Program?", "Exit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (choice == 0) {
-            System.exit(0);
-        }
-    }//GEN-LAST:event_jpnlExitIconMouseClicked
 
     private void jpnlRegistrationButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlRegistrationButtonMouseClicked
         
@@ -992,7 +961,7 @@ public class TopContainer extends javax.swing.JFrame{
 //        CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new PaymentsPanel());
         if (evt.getClickCount() >= 1) {
             if (PAYMENTS_INSTANCE <= 0) {
-                PaymentsPanel paymentPanel = new PaymentsPanel();
+                PaymentAndAssessmentForm paymentPanel = new PaymentAndAssessmentForm();
                 jtpTopTabbedPane.add("Payment", paymentPanel);
                 jtpTopTabbedPane.setSelectedComponent(paymentPanel);
                 setPAYMENTS_INSTANCE(1);
@@ -1141,7 +1110,6 @@ public class TopContainer extends javax.swing.JFrame{
     private javax.swing.JPanel jpnlButtons;
     private javax.swing.JPanel jpnlCalendar;
     private javax.swing.JPanel jpnlEnrollmentButton;
-    private javax.swing.JPanel jpnlExitIcon;
     private javax.swing.JPanel jpnlGradesButton;
     private javax.swing.JPanel jpnlHeader;
     private javax.swing.JPanel jpnlHelloUser;

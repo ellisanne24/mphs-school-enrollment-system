@@ -74,7 +74,7 @@ public class ScheduleDaoImpl {
             cs.setInt(1,startTime);
             cs.setInt(2,endTime);
             cs.setInt(3,Days.getId(day));
-            cs.setInt(4,RoomDaoImpl.getId(roomNameOrNum));
+//            cs.setInt(4,RoomDaoImpl.getRoomById(roomNameOrNum));
             cs.setInt(6,LoginDaoImpl.getUserId());
 //            cs.setInt(7,GradeLevelDaoImpl.getId(gradeLevel));
             cs.setInt(8,SectionDaoImpl_OLD.getId(sectionName));

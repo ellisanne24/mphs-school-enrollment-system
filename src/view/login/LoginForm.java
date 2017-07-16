@@ -3,7 +3,7 @@ package view.login;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
-import component_utility.ImageGUIUtil;
+import component_utility.ImageUtil;
 import utility.PasswordUtil;
 import daoimpl.LoginDaoImpl;
 import database_utility.DBUtil;
@@ -22,10 +22,10 @@ public class LoginForm extends javax.swing.JFrame {
 
     public LoginForm() {
         initComponents();
-        loginBgIcon = new ImageGUIUtil().getResourceImage("assets/LoginBgImage.jpg", jpnlBody);
+        loginBgIcon = new ImageUtil().getResourceImage("assets/LoginBgImage.jpg", jpnlBody);
 
-        usernameIcon = new ImageGUIUtil().getResourceImage("assets/usernameIcon.png", jpnlUserNameIconContainer);
-        passwordIcon = new ImageGUIUtil().getResourceImage("assets/password.png", jpnlPasswordIconContainer);
+        usernameIcon = new ImageUtil().getResourceImage("assets/usernameIcon.png", jpnlUserNameIconContainer);
+        passwordIcon = new ImageUtil().getResourceImage("assets/password.png", jpnlPasswordIconContainer);
         
     }
 

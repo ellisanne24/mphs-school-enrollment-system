@@ -7,7 +7,7 @@ package view.receipt;
 
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
-import component_utility.ImageGUIUtil;
+import component_utility.ImageUtil;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -46,7 +46,7 @@ public class Receipt extends javax.swing.JDialog {
     public Receipt(OfficialReceipt officialReceipt) {
         super(null, ModalityType.APPLICATION_MODAL);
         initComponents();
-        schoolLogo = new ImageGUIUtil().getResourceAsImage("assets/logo.jpg", 200, 200);
+        schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.jpg", 200, 200);
         
         this.particulars = officialReceipt.getPayment().getParticulars();
         this.payment = officialReceipt.getPayment();
