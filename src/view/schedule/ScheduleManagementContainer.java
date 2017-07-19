@@ -34,7 +34,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
     public class GUIManager {
 
         private void setInitialGUIComponentState() {
-            jcmbGradeLevel.setSelectedIndex(-1);
             jcmbSection.setSelectedIndex(-1);
             jcmbSubject.setSelectedIndex(-1);
             jcmbSchoolYearFrom.setSelectedIndex(-1);
@@ -82,8 +81,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
         jCheckBox6 = new javax.swing.JCheckBox();
         jCheckBox7 = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
-        jlblGradeLevel = new javax.swing.JLabel();
-        jcmbGradeLevel = new javax.swing.JComboBox<>();
         jlblSection = new javax.swing.JLabel();
         jcmbSection = new javax.swing.JComboBox<>();
         jlblSubject = new javax.swing.JLabel();
@@ -238,28 +235,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Assignment"));
         jPanel7.setLayout(new java.awt.GridBagLayout());
-
-        jlblGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jlblGradeLevel.setText("Grade Level");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel7.add(jlblGradeLevel, gridBagConstraints);
-
-        jcmbGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jcmbGradeLevel.setModel(new component_model_loader.GradeLevelML().getAllGradeLevels());
-        jcmbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
-        jcmbGradeLevel.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jcmbGradeLevelItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel7.add(jcmbGradeLevel, gridBagConstraints);
 
         jlblSection.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jlblSection.setText("Section");
@@ -453,7 +428,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel1.add(jpnlScheduleTable, gridBagConstraints);
 
-        jpnlSubmitSchedule.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jpnlSubmitSchedule.setLayout(new java.awt.GridBagLayout());
 
         jbtnSubmit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -491,10 +465,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
         add(jPanel3, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jcmbGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbGradeLevelItemStateChanged
-        
-    }//GEN-LAST:event_jcmbGradeLevelItemStateChanged
-
     private void jcmbSectionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbSectionItemStateChanged
     }//GEN-LAST:event_jcmbSectionItemStateChanged
 
@@ -519,9 +489,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
         }
         if(jcmbRoom.getSelectedIndex() > -1){
             aRoom = jcmbRoom.getSelectedItem().toString();
-        }
-        if(jcmbGradeLevel.getSelectedIndex() > -1){
-            aGradeLevel = jcmbGradeLevel.getSelectedItem().toString();
         }
         if(jcmbSection.getSelectedIndex() > -1){
             aSection = jcmbSection.getSelectedItem().toString();
@@ -676,7 +643,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
     private javax.swing.JButton jbtnAddSchedule;
     private javax.swing.JButton jbtnSubmit;
     private javax.swing.JComboBox<String> jcmbDay;
-    private javax.swing.JComboBox<String> jcmbGradeLevel;
     private javax.swing.JComboBox<String> jcmbRoom;
     private javax.swing.JComboBox<String> jcmbSchoolYearFrom;
     private javax.swing.JComboBox<String> jcmbSchoolYearTo;
@@ -684,7 +650,6 @@ public class ScheduleManagementContainer extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jcmbSubject;
     private javax.swing.JLabel jlblDay;
     private javax.swing.JLabel jlblEndTime;
-    private javax.swing.JLabel jlblGradeLevel;
     private javax.swing.JLabel jlblRoom;
     private javax.swing.JLabel jlblSchoolYear;
     private javax.swing.JLabel jlblSection;

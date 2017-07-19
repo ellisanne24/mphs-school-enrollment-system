@@ -72,107 +72,6 @@ INSERT INTO `balance_breakdown_fee` VALUES (1,'Downpayment',8000.00,'2017-07-16 
 UNLOCK TABLES;
 
 --
--- Table structure for table `classschedule`
---
-
-DROP TABLE IF EXISTS `classschedule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `classschedule` (
-  `classschedule_id` int(11) NOT NULL AUTO_INCREMENT,
-  `startTime` int(11) NOT NULL,
-  `endTime` int(11) NOT NULL,
-  `dayOfWeek_id` int(11) NOT NULL,
-  `room_id` int(11) NOT NULL,
-  `subject_id` int(11) NOT NULL,
-  `faculty_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`classschedule_id`),
-  KEY `class_schedule_TABLE_roomId_COL_idx` (`room_id`),
-  KEY `fk_class_schedule_TABLE_facultyId_COL_idx` (`faculty_id`),
-  KEY `fk_class_schedule_TABLE_subjectId_COLUMN_idx` (`subject_id`),
-  CONSTRAINT `fk_class_schedule_TABLE_facultyId_COL` FOREIGN KEY (`faculty_id`) REFERENCES `faculty_mt` (`faculty_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_class_schedule_TABLE_roomId_COL` FOREIGN KEY (`room_id`) REFERENCES `room_mt` (`room_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_class_schedule_TABLE_subjectId_COLUMN` FOREIGN KEY (`subject_id`) REFERENCES `subject_mt` (`subject_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `classschedule`
---
-
-LOCK TABLES `classschedule` WRITE;
-/*!40000 ALTER TABLE `classschedule` DISABLE KEYS */;
-INSERT INTO `classschedule` VALUES (1,700,1200,1,1,60,NULL),(2,700,730,2,1,60,NULL),(3,730,800,2,1,62,NULL),(4,800,900,2,1,64,NULL),(5,800,900,3,1,67,NULL),(6,700,730,1,1,68,NULL),(7,700,730,1,2,70,NULL);
-/*!40000 ALTER TABLE `classschedule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `classschedule_hd`
---
-
-DROP TABLE IF EXISTS `classschedule_hd`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `classschedule_hd` (
-  `classschedule_id` int(11) NOT NULL,
-  `addedBy_UserId` int(11) NOT NULL,
-  `lastEditedBy_UserId` int(11) NOT NULL,
-  `dateAdded` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `dateLastEdited` datetime DEFAULT NULL,
-  KEY `fk_classschedule_hd_TABLE_classschedule_id_COL_idx` (`classschedule_id`),
-  KEY `fk_classschedule_hdTABLE_addedByUserId_COLUMN_idx` (`addedBy_UserId`),
-  KEY `fk_classschedule_hdTABLE_lastEditedByUserId_COLUMN_idx` (`lastEditedBy_UserId`),
-  CONSTRAINT `fk_classschedule_hdTABLE_addedByUserId_COLUMN` FOREIGN KEY (`addedBy_UserId`) REFERENCES `user_mt` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_classschedule_hdTABLE_lastEditedByUserId_COLUMN` FOREIGN KEY (`lastEditedBy_UserId`) REFERENCES `user_mt` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_classschedule_hd_TABLE_classschedule_id_COL` FOREIGN KEY (`classschedule_id`) REFERENCES `classschedule` (`classschedule_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `classschedule_hd`
---
-
-LOCK TABLES `classschedule_hd` WRITE;
-/*!40000 ALTER TABLE `classschedule_hd` DISABLE KEYS */;
-INSERT INTO `classschedule_hd` VALUES (1,3,3,'2016-09-02 11:12:02','2016-09-02 11:12:02'),(2,3,3,'2016-09-02 11:12:04','2016-09-02 11:12:04'),(3,3,3,'2016-09-02 11:12:05','2016-09-02 11:12:05'),(4,3,3,'2016-09-02 11:12:06','2016-09-02 11:12:06'),(5,3,3,'2016-09-02 11:12:07','2016-09-02 11:12:07'),(6,3,3,'2016-09-02 11:15:21','2016-09-02 11:15:21'),(7,3,3,'2016-09-02 11:15:22','2016-09-02 11:15:22');
-/*!40000 ALTER TABLE `classschedule_hd` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `classschedule_section`
---
-
-DROP TABLE IF EXISTS `classschedule_section`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `classschedule_section` (
-  `classschedule_section_id` int(11) NOT NULL,
-  `classschedule_id` int(11) NOT NULL,
-  `gradelevel_id` int(11) NOT NULL,
-  `section_id` int(11) NOT NULL,
-  `schoolyear_id` int(11) NOT NULL,
-  PRIMARY KEY (`classschedule_section_id`),
-  KEY `fk_classschedule_sectionTABLE_classschedule_idCOLUMn_idx` (`classschedule_id`),
-  KEY `fk_classschedule_sectionTABLE_section_id_idx` (`section_id`),
-  KEY `fk_classschedule_sectionTABLE_gradelevel_idCOLUMN_idx` (`gradelevel_id`),
-  KEY `fk_classschedule_sectionTABLE_schoolyear_idCOLUMN_idx` (`schoolyear_id`),
-  CONSTRAINT `fk_classschedule_sectionTABLE_classschedule_idCOLUMN` FOREIGN KEY (`classschedule_id`) REFERENCES `classschedule` (`classschedule_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_classschedule_sectionTABLE_gradelevel_idCOLUMN` FOREIGN KEY (`gradelevel_id`) REFERENCES `gradelevel_mt` (`gradelevel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_classschedule_sectionTABLE_schoolyear_idCOLUMN` FOREIGN KEY (`schoolyear_id`) REFERENCES `schoolyear_mt` (`schoolyear_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_classschedule_sectionTABLE_section_id` FOREIGN KEY (`section_id`) REFERENCES `section_mt` (`section_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `classschedule_section`
---
-
-LOCK TABLES `classschedule_section` WRITE;
-/*!40000 ALTER TABLE `classschedule_section` DISABLE KEYS */;
-/*!40000 ALTER TABLE `classschedule_section` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `credential_requirements_lt`
 --
 
@@ -438,6 +337,38 @@ INSERT INTO `faculty_mt` VALUES (1,'Jordan','Rizal','Protacio','asdf','In a Rela
 UNLOCK TABLES;
 
 --
+-- Table structure for table `faculty_schedule`
+--
+
+DROP TABLE IF EXISTS `faculty_schedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `faculty_schedule` (
+  `faculty_schedule_id` int(11) NOT NULL AUTO_INCREMENT,
+  `faculty_id` int(11) NOT NULL,
+  `schedule_id` int(11) NOT NULL,
+  `schoolyear_id` int(11) NOT NULL,
+  `date_assigned` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`faculty_schedule_id`),
+  KEY `fk_faculty_scheduleTABLE_faculty_idCOL_idx` (`faculty_id`),
+  KEY `fk_faculty_scheduleTABLE_schedule_idCOL_idx` (`schedule_id`),
+  KEY `fk_faculty_scheduleTABLE_schoolyear_idCOL_idx` (`schoolyear_id`),
+  CONSTRAINT `fk_faculty_scheduleTABLE_faculty_idCOL` FOREIGN KEY (`faculty_id`) REFERENCES `faculty_mt` (`faculty_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_faculty_scheduleTABLE_schedule_idCOL` FOREIGN KEY (`schedule_id`) REFERENCES `schedule_mt` (`schedule_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_faculty_scheduleTABLE_schoolyear_idCOL` FOREIGN KEY (`schoolyear_id`) REFERENCES `schoolyear_mt` (`schoolyear_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `faculty_schedule`
+--
+
+LOCK TABLES `faculty_schedule` WRITE;
+/*!40000 ALTER TABLE `faculty_schedule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `faculty_schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `faculty_specialization`
 --
 
@@ -562,10 +493,13 @@ CREATE TABLE `grade` (
   `subject_id` int(11) NOT NULL,
   `grade` decimal(10,2) NOT NULL,
   `schoolyear_id` int(11) NOT NULL,
+  `gradingperiod_id` int(11) DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`grade_id`),
   KEY `fk_gradeTABLE_subject_idCOL_idx` (`subject_id`),
   KEY `fk_gradeTABLE_schoolyear_idCOL_idx` (`schoolyear_id`),
+  KEY `fk_gradeTABLE_gradingperiod_idCOL_idx` (`gradingperiod_id`),
+  CONSTRAINT `fk_gradeTABLE_gradingperiod_idCOL` FOREIGN KEY (`gradingperiod_id`) REFERENCES `gradingperiod_mt` (`gradingperiod_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_gradeTABLE_schoolyear_idCOL` FOREIGN KEY (`schoolyear_id`) REFERENCES `schoolyear_mt` (`schoolyear_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_gradeTABLE_subject_idCOL` FOREIGN KEY (`subject_id`) REFERENCES `subject_mt` (`subject_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -603,6 +537,33 @@ LOCK TABLES `gradelevel_mt` WRITE;
 /*!40000 ALTER TABLE `gradelevel_mt` DISABLE KEYS */;
 INSERT INTO `gradelevel_mt` VALUES (301,0,''),(302,1,''),(303,2,''),(304,3,''),(305,4,''),(306,5,''),(307,6,''),(308,7,''),(309,8,''),(310,9,''),(311,10,'');
 /*!40000 ALTER TABLE `gradelevel_mt` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `gradingperiod_mt`
+--
+
+DROP TABLE IF EXISTS `gradingperiod_mt`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gradingperiod_mt` (
+  `gradingperiod_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Contains grading period names such as :\n\n1st Grading Period\n2nd Grading Period\n3rd Grading Period\n4th Grading Period',
+  `gradeperiod` int(11) NOT NULL,
+  `description` varchar(45) NOT NULL,
+  `isActive` bit(1) NOT NULL DEFAULT b'1',
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`gradingperiod_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7004 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `gradingperiod_mt`
+--
+
+LOCK TABLES `gradingperiod_mt` WRITE;
+/*!40000 ALTER TABLE `gradingperiod_mt` DISABLE KEYS */;
+INSERT INTO `gradingperiod_mt` VALUES (7000,1,'1st Period','','2017-07-19 21:09:13'),(7001,2,'2nd Period','','2017-07-19 21:09:14'),(7002,3,'3rd Period','','2017-07-19 21:09:16'),(7003,4,'4th Period','','2017-07-19 21:09:17');
+/*!40000 ALTER TABLE `gradingperiod_mt` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -938,6 +899,38 @@ INSERT INTO `room_mt` VALUES (1,'Room Test','Bldg 5',30,'\0','2017-07-16 20:04:2
 UNLOCK TABLES;
 
 --
+-- Table structure for table `schedule_mt`
+--
+
+DROP TABLE IF EXISTS `schedule_mt`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `schedule_mt` (
+  `schedule_id` int(11) NOT NULL AUTO_INCREMENT,
+  `schedule_day` varchar(2) NOT NULL COMMENT 'Values to contain are \n\nM, T, W, TH, F, S, SU ',
+  `startTime` int(11) NOT NULL,
+  `endTime` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `isActive` bit(1) NOT NULL DEFAULT b'1',
+  PRIMARY KEY (`schedule_id`),
+  KEY `class_schedule_TABLE_roomId_COL_idx` (`room_id`),
+  KEY `fk_class_schedule_TABLE_subjectId_COLUMN_idx` (`subject_id`),
+  CONSTRAINT `fk_scheduleTABLE_room_idCOL` FOREIGN KEY (`room_id`) REFERENCES `room_mt` (`room_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_scheduleTABLE_subject_idCOL` FOREIGN KEY (`subject_id`) REFERENCES `subject_mt` (`subject_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `schedule_mt`
+--
+
+LOCK TABLES `schedule_mt` WRITE;
+/*!40000 ALTER TABLE `schedule_mt` DISABLE KEYS */;
+/*!40000 ALTER TABLE `schedule_mt` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `schoolyear_holiday_lt`
 --
 
@@ -1190,13 +1183,16 @@ CREATE TABLE `section_settings_lt` (
   `gradelevel_id` int(11) NOT NULL,
   `capacity` int(11) NOT NULL,
   `sectioncategory_id` int(11) NOT NULL,
-  `session_id` int(11) DEFAULT NULL,
+  `session_id` int(11) NOT NULL COMMENT 'faculty_id COL represents the faculty member assigned as ADVISER for a section',
+  `faculty_id` int(11) NOT NULL,
   PRIMARY KEY (`section_settings_id`),
   KEY `fk_section_settings_ltTABLE_section_idCOL_idx` (`section_id`),
   KEY `fk_section_settings_ltTABLE_schoolyear_idCOL_idx` (`schoolyear_id`),
   KEY `fk_section_settings_ltTABLE_gradelevel_idCOL_idx` (`gradelevel_id`),
   KEY `fk_section_settings_ltTABLE_sectioncategory_idCOL_idx` (`sectioncategory_id`),
+  KEY `fk_section_settings_ltTABLE_faculty_idCOL_idx` (`faculty_id`),
   KEY `fk_section_settings_ltTABLE_session_idCOL_idx` (`session_id`),
+  CONSTRAINT `fk_section_settings_ltTABLE_faculty_idCOL` FOREIGN KEY (`faculty_id`) REFERENCES `faculty_mt` (`faculty_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_section_settings_ltTABLE_gradelevel_idCOL` FOREIGN KEY (`gradelevel_id`) REFERENCES `gradelevel_mt` (`gradelevel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_section_settings_ltTABLE_schoolyear_idCOL` FOREIGN KEY (`schoolyear_id`) REFERENCES `schoolyear_mt` (`schoolyear_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_section_settings_ltTABLE_section_idCOL` FOREIGN KEY (`section_id`) REFERENCES `section_mt` (`section_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -1211,7 +1207,6 @@ CREATE TABLE `section_settings_lt` (
 
 LOCK TABLES `section_settings_lt` WRITE;
 /*!40000 ALTER TABLE `section_settings_lt` DISABLE KEYS */;
-INSERT INTO `section_settings_lt` VALUES (3,30,408,301,1000,1,2);
 /*!40000 ALTER TABLE `section_settings_lt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1473,6 +1468,67 @@ INSERT INTO `student_paymentterm_lt` VALUES (18,3,407);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `student_promotion`
+--
+
+DROP TABLE IF EXISTS `student_promotion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_promotion` (
+  `student_promotion_id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` int(11) NOT NULL,
+  `gradelevel_id_from` int(11) NOT NULL,
+  `gradelevel_id_to` int(11) NOT NULL,
+  `date_of_promotion` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`student_promotion_id`),
+  KEY `fk_student_promotionTABLE_student_idCOL_idx` (`student_id`),
+  KEY `fk_student_promotionTABLE_gradelevel_id_fromCOL_idx` (`gradelevel_id_from`),
+  KEY `fk_student_promotionTABLE_gradelevel_id_toCOL_idx` (`gradelevel_id_to`),
+  CONSTRAINT `fk_student_promotionTABLE_gradelevel_id_fromCOL` FOREIGN KEY (`gradelevel_id_from`) REFERENCES `gradelevel_mt` (`gradelevel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_promotionTABLE_gradelevel_id_toCOL` FOREIGN KEY (`gradelevel_id_to`) REFERENCES `gradelevel_mt` (`gradelevel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_promotionTABLE_student_idCOL` FOREIGN KEY (`student_id`) REFERENCES `student_mt` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_promotion`
+--
+
+LOCK TABLES `student_promotion` WRITE;
+/*!40000 ALTER TABLE `student_promotion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `student_promotion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `student_summer`
+--
+
+DROP TABLE IF EXISTS `student_summer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_summer` (
+  `student_summer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` int(11) NOT NULL,
+  `schoolyear_id` int(11) NOT NULL,
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`student_summer_id`),
+  KEY `fk_student_summerTABLE_student_idCOL_idx` (`student_id`),
+  KEY `fk_student_summerTABLE_schoolyear_idCOL_idx` (`schoolyear_id`),
+  CONSTRAINT `fk_student_summerTABLE_schoolyear_idCOL` FOREIGN KEY (`schoolyear_id`) REFERENCES `schoolyear_mt` (`schoolyear_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_summerTABLE_student_idCOL` FOREIGN KEY (`student_id`) REFERENCES `student_mt` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_summer`
+--
+
+LOCK TABLES `student_summer` WRITE;
+/*!40000 ALTER TABLE `student_summer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `student_summer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `subject_gradelevel_lt`
 --
 
@@ -1640,7 +1696,7 @@ CREATE TABLE `user_mt` (
 
 LOCK TABLES `user_mt` WRITE;
 /*!40000 ALTER TABLE `user_mt` DISABLE KEYS */;
-INSERT INTO `user_mt` VALUES (3,'jordan','jordanjordanjoan',1,0,'Antonio','John Ferdinand','Maala','2017-07-16 20:50:47','2016-05-18 22:35:02','jordan');
+INSERT INTO `user_mt` VALUES (3,'jordan','jordanjordanjoan',1,0,'Antonio','John Ferdinand','Maala','2017-07-18 03:51:40','2016-05-18 22:35:02','jordan');
 /*!40000 ALTER TABLE `user_mt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -8771,4 +8827,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-16 20:54:08
+-- Dump completed on 2017-07-19 23:09:08

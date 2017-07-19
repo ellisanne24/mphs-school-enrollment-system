@@ -11,7 +11,7 @@ import java.util.Date;
  * <p>
  * <h2>Period</h2>
  * <br>
- * is a class that represents a payment term's divisions. <br>
+ * is a class that represents a payment term's period. <br>
  * Payment Terms are :
  * <br>
  * 1.) Cash <br>

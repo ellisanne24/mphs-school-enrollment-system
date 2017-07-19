@@ -18,6 +18,15 @@ public class Grade {
     private double grade;
     private Date dateAdded;
     private int schoolYearId;
+    private int gradingPeriodId;
+
+    public int getGradingPeriodId() {
+        return gradingPeriodId;
+    }
+
+    public void setGradingPeriodId(int gradingPeriodId) {
+        this.gradingPeriodId = gradingPeriodId;
+    }
 
     public int getStudentId() {
         return studentId;
