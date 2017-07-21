@@ -7,7 +7,7 @@ package view.container;
 
 import view.fees.FeesSetting;
 import view.rooms.RoomsContainer;
-import view.schedule.ScheduleManagementContainer;
+import view.schedule.ScheduleRecord;
 import view.faculty.NewFaculty;
 import view.curriculum.CurriculumManagementContainer;
 
@@ -548,7 +548,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     break;
                 case 5:
                     jpnlScheduleManagement.removeAll();
-                    jpnlScheduleManagement.add(new ScheduleManagementContainer());
+                    jpnlScheduleManagement.add(new ScheduleRecord());
                     jtpManagementTabbedPane.repaint();
                     break;
                 case 6:

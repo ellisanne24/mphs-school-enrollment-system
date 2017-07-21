@@ -17,7 +17,7 @@ import model.Curriculum;
 import model.GradeLevel;
 import model.SchoolYear;
 import model.Subject;
-import component_renderers.JComboBoxRenderer_GradeLevel;
+import component_renderers.GradeLevelJComboBoxRenderer;
 
 public class CreateCurriculumForm extends javax.swing.JPanel {
 
@@ -41,7 +41,7 @@ public class CreateCurriculumForm extends javax.swing.JPanel {
         UIManager.put("ComboBox.disabledForeground", Color.BLACK);
         initComponents();
         jcmbGradeLevel.setModel(glu.getAllRegisteredSubjectGradeLevel());
-        jcmbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
+        jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
         jcmbGradeLevel.setSelectedIndex(-1);
         jcmbSchoolYearYearFrom.setModel(syu.getAllSchoolYearStart());
         jcmbSchoolYearYearFrom.setSelectedIndex(-1);

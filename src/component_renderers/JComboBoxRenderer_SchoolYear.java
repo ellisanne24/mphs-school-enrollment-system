@@ -32,7 +32,6 @@ public class JComboBoxRenderer_SchoolYear extends JLabel implements ListCellRend
         } else {
             this.setBackground(list.getBackground()); //default bg color
             this.setForeground(list.getForeground()); //default fg color
-            
         }
         return this;
     }

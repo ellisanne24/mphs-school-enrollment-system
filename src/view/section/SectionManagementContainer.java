@@ -7,7 +7,7 @@ import component_model_loader.GradeLevelML;
 import component_utility.JTableUtil;
 import component_model_loader.SchoolYearML;
 import component_model_loader.SectionML;
-import component_renderers.JComboBoxRenderer_GradeLevel;
+import component_renderers.GradeLevelJComboBoxRenderer;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 import model.GradeLevel;
@@ -90,11 +90,11 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         btnSessionGroup.add(radioAM);
         btnSessionGroup.add(radioPM);
         
-        cbGradeLevelList.setRenderer(new JComboBoxRenderer_GradeLevel());
-        cbAssignGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
-        cbAssignGradeLevel2.setRenderer(new JComboBoxRenderer_GradeLevel());
+        cbGradeLevelList.setRenderer(new GradeLevelJComboBoxRenderer());
+        cbAssignGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
+        cbAssignGradeLevel2.setRenderer(new GradeLevelJComboBoxRenderer());
         
-        cbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
+        cbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
     }
 
     @SuppressWarnings("unchecked")

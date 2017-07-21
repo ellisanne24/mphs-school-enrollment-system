@@ -15,7 +15,6 @@ import model.Section;
 import model.Session;
 import model.Student;
 import dao.ISection;
-import model.Curriculum;
 
 public class SectionDaoImpl implements ISection {
 

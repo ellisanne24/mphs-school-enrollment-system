@@ -8,6 +8,7 @@ import model.Student;
 
 
 public interface IStudent {
+    
     List<Student> getActiveOfCurrentSchoolYear (); //Always Current School Year
     List<Student> getInactive(); //applies to all school year
     List<Student> getInactive(SchoolYear aSchoolYear);

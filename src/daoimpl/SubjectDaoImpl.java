@@ -29,23 +29,20 @@ public class SubjectDaoImpl implements ISubject{
     public List<Subject> getAllSubjects() 
     {
         List <Subject> list = new ArrayList();
-        String sql = "{call getAllSubjects()}";
+        String sql = "{CALL getAllSubjects()}";
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql))
         {
             try(ResultSet rs = cs.executeQuery();)
             {
-                while(rs.next())
-                {
-                    Subject subject = new Subject();
-                    
-                    subject.setSubjectId(rs.getInt("subject_id"));
-                    subject.setSubjectTitle(rs.getString("title"));
-                    subject.setSubjectCode(rs.getString("code"));
-                    subject.setSubjectDescription(rs.getString("description"));
-                    subject.setIsActive(rs.getBoolean("isActive"));
-                    
-                    list.add(subject);
+                while (rs.next()) {
+                    Subject s = new Subject();
+                    s.setSubjectId(rs.getInt("subject_id"));
+                    s.setSubjectTitle(rs.getString("title"));
+                    s.setSubjectCode(rs.getString("code"));
+                    s.setSubjectDescription(rs.getString("description"));
+                    s.setIsActive(rs.getBoolean("isActive"));
+                    list.add(s);
                 }
             }
         }
@@ -60,8 +57,8 @@ public class SubjectDaoImpl implements ISubject{
     @Override
     public List<Subject> getAllSubjectsByGradeLevelId(GradeLevel aGradeLevel) 
     {
-        List<Subject> list = new ArrayList();
-        String sql = "{call getAllSubjectsByGradeLevelId(?)}";
+        List<Subject> list = new ArrayList<>();
+        String sql = "{CALL getAllSubjectsByGradeLevelId(?)}";
         
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql);)
@@ -77,16 +74,19 @@ public class SubjectDaoImpl implements ISubject{
                     s.setSubjectCode(rs.getString("code"));
                     s.setSubjectDescription(rs.getString("description"));
                     s.setIsActive(rs.getBoolean(rs.getString("isActive")));
-                    
                     list.add(s);
+                    
+                    System.out.println("SubjectId: "+s.getSubjectId());
+                    System.out.println("SubjectTitle: "+s.getSubjectTitle());
+                    System.out.println("SubjectCode: "+s.getSubjectCode());
+                    System.out.println("SubjectDescription: "+s.getSubjectDescription());
+                    System.out.println("SubjectIsActive: "+s.getIsActive());
                 }
             }
         }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getAllSubjectsByGradeLevel "+ex);
+        catch (SQLException ex) {
+            System.err.println("Error at getAllSubjectsByGradeLevel " + ex);
         }
-        
         return list;
     }
 

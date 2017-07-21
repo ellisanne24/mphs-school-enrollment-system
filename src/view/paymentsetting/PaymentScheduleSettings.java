@@ -300,7 +300,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbSem1DeadlineMonth.setEnabled(false);
         jcmbSem1DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbSem1DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbSem1DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -375,7 +375,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbSem2DeadlineMonth.setEnabled(false);
         jcmbSem2DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbSem2DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbSem2DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -492,7 +492,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbQ1DeadlineMonth.setEnabled(false);
         jcmbQ1DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbQ1DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbQ1DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -566,7 +566,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbQ2DeadlineMonth.setEnabled(false);
         jcmbQ2DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbQ2DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbQ2DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -641,7 +641,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbQ3DeadlineMonth.setEnabled(false);
         jcmbQ3DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbQ3DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbQ3DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -716,7 +716,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbQ4DeadlineMonth.setEnabled(false);
         jcmbQ4DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbQ4DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbQ4DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -833,7 +833,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo1DeadlineMonth.setEnabled(false);
         jcmbMo1DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo1DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo1DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -908,7 +908,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo2DeadlineMonth.setEnabled(false);
         jcmbMo2DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo2DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo2DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -984,7 +984,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo3DeadlineMonth.setEnabled(false);
         jcmbMo3DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo3DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo3DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -1060,7 +1060,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo4DeadlineMonth.setEnabled(false);
         jcmbMo4DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo4DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo4DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -1136,7 +1136,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo5DeadlineMonth.setEnabled(false);
         jcmbMo5DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo5DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo5DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -1212,7 +1212,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo6DeadlineMonth.setEnabled(false);
         jcmbMo6DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo6DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo6DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -1288,7 +1288,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo7DeadlineMonth.setEnabled(false);
         jcmbMo7DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo7DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo7DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -1364,7 +1364,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo8DeadlineMonth.setEnabled(false);
         jcmbMo8DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo8DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo8DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -1440,7 +1440,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo9DeadlineMonth.setEnabled(false);
         jcmbMo9DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo9DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo9DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -1516,7 +1516,7 @@ public class PaymentScheduleSettings extends javax.swing.JPanel {
 
         jcmbMo10DeadlineMonth.setEnabled(false);
         jcmbMo10DeadlineMonth.setPreferredSize(new java.awt.Dimension(43, 26));
-        jcmbMo10DeadlineMonth.setRenderer(new component_renderers.JComboBoxRenderer_Month("--"));
+        jcmbMo10DeadlineMonth.setRenderer(new component_renderers.MonthJComboBoxRenderer("--"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;

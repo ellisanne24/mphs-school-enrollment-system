@@ -6,7 +6,7 @@ import component_model_loader.CurriculumML;
 import component_model_loader.GradeLevelML;
 import component_utility.JTableUtil;
 import component_model_loader.SchoolYearML;
-import component_renderers.JComboBoxRenderer_GradeLevel;
+import component_renderers.GradeLevelJComboBoxRenderer;
 import daoimpl.CurriculumDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
@@ -58,7 +58,7 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
         initComponents();
         
         jcmbGradeLevel.setModel(glu.getAllRegisteredSubjectGradeLevel());
-        jcmbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
+        jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
         jcmbGradeLevel.setSelectedIndex(-1);
         
         cbFilterControlYearFrom.setSelectedIndex(-1);
@@ -82,9 +82,9 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
         cbCreatedSchoolYearStart.setSelectedIndex(-1);
         cbCreatedSchoolYearStart.setSelectedIndex(-1);
         
-        cbCreatedGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
-        jcmbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
-        cbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
+        cbCreatedGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
+        jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
+        cbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
         
         tblCreatedCurriculum.setModel(cu.getAllCurriculum());
         

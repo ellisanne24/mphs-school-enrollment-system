@@ -24,7 +24,7 @@ import model.GradeLevel;
 import model.PaymentTerm;
 import model.Registration;
 import model.SchoolYear;
-import component_renderers.JComboBoxRenderer_GradeLevel;
+import component_renderers.GradeLevelJComboBoxRenderer;
 import component_renderers.JComboBoxRenderer_Master;
 import view.enrollment.EnrollmentPanel;
 import view.container.TopContainer;
@@ -52,7 +52,7 @@ public class RegistrationForm extends javax.swing.JPanel {
 //        jpnlPaymentTerm.setVisible(false);
         
         jcmbGradeLevel.setModel(gradeLevelGUIUtil.getAllGradeLevels());
-        jcmbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
+        jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
         jcmbGradeLevel.setSelectedIndex(-1);
         
         jcmbSchoolYearStart.setModel(schoolYearGUIUtil.getCurrentSchoolYearFrom());

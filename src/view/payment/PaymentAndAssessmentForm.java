@@ -37,7 +37,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellRenderer;
 import model.PresentGradeLevel;
 import model.Student;
-import component_renderers.JTableRenderer_Payment;
+import component_renderers.PaymentJTableRenderer;
 import controller.payment.DisplayPaymentFormController;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.RegistrationDaoImpl;
@@ -1310,32 +1310,32 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             int jtblTransactionHistoryColumnCount = jtblTransactionHistory.getColumnCount();
 
             for (int i = 0; i < jtblBalanceBreakdownColumnCount; i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblBalanceBreakdown.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
 
             for (int i = 0; i < jtblTuitionFeeColumnCount; i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblBasicFee.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
 
             for (int i = 0; i < jtblMiscFeesColumnCount; i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblMiscFees.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
 
             for (int i = 0; i < jtblOtherFeesColumnCount; i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblOtherFees.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
             
             for (int i = 0; i < jtblDownPaymentFeeColumnCount; i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblDownPaymentFee.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
             
             for (int i = 0; i < jtblTransactionHistoryColumnCount; i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblTransactionHistory.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
         }
@@ -1506,7 +1506,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             
             DefaultTableModel downPaymentModel = (DefaultTableModel) schoolFeesML.getDownPayment(jtblDownPaymentFee, gradeLevelId);
             for (int i = 0; i < jtblDownPaymentFee.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblDownPaymentFee.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
             
@@ -1516,15 +1516,15 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             jtblOtherFees.setModel(schoolFeesML.getOther(jtblOtherFees, gradeLevelId));
             
             for (int i = 0; i < jtblBasicFee.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblBasicFee.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
             for (int i = 0; i < jtblMiscFees.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblMiscFees.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
             for (int i = 0; i < jtblOtherFees.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new JTableRenderer_Payment();
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
                 jtblOtherFees.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
             }
         }

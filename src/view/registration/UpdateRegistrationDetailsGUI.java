@@ -17,7 +17,7 @@ import component_model_loader.GradeLevelML;
 import component_model_loader.SchoolYearML;
 import java.util.Arrays;
 import model.Registration;
-import component_renderers.JComboBoxRenderer_GradeLevel;
+import component_renderers.GradeLevelJComboBoxRenderer;
 import view.enrollment.EnrollmentPanel;
 
 public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
@@ -1306,7 +1306,7 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         }
         
         private void setGUIComponentsRenderer(){
-            jcmbGradeLevel.setRenderer(new JComboBoxRenderer_GradeLevel());
+            jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
         }
         
         private void setFormDetails(Integer aRegistrationId) {
