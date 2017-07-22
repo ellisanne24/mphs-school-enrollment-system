@@ -11,8 +11,8 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import model.PaymentTerm;
-import model.SchoolYear;
+import model.paymentterm.PaymentTerm;
+import model.schoolyear.SchoolYear;
 
 /**
  *

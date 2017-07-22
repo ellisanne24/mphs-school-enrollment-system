@@ -5,12 +5,12 @@ import daoimpl.StudentDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Section;
-import model.Session;
-import model.Student;
-import model.Subject;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.session.Session;
+import model.student.Student;
+import model.subject.Subject;
 
 public class SectionML {
     private final SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();

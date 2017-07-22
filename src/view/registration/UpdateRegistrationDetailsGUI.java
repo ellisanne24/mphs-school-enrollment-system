@@ -5,7 +5,7 @@
  */
 package view.registration;
 
-import calendar_utility.CalendarUtil;
+import utility.calendar.CalendarUtil;
 import daoimpl.AdmissionDaoImpl;
 import java.awt.Color;
 import javax.swing.ComboBoxModel;
@@ -16,7 +16,7 @@ import daoimpl.RegistrationDaoImpl;
 import component_model_loader.GradeLevelML;
 import component_model_loader.SchoolYearML;
 import java.util.Arrays;
-import model.Registration;
+import model.registration.Registration;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import view.enrollment.EnrollmentPanel;
 

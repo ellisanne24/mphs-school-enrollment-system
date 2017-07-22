@@ -7,7 +7,7 @@ package daoimpl;
 
 import dao.IGradingPeriod;
 import java.util.List;
-import model.GradingPeriod;
+import model.gradingperiod.GradingPeriod;
 
 /**
  *

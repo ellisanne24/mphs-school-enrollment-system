@@ -1,7 +1,7 @@
 package daoimpl;
 
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -6,8 +6,8 @@
 package service;
 
 import java.util.List;
-import model.BalanceBreakDownFee;
-import model.Payment;
+import model.balancebreakdownfee.BalanceBreakDownFee;
+import model.payment.Payment;
 
 /**
  *

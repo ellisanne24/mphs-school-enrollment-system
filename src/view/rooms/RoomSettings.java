@@ -7,7 +7,7 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import model.Room;
+import model.room.Room;
 
 public class RoomSettings extends javax.swing.JPanel {
 

@@ -8,14 +8,14 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import model.BalanceBreakDownFee;
-import model.DownPaymentFee;
-import model.Fee;
-import model.OtherFees;
-import model.PaymentTerm;
-import model.SchoolFees;
-import model.Student;
-import model.TuitionFee;
+import model.balancebreakdownfee.BalanceBreakDownFee;
+import model.downpayment.DownPaymentFee;
+import model.fee.Fee;
+import model.otherfees.OtherFees;
+import model.paymentterm.PaymentTerm;
+import model.schoolfees.SchoolFees;
+import model.student.Student;
+import model.tuitionfee.TuitionFee;
 
 /**
  *

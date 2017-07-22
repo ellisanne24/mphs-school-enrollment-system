@@ -6,8 +6,8 @@
 package daoimpl;
 
 import dao.IRoom;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,13 +15,31 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.util.List;
-import model.Room;
+import model.room.Room;
 
 /**
  *
  * @author Acer
  */
 public class RoomDaoImpl implements IRoom {
+
+    @Override
+    public int getId(String roomName) {
+        int roomId = 0;
+        String SQL = "{CALL getRoomIdByName(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, roomName.trim());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    roomId = rs.getInt("room_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return roomId;
+    }
 
     @Override
     public boolean addRoom(Room aRoom) {

@@ -5,7 +5,7 @@
  */
 package view.templates;
 
-import component_utility.JInternalFrameUtil;
+import utility.component.JInternalFrameUtil;
 
 /**
  *

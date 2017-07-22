@@ -2,9 +2,9 @@
 package dao;
 
 import java.util.List;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Student;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.student.Student;
 
 
 public interface IStudent {

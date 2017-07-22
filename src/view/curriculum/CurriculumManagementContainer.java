@@ -4,7 +4,7 @@ package view.curriculum;
 import component_editor.JSpinnerEditor_Curriculum;
 import component_model_loader.CurriculumML;
 import component_model_loader.GradeLevelML;
-import component_utility.JTableUtil;
+import utility.component.JTableUtil;
 import component_model_loader.SchoolYearML;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import daoimpl.CurriculumDaoImpl;
@@ -21,12 +21,12 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import layout_utility.CardLayoutUtil;
-import layout_utility.CurriculumUtility;
-import model.Curriculum;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Subject;
+import utility.layout.CardLayoutUtil;
+import utility.layout.CurriculumUtility;
+import model.curriculum.Curriculum;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.subject.Subject;
 import view.curriculum.UpdateCurriculum;
 
 public class CurriculumManagementContainer extends javax.swing.JPanel {

@@ -6,10 +6,10 @@
 package dao;
 
 import java.util.List;
-import model.Fee;
-import model.FeeCategory;
-import model.GradeLevel;
-import model.SchoolYear;
+import model.fee.Fee;
+import model.feecategory.FeeCategory;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 
 /**
  *

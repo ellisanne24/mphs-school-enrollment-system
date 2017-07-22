@@ -6,15 +6,15 @@
 package daoimpl;
 
 import dao.IHoliday;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Holiday;
+import model.holiday.Holiday;
 
 /**
  *

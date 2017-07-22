@@ -8,7 +8,7 @@ package view.faculty;
 import daoimpl.FacultyDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.Faculty;
+import model.faculty.Faculty;
 
 /**
  *

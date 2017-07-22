@@ -5,8 +5,8 @@
  */
 package dao;
 
-import model.Student;
-import model.TuitionFee;
+import model.student.Student;
+import model.tuitionfee.TuitionFee;
 
 /**
  *

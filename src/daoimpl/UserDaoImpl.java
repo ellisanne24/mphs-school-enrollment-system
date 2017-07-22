@@ -1,8 +1,8 @@
 package daoimpl;
 
 import dao.IUser;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import model.User;
+import model.user.User;
 
 public class UserDaoImpl implements IUser{
 

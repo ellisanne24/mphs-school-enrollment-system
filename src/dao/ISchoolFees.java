@@ -5,11 +5,11 @@
  */
 package dao;
 
-import model.BasicFee;
-import model.DownPaymentFee;
-import model.MiscellaneousFees;
-import model.OtherFees;
-import model.SchoolFees;
+import model.basicfee.BasicFee;
+import model.downpayment.DownPaymentFee;
+import model.miscellaneousfees.MiscellaneousFees;
+import model.otherfees.OtherFees;
+import model.schoolfees.SchoolFees;
 
 /**
  *

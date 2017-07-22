@@ -7,8 +7,8 @@ package daoimpl;
 
 import constants.SchoolYearTable;
 import constants.QuarterTable;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,8 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import model.SchoolYear;
-import model.Quarter;
+import model.schoolyear.SchoolYear;
+import model.quarter.Quarter;
 import dao.IQuarter;
 
 /**

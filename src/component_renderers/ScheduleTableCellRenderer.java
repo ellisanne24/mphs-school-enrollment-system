@@ -5,7 +5,7 @@
  */
 package component_renderers;
 
-import component_utility.JTableUtil;
+import utility.component.JTableUtil;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JTable;

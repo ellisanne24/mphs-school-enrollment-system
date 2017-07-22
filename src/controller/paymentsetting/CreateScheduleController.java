@@ -16,11 +16,11 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import model.Monthly;
-import model.PaymentTerm;
-import model.Period;
-import model.Quarterly;
-import model.Semestral;
+import model.paymentterm.Monthly;
+import model.paymentterm.PaymentTerm;
+import model.period.Period;
+import model.paymentterm.Quarterly;
+import model.semestral.Semestral;
 
 /**
  *

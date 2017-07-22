@@ -1,7 +1,7 @@
 package daoimpl;
 
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -9,11 +9,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Section;
-import model.Session;
-import model.Student;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.session.Session;
+import model.student.Student;
 import dao.ISection;
 
 public class SectionDaoImpl implements ISection {
@@ -52,18 +52,18 @@ public class SectionDaoImpl implements ISection {
 
     @Override
     public Integer getSectionIdByName(String aSectionName) {
-        String SQL = "{CALL getSectionIdByName(?)}";
+        String SQL = "{CALL getSectionId(?)}";
         Integer aSectionId = null;
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
             cs.setString(1, aSectionName);
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
-                    aSectionId = rs.getInt("aSectionId");
+                    aSectionId = rs.getInt("section_id");
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
         return aSectionId;
     }

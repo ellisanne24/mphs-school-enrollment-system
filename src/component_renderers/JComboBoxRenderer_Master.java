@@ -12,10 +12,10 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.LineBorder;
-import model.FeeCategory;
-import model.GradeLevel;
-import model.PaymentTerm;
-import model.SchoolYear;
+import model.feecategory.FeeCategory;
+import model.gradelevel.GradeLevel;
+import model.paymentterm.PaymentTerm;
+import model.schoolyear.SchoolYear;
 
 /**
  *

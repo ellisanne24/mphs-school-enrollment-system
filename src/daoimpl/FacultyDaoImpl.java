@@ -1,8 +1,8 @@
 package daoimpl;
 
 import dao.IFaculty;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import model.Faculty;
+import model.faculty.Faculty;
 
 public class FacultyDaoImpl implements IFaculty  {  
 
@@ -202,7 +202,7 @@ public class FacultyDaoImpl implements IFaculty  {
                 faculty.setEmailAddress(rs.getString("email"));
                 faculty.setDegree(rs.getString("degree"));
                 faculty.setStatus(rs.getBoolean("Status"));
-                faculty.setSpecializationID(rs.getInt("specialization_id"));
+//                faculty.setSpecializationID(rs.getInt("specialization_id"));
                 list.add(faculty);         
             }  
             }

@@ -1,7 +1,7 @@
 
 package dao;
 
-import model.Admission;
+import model.admission.Admission;
 
 /**
  *

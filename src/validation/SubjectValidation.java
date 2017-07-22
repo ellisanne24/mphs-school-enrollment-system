@@ -8,7 +8,7 @@ package validation;
 import daoimpl.SubjectDaoImpl;
 import java.util.ArrayList;
 import java.util.List;
-import model.Subject;
+import model.subject.Subject;
 
 /**
  *

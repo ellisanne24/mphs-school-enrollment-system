@@ -6,8 +6,8 @@
 package dao;
 
 import java.util.List;
-import model.SchoolYear;
-import model.Quarter;
+import model.schoolyear.SchoolYear;
+import model.quarter.Quarter;
 
 /**
  *

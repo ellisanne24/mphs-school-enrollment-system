@@ -22,11 +22,11 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import layout_utility.CurriculumUtility;
-import model.Curriculum;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Subject;
+import utility.layout.CurriculumUtility;
+import model.curriculum.Curriculum;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.subject.Subject;
 import validation.CurriculumValidation;
 
 /**

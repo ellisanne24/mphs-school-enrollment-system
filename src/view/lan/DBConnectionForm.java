@@ -6,7 +6,7 @@
 package view.lan;
 
 import javax.swing.JOptionPane;
-import model.DatabaseConnectionProperty;
+import model.database.DatabaseConnectionProperty;
 import service.DBConfigurationCreator;
 
 /**

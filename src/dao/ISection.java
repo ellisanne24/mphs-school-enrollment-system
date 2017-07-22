@@ -2,11 +2,11 @@
 package dao;
 
 import java.util.List;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Section;
-import model.Session;
-import model.Student;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.session.Session;
+import model.student.Student;
 
 
 public interface ISection{

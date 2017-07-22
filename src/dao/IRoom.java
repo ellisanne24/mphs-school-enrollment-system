@@ -2,11 +2,11 @@
 package dao;
 
 import java.util.List;
-import model.Room;
+import model.room.Room;
 
 public interface IRoom {
     
-    
+    int getId(String roomName);
     public List<Room>getRoomInfo();
     Room getRoomByID(int aRoomID);
     public boolean addRoom(Room aRoom);

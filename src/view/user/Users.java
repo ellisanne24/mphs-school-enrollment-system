@@ -5,7 +5,7 @@
  */
 package view.user;
 
-import layout_utility.CardLayoutUtil;
+import utility.layout.CardLayoutUtil;
 
 public class Users extends javax.swing.JPanel {
 

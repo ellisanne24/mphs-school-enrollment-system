@@ -2,8 +2,8 @@ package daoimpl;
 
 import constants.AdmissionTable;
 import constants.RegistrationTable;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,11 +13,11 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.Registration;
+import model.registration.Registration;
 import org.apache.derby.client.am.Types;
-import model.GradeLevel;
-import model.PaymentTerm;
-import model.SchoolYear;
+import model.gradelevel.GradeLevel;
+import model.paymentterm.PaymentTerm;
+import model.schoolyear.SchoolYear;
 import dao.IRegistration;
 
 public class RegistrationDaoImpl implements IRegistration{

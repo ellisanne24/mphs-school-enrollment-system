@@ -7,7 +7,7 @@ package component_model_loader;
 
 import daoimpl.RoomDaoImpl;
 import javax.swing.DefaultComboBoxModel;
-import model.Room;
+import model.room.Room;
 
 /**
  *

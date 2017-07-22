@@ -2,14 +2,14 @@
 package daoimpl;
 
 import constants.AdmissionTable;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import model.Admission;
+import model.admission.Admission;
 import dao.IAdmission;
 
 public class AdmissionDaoImpl implements IAdmission{

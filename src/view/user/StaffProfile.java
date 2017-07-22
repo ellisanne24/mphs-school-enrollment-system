@@ -6,7 +6,7 @@
 package view.user;
 
 import view.user.SchoolStaff;
-import layout_utility.CardLayoutUtil;
+import utility.layout.CardLayoutUtil;
 
 /**
  *

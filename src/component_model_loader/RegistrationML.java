@@ -8,7 +8,7 @@ package component_model_loader;
 import daoimpl.RegistrationDaoImpl;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.Registration;
+import model.registration.Registration;
 
 /**
  *

@@ -5,8 +5,8 @@
  */
 package daoimpl;
 
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,11 +14,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import model.PaymentTerm;
+import model.paymentterm.PaymentTerm;
 import dao.IPaymentTerm;
-import model.PaymentTermPenalty;
-import model.Period;
-import model.SchoolYear;
+import model.paymentterm.PaymentTermPenalty;
+import model.period.Period;
+import model.schoolyear.SchoolYear;
 
 /**
  *

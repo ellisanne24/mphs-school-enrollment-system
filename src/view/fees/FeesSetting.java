@@ -10,7 +10,7 @@ import daoimpl.FeeDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import component_model_loader.DiscountML;
 import component_model_loader.FeeML;
-import component_utility.JPanelUtil;
+import utility.component.JPanelUtil;
 import controller.feesetting.CreateFeeController;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.Color;
@@ -24,8 +24,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
-import model.GradeLevel;
-import model.Discount;
+import model.gradelevel.GradeLevel;
+import model.discount.Discount;
 
 public class FeesSetting extends javax.swing.JPanel {
 

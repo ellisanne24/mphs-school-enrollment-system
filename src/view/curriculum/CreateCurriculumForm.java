@@ -6,17 +6,17 @@ import java.util.Arrays;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import component_utility.JTableUtil;
+import utility.component.JTableUtil;
 import component_model_loader.CurriculumML;
 import component_model_loader.GradeLevelML;
 import component_model_loader.SchoolYearML;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import model.Curriculum;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Subject;
+import model.curriculum.Curriculum;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.subject.Subject;
 import component_renderers.GradeLevelJComboBoxRenderer;
 
 public class CreateCurriculumForm extends javax.swing.JPanel {

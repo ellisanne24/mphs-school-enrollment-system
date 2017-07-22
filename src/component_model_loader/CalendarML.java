@@ -5,7 +5,7 @@
  */
 package component_model_loader;
 
-import calendar_utility.CalendarUtil;
+import utility.calendar.CalendarUtil;
 import javax.swing.DefaultComboBoxModel;
 
 /**

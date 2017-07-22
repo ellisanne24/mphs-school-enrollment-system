@@ -5,20 +5,20 @@
  */
 package view.credential;
 
-import calendar_utility.CalendarUtil;
+import utility.calendar.CalendarUtil;
 import daoimpl.CredentialDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import component_model_loader.CredentialML;
-import component_utility.JPanelUtil;
+import utility.component.JPanelUtil;
 import component_model_loader.SchoolYearML;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import model.Credential;
-import model.GradeLevel;
-import model.SchoolYear;
+import model.credential.Credential;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 
 /**
  *

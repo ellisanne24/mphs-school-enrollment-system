@@ -1,7 +1,7 @@
 
 package view.rooms;
 
-import layout_utility.CardLayoutUtil;
+import utility.layout.CardLayoutUtil;
 
 
 public class RoomsContainer extends javax.swing.JPanel {

@@ -18,10 +18,10 @@ import javax.swing.InputVerifier;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
-import model.Curriculum;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Subject;
+import model.curriculum.Curriculum;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.subject.Subject;
 
 /**
  *

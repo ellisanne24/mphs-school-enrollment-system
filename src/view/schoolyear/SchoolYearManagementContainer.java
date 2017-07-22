@@ -5,12 +5,12 @@
  */
 package view.schoolyear;
 
-import calendar_utility.CalendarUtil;
+import utility.calendar.CalendarUtil;
 import daoimpl.EnrollmentDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import component_model_loader.CalendarML;
-import component_utility.JPanelUtil;
-import component_utility.JSpinnerUtil;
+import utility.component.JPanelUtil;
+import utility.component.JSpinnerUtil;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.sql.Date;
@@ -22,17 +22,17 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import model.Enrollment;
-import model.SchoolYear;
-import model.Quarter;
+import model.enrollment.Enrollment;
+import model.schoolyear.SchoolYear;
+import model.quarter.Quarter;
 import component_renderers.SchoolYearJTableRenderer;
 import daoimpl.HolidayDaoImpl;
 import java.awt.Dimension;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.DefaultListModel;
-import model.Holiday;
-import model.SummerClassSchedule;
+import model.holiday.Holiday;
+import model.summerclassschedule.SummerClassSchedule;
 import view.holiday.AddHolidayToSchoolYear;
 
 /**

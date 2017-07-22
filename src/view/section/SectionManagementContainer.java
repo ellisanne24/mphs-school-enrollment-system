@@ -4,20 +4,20 @@ import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
 import component_model_loader.GradeLevelML;
-import component_utility.JTableUtil;
+import utility.component.JTableUtil;
 import component_model_loader.SchoolYearML;
 import component_model_loader.SectionML;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Section;
-import model.Session;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.session.Session;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
-import layout_utility.SectionUtility;
-import model.Student;
+import utility.layout.SectionUtility;
+import model.student.Student;
 
 public class SectionManagementContainer extends javax.swing.JPanel {
     

@@ -6,10 +6,10 @@
 package dao;
 
 import java.util.List;
-import model.Curriculum;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Subject;
+import model.curriculum.Curriculum;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.subject.Subject;
 
 public interface ICurriculum {
     List<Subject> getCurriculumSubjects();

@@ -1,8 +1,8 @@
 
 package daoimpl;
 
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,9 +11,9 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import model.Credential;
-import model.GradeLevel;
-import model.SchoolYear;
+import model.credential.Credential;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 import dao.ICredential;
 
 public class CredentialDaoImpl implements ICredential{

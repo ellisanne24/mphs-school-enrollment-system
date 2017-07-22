@@ -4,7 +4,7 @@ package view.rooms;
 import daoimpl.RoomDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.Room;
+import model.room.Room;
 
  
 public class UpdateRoom extends javax.swing.JDialog {

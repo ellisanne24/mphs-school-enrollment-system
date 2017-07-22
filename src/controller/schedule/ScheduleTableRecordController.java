@@ -5,10 +5,11 @@
  */
 package controller.schedule;
 
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import view.schedule.AssignSchedule;
 
 /**
  *
@@ -26,7 +27,15 @@ public class ScheduleTableRecordController implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         
             if(e.getClickCount() == 2){
-                JOptionPane.showMessageDialog(null,"Clicked");
+                int row = jtblScheduleRecord.getSelectedRow();
+                int col = 0;
+                int scheduleId = Integer.parseInt(jtblScheduleRecord.getValueAt(row, col).toString());
+//                JOptionPane.showMessageDialog(null,"Clicked");
+                    AssignSchedule a = new AssignSchedule(null, true,scheduleId);
+                    a.setPreferredSize(new Dimension(750,400));
+                    a.pack();
+                    a.setLocationRelativeTo(null);
+                    a.setVisible(true);
             }
         
     }

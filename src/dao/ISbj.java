@@ -5,7 +5,7 @@
  */
 package dao;
 
-import model.Subject;
+import model.subject.Subject;
 
 /**
  *

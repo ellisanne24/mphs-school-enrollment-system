@@ -5,7 +5,7 @@
  */
 package component_model_loader;
 
-import layout_utility.CardLayoutUtil;
+import utility.layout.CardLayoutUtil;
 import view.container.TopContainer;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;

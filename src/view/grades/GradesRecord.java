@@ -5,7 +5,7 @@
  */
 package view.grades;
 
-import component_utility.JInternalFrameUtil;
+import utility.component.JInternalFrameUtil;
 import java.awt.GridBagConstraints;
 import view.container.TopContainer;
 

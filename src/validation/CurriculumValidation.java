@@ -8,7 +8,7 @@ package validation;
 import daoimpl.CurriculumDaoImpl;
 import java.util.ArrayList;
 import java.util.List;
-import model.Curriculum;
+import model.curriculum.Curriculum;
 
 /**
  *

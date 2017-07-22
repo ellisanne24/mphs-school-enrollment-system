@@ -5,8 +5,8 @@ import daoimpl.StudentDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.GradeLevel;
-import model.Student;
+import model.gradelevel.GradeLevel;
+import model.student.Student;
 
 public class StudentML {
 

@@ -6,8 +6,8 @@
 package daoimpl;
 
 import dao.ISchoolFees;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,15 +15,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.BasicFee;
-import model.DownPaymentFee;
-import model.Fee;
-import model.FeeCategory;
-import model.MiscellaneousFees;
-import model.OtherFees;
-import model.SchoolFees;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.basicfee.BasicFee;
+import model.downpayment.DownPaymentFee;
+import model.fee.Fee;
+import model.feecategory.FeeCategory;
+import model.miscellaneousfees.MiscellaneousFees;
+import model.otherfees.OtherFees;
+import model.schoolfees.SchoolFees;
 
 /**
  *

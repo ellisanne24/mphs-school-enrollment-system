@@ -4,7 +4,7 @@ package component_model_loader;
 import daoimpl.GradeLevelDaoImpl;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import model.GradeLevel;
+import model.gradelevel.GradeLevel;
 
 
 public class GradeLevelML {

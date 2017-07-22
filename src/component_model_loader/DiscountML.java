@@ -8,7 +8,7 @@ package component_model_loader;
 import daoimpl.DiscountDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import model.Discount;
+import model.discount.Discount;
 
 public class DiscountML {
 

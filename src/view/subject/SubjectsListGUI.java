@@ -4,7 +4,7 @@ import view.subject.UpdateSubjectGUI;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import daoimpl.SchoolYearDaoImpl;
-import component_utility.JTableUtil;
+import utility.component.JTableUtil;
 
 public class SubjectsListGUI extends javax.swing.JPanel {
 

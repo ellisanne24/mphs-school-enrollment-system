@@ -4,7 +4,7 @@ package component_model_loader;
 import daoimpl.SessionDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import model.Session;
+import model.session.Session;
 
 
 public class SessionML {

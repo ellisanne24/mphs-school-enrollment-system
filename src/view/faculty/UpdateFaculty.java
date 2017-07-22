@@ -4,7 +4,7 @@ import daoimpl.FacultyDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import model.Faculty;
+import model.faculty.Faculty;
 
 public class UpdateFaculty extends javax.swing.JDialog {
 

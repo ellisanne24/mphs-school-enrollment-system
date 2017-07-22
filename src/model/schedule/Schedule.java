@@ -1,7 +1,7 @@
 package model.schedule;
 
-import model.Faculty;
-import model.SchoolYear;
+import model.faculty.Faculty;
+import model.schoolyear.SchoolYear;
 
 public class Schedule {
 
@@ -12,7 +12,7 @@ public class Schedule {
     private String roomName;
     private Faculty faculty;
     private String sectionName;
-    private SchoolYear schoolYear;
+    private int schoolYearId;
     private String subjectName;
 
     public String getSubjectName() {
@@ -23,12 +23,12 @@ public class Schedule {
         this.subjectName = subjectName;
     }
 
-    public SchoolYear getSchoolYear() {
-        return schoolYear;
+    public int getSchoolYearId() {
+        return schoolYearId;
     }
 
-    public void setSchoolYear(SchoolYear schoolYear) {
-        this.schoolYear = schoolYear;
+    public void setSchoolYearId(int schoolYearId) {
+        this.schoolYearId = schoolYearId;
     }
 
     public String getSectionName() {

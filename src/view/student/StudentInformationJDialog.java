@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
-import component_utility.ImageUtil;
+import utility.component.ImageUtil;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,8 +19,8 @@ import java.awt.RenderingHints;
 import java.awt.print.PrinterJob;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.JTableHeader;
-import model.SchoolYear;
-import model.Student;
+import model.schoolyear.SchoolYear;
+import model.student.Student;
 
 public class StudentInformationJDialog extends javax.swing.JDialog {
 

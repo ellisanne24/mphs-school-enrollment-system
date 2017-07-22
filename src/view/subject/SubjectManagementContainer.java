@@ -7,9 +7,9 @@ import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SubjectDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import layout_utility.SubjectUtility;
-import model.GradeLevel;
-import model.Subject;
+import utility.layout.SubjectUtility;
+import model.gradelevel.GradeLevel;
+import model.subject.Subject;
 
 public class SubjectManagementContainer extends javax.swing.JPanel {
     

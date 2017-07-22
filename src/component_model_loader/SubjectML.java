@@ -9,8 +9,8 @@ import daoimpl.SubjectDaoImpl;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
-import model.GradeLevel;
-import model.Subject;
+import model.gradelevel.GradeLevel;
+import model.subject.Subject;
 
 /**
  *

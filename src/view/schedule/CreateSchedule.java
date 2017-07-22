@@ -5,11 +5,12 @@
  */
 package view.schedule;
 
+import controller.schedule.CreateScheduleController;
 import component_model_loader.RoomML;
 import component_model_loader.SbjML;
 import component_model_loader.SchoolYearML;
 import component_model_loader.SctnML;
-import component_utility.JSpinnerUtil;
+import utility.component.JSpinnerUtil;
 import controller.global.SchoolYearController;
 import controller.schedule.AddScheduleController;
 
@@ -46,6 +47,8 @@ public class CreateSchedule extends javax.swing.JDialog {
         
         jtblSchedule.setAutoCreateRowSorter(true);
         
+        CreateScheduleController createController = new CreateScheduleController(jtblSchedule,this);
+        jbtnCreate.addActionListener(createController);
     }
     
     @SuppressWarnings("unchecked")

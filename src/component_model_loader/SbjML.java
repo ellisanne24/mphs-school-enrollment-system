@@ -7,7 +7,7 @@ package component_model_loader;
 
 import daoimpl.SubjectDaoImpl;
 import javax.swing.DefaultComboBoxModel;
-import model.Subject;
+import model.subject.Subject;
 
 /**
  *

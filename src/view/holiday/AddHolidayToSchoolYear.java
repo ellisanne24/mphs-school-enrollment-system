@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
-import model.Holiday;
+import model.holiday.Holiday;
 
 /**
  *

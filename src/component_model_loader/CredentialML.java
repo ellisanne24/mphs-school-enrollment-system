@@ -4,7 +4,7 @@ import daoimpl.CredentialDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import model.Credential;
+import model.credential.Credential;
 
 public class CredentialML {
    

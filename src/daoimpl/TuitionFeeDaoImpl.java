@@ -6,8 +6,8 @@
 package daoimpl;
 
 import dao.ITuitionFee;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.apache.derby.client.am.Types;
-import model.BalanceBreakDownFee;
-import model.Discount;
-import model.PaymentTerm;
-import model.SchoolYear;
-import model.Student;
-import model.TuitionFee;
+import model.balancebreakdownfee.BalanceBreakDownFee;
+import model.discount.Discount;
+import model.paymentterm.PaymentTerm;
+import model.schoolyear.SchoolYear;
+import model.student.Student;
+import model.tuitionfee.TuitionFee;
 
 /**
  *

@@ -6,7 +6,7 @@
 package controller.feesetting;
 
 import component_model_loader.FeeML;
-import component_utility.JPanelUtil;
+import utility.component.JPanelUtil;
 import daoimpl.FeeDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.Component;
@@ -25,9 +25,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import model.Fee;
-import model.FeeCategory;
-import model.SchoolYear;
+import model.fee.Fee;
+import model.feecategory.FeeCategory;
+import model.schoolyear.SchoolYear;
 
 /**
  *

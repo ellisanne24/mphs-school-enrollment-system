@@ -6,9 +6,9 @@
 package dao;
 
 import java.util.List;
-import model.PaymentTerm;
-import model.PaymentTermPenalty;
-import model.SchoolYear;
+import model.paymentterm.PaymentTerm;
+import model.paymentterm.PaymentTermPenalty;
+import model.schoolyear.SchoolYear;
 
 /**
  *

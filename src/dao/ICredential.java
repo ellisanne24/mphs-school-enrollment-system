@@ -6,8 +6,8 @@
 package dao;
 
 import java.util.List;
-import model.Credential;
-import model.GradeLevel;
+import model.credential.Credential;
+import model.gradelevel.GradeLevel;
 
 /**
  *

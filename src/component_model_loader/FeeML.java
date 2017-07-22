@@ -13,9 +13,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.Fee;
-import model.FeeCategory;
-import model.GradeLevel;
+import model.fee.Fee;
+import model.feecategory.FeeCategory;
+import model.gradelevel.GradeLevel;
 
 
 public class FeeML {

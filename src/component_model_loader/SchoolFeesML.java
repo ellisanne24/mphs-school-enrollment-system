@@ -11,11 +11,11 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.BasicFee;
-import model.DownPaymentFee;
-import model.Fee;
-import model.MiscellaneousFees;
-import model.OtherFees;
+import model.basicfee.BasicFee;
+import model.downpayment.DownPaymentFee;
+import model.fee.Fee;
+import model.miscellaneousfees.MiscellaneousFees;
+import model.otherfees.OtherFees;
 
 /**
  *

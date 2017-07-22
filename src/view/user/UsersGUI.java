@@ -1,8 +1,8 @@
 package view.user;
 
-import component_utility.JPanelUtil;
-import database_utility.DBType;
-import database_utility.DBUtil;
+import utility.component.JPanelUtil;
+import utility.database.DBType;
+import utility.database.DBUtil;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.io.File;
@@ -19,7 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import component_utility.ImageUtil;
+import utility.component.ImageUtil;
 
 public class UsersGUI extends javax.swing.JPanel {
 

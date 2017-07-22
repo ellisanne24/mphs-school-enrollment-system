@@ -5,7 +5,7 @@
  */
 package dao;
 
-import model.User;
+import model.user.User;
 
 /**
  *

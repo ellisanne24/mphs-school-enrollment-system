@@ -10,7 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import javax.swing.JOptionPane;
-import model.DatabaseConnectionProperty;
+import model.database.DatabaseConnectionProperty;
 
 /**
  *

@@ -7,7 +7,7 @@ package daoimpl;
 
 import dao.IGrade;
 import java.util.List;
-import model.Grade;
+import model.grade.Grade;
 
 /**
  *

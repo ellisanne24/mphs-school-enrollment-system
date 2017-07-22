@@ -1,7 +1,7 @@
 package view.faculty;
 
 import javax.swing.JOptionPane;
-import model.Faculty;
+import model.faculty.Faculty;
 import daoimpl.FacultyDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;

@@ -7,7 +7,7 @@ package view.receipt;
 
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
-import component_utility.ImageUtil;
+import utility.component.ImageUtil;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -21,12 +21,12 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import model.SchoolYear;
-import model.Student;
-import model.BalanceBreakDownFee;
-import model.OfficialReceipt;
-import model.Particulars;
-import model.Payment;
+import model.schoolyear.SchoolYear;
+import model.student.Student;
+import model.balancebreakdownfee.BalanceBreakDownFee;
+import model.receipt.OfficialReceipt;
+import model.particulars.Particulars;
+import model.payment.Payment;
 
 /**
  *

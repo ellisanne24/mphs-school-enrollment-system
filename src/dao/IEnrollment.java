@@ -6,9 +6,9 @@
 package dao;
 
 import java.util.List;
-import model.Enrollment;
-import model.SchoolYear;
-import model.Student;
+import model.enrollment.Enrollment;
+import model.schoolyear.SchoolYear;
+import model.student.Student;
 
 /**
  *

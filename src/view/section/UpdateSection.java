@@ -15,11 +15,11 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import model.GradeLevel;
-import model.SchoolYear;
-import model.Section;
-import model.Session;
-import model.Student;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.session.Session;
+import model.student.Student;
 
 /**
  *

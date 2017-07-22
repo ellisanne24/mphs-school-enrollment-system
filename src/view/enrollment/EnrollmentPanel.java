@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import model.SchoolYear;
+import model.schoolyear.SchoolYear;
 
 /**
  *

@@ -6,16 +6,21 @@
 package view.schedule;
 
 import component_model_loader.SbjML;
+import component_model_loader.ScheduleML;
 import component_model_loader.SchoolYearML;
-import component_utility.JInternalFrameUtil;
+import utility.component.JInternalFrameUtil;
 import controller.global.SchoolYearController;
+import controller.schedule.FilterScheduleRecordController;
 import controller.schedule.NewController;
 import controller.schedule.ScheduleTableRecordController;
+import daoimpl.SchoolYearDaoImpl;
 import java.awt.Color;
 import javax.swing.UIManager;
 
 public class ScheduleRecord extends javax.swing.JPanel {
 
+    SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
+    
     public ScheduleRecord() {
         initComponents();
         UIManager.put("ComboBox.disabledBackground", new Color(212, 212, 210));
@@ -32,9 +37,13 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jcmbSubject.setSelectedIndex(-1);
         
         jtblSchedule.setAutoCreateRowSorter(true);
+        jtblSchedule.setModel(new ScheduleML().getAllBySchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId(), jtblSchedule));
         jtblSchedule.addMouseListener(new ScheduleTableRecordController(jtblSchedule));
         
         jmiNewSchedule.addActionListener(new NewController());
+        
+        FilterScheduleRecordController filterScheduleRecordController = new FilterScheduleRecordController(jcmbSchoolYearFrom, jcmbSubject, jtblSchedule,jcbAllSubjects);
+        filterScheduleRecordController.control();
     }
 
     @SuppressWarnings("unchecked")
@@ -55,7 +64,7 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jcmbSchoolYearTo = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jcmbSubject = new javax.swing.JComboBox<>();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        jcbAllSubjects = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jpnlScheduleTable = new javax.swing.JPanel();
@@ -84,7 +93,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jpnlYourContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jpnlYourContent.setLayout(new java.awt.GridBagLayout());
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setText("School Year ");
@@ -97,47 +105,48 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jPanel4.add(jcmbSchoolYearFrom, gridBagConstraints);
 
         jLabel2.setText("-");
-        jPanel4.add(jLabel2, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel4.add(jLabel2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jcmbSchoolYearTo, gridBagConstraints);
 
         jLabel3.setText("Subject");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jLabel3, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jcmbSubject, gridBagConstraints);
 
-        jCheckBox1.setText("All Subjects");
+        jcbAllSubjects.setText("All Subjects");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel4.add(jCheckBox1, gridBagConstraints);
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel4.add(jcbAllSubjects, gridBagConstraints);
 
         jLabel4.setText("Day");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jLabel4, gridBagConstraints);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" }));
         jComboBox1.setSelectedIndex(-1);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jComboBox1, gridBagConstraints);
 
@@ -157,14 +166,14 @@ public class ScheduleRecord extends javax.swing.JPanel {
 
         jtblSchedule.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Day", "Start Time", "End Time", "Subject", "Section", "Room", "Faculty"
+                "Schedule Id", "Day", "Start Time", "End Time", "Section", "Subject", "Room", "Faculty"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -246,7 +255,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
@@ -259,6 +267,7 @@ public class ScheduleRecord extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JCheckBox jcbAllSubjects;
     private javax.swing.JComboBox<String> jcmbSchoolYearFrom;
     private javax.swing.JComboBox<String> jcmbSchoolYearTo;
     private javax.swing.JComboBox<String> jcmbSubject;
@@ -269,6 +278,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
     public static javax.swing.JPanel jpnlCardContainer;
     private javax.swing.JPanel jpnlScheduleTable;
     private javax.swing.JPanel jpnlYourContent;
-    private javax.swing.JTable jtblSchedule;
+    public static javax.swing.JTable jtblSchedule;
     // End of variables declaration//GEN-END:variables
 }
