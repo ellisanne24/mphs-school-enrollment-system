@@ -1,10 +1,12 @@
 package view.faculty;
 
 import daoimpl.FacultyDaoImpl;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import model.faculty.Faculty;
+
 
 public class UpdateFaculty extends javax.swing.JDialog {
 
@@ -21,6 +23,7 @@ public class UpdateFaculty extends javax.swing.JDialog {
     }
 
     public void loadSpecializationToComboBox() {
+
         FacultyDaoImpl fdi = new FacultyDaoImpl();
         Object[] specializationData = fdi.getAllSpecializationInfo().toArray();
         DefaultComboBoxModel jcb = (DefaultComboBoxModel) update_specialization.getModel();
@@ -28,8 +31,10 @@ public class UpdateFaculty extends javax.swing.JDialog {
         for (Object faculty : specializationData) {
             Faculty f = (Faculty) faculty;
             jcb.addElement(f.getSpecializationTitle());
+
         }
         update_specialization.setModel(jcb);
+
     }
 
     public void loadFaculty() {
@@ -51,8 +56,10 @@ public class UpdateFaculty extends javax.swing.JDialog {
             if (cb_status.isSelected() == true) {
                 cb_status.setSelected(f.getStatus());
             }
+
         }
         jlist_UpdateSpecialization.setModel(dlm);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -242,9 +249,7 @@ public class UpdateFaculty extends javax.swing.JDialog {
         jPanel3.add(cb_status, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
         jPanel1.add(jPanel3, gridBagConstraints);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Specialization", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Trebuchet MS", 0, 14))); // NOI18N
@@ -295,52 +300,34 @@ public class UpdateFaculty extends javax.swing.JDialog {
         jPanel2.add(jButton4, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel5.add(jPanel2, gridBagConstraints);
 
         jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel7.setPreferredSize(new java.awt.Dimension(200, 344));
-        jPanel7.setLayout(new java.awt.GridBagLayout());
+        jPanel7.setLayout(new java.awt.BorderLayout());
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        jPanel9.setLayout(new java.awt.GridBagLayout());
+        jPanel9.setLayout(new java.awt.BorderLayout());
 
         jScrollPane3.setViewportView(jlist_UpdateSpecialization);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel9.add(jScrollPane3, gridBagConstraints);
+        jPanel9.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
         jScrollPane1.setViewportView(jPanel9);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel7.add(jScrollPane1, gridBagConstraints);
+        jPanel7.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel5.add(jPanel7, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel4.add(jPanel5, gridBagConstraints);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -372,14 +359,10 @@ public class UpdateFaculty extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel4.add(jPanel6, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
         jPanel1.add(jPanel4, gridBagConstraints);
 
@@ -396,13 +379,13 @@ public class UpdateFaculty extends javax.swing.JDialog {
         jtf_updateContact.setText("");
         jcb_updateCivilStatus.setSelectedItem("");
         jcb_updateDegree.setSelectedItem("");
+
+
     }//GEN-LAST:event_ClearActionPerformed
 
 
     private void jbtn_updateFacultyAndSpecializationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtn_updateFacultyAndSpecializationActionPerformed
-
         FacultyDaoImpl fdi = new FacultyDaoImpl();
-
         String lName = jtf_updateLastName.getText().trim();
         String fName = jtf_updateFirstName.getText().trim();
         String mName = jtf_updateMiddleName.getText().trim();
@@ -421,11 +404,7 @@ public class UpdateFaculty extends javax.swing.JDialog {
         faculty.setDegree(jcb_updateDegree.getSelectedItem().toString());
 
         boolean isActive;
-        if (cb_status.isSelected()) {
-            isActive = true;
-        } else {
-            isActive = false;
-        }
+        isActive = cb_status.isSelected();
         faculty.setStatus(isActive);
 
         int update = JOptionPane.showConfirmDialog(null, "Update faculty?", "SUBMIT", JOptionPane.YES_NO_OPTION);
@@ -451,12 +430,10 @@ public class UpdateFaculty extends javax.swing.JDialog {
     }//GEN-LAST:event_jbtn_updateFacultyAndSpecializationActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
         DefaultListModel dlm = new DefaultListModel();
         String o = update_specialization.getSelectedItem().toString();
         dlm.removeElement(o);
         jlist_UpdateSpecialization.setModel(dlm);
-
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -464,7 +441,6 @@ public class UpdateFaculty extends javax.swing.JDialog {
         String o = update_specialization.getSelectedItem().toString();
         dlm.addElement(o);
         jlist_UpdateSpecialization.setModel(dlm);
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

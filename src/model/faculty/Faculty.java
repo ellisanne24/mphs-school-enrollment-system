@@ -1,11 +1,9 @@
- 
 package model.faculty;
- 
+
 public class Faculty {
-    
-    
+
     private int facultyID;
-  
+
     private String firstName;
     private String lastName;
     private String middleName;
@@ -14,14 +12,13 @@ public class Faculty {
     private String emailAddress;
     private String degree;
     private boolean status;
-    
+
     private int specializationID;
     private String specializationTitle;
     private String specializationDescription;
     private String dateCreated;
     private boolean isActive;
 
-    
     public boolean isIsActive() {
         return isActive;
     }
@@ -29,22 +26,19 @@ public class Faculty {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-   
 
-    public void setFacultyID(int facultyID){
+    public void setFacultyID(int facultyID) {
         this.facultyID = facultyID;
     }
-    
-    public int getFacultyID()
-    {
+
+    public int getFacultyID() {
         return facultyID;
     }
-     
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
     public String getFirstName() {
         return firstName;
     }
@@ -52,7 +46,7 @@ public class Faculty {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
     public String getLastName() {
         return lastName;
     }
@@ -60,7 +54,7 @@ public class Faculty {
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
     }
-      
+
     public String getMiddleName() {
         return middleName;
     }
@@ -68,7 +62,7 @@ public class Faculty {
     public void setCivilStatus(String civilStatus) {
         this.civilStatus = civilStatus;
     }
-    
+
     public String getCivilStatus() {
         return civilStatus;
     }
@@ -76,7 +70,7 @@ public class Faculty {
     public void setContact(String contact) {
         this.contact = contact;
     }
-    
+
     public String getContact() {
         return contact;
     }
@@ -84,18 +78,17 @@ public class Faculty {
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
-    
+
     public String getEmailAddress() {
         return emailAddress;
     }
-    
 
     public boolean setStatus(boolean status) {
         this.status = status;
         return this.status;
     }
-    
-      public boolean getStatus() {
+
+    public boolean getStatus() {
         return status;
     }
 
@@ -138,5 +131,5 @@ public class Faculty {
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
-   
+
 }

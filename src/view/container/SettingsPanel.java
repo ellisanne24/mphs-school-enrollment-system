@@ -8,9 +8,10 @@ package view.container;
 import view.fees.FeesSetting;
 import view.rooms.RoomsContainer;
 import view.schedule.ScheduleRecord;
-import view.faculty.NewFaculty;
+
 import view.curriculum.CurriculumManagementContainer;
 
+import view.faculty.*;
 import view.paymentsetting.PaymentScheduleSettings;
 import view.schoolyear.SchoolYearManagementContainer;
 import view.subject.SubjectManagementContainer;

@@ -10,5 +10,5 @@ import model.admission.Admission;
 public interface IAdmission {
     Admission getAdmissionInfoByRegistrationId(int aRegistrationId);
     Admission getAdmissionInfoByStudentId(int aStudentId);
-    boolean completeAdmission(int aRegistrationId);
+    boolean completeAdmission(Admission admission);
 }

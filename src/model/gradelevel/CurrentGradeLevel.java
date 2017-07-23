@@ -7,7 +7,7 @@ import model.schoolyear.SchoolYear;
  *
  * @author John Ferdinand Antonio
  */
-public class PresentGradeLevel extends GradeLevel{
+public class CurrentGradeLevel extends GradeLevel{
     private Boolean isPassed;
     private SchoolYear schoolYear;
 

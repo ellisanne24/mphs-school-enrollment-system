@@ -5,7 +5,7 @@ import model.tuitionfee.TuitionFee;
 import java.util.Date;
 import model.admission.Admission;
 import model.gradelevel.GradeLevel;
-import model.gradelevel.PresentGradeLevel;
+import model.gradelevel.CurrentGradeLevel;
 import model.gradelevel.PromotedGradeLevel;
 import model.registration.Registration;
 import model.schoolyear.SchoolYear;
@@ -19,7 +19,7 @@ public class Student {
     private GradeLevel admissionGradeLevel;
     private PromotedGradeLevel promotedGradeLevel;
     private SchoolYear schoolYearEnrolled;
-    private PresentGradeLevel presentGradeLevel;
+    private CurrentGradeLevel currentGradeLevel;
     private GradeLevel recommendedGradeLevelToEnroll;
     private GradeLevel lastGradeLevelEnrolled;
     private SchoolYear lastGradeLevelEnrolledSchoolYear;
@@ -133,12 +133,12 @@ public class Student {
     }
 
     
-    public PresentGradeLevel getPresentGradeLevel() {
-        return presentGradeLevel;
+    public CurrentGradeLevel getCurrentGradeLevel() {
+        return currentGradeLevel;
     }
 
-    public void setPresentGradeLevel(PresentGradeLevel presentGradeLevel) {
-        this.presentGradeLevel = presentGradeLevel;
+    public void setCurrentGradeLevel(CurrentGradeLevel currentGradeLevel) {
+        this.currentGradeLevel = currentGradeLevel;
     }
 
     

@@ -1341,7 +1341,7 @@ public class RegistrationForm extends javax.swing.JPanel {
     private void jbtnAddRegistrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAddRegistrationActionPerformed
         Registration registration = new Registration();
         
-        registration.setRegisteredStudentType(jcbTransfereeeStudent.isSelected()==true? jcbTransfereeeStudent.getText() : jcbNewStudent.getText() ); 
+        registration.setStudentType(jcbTransfereeeStudent.isSelected()==true? jcbTransfereeeStudent.getText() : jcbNewStudent.getText() ); 
         registration.setLastName(jtfLastName.getText().trim());
         registration.setFirstName(jtfFirstName.getText().trim());
         registration.setMiddleName(jtfMiddleName.getText().trim());

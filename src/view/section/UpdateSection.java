@@ -1,10 +1,10 @@
+package view.section;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
-
 import component_model_loader.GradeLevelML;
 import component_model_loader.SchoolYearML;
 import component_model_loader.SectionML;
@@ -26,38 +26,38 @@ import model.student.Student;
  * @author francisunoxx
  */
 public class UpdateSection extends javax.swing.JFrame {
-    
-    Object[] category = new Object[]{"FCFS","Grade Ranking"};
+
+    Object[] category = new Object[]{"FCFS", "Grade Ranking"};
     Object[] sessionList = new Object[]{"AM", "PM"};
-    
+
     DefaultComboBoxModel gradesFromModel = new DefaultComboBoxModel();
     DefaultComboBoxModel gradeToModel = new DefaultComboBoxModel();
     DefaultComboBoxModel categoryModel = new DefaultComboBoxModel(category);
     DefaultComboBoxModel sessionModel = new DefaultComboBoxModel(sessionList);
-    
+
     private SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
     private SectionDaoImpl sdi = new SectionDaoImpl();
     private GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
-    
+
     private GradeLevelML gl = new GradeLevelML();
     private SchoolYearML syml = new SchoolYearML();
     private SectionML sml = new SectionML();
-    
+
     private SchoolYear schoolYear = new SchoolYear();
-    
+
     private Section section = new Section();
     private GradeLevel gradeLevel = new GradeLevel();
     private Session session = new Session();
     private Student student = new Student();
+
     public UpdateSection() {
         initComponents();
-        
-        for(int i = 60; i < 100; i++)
-        {
+
+        for (int i = 60; i < 100; i++) {
             gradesFromModel.addElement(i);
             gradeToModel.addElement(i);
         }
-        
+
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -71,7 +71,6 @@ public class UpdateSection extends javax.swing.JFrame {
         cbSession.setModel(sessionModel);
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -331,111 +330,90 @@ public class UpdateSection extends javax.swing.JFrame {
 
     private void cbCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCategoryItemStateChanged
         //Setter call from Section
-        //        section.setCategory((String) cbCategory.getSelectedItem());
-        //        section.setSectionCategoryId(sdi.getSectionCategoryId(section));
+//                section.setCategory((String) cbCategory.getSelectedItem());
+//                section.setSectionCategoryId(sdi.getSectionCategoryId(section));
     }//GEN-LAST:event_cbCategoryItemStateChanged
 
     private void cbGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradeLevelItemStateChanged
-        
+
     }//GEN-LAST:event_cbGradeLevelItemStateChanged
 
     private void cbSchoolYearFromItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSchoolYearFromItemStateChanged
-        
+
     }//GEN-LAST:event_cbSchoolYearFromItemStateChanged
 
     private void cbSessionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSessionItemStateChanged
-//        if(cbSession.getSelectedIndex() == 0)
-//        {
-//            session.setSessionId(1);
-//
-//            tfCapacityAM.setEnabled(true);
-//            tfCapacityPM.setEnabled(false);
-//        }
-//        else
-//        {
-//            session.setSessionId(2);
-//
-//            tfCapacityAM.setEnabled(false);
-//            tfCapacityPM.setEnabled(true);
-//        }
+        if (cbSession.getSelectedIndex() == 0) {
+            session.setSessionId(1);
+            tfCapacityAM.setEnabled(true);
+            tfCapacityPM.setEnabled(false);
+        } else {
+            session.setSessionId(2);
+
+            tfCapacityAM.setEnabled(false);
+            tfCapacityPM.setEnabled(true);
+        }
     }//GEN-LAST:event_cbSessionItemStateChanged
 
     private void chbBothItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chbBothItemStateChanged
-//        if(chbBoth.isSelected())
-//        {
-//            tfCapacityAM.setEnabled(true);
-//            tfCapacityPM.setEnabled(true);
-//        }
-//        else
-//        {
-//            tfCapacityAM.setEnabled(false);
-//            tfCapacityPM.setEnabled(false);
-//
-//        }
+        if (chbBoth.isSelected()) {
+            tfCapacityAM.setEnabled(true);
+            tfCapacityPM.setEnabled(true);
+        } else {
+            tfCapacityAM.setEnabled(false);
+            tfCapacityPM.setEnabled(false);
+        }
     }//GEN-LAST:event_chbBothItemStateChanged
 
     private void tfCapacityAMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfCapacityAMMouseClicked
-
         tfCapacityAM.setText("");
-
     }//GEN-LAST:event_tfCapacityAMMouseClicked
 
     private void tfCapacityPMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfCapacityPMMouseClicked
         tfCapacityPM.setText("");
     }//GEN-LAST:event_tfCapacityPMMouseClicked
-        
-    public JTextField getTfSectionName()
-    {
+
+    public JTextField getTfSectionName() {
         return tfSubjectName;
     }
-    
-    public JTextField getTfAM()
-    {
+
+    public JTextField getTfAM() {
         return tfCapacityAM;
     }
-    
-    public JTextField getTfPM()
-    {
+
+    public JTextField getTfPM() {
         return tfCapacityPM;
     }
-    
-    public JComboBox getCbGradeLevel()
-    {
+
+    public JComboBox getCbGradeLevel() {
         return cbGradeLevel;
     }
-    
-    public JComboBox getCbSchoolYearFrom()
-    {
+
+    public JComboBox getCbSchoolYearFrom() {
         return cbSchoolYearFrom;
     }
-    
-    public JComboBox getCbSchoolYearTo()
-    {
+
+    public JComboBox getCbSchoolYearTo() {
         return cbSchoolYearTo;
     }
-    
-    public JComboBox getCbGradeLevelFrom()
-    {
+
+    public JComboBox getCbGradeLevelFrom() {
         return cbGradeFrom;
     }
-    
-    public JComboBox getCbGradeLevelTo()
-    {
+
+    public JComboBox getCbGradeLevelTo() {
         return cbGradeTo;
     }
-    
-    public JComboBox getCbMethod()
-    {
+
+    public JComboBox getCbMethod() {
         return cbCategory;
     }
-    
-    public JComboBox getCbSession()
-    {
+
+    public JComboBox getCbSession() {
         return cbSession;
     }
-    
-    public JCheckBox getChbBoth()
-    {
+
+    public JCheckBox getChbBoth() {
         return chbBoth;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

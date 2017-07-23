@@ -74,7 +74,7 @@ public class Receipt extends javax.swing.JDialog {
             String brgyOrSubd = student.getRegistration().getAddressBrgyOrSubd() + " ";
             String city = student.getRegistration().getAddressCity();
             String address = roomHouseNo + street + brgyOrSubd + city;
-            String gradeLevel = student.getPresentGradeLevel().getLevel()+"";
+            String gradeLevel = student.getCurrentGradeLevel().getLevel()+"";
                     
             double amountTendered = payment.getAmountTendered();
             double change = payment.getChange();

@@ -13,7 +13,7 @@ public class Registration {
     //STUDENT REGISTRATION ONLY APPLIES TO NEW STUDENTS & TRANSFEREES
     
     private Integer registrationId;
-    private String registeredStudentType; //NEW or TRANSFEREE ONLY OLD STUDENTS proceed to Enrollment
+    private String studentType; //NEW or TRANSFEREE ONLY OLD STUDENTS proceed to Enrollment
     private String firstName;
     private String middleName;
     private String lastName;
@@ -132,12 +132,12 @@ public class Registration {
         this.registrationId = registrationId;
     }
 
-    public String getRegisteredStudentType() {
-        return registeredStudentType;
+    public String getStudentType() {
+        return studentType;
     }
 
-    public void setRegisteredStudentType(String registeredStudentType) {
-        this.registeredStudentType = registeredStudentType;
+    public void setStudentType(String studentType) {
+        this.studentType = studentType;
     }
 
     public String getFirstName() {

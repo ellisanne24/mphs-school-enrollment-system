@@ -1070,8 +1070,8 @@ public class StudentInformationJDialog extends javax.swing.JDialog {
         String aAdmissionId = s.getAdmission().getAdmissionId()+"";
         String aAdmissionStatus = s.getAdmission().isCompleted()==true?"Complete":"Pending";
         String aAdmissionCompletionDate = s.getAdmission().getCompletionDate()==null?"--":s.getAdmission().getCompletionDate()+"";
-        String isPassed = s.getPresentGradeLevel().getIsPassed()==null?
-                "":s.getPresentGradeLevel().getIsPassed()+"";
+        String isPassed = s.getCurrentGradeLevel().getIsPassed()==null?
+                "":s.getCurrentGradeLevel().getIsPassed()+"";
         
         String aAddress = s.getRegistration().getAddressRoomOrHouseNo()+" "+s.getRegistration().getAddressStreet()+
                 s.getRegistration().getAddressBrgyOrSubd()+" "+s.getRegistration().getAddressCity();
@@ -1141,8 +1141,8 @@ public class StudentInformationJDialog extends javax.swing.JDialog {
         String aAdmissionId = student.getAdmission().getAdmissionId()+"";
         String aAdmissionStatus = student.getAdmission().isCompleted()==true?"Complete":"Pending";
         String aAdmissionCompletionDate = student.getAdmission().getCompletionDate()==null?"--":student.getAdmission().getCompletionDate()+"";
-        String isPassed = student.getPresentGradeLevel().getIsPassed()==null?
-                "":student.getPresentGradeLevel().getIsPassed()+"";
+        String isPassed = student.getCurrentGradeLevel().getIsPassed()==null?
+                "":student.getCurrentGradeLevel().getIsPassed()+"";
         String aDateOfRegistration = student.getRegistration().getRegistrationDate()+"";
         
         jlblStatusText.setText(aStatus);

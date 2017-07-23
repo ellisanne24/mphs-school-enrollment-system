@@ -8,6 +8,7 @@ package view.schedule;
 import component_model_loader.FacultyML;
 import daoimpl.ScheduleDaoImpl;
 import model.faculty.Faculty;
+
 import model.schedule.Schedule;
 
 /**

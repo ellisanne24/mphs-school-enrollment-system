@@ -1,7 +1,8 @@
  
 package dao;
 import java.util.List;
- import model.faculty.Faculty;
+import model.faculty.Faculty;
+
 public interface IFaculty {
     
     

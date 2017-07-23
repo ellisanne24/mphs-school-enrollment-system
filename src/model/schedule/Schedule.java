@@ -1,7 +1,6 @@
 package model.schedule;
 
 import model.faculty.Faculty;
-import model.schoolyear.SchoolYear;
 
 public class Schedule {
 

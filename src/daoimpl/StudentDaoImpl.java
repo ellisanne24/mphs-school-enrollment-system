@@ -15,7 +15,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.admission.Admission;
 import model.gradelevel.GradeLevel;
-import model.gradelevel.PresentGradeLevel;
+import model.gradelevel.CurrentGradeLevel;
 import model.gradelevel.PromotedGradeLevel;
 import model.registration.Registration;
 import model.schoolyear.SchoolYear;
@@ -24,6 +24,26 @@ import dao.IStudent;
 
 public class StudentDaoImpl implements IStudent {
 
+    @Override
+    public Integer getId(int registrationId) {
+        Integer studentId = null;
+        String SQL = "{CALL getStudentIdByRegistrationId(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,registrationId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    studentId = rs.getInt("student_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return studentId;
+    }
+
+    
+    
     @Override
     public List<Student> get(String aKeyword) {
         List<Student> studentList = new ArrayList<>();
@@ -41,7 +61,7 @@ public class StudentDaoImpl implements IStudent {
                     admission.setIsCompleted(rs.getBoolean(AdmissionTable.ISCOMPLETE));
                     admission.setCompletionDate(rs.getDate(AdmissionTable.COMPLETIONDATE));
                     registration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    registration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    registration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     registration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     registration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     registration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -131,7 +151,7 @@ public class StudentDaoImpl implements IStudent {
         Registration registration = new Registration();
         GradeLevel admissionGradeLevel = new GradeLevel();
         GradeLevel lastGradeLevelEnrolled = new GradeLevel();
-        PresentGradeLevel presentGradeLevel = new PresentGradeLevel();
+        CurrentGradeLevel presentGradeLevel = new CurrentGradeLevel();
         PromotedGradeLevel promotedGradeLevel = new PromotedGradeLevel();
         SchoolYear schoolYear = new SchoolYear();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
@@ -147,7 +167,7 @@ public class StudentDaoImpl implements IStudent {
                         admission.setIsCompleted(rsa.getBoolean(AdmissionTable.ISCOMPLETE));
                         admission.setCompletionDate(rsa.getDate(AdmissionTable.COMPLETIONDATE));
                         registration.setRegistrationId(rsa.getInt(RegistrationTable.REGISTRATION_ID));
-                        registration.setRegisteredStudentType(rsa.getString(RegistrationTable.STUDENT_TYPE));
+                        registration.setStudentType(rsa.getString(RegistrationTable.STUDENT_TYPE));
                         registration.setLastName(rsa.getString(RegistrationTable.LASTNAME));
                         registration.setFirstName(rsa.getString(RegistrationTable.FIRSTNAME));
                         registration.setMiddleName(rsa.getString(RegistrationTable.MIDDLENAME));
@@ -256,7 +276,7 @@ public class StudentDaoImpl implements IStudent {
                 student.setAdmission(admission);
                 student.setRegistration(registration);
                 student.setAdmissionGradeLevel(admissionGradeLevel);
-                student.setPresentGradeLevel(presentGradeLevel);
+                student.setCurrentGradeLevel(presentGradeLevel);
                 student.setLastGradeLevelEnrolledSchoolYear(schoolYear);
 
                 student.setPromotedGradeLevel(promotedGradeLevel); // int level only
@@ -279,7 +299,7 @@ public class StudentDaoImpl implements IStudent {
         Registration registration = new Registration();
         GradeLevel admissionGradeLevel = new GradeLevel();
         GradeLevel lastGradeLevelEnrolled = new GradeLevel();
-        PresentGradeLevel presentGradeLevel = new PresentGradeLevel();
+        CurrentGradeLevel presentGradeLevel = new CurrentGradeLevel();
         PromotedGradeLevel promotedGradeLevel = new PromotedGradeLevel();
         SchoolYear schoolYear = new SchoolYear();
 
@@ -292,7 +312,7 @@ public class StudentDaoImpl implements IStudent {
                     admission.setIsCompleted(rs.getBoolean(AdmissionTable.ISCOMPLETE));
                     admission.setCompletionDate(rs.getDate(AdmissionTable.COMPLETIONDATE));
                     registration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    registration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    registration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     registration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     registration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     registration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -353,7 +373,7 @@ public class StudentDaoImpl implements IStudent {
                     student.setAdmission(admission);
                     student.setRegistration(registration);
                     student.setAdmissionGradeLevel(admissionGradeLevel);
-                    student.setPresentGradeLevel(presentGradeLevel);
+                    student.setCurrentGradeLevel(presentGradeLevel);
                     student.setLastGradeLevelEnrolledSchoolYear(schoolYear);
                     student.setPromotedGradeLevel(promotedGradeLevel); // int level only
                 }
@@ -380,7 +400,7 @@ public class StudentDaoImpl implements IStudent {
                     admission.setIsCompleted(rs.getBoolean(AdmissionTable.ISCOMPLETE));
                     admission.setCompletionDate(rs.getDate(AdmissionTable.COMPLETIONDATE));
                     registration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    registration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    registration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     registration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     registration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     registration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -451,7 +471,7 @@ public class StudentDaoImpl implements IStudent {
                     admission.setIsCompleted(rs.getBoolean(AdmissionTable.ISCOMPLETE));
                     admission.setCompletionDate(rs.getDate(AdmissionTable.COMPLETIONDATE));
                     registration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    registration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    registration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     registration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     registration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     registration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -518,7 +538,7 @@ public class StudentDaoImpl implements IStudent {
                 while (rs.next()) {
                     Admission admission = new Admission();
                     Registration registration = new Registration();
-                    PresentGradeLevel previousGradeLevel = new PresentGradeLevel();
+                    CurrentGradeLevel previousGradeLevel = new CurrentGradeLevel();
                     Student student = new Student();
                     SchoolYear schoolYear = new SchoolYear();
 
@@ -526,7 +546,7 @@ public class StudentDaoImpl implements IStudent {
                     admission.setIsCompleted(rs.getBoolean(AdmissionTable.ISCOMPLETE));
                     admission.setCompletionDate(rs.getDate(AdmissionTable.COMPLETIONDATE));
                     registration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    registration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    registration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     registration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     registration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     registration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -577,7 +597,7 @@ public class StudentDaoImpl implements IStudent {
 
                     student.setAdmission(admission);
                     student.setRegistration(registration);
-                    student.setPresentGradeLevel(previousGradeLevel);
+                    student.setCurrentGradeLevel(previousGradeLevel);
                     student.setLastGradeLevelEnrolledSchoolYear(schoolYear);
 
                     list.add(student);
@@ -606,7 +626,7 @@ public class StudentDaoImpl implements IStudent {
                     admission.setIsCompleted(rs.getBoolean(AdmissionTable.ISCOMPLETE));
                     admission.setCompletionDate(rs.getDate(AdmissionTable.COMPLETIONDATE));
                     registration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    registration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    registration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     registration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     registration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     registration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -677,7 +697,7 @@ public class StudentDaoImpl implements IStudent {
                     admission.setIsCompleted(rs.getBoolean(AdmissionTable.ISCOMPLETE));
                     admission.setCompletionDate(rs.getDate(AdmissionTable.COMPLETIONDATE));
                     registration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    registration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    registration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     registration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     registration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     registration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));

@@ -16,7 +16,6 @@ import javax.swing.table.DefaultTableModel;
 import model.registration.Registration;
 import org.apache.derby.client.am.Types;
 import model.gradelevel.GradeLevel;
-import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
 import dao.IRegistration;
 
@@ -35,7 +34,7 @@ public class RegistrationDaoImpl implements IRegistration{
                 while(rs.next()){
                     Registration aRegistration = new Registration();
                     aRegistration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    aRegistration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    aRegistration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     aRegistration.setLastName(rs.getString(RegistrationTable.LASTNAME) );
                     aRegistration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME)); 
                     aRegistration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -104,7 +103,7 @@ public class RegistrationDaoImpl implements IRegistration{
                 while(rs.next()){
                     Registration aRegistration = new Registration();
                     aRegistration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    aRegistration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    aRegistration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     aRegistration.setLastName(rs.getString(RegistrationTable.LASTNAME) );
                     aRegistration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME)); 
                     aRegistration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -176,7 +175,7 @@ public class RegistrationDaoImpl implements IRegistration{
                 while(rs.next()){
                     Registration aRegistration = new Registration();
                     aRegistration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    aRegistration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    aRegistration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     aRegistration.setLastName(rs.getString(RegistrationTable.LASTNAME) );
                     aRegistration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME)); 
                     aRegistration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -246,7 +245,7 @@ public class RegistrationDaoImpl implements IRegistration{
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
                     aRegistration.setRegistrationId(rs.getInt(RegistrationTable.REGISTRATION_ID));
-                    aRegistration.setRegisteredStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
+                    aRegistration.setStudentType(rs.getString(RegistrationTable.STUDENT_TYPE));
                     aRegistration.setLastName(rs.getString(RegistrationTable.LASTNAME));
                     aRegistration.setFirstName(rs.getString(RegistrationTable.FIRSTNAME));
                     aRegistration.setMiddleName(rs.getString(RegistrationTable.MIDDLENAME));
@@ -333,7 +332,7 @@ public class RegistrationDaoImpl implements IRegistration{
                 + "?,?,?,?,?,?,?,?,?,?,?) }" ;
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1, aRegistration.getRegisteredStudentType());
+            cs.setString(1, aRegistration.getStudentType());
             cs.setString(2, aRegistration.getLastName());
             cs.setString(3, aRegistration.getFirstName());
             cs.setString(4, aRegistration.getMiddleName());

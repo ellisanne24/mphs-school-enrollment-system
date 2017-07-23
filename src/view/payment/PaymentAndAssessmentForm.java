@@ -35,7 +35,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellRenderer;
-import model.gradelevel.PresentGradeLevel;
+import model.gradelevel.CurrentGradeLevel;
 import model.student.Student;
 import component_renderers.PaymentJTableRenderer;
 import controller.payment.DisplayPaymentFormController;
@@ -1226,7 +1226,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         jlblMiddleNameText.setText(student.getRegistration().getMiddleName());
         jlblStudentStatusText.setText(studentDaoImpl.isEnrolledInSchoolYear(aStudentId, aSchoolYearId) == true ? "Active" : "Inactive");
 
-        Integer presentGradeLevel = student.getPresentGradeLevel().getLevel();
+        Integer presentGradeLevel = student.getCurrentGradeLevel().getLevel();
         String prG = "";
         if (presentGradeLevel == null) {
             prG = "";
@@ -1398,8 +1398,8 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             String lastName = student.getRegistration().getLastName();
             String firstName = student.getRegistration().getFirstName();
             String middleName = student.getRegistration().getMiddleName();
-            String admissionStatus = student.getAdmission().isCompleted() == true ? "Complete" : "Not Completed";
-            String presentGradeLevel = student.getPresentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getPresentGradeLevel().getLevel();
+            String admissionStatus = student.getAdmission().isCompleted() == true ? "Complete" : "Pending";
+            String presentGradeLevel = student.getCurrentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getCurrentGradeLevel().getLevel();
             String studentStatus = student.isActive() == true ? "Active" : "Inactive";
             String basicFee = decimalFormatter.format(schoolFees.getBasicFee().getAmount());
             String miscellaneousFee = decimalFormatter.format(schoolFees.getMiscellaneousFees().getSum());
@@ -1456,7 +1456,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             String firstName = student.getRegistration().getFirstName();
             String middleName = student.getRegistration().getMiddleName();
             String admissionStatus = student.getAdmission().isCompleted() == true ? "Complete" : "Not Completed";
-            String presentGradeLevel = student.getPresentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getPresentGradeLevel().getLevel();
+            String presentGradeLevel = student.getCurrentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getCurrentGradeLevel().getLevel();
             String studentStatus = student.isActive() == true ? "Active" : "Inactive";
             String basicFee = decimalFormatter.format(schoolFees.getBasicFee().getAmount());
             String miscellaneousFee = decimalFormatter.format(schoolFees.getMiscellaneousFees().getSum());
@@ -1501,7 +1501,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         }
         
         private void setSchoolFees() {
-            PresentGradeLevel presentGradeLevel = student.getPresentGradeLevel();
+            CurrentGradeLevel presentGradeLevel = student.getCurrentGradeLevel();
             int gradeLevelId = gradeLevelDaoImpl.getId(presentGradeLevel);
             
             DefaultTableModel downPaymentModel = (DefaultTableModel) schoolFeesML.getDownPayment(jtblDownPaymentFee, gradeLevelId);
@@ -1535,7 +1535,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             String firstName = student.getRegistration().getFirstName();
             String middleName = student.getRegistration().getMiddleName();
             String admissionStatus = student.getAdmission().isCompleted() == true ? "Complete" : "Not Completed";
-            String presentGradeLevel = student.getPresentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getPresentGradeLevel().getLevel();
+            String presentGradeLevel = student.getCurrentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getCurrentGradeLevel().getLevel();
             String studentStatus = student.isActive() == true ? "Active" : "Inactive";
             String basicFee = decimalFormatter.format(schoolFees.getBasicFee().getAmount());
             String miscellaneousFee = decimalFormatter.format(schoolFees.getMiscellaneousFees().getSum());
@@ -1603,8 +1603,8 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             Student aStudent = studentDaoImpl.getStudentById(aStudentId);
             
             if (aStudent.getRegistration().exists()) {
-                PresentGradeLevel presentGradeLevel = aStudent.getPresentGradeLevel();
-                int aGradeLevelId = gradeLevelDaoImpl.getId(presentGradeLevel);
+                CurrentGradeLevel currentGradeLevel = aStudent.getCurrentGradeLevel();
+                int aGradeLevelId = gradeLevelDaoImpl.getId(currentGradeLevel);
                 
                 SchoolFees aSchoolFee = schoolFeesDaoImpl.get(aGradeLevelId);
                 TuitionFee tf = tuitionFeeDaoImpl.get(studentId, aSchoolYearId);
@@ -1656,7 +1656,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             Student aStudent = studentDaoImpl.getStudentById(aStudentId);
             
             if (aStudent.getRegistration().exists()) {
-                PresentGradeLevel presentGradeLevel = aStudent.getPresentGradeLevel();
+                CurrentGradeLevel presentGradeLevel = aStudent.getCurrentGradeLevel();
                 int aGradeLevelId = gradeLevelDaoImpl.getId(presentGradeLevel);
                 
                 SchoolFees aSchoolFee = schoolFeesDaoImpl.get(aGradeLevelId);
@@ -1710,7 +1710,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             Student aStudent = studentDaoImpl.getStudentById(aStudentId);
 
             if (aStudent.getRegistration().exists()) {
-                PresentGradeLevel presentGradeLevel = aStudent.getPresentGradeLevel();
+                CurrentGradeLevel presentGradeLevel = aStudent.getCurrentGradeLevel();
                 int aGradeLevelId = gradeLevelDaoImpl.getId(presentGradeLevel);
 
                 SchoolFees aSchoolFee = schoolFeesDaoImpl.get(aGradeLevelId);
@@ -1755,7 +1755,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             Student aStudent = studentDaoImpl.getStudentById(aStudentId);
             
             if (aStudent.getRegistration().exists()) {
-                PresentGradeLevel presentGradeLevel = aStudent.getPresentGradeLevel();
+                CurrentGradeLevel presentGradeLevel = aStudent.getCurrentGradeLevel();
                 int aGradeLevelId = gradeLevelDaoImpl.getId(presentGradeLevel);
                 
                 SchoolFees aSchoolFee = schoolFeesDaoImpl.get(aGradeLevelId);

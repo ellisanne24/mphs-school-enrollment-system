@@ -2,14 +2,43 @@
 package model.admission;
 
 import java.util.Date;
+import model.registration.Registration;
+import model.schoolfees.SchoolFees;
 
 
 public class Admission {
-    int admissionId;
-    int registrationId;
-    boolean isCompleted;
-    Date completionDate;
+    private int studentId;
+    private int schoolYearId;
+    private SchoolFees schoolFees;
+    private int admissionId;
+    private Registration registration;
+    private boolean isCompleted;
+    private Date completionDate;
 
+    public int getSchoolYearId() {
+        return schoolYearId;
+    }
+
+    public void setSchoolYearId(int schoolYearId) {
+        this.schoolYearId = schoolYearId;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
+
+    public SchoolFees getSchoolFees() {
+        return schoolFees;
+    }
+
+    public void setSchoolFees(SchoolFees schoolFees) {
+        this.schoolFees = schoolFees;
+    }
+    
     public int getAdmissionId() {
         return admissionId;
     }
@@ -18,12 +47,12 @@ public class Admission {
         this.admissionId = admissionId;
     }
 
-    public int getRegistrationId() {
-        return registrationId;
+    public Registration getRegistration() {
+        return registration;
     }
 
-    public void setRegistrationId(int registrationId) {
-        this.registrationId = registrationId;
+    public void setRegistration(Registration registration) {
+        this.registration = registration;
     }
 
     public boolean isCompleted() {

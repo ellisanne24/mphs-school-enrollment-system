@@ -974,9 +974,9 @@ public class TopContainer extends javax.swing.JFrame{
 
         if (evt.getClickCount() >= 1) {
             if (MANAGEMENT_INSTANCE <= 0) {
-                SettingsPanel managementPanel = new SettingsPanel();
-                jtpTopTabbedPane.add("Settings", managementPanel);
-                jtpTopTabbedPane.setSelectedComponent(managementPanel);
+                SettingsPanel settings = new SettingsPanel();
+                jtpTopTabbedPane.add("Settings", settings);
+                jtpTopTabbedPane.setSelectedComponent(settings);
                 setMANAGEMENT_INSTANCE(1);
             }
         }

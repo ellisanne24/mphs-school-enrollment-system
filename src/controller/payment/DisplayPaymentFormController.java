@@ -124,7 +124,7 @@ public class DisplayPaymentFormController implements ActionListener {
 
         Student student = sdi.getStudentById(studentId);
         SchoolYear schoolYear = sydi.getById(schoolYearId);
-        Integer gradeLevelId = gldi.getId(student.getPresentGradeLevel());
+        Integer gradeLevelId = gldi.getId(student.getCurrentGradeLevel());
         SchoolFees schoolFees = sfdi.get(gradeLevelId);
         Discount discount = null;
         PaymentTerm paymentTerm = new PaymentTerm();

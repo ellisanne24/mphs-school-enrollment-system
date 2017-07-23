@@ -16,6 +16,7 @@ public interface IStudent {
     List<Student> get();
     List<Student> get(String aKeyword);
     
+    Integer getId(int registrationId);
     Integer getRegistrationId(Integer aStudentId);
     Integer getAdmissionGradeLevelByRegistrationId(Integer aRegistrationId);
     Integer getPresentGradeLevelByStudentId(Integer aStudentId);

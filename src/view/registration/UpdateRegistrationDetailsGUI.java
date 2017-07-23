@@ -6,11 +6,9 @@
 package view.registration;
 
 import utility.calendar.CalendarUtil;
-import daoimpl.AdmissionDaoImpl;
 import java.awt.Color;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import daoimpl.RegistrationDaoImpl;
 import component_model_loader.GradeLevelML;
@@ -18,7 +16,8 @@ import component_model_loader.SchoolYearML;
 import java.util.Arrays;
 import model.registration.Registration;
 import component_renderers.GradeLevelJComboBoxRenderer;
-import view.enrollment.EnrollmentPanel;
+import controller.transferee.AddTransfereeGradeController;
+import controller.registration.CompleteAdmissionController;
 
 public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
 
@@ -29,13 +28,17 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         
     public UpdateRegistrationDetailsGUI(int aRegistrationId) {
         super(null, ModalityType.APPLICATION_MODAL);
+        this.aRegistrationId = aRegistrationId;
+        
         guiManager.setInitialGUIState();
         initComponents();
-        this.aRegistrationId = aRegistrationId;
+        
         guiManager.setGUIComponentsModel();
         guiManager.setGUIComponentsRenderer();
         guiManager.setFormDetails(this.aRegistrationId);
         
+        jbtnCompleteAdmission.addActionListener(new CompleteAdmissionController(aRegistrationId, jcmbAdmissionStatus,jcbTransfereeStudent,jcmbGradeLevel));
+        jbtnAddGrades.addActionListener(new AddTransfereeGradeController(aRegistrationId,jcbTransfereeStudent));
     }
 
     
@@ -89,6 +92,7 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         jcmbAdmissionStatus = new javax.swing.JComboBox<>();
         jbtnCompleteAdmission = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jbtnAddGrades = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -598,6 +602,15 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdmissionStatus.add(jLabel2, gridBagConstraints);
+
+        jbtnAddGrades.setText("Add Grades");
+        jbtnAddGrades.setPreferredSize(new java.awt.Dimension(147, 32));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlAdmissionStatus.add(jbtnAddGrades, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1312,7 +1325,6 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         private void setFormDetails(Integer aRegistrationId) {
             RegistrationDaoImpl rdi = new RegistrationDaoImpl();
             Registration registration = rdi.getRegistrationInfoById(aRegistrationId);
-
             jcmbGradeLevel.setSelectedItem(registration.getGradeLevel());
             
             int schoolYearFrom = registration.getSchoolYear().getYearFrom();
@@ -1370,8 +1382,8 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
             jtfSchoolLastAttendedAddress.setText(registration.getSchoolLastAttendedAddress());
 
             jcmbAdmissionStatus.setSelectedItem(registration.getIsAdmissionComplete() == true ? "Completed" : "Pending");
-            jcbNewStudent.setSelected("New".equals(registration.getRegisteredStudentType()));
-            jcbTransfereeStudent.setSelected("Transferee".equals(registration.getRegisteredStudentType()));
+            jcbNewStudent.setSelected("New".equals(registration.getStudentType()));
+            jcbTransfereeStudent.setSelected("Transferee".equals(registration.getStudentType()));
         }
     }
     
@@ -1530,20 +1542,7 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
     }//GEN-LAST:event_jcmbAdmissionStatusActionPerformed
 
     private void jbtnCompleteAdmissionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCompleteAdmissionActionPerformed
-        int choice = JOptionPane.showConfirmDialog(null, "Complete Admission?", "Confirmation", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION) {
-            AdmissionDaoImpl adi = new AdmissionDaoImpl();
-            boolean isSuccessful = adi.completeAdmission(aRegistrationId);
-            if (isSuccessful) {
-                JOptionPane.showMessageDialog(null, "Student Officially Admitted.");
-                jcmbAdmissionStatus.setSelectedItem("Completed");
-                jcmbAdmissionStatus.setEnabled(false);
-                EnrollmentPanel.loadAllStudentsToJTable();
-                EnrollmentPanel.loadRegisteredApplicantsToJTable();
-            } else {
-                JOptionPane.showMessageDialog(null, "Error encountered while completing admission.");
-            }
-        }
+        
     }//GEN-LAST:event_jbtnCompleteAdmissionActionPerformed
 
     private void jtfPobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfPobActionPerformed
@@ -1605,6 +1604,7 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton jbtnAddGrades;
     private javax.swing.JButton jbtnAddImage;
     private javax.swing.JButton jbtnCamera;
     private javax.swing.JButton jbtnCompleteAdmission;
