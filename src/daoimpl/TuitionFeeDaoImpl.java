@@ -51,11 +51,12 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         String SQLg = "{CALL addTransactionPayment(?,?)}";
 
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            con.setAutoCommit(false);
             try (CallableStatement csA = con.prepareCall(SQLa);
                     CallableStatement csB = con.prepareCall(SQLb);
                     CallableStatement csC = con.prepareCall(SQLc);
                     CallableStatement csD = con.prepareCall(SQLd);) {
-                con.setAutoCommit(false);
+                
                 if (!tuitionFee.exists()) {
                     for (BalanceBreakDownFee bbf : tuitionFee.getBalanceBreakDownFees()) {
                         csA.setString(1, bbf.getDescription());
@@ -84,12 +85,14 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 }
                 con.commit();
             } catch (SQLException e) {
+                con.rollback();
+                con.setAutoCommit(true);
                 isAdded = false;
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                e.printStackTrace();
             }
         } catch (SQLException e) {
             isAdded = false;
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            e.printStackTrace();
         }
         return isAdded;
     }
@@ -202,10 +205,10 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 tuitionFee.setSchoolYear(schoolYear);
                 
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                e.printStackTrace();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            e.printStackTrace();
         }
         return tuitionFee;
     }
@@ -217,11 +220,10 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         String SQLb = "{CALL payTuitionFee(?,?,?)}";
         String SQLc = "{CALL addTransactionPayment(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            con.setAutoCommit(false);
             try (CallableStatement csA = con.prepareCall(SQLa);
                     CallableStatement csB = con.prepareCall(SQLb);
                     CallableStatement csC = con.prepareCall(SQLc);) {
-                con.setAutoCommit(false);
-
                 csA.setInt(1, tuitionFee.getStudent().getStudentId());
                 csA.registerOutParameter(2, Types.INTEGER);
                 csA.executeUpdate();
@@ -243,11 +245,13 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 con.commit();
                 isSuccessfullyPaid = true;
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            e.printStackTrace();
         }
         return isSuccessfullyPaid;
     }

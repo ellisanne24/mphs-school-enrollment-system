@@ -60,13 +60,21 @@ public class EnrollmentDaoImpl implements IEnrollment{
     public boolean enrollStudent(Student student) {
         boolean isSuccessfullyEnrolled;
         String SQL = "{CALL enrollStudent(?,?,?)}";
-        int recommendedGradeLevelId = studentDaoImpl.getRecommendedGradeLevel(student.getStudentId());
+        Integer enrolledGradeLevelId;
+        System.out.println("Student Id: "+student.getStudentId());
+        if(student.getStudentType() == 1){
+            int level = student.getRegistration().getGradeLevel();
+            enrolledGradeLevelId = gradeLevelDaoImpl.getId(level);
+        }else{
+            enrolledGradeLevelId = studentDaoImpl.getCurrentGradeLevelId(student.getStudentId());
+        }
         
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, student.getLastGradeLevelEnrolledSchoolYear().getSchoolYearId());
+            SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
+            cs.setInt(1, sydi.getCurrentSchoolYearId());
             cs.setInt(2, student.getStudentId());
-            cs.setInt(3, recommendedGradeLevelId);
+            cs.setInt(3, enrolledGradeLevelId);
             cs.executeUpdate();
             isSuccessfullyEnrolled = true;
         } catch (SQLException e) {

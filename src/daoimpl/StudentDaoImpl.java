@@ -47,6 +47,24 @@ public class StudentDaoImpl implements IStudent {
         return studentId;
     }
 
+    @Override
+    public Integer getCurrentGradeLevelId(int studentId) {
+        Integer gradeLevelId = null;
+        String SQL = "{CALL getStudentCurrentGradeLevel(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,studentId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    gradeLevelId = rs.getInt("gradelevel_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return gradeLevelId;
+    }
+
     
     
     @Override

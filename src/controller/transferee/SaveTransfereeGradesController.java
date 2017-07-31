@@ -5,13 +5,18 @@
  */
 package controller.transferee;
 
+import daoimpl.AdmissionDaoImpl;
 import daoimpl.TransfereeGradeDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import model.admission.Admission;
 import model.transfereegrade.TransfereeGrade;
+import view.enrollment.EnrollmentPanel;
 
 /**
  *
@@ -19,27 +24,70 @@ import model.transfereegrade.TransfereeGrade;
  */
 public class SaveTransfereeGradesController implements ActionListener{
 
+    private final JComboBox jcmbAdmissionStatus;
     private final JTextField jtfFirstQuarterGrade;
     private final JTextField jtfSecondQuarterGrade;
     private final JTextField jtfThirdQuarterGrade;
     private final JTextField jtfFourthQuarterGrade;
     private final JTextField jtfGwa;
     private final int registrationId;
+    private final Admission admission;
+    private final JDialog jdlgAddGrades;
     
     public SaveTransfereeGradesController(
             JTextField jtfFirstQuarterGrade, JTextField jtfSecondQuarterGrade,
-            JTextField jtfThirdQuarterGrade, JTextField jtfFourthQuarterGrade, JTextField jtfGwa, int registrationId
+            JTextField jtfThirdQuarterGrade, JTextField jtfFourthQuarterGrade, 
+            JTextField jtfGwa, Admission admission,JComboBox jcmbAdmissionStatus, 
+            JDialog jdlgAddGrades
     ) {
         this.jtfFirstQuarterGrade = jtfFirstQuarterGrade;
         this.jtfSecondQuarterGrade = jtfSecondQuarterGrade;
         this.jtfThirdQuarterGrade = jtfThirdQuarterGrade;
         this.jtfFourthQuarterGrade = jtfFourthQuarterGrade;
         this.jtfGwa = jtfGwa;
-        this.registrationId = registrationId;
+        this.admission = admission;
+        this.jcmbAdmissionStatus = jcmbAdmissionStatus;
+        this.registrationId = admission.getRegistration().getRegistrationId();
+        this.jdlgAddGrades = jdlgAddGrades;
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        JOptionPane.showConfirmDialog(null, "Complete admission and add grades?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (completeAdmission()) {
+            if(addGrades()){
+                jdlgAddGrades.dispose();
+            }
+        }
+    }
+    
+    private void reloadStudentsListView() {
+        EnrollmentPanel.loadAllStudentsToJTable();
+    }
+    
+    private void reloadRegisteredListView(){
+        EnrollmentPanel.loadRegisteredApplicantsToJTable();
+    }
+    
+    private boolean completeAdmission() {
+        AdmissionDaoImpl admissionDaoImpl = new AdmissionDaoImpl();
+        boolean isSuccessful;
+        isSuccessful = admissionDaoImpl.completeAdmission(admission);
+        if (isSuccessful) {
+            JOptionPane.showMessageDialog(null, "Applicant officially admitted. ");
+            jcmbAdmissionStatus.setSelectedItem("Completed");
+            jcmbAdmissionStatus.setEnabled(false);
+
+            reloadRegisteredListView();
+            reloadStudentsListView();
+        } else {
+            JOptionPane.showMessageDialog(null, "Error encountered. Failed to complete admission process.\nContact your administrator.");
+        }
+        return isSuccessful;
+    }
+    
+    private boolean addGrades(){
+        boolean isAdded = false;
         TransfereeGradeDaoImpl transfereeGradeDaoImpl = new TransfereeGradeDaoImpl();
         
         double firstQuarterGrade = !jtfFirstQuarterGrade.getText().isEmpty()? Double.parseDouble(jtfFirstQuarterGrade.getText().trim()) : 0.00;
@@ -67,14 +115,14 @@ public class SaveTransfereeGradesController implements ActionListener{
             System.out.println("GWA: "+gwa);
             System.out.println("RegistrationId: "+registrationId);
             
-            boolean isAdded = transfereeGradeDaoImpl.add(transfereeGrade);
+            isAdded = transfereeGradeDaoImpl.add(transfereeGrade);
             if(isAdded){
                 JOptionPane.showMessageDialog(null,"Grades successfully recorded.");
             }else{
                 JOptionPane.showMessageDialog(null,"Error encountered while adding grades.");
             }
         }
-        
+        return isAdded;
     }
     
 }

@@ -1261,9 +1261,9 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             DefaultTableModel jtblOtherFeesModel = (DefaultTableModel) jtblOtherFees.getModel();
             jtblOtherFeesModel.setRowCount(0);
             jcmbPaymentTerm.setSelectedIndex(-1);
-            jcmbPaymentTerm.setEnabled(false);
+//            jcmbPaymentTerm.setEnabled(false);
             jcmbDiscount.setSelectedIndex(-1);
-            jcmbDiscount.setEnabled(false);
+//            jcmbDiscount.setEnabled(false);
             jtfDiscountPercentage.setText("");
             jbtnResetDiscount.setEnabled(false);
             DefaultTableModel jtblBalanceBreakdownModel = (DefaultTableModel) jtblBalanceBreakdown.getModel();

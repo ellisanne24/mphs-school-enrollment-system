@@ -14,7 +14,6 @@ import model.registration.Registration;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import controller.transferee.AddTransfereeGradeController;
 import controller.registration.CompleteAdmissionController;
-import javax.swing.JOptionPane;
 
 public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
 
@@ -39,7 +38,6 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
 
     private void initializeControllers(){
         jbtnCompleteAdmission.addActionListener(new CompleteAdmissionController(aRegistrationId, jcmbAdmissionStatus,jcbTransfereeStudent,jcmbGradeLevel));
-        jbtnAddGrades.addActionListener(new AddTransfereeGradeController(aRegistrationId,jcbTransfereeStudent));
     }
     
     @SuppressWarnings("unchecked")
@@ -92,7 +90,6 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         jcmbAdmissionStatus = new javax.swing.JComboBox<>();
         jbtnCompleteAdmission = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jbtnAddGrades = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -602,15 +599,6 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdmissionStatus.add(jLabel2, gridBagConstraints);
-
-        jbtnAddGrades.setText("Add Grades");
-        jbtnAddGrades.setPreferredSize(new java.awt.Dimension(147, 32));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlAdmissionStatus.add(jbtnAddGrades, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1604,7 +1592,6 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JButton jbtnAddGrades;
     private javax.swing.JButton jbtnAddImage;
     private javax.swing.JButton jbtnCamera;
     private javax.swing.JButton jbtnCompleteAdmission;

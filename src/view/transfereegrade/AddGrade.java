@@ -2,17 +2,9 @@ package view.transfereegrade;
 
 import controller.transferee.SaveTransfereeGradesController;
 import controller.transferee.TransfereeGradeFieldsController;
-import daoimpl.AdmissionDaoImpl;
-import daoimpl.GradeLevelDaoImpl;
-import daoimpl.SchoolFeesDaoImpl;
-import daoimpl.SchoolYearDaoImpl;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import model.admission.Admission;
-import model.registration.Registration;
-import model.schoolfees.SchoolFees;
-import view.enrollment.EnrollmentPanel;
 
 /**
  *
@@ -20,9 +12,9 @@ import view.enrollment.EnrollmentPanel;
  */
 public class AddGrade extends javax.swing.JDialog {
     
-    private Admission admission;
-    private final JComboBox jcmbAdmissionStatus;
+    private final Admission admission;
     private final int registrationId;
+    private final JComboBox jcmbAdmissionStatus;
     
     public AddGrade(java.awt.Frame parent,boolean modal,
             Admission admission,
@@ -31,7 +23,6 @@ public class AddGrade extends javax.swing.JDialog {
         this.admission = admission;
         this.registrationId = admission.getRegistration().getRegistrationId();
         this.jcmbAdmissionStatus = jcmbAdmissionStatus;
-
         initComponents();
         initializeControllers();
     }
@@ -44,7 +35,7 @@ public class AddGrade extends javax.swing.JDialog {
                 new SaveTransfereeGradesController(
                         jtfFirstQuarter, jtfSecondQuarter, 
                         jtfThirdQuarter, jtfFourthQuarter, jtfGwa, 
-                        registrationId)
+                        admission,jcmbAdmissionStatus,this)
         );
     }
 
@@ -204,36 +195,10 @@ public class AddGrade extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void reloadStudentsListView() {
-        EnrollmentPanel.loadAllStudentsToJTable();
-    }
-    
-    private void reloadRegisteredListView(){
-        EnrollmentPanel.loadRegisteredApplicantsToJTable();
-    }
-    
-    private void completeAdmission() {
-        AdmissionDaoImpl admissionDaoImpl = new AdmissionDaoImpl();
-        boolean isSuccessful;
-        isSuccessful = admissionDaoImpl.completeAdmission(admission);
-        if (isSuccessful) {
-            JOptionPane.showMessageDialog(null, "Applicant officially admitted. ");
-            jcmbAdmissionStatus.setSelectedItem("Completed");
-            jcmbAdmissionStatus.setEnabled(false);
-
-            reloadRegisteredListView();
-            reloadStudentsListView();
-        } else {
-            JOptionPane.showMessageDialog(null, "Error encountered. Failed to complete admission process.\nContact your administrator.");
-        }
-    }
-    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int choice = JOptionPane.showConfirmDialog(null, "Cancel adding of grades? ", "Confirmation", JOptionPane.YES_NO_OPTION);
         if(choice == JOptionPane.YES_OPTION){
             this.dispose();
-        }else{
-            completeAdmission();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

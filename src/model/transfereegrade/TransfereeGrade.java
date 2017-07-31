@@ -10,6 +10,7 @@ package model.transfereegrade;
  * @author John Ferdinand Antonio
  */
 public class TransfereeGrade {
+    private int admissionId;
     private int registrationId;
     private int studentId;
     private double firstQuarterGrade;
@@ -18,6 +19,14 @@ public class TransfereeGrade {
     private double fourthQuarterGrade;
     private double gwa;
 
+    public int getAdmissionId() {
+        return admissionId;
+    }
+
+    public void setAdmissionId(int admissionId) {
+        this.admissionId = admissionId;
+    }
+    
     public int getRegistrationId() {
         return registrationId;
     }
