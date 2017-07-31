@@ -50,7 +50,7 @@ public class CompleteAdmissionController implements ActionListener{
         if (choice == JOptionPane.YES_OPTION) {
             if (transferee) {
                 inputPreviousSchoolGrades();
-                completeAdmission();
+//                completeAdmission();
             } 
 //            else if (gradeSchool) {
 //                completeAdmission();

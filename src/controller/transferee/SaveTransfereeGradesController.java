@@ -60,6 +60,13 @@ public class SaveTransfereeGradesController implements ActionListener{
             transfereeGrade.setGwa(gwa);
             transfereeGrade.setRegistrationId(registrationId);
             
+            System.out.println("1st: "+firstQuarterGrade);
+            System.out.println("2nd: "+secondQuarterGrade);
+            System.out.println("3rd: "+thirdQuarterGrade);
+            System.out.println("4th: "+fourthQuarterGrade);
+            System.out.println("GWA: "+gwa);
+            System.out.println("RegistrationId: "+registrationId);
+            
             boolean isAdded = transfereeGradeDaoImpl.add(transfereeGrade);
             if(isAdded){
                 JOptionPane.showMessageDialog(null,"Grades successfully recorded.");

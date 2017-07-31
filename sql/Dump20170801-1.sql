@@ -32,7 +32,7 @@ CREATE TABLE `admission_mt` (
   PRIMARY KEY (`admission_id`),
   UNIQUE KEY `registration_id_UNIQUE` (`registration_id`),
   CONSTRAINT `fk_admission_mtTABLE_registration_idCOL` FOREIGN KEY (`registration_id`) REFERENCES `registration_mt` (`registration_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='This is a table to be used for new students only.';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='This is a table to be used for new students only.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -883,7 +883,7 @@ CREATE TABLE `registration_mt` (
   CONSTRAINT `fk_registration_mtTABLE_gradelevel_idCOL` FOREIGN KEY (`gradelevel_id`) REFERENCES `gradelevel_mt` (`gradelevel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_registration_mtTABLE_paymentterm_idCOL` FOREIGN KEY (`paymentterm_id`) REFERENCES `paymentterm_mt` (`paymentterm_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_registration_mtTABLE_schoolyear_idCOL` FOREIGN KEY (`schoolyear_id`) REFERENCES `schoolyear_mt` (`schoolyear_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1 COMMENT='Master Table for registration of new students and transferees ';
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1 COMMENT='Master Table for registration of new students and transferees ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1426,7 +1426,7 @@ CREATE TABLE `student_fee` (
   KEY `fk_student_feeTABLE_fee_idCOL_idx` (`fee_id`),
   CONSTRAINT `fk_student_feeTABLE_fee_idCOL` FOREIGN KEY (`fee_id`) REFERENCES `fee_mt` (`fee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_student_feeTABLE_student_id` FOREIGN KEY (`student_id`) REFERENCES `student_mt` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=248 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1449,6 +1449,8 @@ CREATE TABLE `student_grade` (
   `student_grade_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
   `grade_id` int(11) NOT NULL,
+  `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
+  `isActive` bit(1) DEFAULT b'1',
   PRIMARY KEY (`student_grade_id`),
   KEY `fk_student_gradeTABLE_student_idCOL_idx` (`student_id`),
   KEY `fk_student_gradeTABLE_grade_idCOL_idx` (`grade_id`),
@@ -1485,7 +1487,7 @@ CREATE TABLE `student_mt` (
   UNIQUE KEY `registration_id_UNIQUE` (`registration_id`),
   KEY `fk_student_mtTABLE_registration_idCOL_idx` (`registration_id`),
   CONSTRAINT `fk_student_mtTABLE_registration_idCOL` FOREIGN KEY (`registration_id`) REFERENCES `registration_mt` (`registration_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=20170023 DEFAULT CHARSET=latin1 COMMENT='Students Master Table';
+) ENGINE=InnoDB AUTO_INCREMENT=20170024 DEFAULT CHARSET=latin1 COMMENT='Students Master Table';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1809,7 +1811,7 @@ CREATE TABLE `user_mt` (
 
 LOCK TABLES `user_mt` WRITE;
 /*!40000 ALTER TABLE `user_mt` DISABLE KEYS */;
-INSERT INTO `user_mt` VALUES (3,'jordan','jordanjordanjoan',1,0,'Antonio','John Ferdinand','Maala','2017-08-01 01:23:43','2016-05-18 22:35:02','jordan');
+INSERT INTO `user_mt` VALUES (3,'jordan','jordanjordanjoan',1,0,'Antonio','John Ferdinand','Maala','2017-08-01 01:46:58','2016-05-18 22:35:02','jordan');
 /*!40000 ALTER TABLE `user_mt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -9353,4 +9355,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-08-01  1:41:58
+-- Dump completed on 2017-08-01  2:01:36

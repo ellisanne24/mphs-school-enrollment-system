@@ -27,6 +27,7 @@ public class TransfereeGradeDaoImpl implements ITransfereeGrade{
         StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
         
         int studentId = studentDaoImpl.getId(transfereeGrade.getRegistrationId());
+        System.out.println("StudentId: "+studentId);
         String SQL = "{CALL addTransfereeGrade(?,?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
