@@ -90,17 +90,17 @@ public class SaveNewController{
         
         PaymentTerm s = new PaymentTerm();
         s.setSchoolYearId(schoolYearId);
-        s.setPaymentTermId(semestralId);
+        s.setId(semestralId);
         s.setPenaltyAmount(semestralAmount);
         
         PaymentTerm q = new PaymentTerm();
         q.setSchoolYearId(schoolYearId);
-        q.setPaymentTermId(quarterlyId);
+        q.setId(quarterlyId);
         q.setPenaltyAmount(quarterlyAmount);
         
         PaymentTerm m = new PaymentTerm();
         m.setSchoolYearId(schoolYearId);
-        m.setPaymentTermId(monthlyId);
+        m.setId(monthlyId);
         m.setPenaltyAmount(monthlyAmount);
         
         List<PaymentTerm> listOfPaymentTerms = new ArrayList<>();

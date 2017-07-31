@@ -23,6 +23,7 @@ public class RoomML {
             String roomName = room.getRoomName();
             model.addElement(roomName);
         }
+        model.setSelectedItem(null);
         return model;
     }
 }

@@ -14,6 +14,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import utility.string.StringUtil;
 
 /**
  *
@@ -23,18 +24,24 @@ public class FilterScheduleRecordController {
 
     private ItemListener schoolYearFromChange;
     private ItemListener subjectChange;
+    private ItemListener facultyChange;
     
 
     private final JComboBox jcmbSchoolYearFrom;
     private final JComboBox jcmbSubject;
     private final JTable jtblScheduleRecord;
     private final JCheckBox jcbAllSubjects;
+    private final JComboBox jcmbFaculty;
 
-    public FilterScheduleRecordController(JComboBox jcmbSchoolYearFrom, JComboBox jcmbSubject, JTable jtblScheduleRecord, JCheckBox jcbAllSubjects) {
+    public FilterScheduleRecordController(
+            JComboBox jcmbSchoolYearFrom, JComboBox jcmbSubject, 
+            JTable jtblScheduleRecord, JCheckBox jcbAllSubjects,
+            JComboBox jcmbFaculty) {
         this.jcmbSchoolYearFrom = jcmbSchoolYearFrom;
         this.jcmbSubject = jcmbSubject;
         this.jtblScheduleRecord = jtblScheduleRecord;
         this.jcbAllSubjects = jcbAllSubjects;
+        this.jcmbFaculty = jcmbFaculty;
     }
 
     public void control() {
@@ -71,5 +78,17 @@ public class FilterScheduleRecordController {
             }
         };
         jcmbSubject.addItemListener(subjectChange);
+        
+        facultyChange = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                int schoolyearId = schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString()));
+                String cleansedFacultyId = StringUtil.getNumbers(jcmbFaculty.getSelectedItem().toString().trim());
+                int facultyId = Integer.parseInt(cleansedFacultyId.trim());
+                DefaultTableModel model = new ScheduleML().getByFacultyId(facultyId, schoolyearId, jtblScheduleRecord);
+                jtblScheduleRecord.setModel(model);
+            }
+        };
+        jcmbFaculty.addItemListener(facultyChange);
     }
 }

@@ -5,13 +5,14 @@
  */
 package view.schedule;
 
+import component_model_loader.FacultyML;
 import component_model_loader.SbjML;
 import component_model_loader.ScheduleML;
 import component_model_loader.SchoolYearML;
 import utility.component.JInternalFrameUtil;
 import controller.global.SchoolYearController;
 import controller.schedule.FilterScheduleRecordController;
-import controller.schedule.NewController;
+import controller.schedule.DisplayCreateController;
 import controller.schedule.ScheduleTableRecordController;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.Color;
@@ -26,26 +27,30 @@ public class ScheduleRecord extends javax.swing.JPanel {
         UIManager.put("ComboBox.disabledBackground", new Color(212, 212, 210));
         UIManager.put("ComboBox.disabledForeground", Color.BLACK);
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
-        
-        
-        jcmbSchoolYearFrom.setModel(new SchoolYearML().getAllSchoolYearStart());
-        jcmbSchoolYearTo.setModel(new SchoolYearML().getAllSchoolYearEnd());
-        SchoolYearController schoolYearController = new SchoolYearController(jcmbSchoolYearFrom, jcmbSchoolYearTo);
-        jcmbSchoolYearFrom.addItemListener(schoolYearController);
-        
-        jcmbSubject.setModel(new SbjML().getSubjectNames());
-        jcmbSubject.setSelectedIndex(-1);
-        
-        jtblSchedule.setAutoCreateRowSorter(true);
-        jtblSchedule.setModel(new ScheduleML().getAllBySchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId(), jtblSchedule));
-        jtblSchedule.addMouseListener(new ScheduleTableRecordController(jtblSchedule));
-        
-        jmiNewSchedule.addActionListener(new NewController());
-        
-        FilterScheduleRecordController filterScheduleRecordController = new FilterScheduleRecordController(jcmbSchoolYearFrom, jcmbSubject, jtblSchedule,jcbAllSubjects);
-        filterScheduleRecordController.control();
+        initializeModels();
+        initializeControllers();
     }
 
+    private void initializeControllers() {
+        FilterScheduleRecordController filterScheduleRecordController = new FilterScheduleRecordController(
+                jcmbSchoolYearFrom, jcmbSubject, jtblSchedule, jcbAllSubjects, jcmbFaculty);
+        filterScheduleRecordController.control();
+        jmiNewSchedule.addActionListener(new DisplayCreateController());
+        jtblSchedule.addMouseListener(new ScheduleTableRecordController(jtblSchedule));
+        SchoolYearController schoolYearController = new SchoolYearController(jcmbSchoolYearFrom, jcmbSchoolYearTo);
+        jcmbSchoolYearFrom.addItemListener(schoolYearController);
+    }
+
+    private void initializeModels() {
+        jcmbSchoolYearFrom.setModel(new SchoolYearML().getAllSchoolYearStart());
+        jcmbSchoolYearTo.setModel(new SchoolYearML().getAllSchoolYearEnd());
+        jcmbSubject.setModel(new SbjML().getSubjectNames());
+        jcmbSubject.setSelectedIndex(-1);
+        jtblSchedule.setModel(new ScheduleML().getAllBySchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId(), jtblSchedule));
+        jtblSchedule.setAutoCreateRowSorter(true);
+        jcmbFaculty.setModel(new FacultyML().getAllFacultyNames());
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -67,6 +72,8 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jcbAllSubjects = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jlblFaculty = new javax.swing.JLabel();
+        jcmbFaculty = new javax.swing.JComboBox<>();
         jpnlScheduleTable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblSchedule = new javax.swing.JTable();
@@ -146,9 +153,17 @@ public class ScheduleRecord extends javax.swing.JPanel {
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jComboBox1, gridBagConstraints);
+
+        jlblFaculty.setText("Faculty");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel4.add(jlblFaculty, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel4.add(jcmbFaculty, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -268,9 +283,11 @@ public class ScheduleRecord extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JCheckBox jcbAllSubjects;
+    private javax.swing.JComboBox<String> jcmbFaculty;
     private javax.swing.JComboBox<String> jcmbSchoolYearFrom;
     private javax.swing.JComboBox<String> jcmbSchoolYearTo;
     private javax.swing.JComboBox<String> jcmbSubject;
+    private javax.swing.JLabel jlblFaculty;
     private javax.swing.JMenu jmenuFile;
     private javax.swing.JMenuItem jmiEdit;
     private javax.swing.JMenuItem jmiNewSchedule;

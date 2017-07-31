@@ -34,7 +34,7 @@ public class DiscountDaoImpl implements IDiscount {
                     Discount discount = new Discount();
                     discount.setDateCreated(rs.getDate("date_created"));
                     discount.setDescription(rs.getString("description"));
-                    discount.setDiscountId(rs.getInt("discount_id"));
+                    discount.setId(rs.getInt("discount_id"));
                     discount.setDiscountName(rs.getString("discount_name"));
                     discount.setIsActive(rs.getBoolean("isActive"));
                     discount.setPercentOfDiscount(rs.getInt("percentage"));
@@ -86,7 +86,7 @@ public class DiscountDaoImpl implements IDiscount {
                 while(rs.next()){
                     discount.setDateCreated(rs.getDate("date_created"));
                     discount.setDescription(rs.getString("description"));
-                    discount.setDiscountId(rs.getInt("discount_id"));
+                    discount.setId(rs.getInt("discount_id"));
                     discount.setDiscountName(rs.getString("discount_name"));
                     discount.setIsActive(rs.getBoolean("isActive"));
                     discount.setPercentOfDiscount(rs.getInt("percentage"));

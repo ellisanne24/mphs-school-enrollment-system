@@ -7,7 +7,6 @@ package component_model_loader;
 
 import daoimpl.SubjectDaoImpl;
 import java.util.List;
-import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 import model.gradelevel.GradeLevel;
 import model.subject.Subject;
@@ -82,7 +81,12 @@ public class SubjectML {
         }
 
         DefaultTableModel model = new DefaultTableModel(data, header()) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
 
+                return false;
+            };
+            
             @Override
             public Class getColumnClass(int c) {
                 return getValueAt(0, c).getClass();
@@ -93,66 +97,12 @@ public class SubjectML {
     }
 
     public DefaultTableModel getAllSubjectsByGradeLevelId(GradeLevel gl) {
-        Object[] obj = subjectDaoImpl.getAllSubjectsByGradeLevelId(gl).toArray();
-
-        Object[] columnId = new Object[subjectDaoImpl.getAllSubjectsByGradeLevelId(gl).size()];
-        Object[] columnTitle = new Object[subjectDaoImpl.getAllSubjectsByGradeLevelId(gl).size()];
-        Object[] columnCode = new Object[subjectDaoImpl.getAllSubjectsByGradeLevelId(gl).size()];
-        Object[] columnDescription = new Object[subjectDaoImpl.getAllSubjectsByGradeLevelId(gl).size()];
-        Object[] columnStatus = new Object[subjectDaoImpl.getAllSubjectsByGradeLevelId(gl).size()];
-
-        Object[][] data = new Object[subjectDaoImpl.getAllSubjectsByGradeLevelId(gl).size()][5];
-
-        int counterId = 0;
-        int counterTitle = 0;
-        int counterCode = 0;
-        int counterDescription = 0;
-        int counterStatus = 0;
-
-        int counterOne = 0;
-        int counterTwo = 0;
-        int counterThree = 0;
-        int counterFour = 0;
-        int counterFive = 0;
-
-        for (Object o : obj) {
-            Subject s = (Subject) o;
-
-            columnId[counterId++] = s.getSubjectId();
-            columnTitle[counterTitle++] = s.getGradeLevel();
-            columnCode[counterCode++] = s.getSubjectCode();
-            columnDescription[counterDescription++] = s.getSubjectDescription();
-            columnStatus[counterStatus++] = s.getIsActive();
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(header());
+        List<Subject> subjectList = subjectDaoImpl.getAllSubjectsByGradeLevelId(gl);
+        for(Subject s : subjectList){
+            model.addRow(new Object[]{s.getSubjectId(),s.getSubjectTitle(),s.getSubjectCode(),s.getSubjectDescription(),s.getIsActive() == false?"Inactive":"Active"});
         }
-
-        for (int row = 0; row < data.length; row++) {
-            for (int column = 0; column < data[row].length; column++) {
-                switch (column) {
-                    case 0:
-                        data[row][column] = columnId[counterOne++];
-                        break;
-                    case 1:
-                        data[row][column] = columnTitle[counterTwo++];
-                        break;
-                    case 2:
-                        data[row][column] = columnCode[counterThree++];
-                        break;
-                    case 3:
-                        data[row][column] = columnDescription[counterFour++];
-                        break;
-                    case 4:
-                        data[row][column] = columnStatus[counterFive++];
-                        break;
-                }
-            }
-        }
-
-        DefaultTableModel model = new DefaultTableModel(data, header()) {
-            @Override
-            public Class getColumnClass(int c) {
-                return getValueAt(0, c).getClass();
-            }
-        };
 
         return model;
     }

@@ -8,6 +8,7 @@ package model.tuitionfee;
 import java.util.List;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
+import model.downpayment.DownPaymentFee;
 import model.payment.Payment;
 import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
@@ -27,9 +28,18 @@ public class TuitionFee {
     private double balance;
     private PaymentTerm paymentTerm;
     private Discount discount;
+    private DownPaymentFee downPaymentFee;
     private List<BalanceBreakDownFee> balanceBreakDownFees;
     private SchoolYear schoolYear;
     private Student student;
+
+    public DownPaymentFee getDownPaymentFee() {
+        return downPaymentFee;
+    }
+
+    public void setDownPaymentFee(DownPaymentFee downPaymentFee) {
+        this.downPaymentFee = downPaymentFee;
+    }
 
     public Payment getPayment() {
         return payment;
@@ -46,7 +56,7 @@ public class TuitionFee {
     public void setHasDiscount(boolean hasDiscount) {
         this.hasDiscount = hasDiscount;
     }
-    
+
     public Student getStudent() {
         return student;
     }
@@ -54,7 +64,7 @@ public class TuitionFee {
     public void setStudent(Student student) {
         this.student = student;
     }
-    
+
     public SchoolYear getSchoolYear() {
         return schoolYear;
     }

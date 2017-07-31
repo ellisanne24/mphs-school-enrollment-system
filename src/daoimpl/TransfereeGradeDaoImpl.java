@@ -9,6 +9,7 @@ import dao.ITransfereeGrade;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import model.transfereegrade.TransfereeGrade;
 import utility.database.DBType;
 import utility.database.DBUtil;
@@ -24,6 +25,7 @@ public class TransfereeGradeDaoImpl implements ITransfereeGrade{
     public boolean add(TransfereeGrade transfereeGrade) {
         boolean isAdded = false;
         StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
+        
         int studentId = studentDaoImpl.getId(transfereeGrade.getRegistrationId());
         String SQL = "{CALL addTransfereeGrade(?,?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);

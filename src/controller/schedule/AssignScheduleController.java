@@ -5,7 +5,6 @@
  */
 package controller.schedule;
 
-import daoimpl.FacultyDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JTable;

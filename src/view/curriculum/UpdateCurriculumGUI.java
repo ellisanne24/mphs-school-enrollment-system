@@ -4,10 +4,10 @@ import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import utility.component.JTableUtil;
 import daoimpl.SchoolYearDaoImpl;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import utility.component.JTableUtil;
 
 public class UpdateCurriculumGUI extends javax.swing.JDialog {
 

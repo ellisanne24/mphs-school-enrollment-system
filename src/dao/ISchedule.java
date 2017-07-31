@@ -10,8 +10,6 @@ import model.schedule.Schedule;
  */
 public interface ISchedule {
     
-    boolean assignFaculty(Schedule schedule);
-
     boolean add(List<Schedule> schedule);
     
     boolean add(Schedule schedule);
@@ -23,4 +21,6 @@ public interface ISchedule {
     List<Schedule> getAll(int schoolYearId);
     
     List<Schedule> getAll(int subjectId , int schoolYearId);
+    
+    List<Schedule> getByFacultyId(int facultyId, int schoolYearId);
 }

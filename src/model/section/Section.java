@@ -1,16 +1,15 @@
-
 package model.section;
 
-import model.session.Session;
-import model.student.Student;
 import java.util.List;
 import model.faculty.Faculty;
-
-
+import model.grade.Grade;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
+import model.session.Session;
+import model.student.Student;
 
 public class Section {
+
     private int sectionId;
     private int sectionCategoryId;
     private String sectionName;
@@ -21,13 +20,16 @@ public class Section {
 //    private SchoolYear schoolYear;
 //    private GradeLevel gradeLevel;
     private Faculty adviser;
-    private int gradeFrom;
-    private int gradeTo;
+    private String requiredAverage;
     private String category;
-    
+
     public SchoolYear schoolYear = new SchoolYear();
     public GradeLevel gradeLevel = new GradeLevel();
     public Session session = new Session();
+    public Grade grade = new Grade();
+    public Faculty faculty = new Faculty();
+    public Student student = new Student();
+
     public Faculty getAdviser() {
         return adviser;
     }
@@ -35,7 +37,7 @@ public class Section {
     public void setAdviser(Faculty adviser) {
         this.adviser = adviser;
     }
-    
+
     public GradeLevel getGradeLevel() {
         return gradeLevel;
     }
@@ -43,7 +45,7 @@ public class Section {
     public void setGradeLevel(GradeLevel gradeLevel) {
         this.gradeLevel = gradeLevel;
     }
-    
+
     public List<Session> getSessionList() {
         return sessionList;
     }
@@ -59,7 +61,7 @@ public class Section {
     public void setSchoolYear(SchoolYear schoolYear) {
         this.schoolYear = schoolYear;
     }
-    
+
     public String getDateCreated() {
         return dateCreated;
     }
@@ -67,7 +69,7 @@ public class Section {
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
-    
+
     public int getSectionId() {
         return sectionId;
     }
@@ -99,45 +101,28 @@ public class Section {
     public void setIsActive(int isActive) {
         this.isActive = isActive;
     }
-    
-    public void setGradeFrom(int gradeFrom)
-    {
-        this.gradeFrom = gradeFrom;
+
+    public void setRequiredAverage(String requiredAverage) {
+        this.requiredAverage = requiredAverage;
     }
-    
-    public int getGradeFrom()
-    {
-        return gradeFrom;
+
+    public String getRequiredAverage() {
+        return requiredAverage;
     }
-    
-    public void setGradeTo(int gradeTo)
-    {
-        this.gradeTo = gradeTo;
-    }
-    
-    public int getGradeTo()
-    {
-        return gradeTo;
-    }
-    
-    public void setCategory(String category)
-    {
+
+    public void setCategory(String category) {
         this.category = category;
     }
-    
-    public String getCategory()
-    {
+
+    public String getCategory() {
         return category;
     }
-    
-    
-    public void setSectionCategoryId(int sectionCategoryId)
-    {
+
+    public void setSectionCategoryId(int sectionCategoryId) {
         this.sectionCategoryId = sectionCategoryId;
     }
-    
-    public int getSectionCategoryId()
-    {
+
+    public int getSectionCategoryId() {
         return sectionCategoryId;
     }
 }

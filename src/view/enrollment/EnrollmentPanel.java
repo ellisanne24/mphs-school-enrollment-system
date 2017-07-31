@@ -37,7 +37,7 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     JMenuItem menuItemCopyLastName = new JMenuItem("Copy Last Name");
     JPopupMenu popupMenu = new JPopupMenu();
     
-    private static final RegistrationML REGISTRATION_GUI_UTIL = new RegistrationML();
+    private static final RegistrationML registrationModelLoader = new RegistrationML();
     private static final StudentML STUDENT_GUI_UTIL = new StudentML();
     private static final StudentDaoImpl STUDENT_DAO_IMPL = new StudentDaoImpl();
     private static final SchoolYearDaoImpl SCHOOLYEAR_DAO_IMPL = new SchoolYearDaoImpl();
@@ -59,6 +59,8 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         jtblStudentsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
+    
+    
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -339,17 +341,17 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     public static void loadRegisteredApplicantsToJTable(){
-        DefaultTableModel dtm = REGISTRATION_GUI_UTIL.getAllRegisteredApplicants(jtblRegistrationList);
+        DefaultTableModel dtm = registrationModelLoader.getAllRegisteredApplicants(jtblRegistrationList);
         jtblRegistrationList.setModel(dtm);
     }
     
     
     private void jtfSearchRegisteredKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfSearchRegisteredKeyPressed
         if ((!jtfSearchRegistered.getText().isEmpty()) && (evt.getKeyCode() == KeyEvent.VK_ENTER)) {
-            DefaultTableModel dtm = REGISTRATION_GUI_UTIL.getAllRegisteredApplicantsByKeyword(jtblRegistrationList, jtfSearchRegistered.getText());
+            DefaultTableModel dtm = registrationModelLoader.getAllRegisteredApplicantsByKeyword(jtblRegistrationList, jtfSearchRegistered.getText());
             jtblRegistrationList.setModel(dtm);
         }else{
-            DefaultTableModel dtm = REGISTRATION_GUI_UTIL.getAllRegisteredApplicants(jtblRegistrationList);
+            DefaultTableModel dtm = registrationModelLoader.getAllRegisteredApplicants(jtblRegistrationList);
             jtblRegistrationList.setModel(dtm);
         }
     }//GEN-LAST:event_jtfSearchRegisteredKeyPressed
@@ -375,6 +377,7 @@ public class EnrollmentPanel extends javax.swing.JPanel {
             String valueOfFirstRowFirstColumn = jtblRegistrationList.getValueAt(selectedRow, 0).toString();
             int registrationId = Integer.parseInt(valueOfFirstRowFirstColumn);
             UpdateRegistrationDetailsGUI detailsGUI = new UpdateRegistrationDetailsGUI(registrationId);
+            detailsGUI.setLocationRelativeTo(null);
             detailsGUI.setVisible(true);
         }
     }//GEN-LAST:event_jtblRegistrationListMouseClicked

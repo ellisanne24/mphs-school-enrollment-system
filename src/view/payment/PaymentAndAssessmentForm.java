@@ -8,7 +8,6 @@ package view.payment;
 import daoimpl.DiscountDaoImpl;
 import daoimpl.FeeDaoImpl;
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -24,12 +23,10 @@ import utility.component.ImageUtil;
 import utility.input.InputUtil;
 import component_model_loader.SchoolFeesML;
 import java.awt.AlphaComposite;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -43,17 +40,12 @@ import daoimpl.GradeLevelDaoImpl;
 import daoimpl.RegistrationDaoImpl;
 import daoimpl.SchoolFeesDaoImpl;
 import daoimpl.TuitionFeeDaoImpl;
+import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
-import model.particulars.Particulars;
 import model.paymentterm.PaymentTerm;
 import model.schoolfees.SchoolFees;
-import model.schoolyear.SchoolYear;
 import model.tuitionfee.TuitionFee;
 import service.TuitionFeeProcessor;
 import threads.SchoolYearLoaderThread;
@@ -88,6 +80,8 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         displayPaymentFormController = new DisplayPaymentFormController(
                 jtfStudentID, jcmbSchoolYearFrom, jtblBalanceBreakdown, jcmbDiscount, jcmbPaymentTerm);
         jbtnPaySelected.addActionListener(displayPaymentFormController);
+        
+//        jtfStudentID.addKeyListener(new SearchStudentController(jcmbPaymentTerm, jtfStudentID,jcmbSchoolYearFrom));
         
         guiManager.setGUIComponentRenderers();
         guiManager.setGUIComponentModels();
@@ -1274,7 +1268,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
             jbtnResetDiscount.setEnabled(false);
             DefaultTableModel jtblBalanceBreakdownModel = (DefaultTableModel) jtblBalanceBreakdown.getModel();
             jtblBalanceBreakdownModel.setRowCount(0);
-            jbtnPaySelected.setEnabled(false);
+//            jbtnPaySelected.setEnabled(false);
             DefaultTableModel jtblTransactionHistoryModel = (DefaultTableModel)jtblTransactionHistory.getModel();
             jtblTransactionHistoryModel.setRowCount(0);
             int schoolYearFrom = Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString());
@@ -1634,7 +1628,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
                     aTuitionFee.setDiscount(discount);
                     TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(aTuitionFee, aSchoolFee);
                     aTuitionFee.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
-                    
                     
 //                    guiManager.resetForm();
                     FeeCollectionLoader feeCollectionLoader = new FeeCollectionLoader(aStudent,aSchoolFee, aTuitionFee);

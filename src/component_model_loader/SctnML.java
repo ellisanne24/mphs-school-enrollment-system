@@ -24,6 +24,7 @@ public class SctnML {
             String sectionName = s.getSectionName();
             model.addElement(sectionName);
         }
+        model.setSelectedItem(null);
         return model;
     }
 }

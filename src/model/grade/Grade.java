@@ -1,81 +1,102 @@
+package model.grade;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model.grade;
 
+
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.student.Student;
 import model.subject.Subject;
-import java.util.Date;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
 public class Grade {
-    private int studentId;
-    private Subject subject;
-    private int gradeId;
-    private double grade;
-    private Date dateAdded;
-    private int schoolYearId;
-    private int gradingPeriodId;
+    private int id;
+    private double first_qtr;
+    private double second_qtr;
+    private double third_qtr;
+    private double fourth_qtr;
+    private double finalGrade;
+    private double gwa;
+    private boolean isPassed;
+    
+    public Subject subject = new Subject();
+    public Student student = new Student();
+    public SchoolYear schoolYear = new SchoolYear();
+    public GradeLevel gradeLevel = new GradeLevel();
+    
+    
 
-    public int getGradingPeriodId() {
-        return gradingPeriodId;
+    public int getId() {
+        return id;
     }
 
-    public void setGradingPeriodId(int gradingPeriodId) {
-        this.gradingPeriodId = gradingPeriodId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public double getFirstQtr() {
+        return first_qtr;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setFirsQtr(double first_qtr) {
+        this.first_qtr = first_qtr;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public double getSecondQtr() {
+        return second_qtr;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setSecondQtr(double second_qtr) {
+        this.second_qtr = second_qtr;
+    }
+
+    public double getThirdQtr() {
+        return third_qtr;
+    }
+
+    public void setThirdQtr(double third_qtr) {
+        this.third_qtr = third_qtr;
+    }
+
+    public double getFourthQtr() {
+        return fourth_qtr;
+    }
+
+    public void setFourthQtr(double fourth_qtr) {
+        this.fourth_qtr = fourth_qtr;
+    }
+
+    public double getFinalGrade() {
+        return finalGrade;
+    }
+
+    public void setFinalGrade(double finalGrade) {
+        this.finalGrade = finalGrade;
+    }
+
+    public double getGwa() {
+        return gwa;
+    }
+
+    public void setGwa(double gwa) {
+        this.gwa = gwa;
     }
     
-    public int getGradeId() {
-        return gradeId;
-    }
-
-    public void setGradeId(int gradeId) {
-        this.gradeId = gradeId;
-    }
-
-    public double getGrade() {
-        return grade;
-    }
-
-    public void setGrade(double grade) {
-        this.grade = grade;
-    }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public int getSchoolYearId() {
-        return schoolYearId;
-    }
-
-    public void setSchoolYearId(int schoolYearId) {
-        this.schoolYearId = schoolYearId;
+    public void setIsPassed(boolean isPassed)
+    {
+        this.isPassed = isPassed;
     }
     
+    public boolean getIsPassed()
+    {
+        return isPassed;
+    }
     
 }

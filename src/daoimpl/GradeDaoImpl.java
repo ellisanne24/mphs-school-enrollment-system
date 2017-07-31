@@ -8,7 +8,6 @@ package daoimpl;
 import dao.IGrade;
 import java.util.List;
 import model.grade.Grade;
-
 /**
  *
  * @author John Ferdinand Antonio

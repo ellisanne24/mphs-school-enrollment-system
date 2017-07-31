@@ -22,6 +22,10 @@ import model.payment.Payment;
 import model.tuitionfee.TuitionFee;
 import org.joda.time.LocalDate;
 import service.PaymentProcessor;
+import view.container.TopContainer;
+import static view.container.TopContainer.jtpTopTabbedPane;
+import static view.container.TopContainer.setENROLLMENT_INSTANCE;
+import view.enrollment.EnrollmentPanel;
 import view.receipt.Receipt;
 
 public class PaySelectedForm extends javax.swing.JDialog {
@@ -278,20 +282,34 @@ public class PaySelectedForm extends javax.swing.JDialog {
                                 JOptionPane.showMessageDialog(null, "Transaction complete.");
                                 this.dispose();
                             } else {
-//                                JOptionPane.showMessageDialog(null, "Error encountered while processing payment.");
+                                JOptionPane.showMessageDialog(null, "Error encountered while processing payment.");
                             }
                         } else {
                             tuitionFee.setPayment(payment);
+                            
                             boolean added = tuitionFeeDaoImpl.add(tuitionFee);
                             if (added) {
                                 JOptionPane.showMessageDialog(null, "Transaction complete.");
-                                this.dispose();
+                                boolean isEnrolled = enrollmentDaoImpl.enrollStudent(student);
+                                if(isEnrolled){
+                                    JOptionPane.showMessageDialog(null,"Student is now active.");
+                                   int enrollmentInstance = TopContainer.getENROLLMENT_INSTANCE();
+                                        if (enrollmentInstance <= 0) {
+                                            EnrollmentPanel enrollmentPanel = new EnrollmentPanel();
+                                            jtpTopTabbedPane.add("Enrollment", enrollmentPanel);
+                                            jtpTopTabbedPane.setSelectedComponent(enrollmentPanel);
+                                            setENROLLMENT_INSTANCE(1);
+                                        }
+                                    
+                                    this.dispose();
+                                }
+                                
                                 //schoolyear enrolled
                                 //present gradelevel
                                 //recommended gradelevel to enroll
                                 //studentId
                             } else {
-//                                JOptionPane.showMessageDialog(null, "Error encountered while processing payment.");
+                                JOptionPane.showMessageDialog(null, "Error encountered while processing payment.");
                             }
                         }
                         OfficialReceipt officialReceipt = new OfficialReceipt();

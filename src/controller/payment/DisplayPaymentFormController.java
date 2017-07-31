@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import model.balancebreakdownfee.BalanceBreakDownFee;
@@ -44,11 +45,11 @@ import static view.payment.PaymentAndAssessmentForm.jtblBalanceBreakdown;
 public class DisplayPaymentFormController implements ActionListener {
 
     SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
-    private JTextField jtfStudentId;
-    private JComboBox jcmbSchoolYearFrom;
-    private JComboBox jcmbDiscount;
-    private JComboBox jcmbPaymentTerm;
-    private JTable jtblBalanceBreakDown;
+    private final JTextField jtfStudentId;
+    private final JComboBox jcmbSchoolYearFrom;
+    private final JComboBox jcmbDiscount;
+    private final JComboBox jcmbPaymentTerm;
+    private final JTable jtblBalanceBreakDown;
 
     public DisplayPaymentFormController(JTextField jtfStudentId, JComboBox jcmbSchoolYearFrom, JTable jtblBalanceBreakDown,
             JComboBox jcmbDiscount, JComboBox jcmbPaymentTerm) {
@@ -64,11 +65,17 @@ public class DisplayPaymentFormController implements ActionListener {
         Particulars particulars = getParticulars();
         TuitionFee tuitionFee = getTuitionFee();
 
-        PaySelectedForm psf = new PaySelectedForm(particulars, tuitionFee);
-        psf.setPreferredSize(new Dimension(540, 450));
-        psf.pack();
-        psf.setLocationRelativeTo(null);
-        psf.setVisible(true);
+        if (jtblBalanceBreakDown.getSelectedRows().length == 0) {
+            JOptionPane.showMessageDialog(null, "Please select an item to pay.");
+        } else if (particulars.getBalanceSum() <= 0) {
+            JOptionPane.showMessageDialog(null, "All fees are paid.");
+        } else {
+            PaySelectedForm psf = new PaySelectedForm(particulars, tuitionFee);
+            psf.setPreferredSize(new Dimension(540, 450));
+            psf.pack();
+            psf.setLocationRelativeTo(null);
+            psf.setVisible(true);
+        }
     }
 
     private Particulars getParticulars() {
@@ -138,8 +145,10 @@ public class DisplayPaymentFormController implements ActionListener {
                 discount = ddi.get(discountId);
             }
             paymentTerm.setName(jcmbPaymentTerm.getSelectedItem().toString().trim());
-            paymentTerm.setPaymentTermId(ptdi.getId(jcmbPaymentTerm.getSelectedItem().toString().trim()));
+            paymentTerm.setId(ptdi.getId(jcmbPaymentTerm.getSelectedItem().toString().trim()));
 
+            System.out.println("Test :"+jcmbPaymentTerm.getSelectedItem().toString().trim());
+            
             tuitionFee.setExists(false);
             tuitionFee.setDiscount(discount);
             tuitionFee.setPaymentTerm(paymentTerm);

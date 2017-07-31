@@ -8,7 +8,7 @@ package model.discount;
 import java.util.Date;
 
 public class Discount {
-    private Integer discountId;
+    private Integer id;
     private String discountName;
     private Integer percentOfDiscount;
     private String description;
@@ -32,12 +32,12 @@ public class Discount {
         this.dateCreated = dateCreated;
     }
     
-    public Integer getDiscountId() {
-        return discountId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setDiscountId(Integer discountId) {
-        this.discountId = discountId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDiscountName() {

@@ -36,7 +36,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     public boolean add(TuitionFee tuitionFee) {
         boolean isAdded = true;
         PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
-        int paymentTermId = paymentTerm.getPaymentTermId();
+        int paymentTermId = paymentTerm.getId();
 
         Discount discount = tuitionFee.getDiscount();
         int studentId = tuitionFee.getStudent().getStudentId();
@@ -71,7 +71,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     }
                     if (discount != null) {
                         csC.setInt(1, studentId);
-                        csC.setInt(2, discount.getDiscountId());
+                        csC.setInt(2, discount.getId());
                         csC.setInt(3, schoolYearId);
                         csC.setDouble(4,discount.getAmount());
                         csC.executeUpdate();
@@ -136,7 +136,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                         BalanceBreakDownFee balanceBreakDownFee = new BalanceBreakDownFee();
                         balanceBreakDownFee.setAmount(rsb.getDouble("amount"));
                         balanceBreakDownFee.setBalance(rsb.getDouble("balance"));
-                        balanceBreakDownFee.setBalanceBreakDownFeeId(rsb.getInt("balance_breakdown_fee_id"));
+                        balanceBreakDownFee.setId(rsb.getInt("balance_breakdown_fee_id"));
                         balanceBreakDownFee.setDateAssigned(rsb.getTimestamp("date_assigned"));
                         balanceBreakDownFee.setIsPaid(rsb.getBoolean("isPaid"));
                         balanceBreakDownFee.setSchoolYearId(rsb.getInt("schoolyear_id"));
@@ -160,7 +160,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 csD.setInt(2, schoolyearId);
                 try(ResultSet rsD = csD.executeQuery();){
                     while(rsD.next()){
-                        paymentTerm.setPaymentTermId(rsD.getInt("paymentterm_id"));
+                        paymentTerm.setId(rsD.getInt("paymentterm_id"));
                         paymentTerm.setName(rsD.getString("paymentterm"));
                         paymentTerm.setIsActive(rsD.getBoolean("isActive"));
                     }
@@ -171,7 +171,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 try(ResultSet rsE = csE.executeQuery();){
                     while(rsE.next()){
                         discount.setAmount(rsE.getInt("amount"));
-                        discount.setDiscountId(rsE.getInt("discount_id"));
+                        discount.setId(rsE.getInt("discount_id"));
                         discount.setDiscountName(rsE.getString("discount_name"));
                         discount.setPercentOfDiscount(rsE.getInt("percentage"));
                         discount.setDescription(rsE.getString("description"));
@@ -228,9 +228,8 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 int aTransactionId = csA.getInt(2);
                 
                 for(BalanceBreakDownFee b: tuitionFee.getPayment().getParticulars().getBalanceBreakDownFees()){
-//                    JOptionPane.showMessageDialog(null,"Balance BreakDown Id: "+b.getBalanceBreakDownFeeId());
 
-                    csB.setInt(1, b.getBalanceBreakDownFeeId());
+                    csB.setInt(1, b.getId());
                     csB.setDouble(2,tuitionFee.getPayment().getAmountTendered());
                     csB.registerOutParameter(3, Types.INTEGER);
                     csB.executeUpdate();
@@ -244,7 +243,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 con.commit();
                 isSuccessfullyPaid = true;
             } catch (SQLException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage());
+                JOptionPane.showMessageDialog(null, e.getMessage());
             }
 
         } catch (SQLException e) {

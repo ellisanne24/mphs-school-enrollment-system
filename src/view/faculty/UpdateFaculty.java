@@ -1,11 +1,13 @@
 package view.faculty;
 
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SpecializationDaoImpl;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import model.faculty.Faculty;
+import model.specialization.Specialization;
 
 
 public class UpdateFaculty extends javax.swing.JDialog {
@@ -13,53 +15,47 @@ public class UpdateFaculty extends javax.swing.JDialog {
     private int facultyId;
 
     public UpdateFaculty(java.awt.Frame parent, boolean modal, int FacultyID) {
-
         super(parent, modal);
         initComponents();
         this.facultyId = FacultyID;
-
         loadFaculty();
         loadSpecializationToComboBox();
     }
 
     public void loadSpecializationToComboBox() {
-
-        FacultyDaoImpl fdi = new FacultyDaoImpl();
-        Object[] specializationData = fdi.getAllSpecializationInfo().toArray();
+        SpecializationDaoImpl sdi = new SpecializationDaoImpl();
+        Object[] specializationData = sdi.getAll().toArray();
         DefaultComboBoxModel jcb = (DefaultComboBoxModel) update_specialization.getModel();
-
-        for (Object faculty : specializationData) {
-            Faculty f = (Faculty) faculty;
-            jcb.addElement(f.getSpecializationTitle());
-
+        for (Object o : specializationData) {
+            Specialization s = (Specialization) o;
+            jcb.addElement(s.getName());
         }
         update_specialization.setModel(jcb);
-
     }
 
     public void loadFaculty() {
+        SpecializationDaoImpl sdi = new SpecializationDaoImpl();
         FacultyDaoImpl fdi = new FacultyDaoImpl();
-        Object[] FacultySpecialization = fdi.getFacultyAndSpecializationByFacultyID(this.facultyId).toArray();
+        
+        Object[] record = fdi.getById(this.facultyId).toArray();
         DefaultListModel dlm = new DefaultListModel();
 
-        for (Object o : FacultySpecialization) {
+        for (Object o : record) {
             Faculty f = (Faculty) o;
-            dlm.addElement(f.getSpecializationTitle());
+//            dlm.addElement(f.getSpecializationTitle());
+            
             jtf_updateFirstName.setText(f.getFirstName());
             jtf_updateLastName.setText(f.getLastName());
             jtf_updateMiddleName.setText(f.getMiddleName());
             jtf_updateEmailAddress.setText(f.getEmailAddress());
             jtf_updateContact.setText(f.getContact());
-            jcb_updateCivilStatus.setSelectedItem(f.getCivilStatus());
             jcb_updateDegree.setSelectedItem(f.getDegree());
             cb_status.isSelected();
             if (cb_status.isSelected() == true) {
                 cb_status.setSelected(f.getStatus());
             }
-
         }
         jlist_UpdateSpecialization.setModel(dlm);
-
     }
 
     @SuppressWarnings("unchecked")
@@ -74,8 +70,6 @@ public class UpdateFaculty extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jcb_updateCivilStatus = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jcb_updateDegree = new javax.swing.JComboBox<>();
         jtf_updateFirstName = new javax.swing.JTextField();
@@ -154,24 +148,6 @@ public class UpdateFaculty extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
         jPanel3.add(jLabel5, gridBagConstraints);
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel6.setText("Civil Status:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel3.add(jLabel6, gridBagConstraints);
-
-        jcb_updateCivilStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single", "Married", "Widowed", "In a Relationship" }));
-        jcb_updateCivilStatus.setPreferredSize(new java.awt.Dimension(130, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel3.add(jcb_updateCivilStatus, gridBagConstraints);
-
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel7.setText("Degree:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -181,7 +157,7 @@ public class UpdateFaculty extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
         jPanel3.add(jLabel7, gridBagConstraints);
 
-        jcb_updateDegree.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Board Passer", "Masters", "Doctors", " " }));
+        jcb_updateDegree.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Board Passer", "Masters", "Doctors" }));
         jcb_updateDegree.setPreferredSize(new java.awt.Dimension(130, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -271,7 +247,7 @@ public class UpdateFaculty extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(50, 5, 5, 5);
         jPanel2.add(update_specialization, gridBagConstraints);
 
-        jButton1.setText("+");
+        jButton1.setText("Add");
         jButton1.setPreferredSize(new java.awt.Dimension(100, 30));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -284,7 +260,7 @@ public class UpdateFaculty extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(jButton1, gridBagConstraints);
 
-        jButton4.setText("-");
+        jButton4.setText("Remove");
         jButton4.setPreferredSize(new java.awt.Dimension(100, 30));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -377,7 +353,6 @@ public class UpdateFaculty extends javax.swing.JDialog {
         jtf_updateMiddleName.setText("");
         jtf_updateEmailAddress.setText("");
         jtf_updateContact.setText("");
-        jcb_updateCivilStatus.setSelectedItem("");
         jcb_updateDegree.setSelectedItem("");
 
 
@@ -400,7 +375,6 @@ public class UpdateFaculty extends javax.swing.JDialog {
         faculty.setMiddleName(mName);
         faculty.setEmailAddress(jtf_updateEmailAddress.getText().trim());
         faculty.setContact(jtf_updateContact.getText().trim());
-        faculty.setCivilStatus(jcb_updateCivilStatus.getSelectedItem().toString());
         faculty.setDegree(jcb_updateDegree.getSelectedItem().toString());
 
         boolean isActive;
@@ -410,19 +384,16 @@ public class UpdateFaculty extends javax.swing.JDialog {
         int update = JOptionPane.showConfirmDialog(null, "Update faculty?", "SUBMIT", JOptionPane.YES_NO_OPTION);
 
         if (update == JOptionPane.YES_OPTION) {
-            boolean isUpdated = fdi.updateFaculty(faculty);
+            boolean isUpdated = fdi.update(faculty);
             if (isUpdated) {
-
                 jtf_updateFirstName.setText("");
                 jtf_updateLastName.setText("");
                 jtf_updateMiddleName.setText("");
                 jtf_updateEmailAddress.setText("");
                 jtf_updateContact.setText("");
-                jcb_updateCivilStatus.setSelectedItem("");
                 jcb_updateDegree.setSelectedItem("");
                 JOptionPane.showMessageDialog(null, "Successfully Updated");
                 loadFaculty();
-
             } else {
                 JOptionPane.showMessageDialog(null, "Error occured during Updating ");
             }
@@ -457,7 +428,6 @@ public class UpdateFaculty extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -471,7 +441,6 @@ public class UpdateFaculty extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton jbtn_updateFacultyAndSpecialization;
-    private javax.swing.JComboBox<String> jcb_updateCivilStatus;
     private javax.swing.JComboBox<String> jcb_updateDegree;
     private javax.swing.JList<String> jlist_UpdateSpecialization;
     private javax.swing.JTextField jtf_updateContact;

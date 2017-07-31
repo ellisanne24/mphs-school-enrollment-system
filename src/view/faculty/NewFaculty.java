@@ -4,58 +4,53 @@ import controller.faculty.AssignSpecializationController;
 import javax.swing.JOptionPane;
 
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SpecializationDaoImpl;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.faculty.Faculty;
+import model.specialization.Specialization;
 
 public class NewFaculty extends javax.swing.JPanel {
 
     public NewFaculty() {
         initComponents();
+        jtbl_faculty.setAutoCreateRowSorter(true);
         setjtblFaculty();
-        setjcbSpecializationToJCB();
+        updateSpecializationJcb();
         loadSpecializtionToJtable();
 
-        jbtnAssignSpecilization.addActionListener(new AssignSpecializationController(jcb_getSpecialization, jlstFacultySpecialization));
+        jbtnAssignSpecilization.addActionListener(new AssignSpecializationController(jcbSpecializations, jlstFacultySpecialization));
     }
 
     @SuppressWarnings("unchecked")
-
     private void loadSpecializtionToJtable() {
-
-        FacultyDaoImpl fdi = new FacultyDaoImpl();
-        Object[] facultyData = fdi.getAllSpecializationInfo().toArray();
+        SpecializationDaoImpl sdi = new SpecializationDaoImpl();
+        Object[] specializations = sdi.getAll().toArray();
         DefaultTableModel tableModel = (DefaultTableModel) SpecializationTable.getModel();
         tableModel.setRowCount(0);
-        for (Object faculty : facultyData) {
-            Faculty f = (Faculty) faculty;
-            Object[] o
-                    = {
-                        f.getSpecializationID(),
-                        f.getSpecializationTitle(),
-                        f.getSpecializationDescription(),
-                        f.getDateCreated(),};
-            tableModel.addRow(o);
+        for (Object o : specializations) {
+            Specialization s = (Specialization) o;
+            Object[] rowData = {
+                s.getId(), s.getName(), s.getDescription(), s.getDateCreated()
+            };
+            tableModel.addRow(rowData);
         }
-
     }
 
-    private void setjcbSpecializationToJCB() {
-
-        FacultyDaoImpl fdi = new FacultyDaoImpl();
-        Object[] specializationData = fdi.getAllSpecializationInfo().toArray();
-        DefaultComboBoxModel jcb = (DefaultComboBoxModel) jcb_getSpecialization.getModel();
-
-        for (Object faculty : specializationData) {
-            Faculty f = (Faculty) faculty;
-            jcb.addElement(f.getSpecializationTitle());
-
+    private void updateSpecializationJcb() {
+        SpecializationDaoImpl sdi = new SpecializationDaoImpl();
+        Object[] specializationData = sdi.getAll().toArray();
+        DefaultComboBoxModel jcb = (DefaultComboBoxModel) jcbSpecializations.getModel();
+        for (Object obj : specializationData) {
+            Specialization s = (Specialization) obj;
+            jcb.addElement(s.getName());
         }
-        jcb_getSpecialization.setModel(jcb);
-
+        jcbSpecializations.setModel(jcb);
     }
 
     private void search(String query) {
@@ -70,7 +65,7 @@ public class NewFaculty extends javax.swing.JPanel {
     public void setjtblFaculty() {
 
         FacultyDaoImpl fdi = new FacultyDaoImpl();
-        Object[] facultyData = fdi.getAllFaculty().toArray();
+        Object[] facultyData = fdi.getAll().toArray();
         DefaultTableModel tableModel = (DefaultTableModel) jtbl_faculty.getModel();
         tableModel.setRowCount(0);
         for (Object faculty : facultyData) {
@@ -82,7 +77,6 @@ public class NewFaculty extends javax.swing.JPanel {
                         f.getMiddleName(),
                         f.getEmailAddress(),
                         f.getContact(),
-                        f.getCivilStatus(),
                         f.getDegree(),
                         f.getStatus() == true ? "Active" : "Inactive"
                     };
@@ -106,8 +100,6 @@ public class NewFaculty extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jbc_civilStatus = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jbc_degree = new javax.swing.JComboBox<>();
         jtf_fname = new javax.swing.JTextField();
@@ -118,7 +110,7 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
-        jcb_getSpecialization = new javax.swing.JComboBox<>();
+        jcbSpecializations = new javax.swing.JComboBox<>();
         jbtnAssignSpecilization = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jPanel13 = new javax.swing.JPanel();
@@ -218,24 +210,6 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
         jPanel5.add(jLabel5, gridBagConstraints);
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel6.setText("Civil Status:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel5.add(jLabel6, gridBagConstraints);
-
-        jbc_civilStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single", "Married", "Widowed", "In a Relationship", " " }));
-        jbc_civilStatus.setPreferredSize(new java.awt.Dimension(130, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel5.add(jbc_civilStatus, gridBagConstraints);
-
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel7.setText("Degree:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -310,19 +284,19 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel12.setPreferredSize(new java.awt.Dimension(150, 344));
         jPanel12.setLayout(new java.awt.GridBagLayout());
 
-        jcb_getSpecialization.setPreferredSize(new java.awt.Dimension(120, 25));
-        jcb_getSpecialization.addActionListener(new java.awt.event.ActionListener() {
+        jcbSpecializations.setPreferredSize(new java.awt.Dimension(120, 25));
+        jcbSpecializations.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcb_getSpecializationActionPerformed(evt);
+                jcbSpecializationsActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(50, 5, 5, 5);
-        jPanel12.add(jcb_getSpecialization, gridBagConstraints);
+        jPanel12.add(jcbSpecializations, gridBagConstraints);
 
-        jbtnAssignSpecilization.setText("+");
+        jbtnAssignSpecilization.setText("Add");
         jbtnAssignSpecilization.setPreferredSize(new java.awt.Dimension(100, 30));
         jbtnAssignSpecilization.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -335,7 +309,7 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel12.add(jbtnAssignSpecilization, gridBagConstraints);
 
-        jButton4.setText("-");
+        jButton4.setText("Remove");
         jButton4.setPreferredSize(new java.awt.Dimension(100, 30));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -463,7 +437,9 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel9.add(jtf_searchFaculty, gridBagConstraints);
 
-        jPanel2.add(jPanel9, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel2.add(jPanel9, gridBagConstraints);
 
         jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel10.setPreferredSize(new java.awt.Dimension(985, 390));
@@ -479,17 +455,18 @@ public class NewFaculty extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Faculty ID", "First Name", "Last Name", "Middle Name", "Email Address", "Contact", "Civil Status", "Degree", "Status"
+                "Faculty ID", "First Name", "Last Name", "Middle Name", "Email Address", "Contact", "Degree", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jtbl_faculty.getTableHeader().setReorderingAllowed(false);
         jtbl_faculty.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtbl_facultyMouseClicked(evt);
@@ -508,7 +485,6 @@ public class NewFaculty extends javax.swing.JPanel {
             jtbl_faculty.getColumnModel().getColumn(5).setResizable(false);
             jtbl_faculty.getColumnModel().getColumn(6).setResizable(false);
             jtbl_faculty.getColumnModel().getColumn(7).setResizable(false);
-            jtbl_faculty.getColumnModel().getColumn(8).setResizable(false);
         }
 
         jPanel15.add(jScrollPane5, java.awt.BorderLayout.CENTER);
@@ -520,6 +496,9 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(jPanel10, gridBagConstraints);
 
@@ -700,22 +679,30 @@ public class NewFaculty extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AddFacultyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddFacultyActionPerformed
-
+        SpecializationDaoImpl sdi = new SpecializationDaoImpl();
         Faculty faculty = new Faculty();
         faculty.setFirstName(jtf_fname.getText().trim());
         faculty.setLastName(jtf_lname.getText().trim());
         faculty.setMiddleName(jtf_mname.getText().trim());
         faculty.setEmailAddress(jtf_email.getText().trim());
         faculty.setContact(jtf_contact.getText().trim());
-        faculty.setCivilStatus(jbc_civilStatus.getSelectedItem().toString());
         faculty.setDegree(jbc_degree.getSelectedItem().toString());
-        faculty.setSpecializationTitle(jlstFacultySpecialization.getSelectedValuesList().toString());
+        int listSize = jlstFacultySpecialization.getModel().getSize();
+        List<Specialization> specializationList = new ArrayList<>();
+        for(int i = 0; i <listSize; i++){
+            int specId = sdi.getId(jlstFacultySpecialization.getModel().getElementAt(i).trim());
+            System.out.println("Id : "+specId);
+            Specialization specialization = new Specialization();
+            specialization.setId(specId);
+            specializationList.add(specialization);
+        }
+        faculty.setSpecializations(specializationList);
+        
+        int choice = JOptionPane.showConfirmDialog(null, "Submit new faculty?", "SUBMIT", JOptionPane.YES_NO_OPTION);
 
-        int register = JOptionPane.showConfirmDialog(null, "Submit new faculty?", "SUBMIT", JOptionPane.YES_NO_OPTION);
-
-        if (register == JOptionPane.YES_OPTION) {
-            daoimpl.FacultyDaoImpl fdi = new daoimpl.FacultyDaoImpl();
-            boolean isAdded = fdi.addFaculty(faculty);
+        if (choice == JOptionPane.YES_OPTION) {
+            FacultyDaoImpl fdi = new daoimpl.FacultyDaoImpl();
+            boolean isAdded = fdi.add(faculty);
             if (isAdded) {
                 jtf_fname.setText("");
                 jtf_lname.setText("");
@@ -732,25 +719,22 @@ public class NewFaculty extends javax.swing.JPanel {
 
 
     private void addSpecializationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSpecializationActionPerformed
-        Faculty faculty = new Faculty();
-        faculty.setSpecializationTitle(jtfSpecializationName.getText().trim());
-        faculty.setSpecializationDescription(jta_description.getText().trim());
+        Specialization s = new Specialization();
+        s.setName(jtfSpecializationName.getText().trim());
+        s.setDescription(jta_description.getText().trim());
 
         int add = JOptionPane.showConfirmDialog(null, "Submit new Specialization??", "SUBMIT", JOptionPane.YES_NO_OPTION);
 
         if (add == JOptionPane.YES_OPTION) {
-            daoimpl.FacultyDaoImpl fdi = new daoimpl.FacultyDaoImpl();
-            boolean isAdded = fdi.addSpecialization(faculty);
+            SpecializationDaoImpl sdi = new SpecializationDaoImpl();
+            boolean isAdded = sdi.add(s);
             if (isAdded) {
-
                 jtfSpecializationName.setText("");
                 jta_description.setText("");
-
                 JOptionPane.showMessageDialog(null, "Successfully added");
 
                 loadSpecializtionToJtable();
-                setjcbSpecializationToJCB();
-
+                updateSpecializationJcb();
             } else {
                 JOptionPane.showMessageDialog(null, "Error occured during Adding ");
             }
@@ -762,16 +746,14 @@ public class NewFaculty extends javax.swing.JPanel {
     }//GEN-LAST:event_jtf_searchFacultyActionPerformed
 
     private void jtbl_facultyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbl_facultyMouseClicked
-
         if (evt.getClickCount() == 2) {
-
             int selectedRow = jtbl_faculty.getSelectedRow();
             String valueOfFirstRowFirstColumn = jtbl_faculty.getValueAt(selectedRow, 0).toString();
             int FacultyID = Integer.parseInt(valueOfFirstRowFirstColumn);
             UpdateFaculty faculty = new UpdateFaculty(null, true, FacultyID);
+            faculty.setLocationRelativeTo(null);
             faculty.setVisible(true);
         }
-
     }//GEN-LAST:event_jtbl_facultyMouseClicked
 
     private void jtbl_facultyMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbl_facultyMousePressed
@@ -791,9 +773,9 @@ public class NewFaculty extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jtf_searchFacultyKeyReleased
 
-    private void jcb_getSpecializationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcb_getSpecializationActionPerformed
+    private void jcbSpecializationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbSpecializationsActionPerformed
 
-    }//GEN-LAST:event_jcb_getSpecializationActionPerformed
+    }//GEN-LAST:event_jcbSpecializationsActionPerformed
 
     private void jtfSpecializationNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfSpecializationNameActionPerformed
         // TODO add your handling code here:
@@ -811,7 +793,7 @@ public class NewFaculty extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         DefaultListModel dlm = new DefaultListModel();
-        String o = jcb_getSpecialization.getSelectedItem().toString();
+        String o = jcbSpecializations.getSelectedItem().toString();
         dlm.removeElement(o);
         jlstFacultySpecialization.setModel(dlm);
 
@@ -839,21 +821,20 @@ public class NewFaculty extends javax.swing.JPanel {
         int specializationId = Integer.parseInt(SpecializationTable.getValueAt(SpecializationTable.getSelectedRow(), 0).toString());
 
         Faculty faculty = new Faculty();
-        faculty.setSpecializationID(specializationId);
-        faculty.setSpecializationTitle(title);
-        faculty.setSpecializationDescription(description);
+//        faculty.setSpecializationID(specializationId);
+//        faculty.setSpecializationTitle(title);
+//        faculty.setSpecializationDescription(description);
 
         int update = JOptionPane.showConfirmDialog(null, "Update faculty?", "SUBMIT", JOptionPane.YES_NO_OPTION);
 
         if (update == JOptionPane.YES_OPTION) {
-            boolean isUpdated = fdi.updateSpecialization(faculty);
+            boolean isUpdated = fdi.update(faculty);
             if (isUpdated) {
-
                 jtfSpecializationName.setText("");
                 jta_description.setText("");
 
                 loadSpecializtionToJtable();
-                setjcbSpecializationToJCB();
+                updateSpecializationJcb();
                 JOptionPane.showMessageDialog(null, "Successfully Updated");
 
             } else {
@@ -877,7 +858,6 @@ public class NewFaculty extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -911,10 +891,9 @@ public class NewFaculty extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JComboBox<String> jbc_civilStatus;
     private javax.swing.JComboBox<String> jbc_degree;
     private javax.swing.JButton jbtnAssignSpecilization;
-    private javax.swing.JComboBox<String> jcb_getSpecialization;
+    private javax.swing.JComboBox<String> jcbSpecializations;
     private javax.swing.JList<String> jlstFacultySpecialization;
     private javax.swing.JTextArea jta_description;
     public static javax.swing.JTable jtbl_faculty;

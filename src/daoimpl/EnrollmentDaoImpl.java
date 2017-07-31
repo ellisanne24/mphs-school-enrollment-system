@@ -64,13 +64,9 @@ public class EnrollmentDaoImpl implements IEnrollment{
         
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, student.getSchoolYearEnrolled().getSchoolYearId());
+            cs.setInt(1, student.getLastGradeLevelEnrolledSchoolYear().getSchoolYearId());
             cs.setInt(2, student.getStudentId());
             cs.setInt(3, recommendedGradeLevelId);
-            JOptionPane.showMessageDialog(
-                    null, "Enrolled SchoolYear Id: " + student.getSchoolYearEnrolled().getSchoolYearId()
-                    + "\nStudent Id: " + student.getStudentId()
-                    + "\nRecommended GradeLevelt Id: " + student.getRecommendedGradeLevelToEnroll().getId());
             cs.executeUpdate();
             isSuccessfullyEnrolled = true;
         } catch (SQLException e) {

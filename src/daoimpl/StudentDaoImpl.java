@@ -25,6 +25,11 @@ import dao.IStudent;
 public class StudentDaoImpl implements IStudent {
 
     @Override
+    public boolean exists(int aStudentId, int aSchoolYearId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
     public Integer getId(int registrationId) {
         Integer studentId = null;
         String SQL = "{CALL getStudentIdByRegistrationId(?)}";
@@ -215,6 +220,7 @@ public class StudentDaoImpl implements IStudent {
                         student.setIsActive(rsa.getBoolean(StudentTable.ISACTIVE));
 
                         student.setStudentType(rsa.getInt("studentType"));
+                        student.setIsNew((rsa.getInt("studentType")==1));
 
                         admissionGradeLevel.setLevel(rsa.getInt("admissionGradeLevel"));
                         if (rsa.getObject("aPassed") == null) {

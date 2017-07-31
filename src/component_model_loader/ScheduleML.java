@@ -24,7 +24,7 @@ public class ScheduleML {
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
                 s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectName(), s.getRoomName()
+                s.getSubjectName(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;
@@ -38,7 +38,21 @@ public class ScheduleML {
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
                 s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectName(), s.getRoomName()
+                s.getSubjectName(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+            });
+        }
+        return model;
+    }
+    
+    public DefaultTableModel getByFacultyId(int aFacultyId, int aSchoolYearId, JTable jtable){
+        DefaultTableModel model = (DefaultTableModel) jtable.getModel();
+        model.setRowCount(0);
+        Object[] scheduleList = scheduleDaoImpl.getByFacultyId(aFacultyId, aSchoolYearId).toArray();
+        for(Object o : scheduleList){
+            Schedule s = (Schedule)o;
+            model.addRow(new Object[]{
+                s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
+                s.getSubjectName(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;

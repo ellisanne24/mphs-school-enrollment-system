@@ -40,7 +40,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             try (ResultSet rsa = csa.executeQuery();) {
                 while (rsa.next()) {
                     PaymentTerm paymentTerm = new PaymentTerm();
-                    paymentTerm.setPaymentTermId(rsa.getInt("paymentterm_id"));
+                    paymentTerm.setId(rsa.getInt("paymentterm_id"));
                     paymentTerm.setName(rsa.getString("paymentterm"));
                     paymentTerm.setIsActive(rsa.getBoolean("isActive"));
                     paymentTerm.setDivisor(rsa.getInt("divisor"));
@@ -82,7 +82,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             try(ResultSet rsa = csa.executeQuery();){
                 while(rsa.next()){
                     PaymentTerm paymentTerm = new PaymentTerm();
-                        paymentTerm.setPaymentTermId(rsa.getInt("paymentterm_id"));
+                        paymentTerm.setId(rsa.getInt("paymentterm_id"));
                         paymentTerm.setName(rsa.getString("paymentterm"));
                         paymentTerm.setIsActive(rsa.getBoolean("isActive"));
                         paymentTerm.setDivisor(rsa.getInt("divisor"));
@@ -123,7 +123,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             try(ResultSet rsa = csa.executeQuery();){
                 while(rsa.next()){
                     PaymentTerm paymentTerm = new PaymentTerm();
-                        paymentTerm.setPaymentTermId(rsa.getInt("paymentterm_id"));
+                        paymentTerm.setId(rsa.getInt("paymentterm_id"));
                         paymentTerm.setName(rsa.getString("paymentterm"));
                         paymentTerm.setIsActive(rsa.getBoolean("isActive"));
                         paymentTerm.setDivisor(rsa.getInt("divisor"));
@@ -161,7 +161,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             csa.setInt(1, aPaymentTermId);
             try (ResultSet rsa = csa.executeQuery();) {
                 while (rsa.next()) {
-                    paymentTerm.setPaymentTermId(rsa.getInt("paymentterm_id"));
+                    paymentTerm.setId(rsa.getInt("paymentterm_id"));
                     paymentTerm.setName(rsa.getString("paymentterm"));
                     paymentTerm.setIsActive(rsa.getBoolean("isActive"));
                     paymentTerm.setDivisor(rsa.getInt("divisor"));
@@ -193,7 +193,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
         String SQL = "{CALL getPaymentTermId(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1, aPaymentTerm);
+            cs.setString(1, aPaymentTerm.toLowerCase());
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     paymentTermId = rs.getInt("paymentterm_id");
@@ -232,7 +232,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
                     int periodId = periodDaoImlp.getId(p.getDescription().trim());
                     
                     cs.setInt(1, pt.getSchoolYearId());
-                    cs.setInt(2, pt.getPaymentTermId());
+                    cs.setInt(2, pt.getId());
                     cs.setInt(3, periodId);
                     cs.setDate(4, java.sql.Date.valueOf(p.getPaymentDeadline().toString()));
                     cs.executeUpdate();
@@ -255,7 +255,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             try(CallableStatement cs = con.prepareCall(SQL);){
                 for(PaymentTerm p : paymentTerms){
                     cs.setInt(1,p.getSchoolYearId());
-                    cs.setInt(2, p.getPaymentTermId());
+                    cs.setInt(2, p.getId());
                     cs.setDouble(3, p.getPenaltyAmount());
                     cs.executeUpdate();
                 }
@@ -309,7 +309,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     PaymentTerm paymentTerm = new PaymentTerm();
-                    paymentTerm.setPaymentTermId(rs.getInt("paymentterm_id"));
+                    paymentTerm.setId(rs.getInt("paymentterm_id"));
                     paymentTerm.setName(rs.getString("paymentterm"));
                     paymentTerm.setDivisor(rs.getInt("divisor"));
                     paymentTerm.setIsActive(rs.getBoolean("isActive"));

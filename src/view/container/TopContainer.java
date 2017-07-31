@@ -1,7 +1,7 @@
 package view.container;
 
 import view.enrollment.EnrollmentPanel;
-import view.user.Accounts;
+import view.user.AllUsersRecord;
 import view.registration.RegistrationForm;
 //import view.payment.PaymentsPanel;
 import utility.calendar.CalendarUtil;
@@ -11,7 +11,6 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import daoimpl.LoginDaoImpl;
 import utility.component.ImageUtil;
-import utility.component.JInternalFrameUtil;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -51,6 +50,7 @@ public class TopContainer extends javax.swing.JFrame{
     private static int MANAGEMENT_INSTANCE = 0;
     private static int ACCOUNTS_INSTANCE = 0;
     private static int PAYMENTS_INSTANCE = 0;
+    
     
     public TopContainer() {
         initComponents();
@@ -472,7 +472,7 @@ public class TopContainer extends javax.swing.JFrame{
 
     jLabel7.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
     jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-    jLabel7.setText("Payments");
+    jLabel7.setText("Payment & Assessment");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
@@ -983,10 +983,10 @@ public class TopContainer extends javax.swing.JFrame{
     }//GEN-LAST:event_jpnlManagementButtonMouseClicked
 
     private void jpnlAccountsButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlAccountsButtonMouseClicked
-//        CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new Accounts());
+//        CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new AllUsersRecord());
         if (evt.getClickCount() >= 1) {
             if (ACCOUNTS_INSTANCE <= 0) {
-                Accounts accountsPanel = new Accounts();
+                AllUsersRecord accountsPanel = new AllUsersRecord();
                 jtpTopTabbedPane.add("Accounts", accountsPanel);
                 jtpTopTabbedPane.setSelectedComponent(accountsPanel);
                 setACCOUNTS_INSTANCE(1);

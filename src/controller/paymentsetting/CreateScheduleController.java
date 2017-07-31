@@ -226,7 +226,7 @@ public class CreateScheduleController implements ActionListener{
         semestralPeriods.add(secondSemester);
         
         Semestral semestral = new Semestral();
-        semestral.setPaymentTermId(paymentTermDaoImpl.getId("semestral"));
+        semestral.setId(paymentTermDaoImpl.getId("semestral"));
         semestral.setSchoolYearId(schoolYearId);
         semestral.setPeriods(semestralPeriods);
         
@@ -268,7 +268,7 @@ public class CreateScheduleController implements ActionListener{
         periods.add(q4Period);
         
         Quarterly quarterly = new Quarterly();
-        quarterly.setPaymentTermId(paymentTermDaoImpl.getId("quarterly"));
+        quarterly.setId(paymentTermDaoImpl.getId("quarterly"));
         quarterly.setSchoolYearId(schoolYearId);
         quarterly.setPeriods(periods);
         
@@ -342,7 +342,7 @@ public class CreateScheduleController implements ActionListener{
         periods.add(tenthMonth);
         
         Monthly monthly = new Monthly();
-        monthly.setPaymentTermId(paymentTermDaoImpl.getId("monthly"));
+        monthly.setId(paymentTermDaoImpl.getId("monthly"));
         monthly.setSchoolYearId(schoolYearId);
         monthly.setPeriods(periods);
         

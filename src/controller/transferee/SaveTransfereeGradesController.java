@@ -8,6 +8,7 @@ package controller.transferee;
 import daoimpl.TransfereeGradeDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import model.transfereegrade.TransfereeGrade;
@@ -27,7 +28,8 @@ public class SaveTransfereeGradesController implements ActionListener{
     
     public SaveTransfereeGradesController(
             JTextField jtfFirstQuarterGrade, JTextField jtfSecondQuarterGrade,
-            JTextField jtfThirdQuarterGrade, JTextField jtfFourthQuarterGrade, JTextField jtfGwa, int registrationId) {
+            JTextField jtfThirdQuarterGrade, JTextField jtfFourthQuarterGrade, JTextField jtfGwa, int registrationId
+    ) {
         this.jtfFirstQuarterGrade = jtfFirstQuarterGrade;
         this.jtfSecondQuarterGrade = jtfSecondQuarterGrade;
         this.jtfThirdQuarterGrade = jtfThirdQuarterGrade;

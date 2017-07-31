@@ -90,10 +90,10 @@ public class AdmissionDaoImpl implements IAdmission {
                     csb.executeUpdate();
                 }
                 
-                if(studentType.equalsIgnoreCase("transferee")){
-                    csc.setInt(1, studentId);
-                    csc.executeUpdate();
-                }
+//                if(studentType.equalsIgnoreCase("transferee")){
+//                    csc.setInt(1, studentId);
+//                    csc.executeUpdate();
+//                }
 
                 con.commit();
                 isSuccessful = true;

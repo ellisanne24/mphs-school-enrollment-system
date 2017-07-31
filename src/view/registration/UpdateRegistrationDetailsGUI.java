@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view.registration;
 
 import utility.calendar.CalendarUtil;
@@ -18,6 +14,7 @@ import model.registration.Registration;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import controller.transferee.AddTransfereeGradeController;
 import controller.registration.CompleteAdmissionController;
+import javax.swing.JOptionPane;
 
 public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
 
@@ -37,10 +34,13 @@ public class UpdateRegistrationDetailsGUI extends javax.swing.JDialog {
         guiManager.setGUIComponentsRenderer();
         guiManager.setFormDetails(this.aRegistrationId);
         
+        initializeControllers();
+    }
+
+    private void initializeControllers(){
         jbtnCompleteAdmission.addActionListener(new CompleteAdmissionController(aRegistrationId, jcmbAdmissionStatus,jcbTransfereeStudent,jcmbGradeLevel));
         jbtnAddGrades.addActionListener(new AddTransfereeGradeController(aRegistrationId,jcbTransfereeStudent));
     }
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

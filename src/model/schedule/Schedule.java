@@ -1,11 +1,13 @@
 package model.schedule;
 
+import java.util.ArrayList;
 import model.faculty.Faculty;
 
 public class Schedule {
 
     private int scheduleId;
     private String day;
+    private ArrayList<String> days;
     private int startTime;
     private int endTime;
     private String roomName;
@@ -14,6 +16,14 @@ public class Schedule {
     private int schoolYearId;
     private String subjectName;
 
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+    
     public String getSubjectName() {
         return subjectName;
     }
@@ -54,12 +64,12 @@ public class Schedule {
         this.scheduleId = scheduleId;
     }
 
-    public String getDay() {
-        return day;
+    public ArrayList<String> getDays() {
+        return days;
     }
 
-    public void setDay(String day) {
-        this.day = day;
+    public void setDays(ArrayList<String> days) {
+        this.days = days;
     }
 
     public int getStartTime() {

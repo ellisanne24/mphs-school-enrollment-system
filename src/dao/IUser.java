@@ -13,4 +13,6 @@ import model.user.User;
  */
 public interface IUser {
     User getById(int userId);
+    boolean add(User user);
+    boolean update(User user);
 }

@@ -7,6 +7,7 @@ package controller.transferee;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.JButton;
 import javax.swing.JTextField;
 
 /**
@@ -20,16 +21,19 @@ public class TransfereeGradeFieldsController {
     private final JTextField jtfThirdQuarterGrade;
     private final JTextField jtfFourthQuarterGrade;
     private final JTextField jtfGwa;
-    private int registrationId;
+    private final int registrationId;
+    private final JButton jbtnSaveGrades;
     
     public TransfereeGradeFieldsController(JTextField jtfFirstQuarterGrade,JTextField jtfSecondQuarterGrade,
-        JTextField jtfThirdQuarterGrade, JTextField jtfFourthQuarterGrade, JTextField jtfGwa){
+        JTextField jtfThirdQuarterGrade, JTextField jtfFourthQuarterGrade, JTextField jtfGwa, JButton jbtnSaveGrades,
+        int registrationId){
         this.jtfFirstQuarterGrade = jtfFirstQuarterGrade;
         this.jtfSecondQuarterGrade = jtfSecondQuarterGrade;
         this.jtfThirdQuarterGrade = jtfThirdQuarterGrade;
         this.jtfFourthQuarterGrade = jtfFourthQuarterGrade;
         this.jtfGwa = jtfGwa;
         this.registrationId = registrationId;
+        this.jbtnSaveGrades = jbtnSaveGrades;
     }
     
     public void control(){
@@ -93,6 +97,7 @@ public class TransfereeGradeFieldsController {
                     double sum = firstQuarterGrade + secondQuarterGrade + thirdQuarterGrade + fourthQuarterGrade;
                     double average = sum / 4;
                     jtfGwa.setText("" + average);
+                    jbtnSaveGrades.setEnabled(true);
                 }
             }
             @Override

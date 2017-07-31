@@ -14,28 +14,26 @@ import model.subject.Subject;
  *
  * @author francisunoxx
  */
-public class SubjectValidation 
-{
+public class SubjectValidation {
+
     SubjectDaoImpl sdi = new SubjectDaoImpl();
-    
+
     Subject subject = new Subject();
-    
-    public List <Object> checkSubjectChanges(Subject aSubject)
-    {
+
+    public List<Object> checkSubjectChanges(Subject aSubject) {
         Object[] object = sdi.checkSubjectChanges(aSubject).toArray();
-        List <Object> list = new ArrayList();
-        
-        for(Object o : object)
-        {
-            Subject subject = (Subject)o;
-            
+        List<Object> list = new ArrayList();
+
+        for (Object o : object) {
+            Subject subject = (Subject) o;
+
             list.add(subject.getSubjectTitle());
             list.add(subject.getSubjectCode());
             list.add(subject.gradeLevel.getLevel());
             list.add(subject.getSubjectDescription());
-            
+
         }
-        
+
         return list;
     }
 }

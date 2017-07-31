@@ -5,9 +5,6 @@
  */
 package daoimpl;
 
-import constants.CurriculumTable;
-import utility.database.DBType;
-import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,12 +12,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import dao.ICurriculum;
 import model.curriculum.Curriculum;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.subject.Subject;
-import dao.ICurriculum;
-import model.section.Section;
+import utility.database.DBType;
+import utility.database.DBUtil;
 
 /**
  *
@@ -230,7 +228,7 @@ public class CurriculumDaoImpl implements ICurriculum {
     public boolean createCurriculumSubjects(Curriculum aCurriculum, Subject aSubject) 
     {
         boolean isSuccesful;
-        String sql = "{call createCurriculumSubjects(?,?,?)}";
+        String sql = "{call createCurriculumSubjects(?,?)}";
         
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql);)
@@ -238,7 +236,7 @@ public class CurriculumDaoImpl implements ICurriculum {
 
             cs.setInt(1, aCurriculum.getCurriculumId());
             cs.setInt(2, aSubject.getSubjectId());
-            cs.setDouble(3, aSubject.getSubjectHours());
+//            cs.setDouble(3, aSubject.getSubjectHours());
             cs.executeUpdate();
             
             isSuccesful = true;

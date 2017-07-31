@@ -1441,7 +1441,7 @@ public class RegistrationForm extends javax.swing.JPanel {
     private void jcmbPaymentTermItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbPaymentTermItemStateChanged
         // TODO add your handling code here:
         if(jcmbPaymentTerm.getSelectedIndex() > -1){
-            int selectedPaymentTermId = ((PaymentTerm)jcmbPaymentTerm.getSelectedItem()).getPaymentTermId();
+            int selectedPaymentTermId = ((PaymentTerm)jcmbPaymentTerm.getSelectedItem()).getId();
             //            JOptionPane.showMessageDialog(null,selectedPaymentTermId);
         }
     }//GEN-LAST:event_jcmbPaymentTermItemStateChanged

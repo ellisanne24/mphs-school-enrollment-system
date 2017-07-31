@@ -83,13 +83,19 @@ public class TuitionFeeProcessor {
             case "Quarterly":
                 double perQuarterAmount = (finalTuitionAmount - dp.getAmount() - otherFees.getSum() )/4;
                 double perQuarterBalance = perQuarterAmount;
+                if(discountPercentage >= 100){
+                    dp.setAmount(0.00);
+                    dp.setBalance(0.00);
+                    balanceBreakDownFees.add(dp);
+                }else{
+                    balanceBreakDownFees.add(dp);
+                }
                 
-                balanceBreakDownFees.add(dp);
                 System.out.println("Added DownPayment");
                 for (int x = 1; x <= 4; x++ ) {
                     BalanceBreakDownFee quarterlyFee = new BalanceBreakDownFee();
-                    quarterlyFee.setAmount(perQuarterAmount);
-                    quarterlyFee.setBalance(perQuarterBalance);
+                    quarterlyFee.setAmount(perQuarterAmount < 0? 0.00 : perQuarterAmount);
+                    quarterlyFee.setBalance(perQuarterBalance < 0? 0.00: perQuarterBalance);
                     quarterlyFee.setDescription("Quarter "+x);
                     
                     balanceBreakDownFees.add(quarterlyFee);
@@ -114,11 +120,18 @@ public class TuitionFeeProcessor {
                 double perMonthAmount = (finalTuitionAmount - dp.getAmount() - otherFees.getSum() )/10;
                 double perMonthBalance = perMonthAmount;
                
-                balanceBreakDownFees.add(dp);
+                if(discountPercentage >= 100){
+                    dp.setAmount(0.00);
+                    dp.setBalance(0.00);
+                    balanceBreakDownFees.add(dp);
+                }else{
+                    balanceBreakDownFees.add(dp);
+                }
+                
                 for (int x = 1; x <= 10; x++ ) {
                     BalanceBreakDownFee monthlyFee = new BalanceBreakDownFee();
-                    monthlyFee.setAmount(perMonthAmount);
-                    monthlyFee.setBalance(perMonthBalance);
+                    monthlyFee.setAmount(perMonthAmount < 0? 0.00 :perMonthAmount);
+                    monthlyFee.setBalance(perMonthBalance < 0? 0.00 :perMonthBalance);
                     monthlyFee.setDescription("Month "+x);
                     
                     balanceBreakDownFees.add(monthlyFee);
@@ -137,11 +150,18 @@ public class TuitionFeeProcessor {
                 double perSemesterAmount = (finalTuitionAmount - dp.getAmount() - otherFees.getSum()  )/2;
                 double perSemesterBalance = perSemesterAmount;
                 
-                balanceBreakDownFees.add(dp);
+                if(discountPercentage >= 100){
+                    dp.setAmount(0.00);
+                    dp.setBalance(0.00);
+                    balanceBreakDownFees.add(dp);
+                }else{
+                    balanceBreakDownFees.add(dp);
+                }
+                
                 for (int x = 1; x <= 2; x++ ) {
                     BalanceBreakDownFee semestralFee = new BalanceBreakDownFee();
-                    semestralFee.setAmount(perSemesterAmount);
-                    semestralFee.setBalance(perSemesterBalance);
+                    semestralFee.setAmount(perSemesterAmount < 0? 0.00 :perSemesterAmount);
+                    semestralFee.setBalance(perSemesterBalance < 0? 0.00 :perSemesterBalance);
                     semestralFee.setDescription("Semester "+x);
                     
                     balanceBreakDownFees.add(semestralFee);

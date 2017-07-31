@@ -12,7 +12,7 @@ import model.schoolyear.SchoolYear;
 
 
 public class Student {
-    private int studentId;
+    private Integer studentId;
     private int studentType; 
     private Registration registration;
     private Admission admission;
@@ -25,15 +25,24 @@ public class Student {
     private SchoolYear lastGradeLevelEnrolledSchoolYear;
     private boolean isActive;
     private boolean isGraduated;
+    private boolean isNew;
     private Date entryDate;
     private Date dateGraduated;
-    private TuitionFee tuition;
+    private TuitionFee tuitionFee;
 
     private String firstName;
     private String lastName;
     private String middleName;
     public GradeLevel gradeLevel;
 
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setIsNew(boolean isNew) {
+        this.isNew = isNew;
+    }
+    
     public String getFirstName() {
         return firstName;
     }
@@ -68,12 +77,12 @@ public class Student {
     
     
     
-    public TuitionFee getTuition() {
-        return tuition;
+    public TuitionFee getTuitionFee() {
+        return tuitionFee;
     }
 
-    public void setTuition(TuitionFee tuition) {
-        this.tuition = tuition;
+    public void setTuitionFee(TuitionFee tuitionFee) {
+        this.tuitionFee = tuitionFee;
     }
     
     public GradeLevel getRecommendedGradeLevelToEnroll() {
@@ -143,7 +152,7 @@ public class Student {
 
     
     
-    public int getStudentId() {
+    public Integer getStudentId() {
         return studentId;
     }
 

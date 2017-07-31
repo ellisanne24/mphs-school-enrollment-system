@@ -1,30 +1,35 @@
 package model.faculty;
 
+import java.util.List;
+import model.specialization.Specialization;
+
 public class Faculty {
 
     private int facultyID;
-
+    private List<Specialization> specializations;
+    private String fullName;
     private String firstName;
     private String lastName;
     private String middleName;
-    private String civilStatus;
     private String contact;
     private String emailAddress;
     private String degree;
     private boolean status;
 
-    private int specializationID;
-    private String specializationTitle;
-    private String specializationDescription;
-    private String dateCreated;
-    private boolean isActive;
-
-    public boolean isIsActive() {
-        return isActive;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public List<Specialization> getSpecializations() {
+        return specializations;
+    }
+
+    public void setSpecializations(List<Specialization> specializations) {
+        this.specializations = specializations;
     }
 
     public void setFacultyID(int facultyID) {
@@ -59,14 +64,6 @@ public class Faculty {
         return middleName;
     }
 
-    public void setCivilStatus(String civilStatus) {
-        this.civilStatus = civilStatus;
-    }
-
-    public String getCivilStatus() {
-        return civilStatus;
-    }
-
     public void setContact(String contact) {
         this.contact = contact;
     }
@@ -98,38 +95,6 @@ public class Faculty {
 
     public void setDegree(String degree) {
         this.degree = degree;
-    }
-
-    public int getSpecializationID() {
-        return specializationID;
-    }
-
-    public void setSpecializationID(int specializationID) {
-        this.specializationID = specializationID;
-    }
-
-    public String getSpecializationTitle() {
-        return specializationTitle;
-    }
-
-    public void setSpecializationTitle(String specializationTitle) {
-        this.specializationTitle = specializationTitle;
-    }
-
-    public String getSpecializationDescription() {
-        return specializationDescription;
-    }
-
-    public void setSpecializationDescription(String specializationDescription) {
-        this.specializationDescription = specializationDescription;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
     }
 
 }

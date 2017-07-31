@@ -33,8 +33,8 @@ public class RegistrationML {
                 r.getGradeLevel() == 0 ? "Kindergarten" : "Grade " + r.getGradeLevel(),
                 r.getSchoolYear().getYearFrom() + "-" + r.getSchoolYear().getYearTo(),
                 r.getRegistrationDate(),
-                r.getIsAdmissionComplete() == true ? "Yes" : "No",
-                r.getIsDownpaymentPaid() == true ? "Yes" : "No"
+                r.getIsAdmissionComplete() == true ? "Complete" : "Pending",
+                r.getIsDownpaymentPaid() == true ? "Paid" : "Pending"
             };
             aJtableModel.addRow(rowData);
         }
@@ -57,8 +57,8 @@ public class RegistrationML {
                 r.getGradeLevel() == 0 ? "Kindergarten" : "Grade " + r.getGradeLevel(),
                 r.getSchoolYear().getYearFrom() + "-" + r.getSchoolYear().getYearTo(),
                 r.getRegistrationDate(),
-                r.getIsAdmissionComplete() == true ? "Yes" : "No",
-                r.getIsDownpaymentPaid() == true ? "Yes" : "No"
+                r.getIsAdmissionComplete() == true ? "Complete" : "Pending",
+                r.getIsDownpaymentPaid() == true ? "Paid" : "Pending"
             };
             aJtableModel.addRow(rowData);
         }

@@ -1,68 +1,80 @@
 package view.section;
 
+import component_model_loader.FacultyML;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
 import component_model_loader.GradeLevelML;
-import utility.component.JTableUtil;
+import component_utility.JTableGUIUtil;
 import component_model_loader.SchoolYearML;
 import component_model_loader.SectionML;
 import component_renderers.GradeLevelJComboBoxRenderer;
-import java.util.Arrays;
+import daoimpl.FacultyDaoImpl;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+import model.faculty.Faculty;
+import model.grade.Grade;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import model.session.Session;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.table.DefaultTableModel;
-import utility.layout.SectionUtility;
 import model.student.Student;
+import utility.layout.SectionUtility;
 
 public class SectionManagementContainer extends javax.swing.JPanel {
     
-    Object[] category = new Object[]{"FCFS","Grade Ranking"};
     Object[] sessionList = new Object[]{"AM", "PM"};
     
-    DefaultComboBoxModel gradesFromModel = new DefaultComboBoxModel();
-    DefaultComboBoxModel gradeToModel = new DefaultComboBoxModel();
-    DefaultComboBoxModel categoryModel = new DefaultComboBoxModel(category);
     DefaultComboBoxModel sessionModel = new DefaultComboBoxModel(sessionList);
+    DefaultComboBoxModel averageModel = new DefaultComboBoxModel();
     
     private SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
     private SectionDaoImpl sdi = new SectionDaoImpl();
     private GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
+    private FacultyDaoImpl fdi = new FacultyDaoImpl();
     
     private GradeLevelML gl = new GradeLevelML();
     private SchoolYearML syml = new SchoolYearML();
     private SectionML sml = new SectionML();
-    
+    private FacultyML fml = new FacultyML();
+            
     private SchoolYear schoolYear = new SchoolYear();
     
     private Section section = new Section();
     private GradeLevel gradeLevel = new GradeLevel();
     private Session session = new Session();
     private Student student = new Student();
+    private Faculty faculty = new Faculty();
+    private Grade grade = new Grade();
     
     private SectionUtility sectionUtility = new SectionUtility();
-    public SectionManagementContainer() {
+    
+    public SectionManagementContainer() 
+    {
         initComponents();
-        btnFilterGroup.add(radioGradeLevel);
-        btnFilterGroup.add(radioSection);
-        cbGradeLevel.setModel(gl.getAllGradeLevels());
         
-        for(int i = 60; i < 100; i++)
+        for(int i = 75; i < 100; i++)
         {
-            gradesFromModel.addElement(i);
-            gradeToModel.addElement(i);
+            averageModel.addElement(i);
         }
-        cbSchoolYearFrom.setModel(syml.getAllSchoolYearStart());
-        cbSchoolYearTo.setModel(syml.getAllSchoolYearEnd());
-        cbGradeFrom.setModel(gradesFromModel);
-        cbGradeTo.setModel(gradeToModel);
-        cbCategory.setModel(categoryModel);
-        cbSession.setModel(sessionModel);
         
+        cbAverage.setModel(averageModel);
+        cbAverage.setSelectedIndex(-1);
+//        
+//        btnFilterGroup.add(radioGradeLevel);
+        
+        btnOldNewGroup.add(radioNew);
+        btnOldNewGroup.add(radioOld);
+        
+        cbGradeLevel.setModel(gl.getAllGradeLevels());
+        cbGradeLevel.setSelectedIndex(-1);
+        
+        
+        cbSession.setModel(sessionModel);
+        cbSession.setSelectedIndex(-1);
+        
+        //Set model
         tblCreatedSections.setModel(sml.getAllSections());
         
         //Hide first column
@@ -79,22 +91,37 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         
         cbAssignGradeLevel.setModel(gl.getAllGradeLevels());
         
-        cbAssignSection.setModel(sml.getAllSectionName());
         cbAssignSection2.setModel(sml.getAllSectionName());
+        cbAssignSection2.setPrototypeDisplayValue("XXXXXXXX");
         
         cbAssignGradeLevel2.setModel(gl.getAllGradeLevels());
         
-        btnSessionGroup2.add(radioAM2);
-        btnSessionGroup2.add(radioPM2);
-        
-        btnSessionGroup.add(radioAM);
-        btnSessionGroup.add(radioPM);
         
         cbGradeLevelList.setRenderer(new GradeLevelJComboBoxRenderer());
         cbAssignGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
         cbAssignGradeLevel2.setRenderer(new GradeLevelJComboBoxRenderer());
         
         cbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
+        
+        if(cbAssignSection2.getSelectedIndex() == 0)
+        {
+            //Setter call from Section
+            section.setSectionName((String) cbAssignSection2.getSelectedItem());
+            section.setSectionId(sdi.getSectionId(section));
+
+        
+            if(sdi.getSectionAverageBySectionId(section) == 0)
+            {
+                radioGWA.setEnabled(false);
+                lblRequiredGWA.setEnabled(false);
+            }
+            else
+            {
+                radioGWA.setEnabled(true);
+                lblRequiredGWA.setEnabled(true);
+                lblRequiredGWA.setText("Required GWA: "+sdi.getSectionAverageBySectionId(section)); 
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -105,6 +132,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         btnFilterGroup = new javax.swing.ButtonGroup();
         btnSessionGroup2 = new javax.swing.ButtonGroup();
         btnSessionGroup = new javax.swing.ButtonGroup();
+        btnOldNewGroup = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
@@ -120,24 +148,13 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tfSubjectName = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        cbGradeFrom = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
-        cbGradeTo = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
-        cbCategory = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         cbGradeLevel = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        cbSchoolYearFrom = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
-        cbSchoolYearTo = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         cbSession = new javax.swing.JComboBox<>();
         chbBoth = new javax.swing.JCheckBox();
-        tfCapacityAM = new javax.swing.JTextField();
-        tfCapacityPM = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        cbAverage = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
@@ -155,24 +172,16 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         jPanel12 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         cbAssignGradeLevel = new javax.swing.JComboBox<>();
-        jLabel20 = new javax.swing.JLabel();
-        cbAssignSection = new javax.swing.JComboBox<>();
-        jLabel21 = new javax.swing.JLabel();
-        radioGradeLevel = new javax.swing.JRadioButton();
-        radioSection = new javax.swing.JRadioButton();
-        jLabel14 = new javax.swing.JLabel();
-        radioAM = new javax.swing.JRadioButton();
-        radioPM = new javax.swing.JRadioButton();
+        radioNew = new javax.swing.JRadioButton();
+        radioOld = new javax.swing.JRadioButton();
         jPanel13 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         cbAssignGradeLevel2 = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
         cbAssignSection2 = new javax.swing.JComboBox<>();
-        jLabel16 = new javax.swing.JLabel();
-        lblCapacity = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        radioAM2 = new javax.swing.JRadioButton();
-        radioPM2 = new javax.swing.JRadioButton();
+        jLabel3 = new javax.swing.JLabel();
+        radioGWA = new javax.swing.JRadioButton();
+        lblRequiredGWA = new javax.swing.JLabel();
         jPanel17 = new javax.swing.JPanel();
         btnCreate = new javax.swing.JButton();
 
@@ -205,17 +214,17 @@ public class SectionManagementContainer extends javax.swing.JPanel {
 
         tblCreatedSections.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Section Name", "Category", "Grade Range", "Capacity", "Session", "SchoolYear", "Date Created", "Status"
+                "Id", "Section Name", "Required Grade", "Session", "SchoolYear", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -230,9 +239,6 @@ public class SectionManagementContainer extends javax.swing.JPanel {
             tblCreatedSections.getColumnModel().getColumn(3).setResizable(false);
             tblCreatedSections.getColumnModel().getColumn(4).setResizable(false);
             tblCreatedSections.getColumnModel().getColumn(5).setResizable(false);
-            tblCreatedSections.getColumnModel().getColumn(6).setResizable(false);
-            tblCreatedSections.getColumnModel().getColumn(7).setResizable(false);
-            tblCreatedSections.getColumnModel().getColumn(8).setResizable(false);
         }
 
         jPanel6.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -277,65 +283,6 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel4.add(tfSubjectName, gridBagConstraints);
 
-        jLabel2.setText("Grades:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
-        jPanel4.add(jLabel2, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        jPanel4.add(cbGradeFrom, gridBagConstraints);
-
-        jLabel3.setText("to");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
-        jPanel4.add(jLabel3, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        jPanel4.add(cbGradeTo, gridBagConstraints);
-
-        jLabel4.setText("Method:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
-        jPanel4.add(jLabel4, gridBagConstraints);
-
-        cbCategory.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbCategoryItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        jPanel4.add(cbCategory, gridBagConstraints);
-
-        jLabel5.setText("Capacity:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
-        jPanel4.add(jLabel5, gridBagConstraints);
-
         jLabel6.setText("Grade Level:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -356,45 +303,9 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel4.add(cbGradeLevel, gridBagConstraints);
 
-        jLabel7.setText("Year Level:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
-        jPanel4.add(jLabel7, gridBagConstraints);
-
-        cbSchoolYearFrom.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbSchoolYearFromItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        jPanel4.add(cbSchoolYearFrom, gridBagConstraints);
-
-        jLabel8.setText("to");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
-        jPanel4.add(jLabel8, gridBagConstraints);
-
-        cbSchoolYearTo.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        jPanel4.add(cbSchoolYearTo, gridBagConstraints);
-
         jLabel10.setText("Session:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(15, 10, 0, 0);
         jPanel4.add(jLabel10, gridBagConstraints);
@@ -406,7 +317,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel4.add(cbSession, gridBagConstraints);
@@ -419,48 +330,32 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 0, 0);
         jPanel4.add(chbBoth, gridBagConstraints);
 
-        tfCapacityAM.setText("AM");
-        tfCapacityAM.setEnabled(false);
-        tfCapacityAM.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tfCapacityAMMouseClicked(evt);
-            }
-        });
+        jLabel4.setText("Required Average:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.ipadx = 100;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        jPanel4.add(tfCapacityAM, gridBagConstraints);
+        jPanel4.add(jLabel4, gridBagConstraints);
 
-        tfCapacityPM.setText("PM");
-        tfCapacityPM.setEnabled(false);
-        tfCapacityPM.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tfCapacityPMMouseClicked(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.ipadx = 100;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        jPanel4.add(tfCapacityPM, gridBagConstraints);
+        jPanel4.add(cbAverage, gridBagConstraints);
 
         jPanel2.add(jPanel4, java.awt.BorderLayout.CENTER);
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
-        btnSave.setText("Save");
+        btnSave.setText("Create");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
@@ -479,7 +374,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
 
         jPanel10.setLayout(new java.awt.GridBagLayout());
 
-        jPanel14.setPreferredSize(new java.awt.Dimension(550, 402));
+        jPanel14.setPreferredSize(new java.awt.Dimension(500, 402));
         jPanel14.setLayout(new java.awt.BorderLayout());
 
         tblAssign.setModel(new javax.swing.table.DefaultTableModel(
@@ -487,11 +382,11 @@ public class SectionManagementContainer extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Id", "Student Name", "Grade Level", "General Average", "Entrance Exam Average"
+                "Id", "Student Name", "General Average"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -508,8 +403,6 @@ public class SectionManagementContainer extends javax.swing.JPanel {
             tblAssign.getColumnModel().getColumn(0).setResizable(false);
             tblAssign.getColumnModel().getColumn(1).setResizable(false);
             tblAssign.getColumnModel().getColumn(2).setResizable(false);
-            tblAssign.getColumnModel().getColumn(3).setResizable(false);
-            tblAssign.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jPanel14.add(jScrollPane2, java.awt.BorderLayout.CENTER);
@@ -535,13 +428,21 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         jPanel15.add(btnAdd, gridBagConstraints);
 
         btnRemove.setText("Remove");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         jPanel15.add(btnRemove, gridBagConstraints);
 
-        jPanel10.add(jPanel15, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weightx = 0.5;
+        jPanel10.add(jPanel15, gridBagConstraints);
 
-        jPanel16.setPreferredSize(new java.awt.Dimension(550, 402));
+        jPanel16.setPreferredSize(new java.awt.Dimension(500, 402));
         jPanel16.setLayout(new java.awt.BorderLayout());
 
         tblAssign2.setModel(new javax.swing.table.DefaultTableModel(
@@ -549,7 +450,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Id", "Student Name", "Grade Level"
+                "Id", "Student Name", "General Average"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -558,6 +459,11 @@ public class SectionManagementContainer extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblAssign2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAssign2MouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(tblAssign2);
@@ -571,137 +477,105 @@ public class SectionManagementContainer extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 0.5;
         jPanel10.add(jPanel16, gridBagConstraints);
 
         jPanel9.add(jPanel10, java.awt.BorderLayout.CENTER);
 
+        jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter Controls"));
         jPanel11.setLayout(new java.awt.GridBagLayout());
 
+        jPanel12.setBorder(null);
         jPanel12.setPreferredSize(new java.awt.Dimension(500, 150));
         jPanel12.setLayout(new java.awt.GridBagLayout());
 
         jLabel11.setText("Grade Level:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel12.add(jLabel11, gridBagConstraints);
 
-        cbAssignGradeLevel.setEnabled(false);
         cbAssignGradeLevel.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbAssignGradeLevelItemStateChanged(evt);
             }
         });
+        cbAssignGradeLevel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbAssignGradeLevelActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel12.add(cbAssignGradeLevel, gridBagConstraints);
 
-        jLabel20.setText("Section Name:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel12.add(jLabel20, gridBagConstraints);
-
-        cbAssignSection.setEnabled(false);
-        cbAssignSection.addItemListener(new java.awt.event.ItemListener() {
+        radioNew.setText("Transferee");
+        radioNew.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbAssignSectionItemStateChanged(evt);
+                radioNewItemStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel12.add(cbAssignSection, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        jPanel12.add(radioNew, gridBagConstraints);
 
-        jLabel21.setText("Filter By:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LAST_LINE_START;
-        jPanel12.add(jLabel21, gridBagConstraints);
-
-        radioGradeLevel.setText("Grade Level");
-        radioGradeLevel.addItemListener(new java.awt.event.ItemListener() {
+        radioOld.setText("Old");
+        radioOld.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                radioGradeLevelItemStateChanged(evt);
+                radioOldItemStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel12.add(radioGradeLevel, gridBagConstraints);
-
-        radioSection.setText("Section");
-        radioSection.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                radioSectionItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel12.add(radioSection, gridBagConstraints);
-
-        jLabel14.setText("Session:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel12.add(jLabel14, gridBagConstraints);
-
-        radioAM.setText("AM");
-        radioAM.setEnabled(false);
-        radioAM.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                radioAMItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel12.add(radioAM, gridBagConstraints);
-
-        radioPM.setText("PM");
-        radioPM.setEnabled(false);
-        radioPM.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                radioPMItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel12.add(radioPM, gridBagConstraints);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        jPanel12.add(radioOld, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.weightx = 0.5;
         jPanel11.add(jPanel12, gridBagConstraints);
 
+        jPanel13.setBorder(null);
         jPanel13.setPreferredSize(new java.awt.Dimension(500, 150));
         jPanel13.setLayout(new java.awt.GridBagLayout());
 
         jLabel12.setText("Grade Level:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel13.add(jLabel12, gridBagConstraints);
 
-        cbAssignGradeLevel2.setEnabled(false);
         cbAssignGradeLevel2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbAssignGradeLevel2ItemStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel13.add(cbAssignGradeLevel2, gridBagConstraints);
 
         jLabel13.setText("Section Name:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel13.add(jLabel13, gridBagConstraints);
 
-        cbAssignSection2.setEnabled(false);
         cbAssignSection2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbAssignSection2ItemStateChanged(evt);
@@ -710,44 +584,30 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanel13.add(cbAssignSection2, gridBagConstraints);
+        jPanel13.add(jLabel3, new java.awt.GridBagConstraints());
 
-        jLabel16.setText("Capacity:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel13.add(jLabel16, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel13.add(lblCapacity, gridBagConstraints);
-
-        jLabel15.setText("Session:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel13.add(jLabel15, gridBagConstraints);
-
-        radioAM2.setText("AM");
-        radioAM2.addItemListener(new java.awt.event.ItemListener() {
+        radioGWA.setText("GWA");
+        radioGWA.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                radioAM2ItemStateChanged(evt);
+                radioGWAItemStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel13.add(radioAM2, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        jPanel13.add(radioGWA, gridBagConstraints);
 
-        radioPM2.setText("PM");
-        radioPM2.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                radioPM2ItemStateChanged(evt);
-            }
-        });
+        lblRequiredGWA.setText("Required GWA:");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        jPanel13.add(radioPM2, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        jPanel13.add(lblRequiredGWA, gridBagConstraints);
 
         jPanel11.add(jPanel13, new java.awt.GridBagConstraints());
 
@@ -776,100 +636,78 @@ public class SectionManagementContainer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (chbBoth.isSelected()) {
-            for (int i = 0; i < 2; i++) {
-
-            }
-        }
-        
-        //Setter call from Section
-        section.setSectionName(tfSubjectName.getText());
-        section.setGradeFrom((int) cbGradeFrom.getSelectedItem());
-        section.setGradeTo((int) cbGradeTo.getSelectedItem());
-        section.setCategory((String) cbCategory.getSelectedItem());
-        
-        
-        //Method call from SectionDaoImpl
-        //If insert
-        if(sdi.createSection(section) == true)
+        if (chbBoth.isSelected())
         {
-            //Setter call from Section
-            section.setSectionId(section.getSectionId());
-            section.setSectionCategoryId(section.getSectionCategoryId());
-            
-            if(chbBoth.isSelected())
+            for (int i = 0; i < 2; i++) 
             {
-                for(int i = 0; i < 2; i++)
+                if(i == 0)
                 {
-                    if(i == 0)
-                    {
-                        session.setCapacity(Integer.parseInt(tfCapacityAM.getText()));
-                        //Setter call from GradeLevel
-                        gradeLevel.setId(gradeLevel.getId());
-                        //Setter call from SchoolYear
-                        schoolYear.setSchoolYearId(schoolYear.getSchoolYearId());
-                        //Setter && Getter call from Session
-                        session.setSessionId(1);
-
-                        //Method call from SectionDaoImpl
-                        sdi.createSectionSettings(section, schoolYear, gradeLevel,session);
-                    }
-                    else
-                    {
-                        session.setCapacity(Integer.parseInt(tfCapacityPM.getText()));
-                        //Setter call from GradeLevel
-                        gradeLevel.setId(gradeLevel.getId());
-                        //Setter call from SchoolYear
-                        schoolYear.setSchoolYearId(schoolYear.getSchoolYearId());
-                        //Setter && Getter call from Session
-                        session.setSessionId(2);
-
-                        //Method call from SectionDaoImpl
-                        sdi.createSectionSettings(section, schoolYear, gradeLevel,session);
-                    }
+                    //Setter call from Section
+                    section.setSectionName(tfSubjectName.getText());
+                    section.setRequiredAverage((String) cbAverage.getSelectedItem());
+                    section.setSectionId(section.getSectionId());
+                    //Setter call from SchoolYear
+                    schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+                    //Setter call from GradeLevel
+                    gradeLevel.setId(gldi.getId(gradeLevel));
+                    //Setter call from Session
+                    session.setSessionId(1);
                     
-                    JOptionPane.showMessageDialog(null, "Successfully created " + tfSubjectName.getText() + " " + " section!");
+                    //Method call from SectionDaoImpl
+                    sdi.createSectionSettings(section, schoolYear, gradeLevel, session);
+                }
+                else {
+                    //Setter call from Section
+                    section.setSectionName(tfSubjectName.getText());
+                    section.setRequiredAverage((String) cbAverage.getSelectedItem());
+                    section.setSectionId(section.getSectionId());
+                    //Setter call from SchoolYear
+                    schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+                    //Setter call from GradeLevel
+                    gradeLevel.setId(gldi.getId(gradeLevel));
+                    //Setter call from Session
+                    session.setSessionId(2);
+
+                    //Method call from SectionDaoImpl
+                    sdi.createSectionSettings(section, schoolYear, gradeLevel, session);
+
+                    JOptionPane.showMessageDialog(null, "Successfully creating " + tfSubjectName.getText() + " section!");
                 }
             }
         }
-        
+        else {
+            //Setter call from Section
+            section.setSectionName(tfSubjectName.getText());
+            section.setRequiredAverage((String) cbAverage.getSelectedItem());
+            section.setSectionId(section.getSectionId());
+            //Setter call from SchoolYear
+            schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+            //Setter call from GradeLevel
+            gradeLevel.setId(gldi.getId(gradeLevel));
+            //Setter call from Session
+            session.setSessionId(session.getSessionId());
+
+            //Method call from SectionDaoImpl
+            sdi.createSectionSettings(section, schoolYear, gradeLevel, session);
+
+            JOptionPane.showMessageDialog(null, "Successfully creating " + tfSubjectName.getText() + " section!");
+        }
         
     }//GEN-LAST:event_btnSaveActionPerformed
-
-    private void cbSchoolYearFromItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSchoolYearFromItemStateChanged
-        int selectedYearFrom = cbSchoolYearFrom.getSelectedIndex();
-        cbSchoolYearTo.setSelectedIndex(selectedYearFrom);
-            
-        //Setter call from SchoolYear
-        schoolYear.setSchoolYearId(sydi.getId((int) cbSchoolYearFrom.getSelectedItem()));
-    }//GEN-LAST:event_cbSchoolYearFromItemStateChanged
 
     private void cbGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradeLevelItemStateChanged
         //Setter call from GradeLevel
         gradeLevel.setLevel((Integer) cbGradeLevel.getSelectedItem());
-        gradeLevel.setId(gldi.getId(gradeLevel));
+
     }//GEN-LAST:event_cbGradeLevelItemStateChanged
 
-    private void cbCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCategoryItemStateChanged
-        //Setter call from Section
-//        section.setCategory((String) cbCategory.getSelectedItem());
-//        section.setSectionCategoryId(sdi.getSectionCategoryId(section));
-    }//GEN-LAST:event_cbCategoryItemStateChanged
-
     private void cbSessionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSessionItemStateChanged
-        if(cbSession.getSelectedIndex() == 0)
-        {
+        if (cbSession.getSelectedIndex() == 0) {
             session.setSessionId(1);
-            
-            tfCapacityAM.setEnabled(true);
-            tfCapacityPM.setEnabled(false);
-        }
-        else
-        {
+
+        } else {
             session.setSessionId(2);
-            
-            tfCapacityAM.setEnabled(false);
-            tfCapacityPM.setEnabled(true);
+
         }
     }//GEN-LAST:event_cbSessionItemStateChanged
 
@@ -889,34 +727,19 @@ public class SectionManagementContainer extends javax.swing.JPanel {
     private void chbBothItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chbBothItemStateChanged
         if(chbBoth.isSelected())
         {
-            tfCapacityAM.setEnabled(true);
-            tfCapacityPM.setEnabled(true);
+            cbSession.setEnabled(false);
         }
         else
         {
-            tfCapacityAM.setEnabled(false);
-            tfCapacityPM.setEnabled(false);
-            
+            cbSession.setEnabled(true);
         }
     }//GEN-LAST:event_chbBothItemStateChanged
-
-    private void tfCapacityAMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfCapacityAMMouseClicked
-        
-        tfCapacityAM.setText("");
-        
-    }//GEN-LAST:event_tfCapacityAMMouseClicked
-
-    private void tfCapacityPMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfCapacityPMMouseClicked
-        tfCapacityPM.setText("");
-    }//GEN-LAST:event_tfCapacityPMMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         UpdateSection updateSection = new UpdateSection();
         
         //Setter call from Section
         section.setSectionId((int) tblCreatedSections.getValueAt(tblCreatedSections.getSelectedRow(), 0));
-        
-        
         
         //Set text on textfields and jcomboboxes
         updateSection.getTfSectionName().setText((String) sectionUtility.getCreatedSectionById(section).get(0));
@@ -952,141 +775,26 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void radioGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioGradeLevelItemStateChanged
-        if(radioGradeLevel.isSelected())
-        {
-            cbAssignGradeLevel.setEnabled(true);
-        }
-        else
-        {
-            cbAssignGradeLevel.setEnabled(false);
-        }
-    }//GEN-LAST:event_radioGradeLevelItemStateChanged
-
-    private void radioSectionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioSectionItemStateChanged
-        if(radioSection.isSelected())
-        {
-            cbAssignGradeLevel.setSelectedIndex(0);
-            
-            cbAssignGradeLevel.setEnabled(true);
-            cbAssignSection.setEnabled(true);
-            radioAM.setEnabled(true);
-            radioPM.setEnabled(true);
-        }
-        else
-        {
-            cbAssignGradeLevel.setEnabled(false);
-            cbAssignSection.setEnabled(false);
-            radioAM.setEnabled(false);
-            radioPM.setEnabled(false);
-        }
-    }//GEN-LAST:event_radioSectionItemStateChanged
-
     private void cbAssignGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAssignGradeLevelItemStateChanged
         //Setter call from GradeLevel
         gradeLevel.setLevel((Integer) cbAssignGradeLevel.getSelectedItem());
         gradeLevel.setId(gldi.getId(gradeLevel));
         
-        //Set model on tblAssign
-        tblAssign.setModel(sml.getAllRegisteredStudentsByGradeId(gradeLevel));
+        if (radioNew.isSelected()) {
+            tblAssign.setModel(sml.getAllNewStudentsByGradeLevelId(gradeLevel));
+
+            //Hide first column
+            tblAssign.getColumnModel().getColumn(0).setMinWidth(0);
+            tblAssign.getColumnModel().getColumn(0).setMaxWidth(0);
+        } else {
+            tblAssign.setModel(sml.getAllOldStudentsByGradeLevelId(gradeLevel));
+
+            //Hide first column
+            tblAssign.getColumnModel().getColumn(0).setMinWidth(0);
+            tblAssign.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
         
-        //Hide first column
-        tblAssign.getColumnModel().getColumn(0).setMinWidth(0);
-        tblAssign.getColumnModel().getColumn(0).setMaxWidth(0);
     }//GEN-LAST:event_cbAssignGradeLevelItemStateChanged
-
-    private void cbAssignSectionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAssignSectionItemStateChanged
-        //Setter call from Section
-        section.setSectionName((String) cbAssignSection.getSelectedItem());
-       
-        
-        //Set model on tblAssign
-        tblAssign.setModel(sml.getAllStudentsBySection(session,section,gradeLevel));
-        
-        //Hide first column
-        tblAssign.getColumnModel().getColumn(0).setMinWidth(0);
-        tblAssign.getColumnModel().getColumn(0).setMaxWidth(0);
-    }//GEN-LAST:event_cbAssignSectionItemStateChanged
-
-    private void radioAMItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioAMItemStateChanged
-        //Setter call from Session
-        if(radioAM.isSelected())
-        {
-            session.setSessionId(1);
-        }
-        else
-        {
-            session.setSessionId(2);
-        }
-    }//GEN-LAST:event_radioAMItemStateChanged
-
-    private void radioPMItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioPMItemStateChanged
-        //Setter call from Session
-        if(radioPM.isSelected())
-        {
-            session.setSessionId(2);
-        }
-        else
-        {
-            session.setSessionId(1);
-        }
-    }//GEN-LAST:event_radioPMItemStateChanged
-
-    private void radioPM2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioPM2ItemStateChanged
-        if(radioPM2.isSelected())
-        {
-            //Setter call from Session
-            session.setSessionId(2);
-
-            cbAssignGradeLevel2.setEnabled(true);
-            cbAssignSection2.setEnabled(true);
-        }
-        else
-        {
-            session.setSessionId(1);
-
-            cbAssignGradeLevel2.setEnabled(true);
-            cbAssignSection2.setEnabled(true);
-        }
-    }//GEN-LAST:event_radioPM2ItemStateChanged
-
-    private void radioAM2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioAM2ItemStateChanged
-        //Setter call from Session
-        if(radioAM2.isSelected())
-        {
-            session.setSessionId(1);
-
-            cbAssignGradeLevel2.setEnabled(true);
-            cbAssignSection2.setEditable(true);
-        }
-        else
-        {
-            session.setSessionId(2);
-
-            cbAssignGradeLevel2.setEnabled(true);
-            cbAssignSection2.setEditable(true);
-        }
-    }//GEN-LAST:event_radioAM2ItemStateChanged
-
-    private void cbAssignSection2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAssignSection2ItemStateChanged
-        //Setter call from Section
-        section.setSectionName((String) cbAssignSection2.getSelectedItem());
-
-        //Set model on tblAssign
-        tblAssign2.setModel(sml.getAllStudentsBySection(session,section,gradeLevel));
-
-        //Hide first column
-        tblAssign2.getColumnModel().getColumn(0).setMinWidth(0);
-        tblAssign2.getColumnModel().getColumn(0).setMaxWidth(0);
-        
-        lblCapacity.setText(Integer.toString(sdi.getSectionCapacity(section)));
-    }//GEN-LAST:event_cbAssignSection2ItemStateChanged
-
-    private void cbAssignGradeLevel2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAssignGradeLevel2ItemStateChanged
-        //Setter call from Section
-        gradeLevel.setLevel((Integer) cbAssignGradeLevel2.getSelectedItem());
-        gradeLevel.setId(gldi.getId(gradeLevel));
-    }//GEN-LAST:event_cbAssignGradeLevel2ItemStateChanged
 
     private void tblAssignMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAssignMouseClicked
         if (tblAssign.getSelectedRow() > -1) {
@@ -1094,43 +802,17 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         }
         if (evt.getSource().equals(tblAssign)) {
             if (evt.getClickCount() == 2) {
-                JTableUtil jtm = new JTableUtil();
-                jtm.copyTableData(tblAssign, tblAssign2);
-//                jtm.passStudentToSectionList(tblAssign, tblAssign2);
+                JTableGUIUtil jtm = new JTableGUIUtil();
+                jtm.copyTableSectionData(tblAssign, tblAssign2, grade.getGwa(), cbAssignGradeLevel, cbAssignGradeLevel2);
             }
         }
     }//GEN-LAST:event_tblAssignMouseClicked
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        int selectedRow = tblAssign.getSelectedRow(); //selected row which has the data to be added
-        Object selectedSubjCode = tblAssign.getValueAt(selectedRow, 1);
-        
-        int rows = tblAssign.getRowCount();
-        Object[] curriculumSubjects = new Object[rows];
 
-        for (int j = 0; j < rows; j++) {
-            curriculumSubjects[j] = tblAssign.getValueAt(j, 1);
-        }
-        
-        if (Arrays.asList(curriculumSubjects).contains(selectedSubjCode)) {
-            JOptionPane.showMessageDialog(null, selectedSubjCode + " is already on the list.");
-        } else 
-        {
-            int counter = 0;
-            DefaultTableModel model = (DefaultTableModel) tblAssign2.getModel();
-            Object[] rowData = new Object[tblAssign2.getColumnCount()];
-            int selectedRowIndex = tblAssign2.getSelectedRow();
-            
-            for (int i = 0; i < tblAssign2.getColumnCount(); i++) 
-            {
-            
-                rowData[i] = tblAssign2.getValueAt(selectedRowIndex, counter++);
-                
-            }
-            
-            model.addRow(rowData);
-            tblAssign2.setModel(model);
-        }
+          JTableGUIUtil jtm = new JTableGUIUtil();
+          jtm.copyTableSectionData(tblAssign, tblAssign2, grade.getGwa(), cbAssignGradeLevel, cbAssignGradeLevel2);
+
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
@@ -1148,17 +830,81 @@ public class SectionManagementContainer extends javax.swing.JPanel {
                 student.setStudentId((int) tblAssign2.getValueAt(i, 0));
                 //Setter call from SchoolYear
                 schoolYear.setSchoolYearId(sdi.getSectionSchoolYearId(section));
-                
+                System.out.println("Section Id "+section.getSectionId());
+                System.out.println("Student Id "+student.getStudentId());
+                System.out.println("Section SchoolYear Id "+schoolYear.getSchoolYearId());
                 
                 //Method call from SectionDaoImpl
                 sdi.createStudentSection(section, student, schoolYear);
+                
+                if(i == tblAssign2.getRowCount() - 1)
+                {
+                    JOptionPane.showMessageDialog(null, "Successfully adding " +tblAssign2.getRowCount() + " students to "+cbAssignSection2.getSelectedItem());
+                }
             }
             
-          
-            
-            JOptionPane.showMessageDialog(null, "Successfully adding " +tblAssign2.getRowCount() + " students to "+cbAssignSection2.getSelectedItem());
         }
     }//GEN-LAST:event_btnCreateActionPerformed
+
+    private void cbAssignGradeLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAssignGradeLevelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbAssignGradeLevelActionPerformed
+
+    private void cbAssignSection2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAssignSection2ItemStateChanged
+        //Setter call from Section
+        section.setSectionName((String) cbAssignSection2.getSelectedItem());
+        section.setSectionId(sdi.getSectionId(section));
+
+        
+        if(sdi.getSectionAverageBySectionId(section) == 0)
+        {
+            radioGWA.setEnabled(false);
+            lblRequiredGWA.setEnabled(false);
+        }
+        else
+        {
+            radioGWA.setEnabled(true);
+            lblRequiredGWA.setEnabled(true);
+            lblRequiredGWA.setText("Required GWA: "+sdi.getSectionAverageBySectionId(section)); 
+        }
+        
+    }//GEN-LAST:event_cbAssignSection2ItemStateChanged
+
+    private void cbAssignGradeLevel2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAssignGradeLevel2ItemStateChanged
+        //Setter call from GradeLevel
+        gradeLevel.setLevel((Integer) cbAssignGradeLevel2.getSelectedItem());
+        gradeLevel.setId(gldi.getId(gradeLevel));
+        
+        //Set Model
+        cbAssignSection2.setModel(sml.getAllSectionByGradeLevelId(gradeLevel));
+        
+    }//GEN-LAST:event_cbAssignGradeLevel2ItemStateChanged
+
+    private void radioNewItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioNewItemStateChanged
+        
+    }//GEN-LAST:event_radioNewItemStateChanged
+
+    private void radioOldItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioOldItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioOldItemStateChanged
+
+    private void radioGWAItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioGWAItemStateChanged
+        if (radioGWA.isSelected()) {
+            grade.setGwa(sdi.getSectionAverageBySectionId(section));
+        } else {
+            grade.setGwa(0);
+        }
+    }//GEN-LAST:event_radioGWAItemStateChanged
+
+    private void tblAssign2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAssign2MouseClicked
+        DefaultTableModel model = (DefaultTableModel)tblAssign2.getModel();
+        model.removeRow(tblAssign2.getSelectedRow());
+    }//GEN-LAST:event_tblAssign2MouseClicked
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        DefaultTableModel model = (DefaultTableModel)tblAssign2.getModel();
+        model.removeRow(tblAssign2.getSelectedRow());
+    }//GEN-LAST:event_btnRemoveActionPerformed
 
 
 
@@ -1166,21 +912,17 @@ public class SectionManagementContainer extends javax.swing.JPanel {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCreate;
     private javax.swing.ButtonGroup btnFilterGroup;
+    private javax.swing.ButtonGroup btnOldNewGroup;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnSave;
     private javax.swing.ButtonGroup btnSessionGroup;
     private javax.swing.ButtonGroup btnSessionGroup2;
     private javax.swing.JComboBox<String> cbAssignGradeLevel;
     private javax.swing.JComboBox<String> cbAssignGradeLevel2;
-    private javax.swing.JComboBox<String> cbAssignSection;
     private javax.swing.JComboBox<String> cbAssignSection2;
-    private javax.swing.JComboBox<String> cbCategory;
-    private javax.swing.JComboBox<String> cbGradeFrom;
+    private javax.swing.JComboBox<String> cbAverage;
     private javax.swing.JComboBox<String> cbGradeLevel;
     private javax.swing.JComboBox<String> cbGradeLevelList;
-    private javax.swing.JComboBox<String> cbGradeTo;
-    private javax.swing.JComboBox<String> cbSchoolYearFrom;
-    private javax.swing.JComboBox<String> cbSchoolYearTo;
     private javax.swing.JComboBox<String> cbSession;
     private javax.swing.JCheckBox chbBoth;
     private javax.swing.JButton jButton2;
@@ -1189,18 +931,9 @@ public class SectionManagementContainer extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -1223,18 +956,13 @@ public class SectionManagementContainer extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JLabel lblCapacity;
-    private javax.swing.JRadioButton radioAM;
-    private javax.swing.JRadioButton radioAM2;
-    private javax.swing.JRadioButton radioGradeLevel;
-    private javax.swing.JRadioButton radioPM;
-    private javax.swing.JRadioButton radioPM2;
-    private javax.swing.JRadioButton radioSection;
+    private javax.swing.JLabel lblRequiredGWA;
+    private javax.swing.JRadioButton radioGWA;
+    private javax.swing.JRadioButton radioNew;
+    private javax.swing.JRadioButton radioOld;
     private javax.swing.JTable tblAssign;
     private javax.swing.JTable tblAssign2;
     private javax.swing.JTable tblCreatedSections;
-    private javax.swing.JTextField tfCapacityAM;
-    private javax.swing.JTextField tfCapacityPM;
     private javax.swing.JTextField tfSubjectName;
     // End of variables declaration//GEN-END:variables
 }

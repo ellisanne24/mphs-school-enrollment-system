@@ -5,6 +5,7 @@
  */
 package controller.schedule;
 
+import daoimpl.FacultyDaoImpl;
 import daoimpl.ScheduleDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ActionEvent;
@@ -14,7 +15,9 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import model.faculty.Faculty;
 import model.schedule.Schedule;
+import utility.string.StringUtil;
 
 /**
  *
@@ -24,7 +27,7 @@ public class CreateScheduleController implements ActionListener{
 
     private final JTable jtblSchedule;
     private List<Schedule> scheduleList;
-    private JDialog jdlgCreateSchedule;
+    private final JDialog jdlgCreateSchedule;
             
     public CreateScheduleController(JTable jtblSchedule,JDialog jdlgCreateSchedule){
         this.jtblSchedule = jtblSchedule;
@@ -57,6 +60,7 @@ public class CreateScheduleController implements ActionListener{
     
     private void setScheduleList() {
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
+        FacultyDaoImpl fdi = new FacultyDaoImpl();
         scheduleList = new ArrayList<>();
         for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
             String day = jtblSchedule.getValueAt(row, 0).toString().trim();
@@ -66,6 +70,15 @@ public class CreateScheduleController implements ActionListener{
             String setionName = jtblSchedule.getValueAt(row, 4).toString().trim();
             String roomName = jtblSchedule.getValueAt(row, 5).toString().trim();
             
+            String facultyName = jtblSchedule.getValueAt(row,6).toString().trim();
+            String strFacultyId = StringUtil.getNumbers(facultyName).trim();
+            int facultyId = Integer.parseInt(strFacultyId);
+//            System.out.println("facultyId :"+strFacultyId);
+            
+            
+            Faculty faculty = new Faculty();
+            faculty.setFacultyID(facultyId);
+            
             Schedule schedule = new Schedule();
             schedule.setDay(day);
             schedule.setStartTime(startTime);
@@ -74,6 +87,7 @@ public class CreateScheduleController implements ActionListener{
             schedule.setSectionName(setionName);
             schedule.setRoomName(roomName);
             schedule.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
+            schedule.setFaculty(faculty);
             
             scheduleList.add(schedule);
         }

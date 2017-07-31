@@ -7,6 +7,7 @@ import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SubjectDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import model.gradelevel.CurrentGradeLevel;
 import utility.layout.SubjectUtility;
 import model.gradelevel.GradeLevel;
 import model.subject.Subject;
@@ -26,8 +27,11 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
     
     public SubjectManagementContainer() {
         initComponents();
+        jcmbGradeLevel.setRenderer(new component_renderers.GradeLevelJComboBoxRenderer());
+        cbGradeLevelList.setRenderer(new component_renderers.GradeLevelJComboBoxRenderer());
+        tblSubjectList.setAutoCreateRowSorter(true);
         
-        //Set model
+        
         cbGradeLevelList.setModel(gl.getAllGradeLevels());
         
         jcmbGradeLevel.setModel(gl.getAllGradeLevels());
@@ -287,20 +291,18 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
     private void jbtnSaveSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSaveSubjectActionPerformed
         //Setter call from GradeLevel & Getting the gradelevel id
         gradeLevel.setId(gldi.getId(gradeLevel));
-        
+
         //Setter call from Subject
         subject.setSubjectId(subject.getSubjectId());
         subject.setSubjectCode(jtfSubjectCode.getText());
         subject.setSubjectTitle(jtfSubjectName.getText());
         subject.setSubjectDescription(jtfDescription.getText());
+        subject.setGradeLevel(gradeLevel);
         
-        if(sdi.createSubject(subject, gradeLevel) == true)
-        {
-            JOptionPane.showMessageDialog(null, "Successfully creating " +jtfSubjectName.getText() + " subject");
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "Code "+jtfSubjectCode.getText() + " already exist");
+        if (sdi.createSubject(subject) == true) {
+            JOptionPane.showMessageDialog(null, "Successfully creating " + jtfSubjectName.getText() + " subject");
+        } else {
+            JOptionPane.showMessageDialog(null, "Code " + jtfSubjectCode.getText() + " already exist");
         }
     }//GEN-LAST:event_jbtnSaveSubjectActionPerformed
 
@@ -309,11 +311,12 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
     }//GEN-LAST:event_cbGradeLevelListActionPerformed
 
     private void cbGradeLevelListItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradeLevelListItemStateChanged
-        //Setter call from Grade Level
-        gradeLevel.setLevel((Integer) cbGradeLevelList.getSelectedItem());
-        
-        //Set model on tblSubjectList
-        tblSubjectList.setModel(sml.getAllSubjectsByGradeLevelId(gradeLevel));
+        if (cbGradeLevelList.getSelectedIndex() > -1) {
+            String level = cbGradeLevelList.getSelectedItem().toString().trim();
+            GradeLevel g = new GradeLevel();
+            g.setId(gldi.getId(Integer.parseInt(level)));
+            tblSubjectList.setModel(sml.getAllSubjectsByGradeLevelId(g));
+        }
     }//GEN-LAST:event_cbGradeLevelListItemStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

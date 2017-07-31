@@ -1,10 +1,9 @@
-
 package model.curriculum;
 
-import model.subject.Subject;
 import java.util.List;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
+import model.subject.Subject;
 
 
 public class Curriculum {

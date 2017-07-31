@@ -9,89 +9,40 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import model.faculty.Faculty;
+import model.specialization.Specialization;
 import utility.database.DBType;
 import utility.database.DBUtil;
 
 public class FacultyDaoImpl implements IFaculty {
 
-    
-    
     @Override
-    public Faculty getSpecializationByID(int aSpecializationID) {
-        String SQL = "{CALL getSpecializationByID(?)}";
-        Faculty aSpecialization = new Faculty();
+    public int getIdByName(String lastName, String firstName, String middleName) {
+        Integer facultyId = null;
+        String SQL = "{CALL `getFacultyIdByName`(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-
-            cs.setInt(1, aSpecializationID);
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
-                    aSpecialization.setSpecializationID(rs.getInt("specialization_id"));
-                    aSpecialization.setSpecializationTitle(rs.getString("specialization_title"));
-                    aSpecialization.setSpecializationDescription(rs.getString("description"));
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setString(1, lastName.trim());
+            cs.setString(2,firstName.trim());
+            cs.setString(3, middleName.trim());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    facultyId = rs.getInt("faculty_id");
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
-        return aSpecialization;
+        return facultyId;
     }
-
+    
     @Override
-    public int getSpecializationID(String title, String description) {
-        int specializationId = 0;
-        String SQL = "{CALL getSpecializationID()}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL)) {
-            cs.setString(1, title.trim());
-            cs.setString(2, description.trim());
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
-                    specializationId = rs.getInt("specialization_id");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "getSpecializationID\n" + e.getMessage());
-        }
-        return specializationId;
-    }
-
-    @Override
-    public boolean updateSpecialization(Faculty aFaculty) {
-
-        boolean isUpdated;
-        String SQL = "{CALL UpdateSpecialization(?,?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL)) {
-
-            cs.setInt(1, aFaculty.getSpecializationID());
-            cs.setString(2, aFaculty.getSpecializationTitle());
-            cs.setString(3, aFaculty.getSpecializationDescription());
-
-            cs.executeUpdate();
-            isUpdated = true;
-
-        } catch (SQLException e) {
-            isUpdated = false;
-            JOptionPane.showMessageDialog(null, "updateSpecialization\n" + e.getMessage());
-        }
-        return isUpdated;
-
-    }
-
-    @Override
-    public List<Faculty> getFacultyAndSpecializationByFacultyID(int aFacultyID) {
-
+    public List<Faculty> getById(int aFacultyID) {
         List<Faculty> list = new ArrayList();
         String SQL = "{CALL getFacultyBySpecializationID(?)}";
-
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-
             cs.setInt(1, aFacultyID);
-            ;
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Faculty aFaculty = new Faculty();
@@ -101,69 +52,18 @@ public class FacultyDaoImpl implements IFaculty {
                     aFaculty.setMiddleName(rs.getString("middleName"));
                     aFaculty.setEmailAddress(rs.getString("email"));
                     aFaculty.setContact(rs.getString("contact"));
-                    aFaculty.setCivilStatus(rs.getString("civilStatus"));
                     aFaculty.setDegree(rs.getString("degree"));
-
-                    aFaculty.setSpecializationID(rs.getInt("specialization_id"));
-                    aFaculty.setSpecializationTitle(rs.getString("specialization_title"));
                     list.add(aFaculty);
-
                 }
-
             }
-
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
         return list;
     }
 
     @Override
-    public List<Faculty> getAllSpecializationInfo() {
-
-        List<Faculty> list = new ArrayList();
-        String SQL = "{CALL getSpecialization()}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            try (ResultSet rs = cs.executeQuery();) {
-                while (rs.next()) {
-
-                    Faculty faculty = new Faculty();
-                    faculty.setSpecializationID(rs.getInt("specialization_id"));
-                    faculty.setSpecializationTitle(rs.getString("specialization_title"));
-                    faculty.setSpecializationDescription(rs.getString("description"));
-                    faculty.setDateCreated(rs.getString("date_created"));
-                    list.add(faculty);
-
-                }
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "getAllSpecializationInfo()\n" + e.getMessage());
-        }
-        return list;
-    }
-
-    @Override
-    public boolean addSpecialization(Faculty aFaculty) {
-
-        boolean isAdded;
-        String SQL = "{CALL addSpecialization(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setString(1, aFaculty.getSpecializationTitle().trim());
-            cs.setString(2, aFaculty.getSpecializationDescription().trim());
-            cs.executeUpdate();
-            isAdded = true;
-        } catch (SQLException e) {
-            isAdded = false;
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
-        }
-        return isAdded;
-    }
-
-    @Override
-    public List<Faculty> getAllFaculty() {
+    public List<Faculty> getAll() {
 
         List<Faculty> list = new ArrayList();
         String SQL = "{CALL getFacultyAndSpecialization()}";
@@ -177,82 +77,46 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setLastName(rs.getString("lastName"));
                     faculty.setMiddleName(rs.getString("middleName"));
                     faculty.setContact(rs.getString("contact"));
-                    faculty.setCivilStatus(rs.getString("civilStatus"));
                     faculty.setEmailAddress(rs.getString("email"));
                     faculty.setDegree(rs.getString("degree"));
                     faculty.setStatus(rs.getBoolean("Status"));
-                    faculty.setSpecializationID(rs.getInt("specialization_id"));
                     list.add(faculty);
                 }
             }
-
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "getFaculty()\n" + e.getMessage());
+            e.printStackTrace();
         }
         return list;
-
     }
 
-    @Override
-    public List<Faculty> findByName() {
-        List<Faculty> list = new ArrayList();
-        String SQL = "{CALL searchFaculty()}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            try (ResultSet rs = cs.executeQuery();) {
-                while (rs.next()) {
-                    Faculty faculty = new Faculty();
-                    faculty.setFacultyID(rs.getInt("faculty_ID"));
-                    faculty.setFirstName(rs.getString("firstName"));
-                    faculty.setLastName(rs.getString("lastName"));
-                    faculty.setMiddleName(rs.getString("middleName"));
-                    faculty.setCivilStatus(rs.getString("civilStatus"));
-                    faculty.setContact(rs.getString("contact"));
-                    faculty.setEmailAddress(rs.getString("email"));
-                    faculty.setStatus(rs.getBoolean("status"));
-                    list.add(faculty);
-                }
-
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "getFaculty()\n" + e.getMessage());
-        }
-        return list;
-
-    }
+    
 
     @Override
-    public boolean addFaculty(Faculty aFaculty) {
+    public boolean add(Faculty faculty) {
         boolean isAdded = false;
-        String SQl_addFaculty = "{CALL addFaculty(?,?,?,?,?,?,?,?)}";
-        String SQl_addSpecialization = "{CALL addSpecializationTOFaculty(?,?)}";
+        String SQl_addFaculty = "{CALL addFaculty(?,?,?,?,?,?,?)}";
         String SQL_addFacultyAndSpecialization = "{CALL addFacultyandSpecialization(?,?)}";
 
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
             try (CallableStatement cs1 = con.prepareCall(SQl_addFaculty);
-                    CallableStatement cs2 = con.prepareCall(SQl_addSpecialization);
-                    CallableStatement cs3 = con.prepareCall(SQL_addFacultyAndSpecialization);) {
-                cs1.setString(1, aFaculty.getFirstName());
-                cs1.setString(2, aFaculty.getLastName());
-                cs1.setString(3, aFaculty.getMiddleName());
-                cs1.setString(4, aFaculty.getEmailAddress());
-                cs1.setString(5, aFaculty.getContact());
-                cs1.setString(6, aFaculty.getCivilStatus());
-                cs1.setString(7, aFaculty.getDegree());
-                cs1.registerOutParameter(8, Types.INTEGER);
+                    CallableStatement cs2 = con.prepareCall(SQL_addFacultyAndSpecialization);) {
+                cs1.setString(1, faculty.getFirstName());
+                cs1.setString(2, faculty.getLastName());
+                cs1.setString(3, faculty.getMiddleName());
+                cs1.setString(4, faculty.getEmailAddress());
+                cs1.setString(5, faculty.getContact());
+                cs1.setString(6, faculty.getDegree());
+                cs1.registerOutParameter(7, Types.INTEGER);
                 cs1.executeUpdate();
-                int aFacultyID = cs1.getInt(8);
+                int facultyId = cs1.getInt(7);
 
-                cs2.setString(1, aFaculty.getSpecializationTitle());
-                cs2.registerOutParameter(2, Types.INTEGER);
-                cs2.executeUpdate();
-                int aSpecializationID = cs2.getInt(2);
-
-                cs3.setInt(1, aFacultyID);
-                cs3.setInt(2, aSpecializationID);
-                cs3.executeUpdate();
+                List<Specialization> specializations = faculty.getSpecializations();
+                for (Specialization s : specializations) {
+                    cs2.setInt(1, facultyId);
+                    cs2.setInt(2, s.getId());
+                    cs2.executeUpdate();
+                }
                 con.commit();
                 isAdded = true;
             } catch (SQLException e) {
@@ -262,13 +126,13 @@ public class FacultyDaoImpl implements IFaculty {
             }
         } catch (SQLException e) {
             isAdded = false;
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
         return isAdded;
     }
 
     @Override
-    public boolean updateFaculty(Faculty aFaculty) {
+    public boolean update(Faculty aFaculty) {
 
         boolean isUpdated;
         String SQl = "{CALL updateFaculty(?,?,?,?,?,?,?,?,?)}";
@@ -281,7 +145,6 @@ public class FacultyDaoImpl implements IFaculty {
             cs.setString(4, aFaculty.getMiddleName());
             cs.setString(5, aFaculty.getEmailAddress());
             cs.setString(6, aFaculty.getContact());
-            cs.setString(7, aFaculty.getCivilStatus());
             cs.setString(8, aFaculty.getDegree());
             cs.setBoolean(9, aFaculty.getStatus());
             cs.executeUpdate();
@@ -289,7 +152,7 @@ public class FacultyDaoImpl implements IFaculty {
 
         } catch (SQLException e) {
             isUpdated = false;
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
         return isUpdated;
     }

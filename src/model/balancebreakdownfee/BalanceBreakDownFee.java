@@ -6,9 +6,11 @@
 package model.balancebreakdownfee;
 
 import java.util.Date;
+import model.downpayment.DownPaymentFee;
 
 public class BalanceBreakDownFee {
-    private int balanceBreakDownFeeId; 
+
+    private int id;
     private String description; //name of breakdown e.g. Academic Fee for Quarter 1, Academic Fee for Quarter2
     private Date dateAssigned;
     private double amount;
@@ -17,6 +19,15 @@ public class BalanceBreakDownFee {
     private boolean isPaid;
     private int studentId;
     private int schoolYearId;
+    private Date deadline;
+    
+    public Date getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
 
     public double getTotalPaid() {
         return totalPaid;
@@ -65,14 +76,13 @@ public class BalanceBreakDownFee {
     public void setDateAssigned(Date dateAssigned) {
         this.dateAssigned = dateAssigned;
     }
-    
 
-    public int getBalanceBreakDownFeeId() {
-        return balanceBreakDownFeeId;
+    public int getId() {
+        return id;
     }
 
-    public void setBalanceBreakDownFeeId(int balanceBreakDownFeeId) {
-        this.balanceBreakDownFeeId = balanceBreakDownFeeId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -90,5 +100,5 @@ public class BalanceBreakDownFee {
     public void setAmount(double amount) {
         this.amount = amount;
     }
-    
+
 }

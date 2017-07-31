@@ -163,8 +163,6 @@ public class RegistrationDaoImpl implements IRegistration{
         return list;
     }
 
-    
-    
     @Override
     public List<Registration> getAllRegistrationInfo() {
         List<Registration> list = new ArrayList<>();
@@ -320,81 +318,88 @@ public class RegistrationDaoImpl implements IRegistration{
         return paymentTerm;
     }
     
-
-    
-    
     @Override
-    public boolean addRegistration(Registration aRegistration) {
-        boolean isAdded;
-        String SQL = "{CALL addRegistration(?,?,?,?,?,?,?,?,?,?,"
+    public boolean addRegistration(Registration registration) {
+        boolean isAdded = false;
+        String SQLa = "{CALL addRegistration(?,?,?,?,?,?,?,?,?,?,"
                 + "?,?,?,?,?,?,?,?,?,?,"
                 + "?,?,?,?,?,?,?,?,?,?,"
-                + "?,?,?,?,?,?,?,?,?,?,?) }" ;
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1, aRegistration.getStudentType());
-            cs.setString(2, aRegistration.getLastName());
-            cs.setString(3, aRegistration.getFirstName());
-            cs.setString(4, aRegistration.getMiddleName());
-            cs.setObject(5, aRegistration.getDateOfBirth());
-            cs.setString(6, aRegistration.getPlaceOfBirth());
-            cs.setString(7, aRegistration.getNationality());
-            cs.setString(8, aRegistration.getReligion());
-            cs.setInt(9, "Male".equals(aRegistration.getGender())? 1:0);
-            cs.setString(10, aRegistration.getFatherFirstName());
-            cs.setString(11, aRegistration.getFatherMiddleName());
-            cs.setString(12, aRegistration.getFatherLastName());
-            cs.setString(13, aRegistration.getFatherOccupation());
-            cs.setString(14, aRegistration.getFatherOfficePhoneNo());
-            cs.setString(15, aRegistration.getFatherMobileNo());
-            cs.setInt(16, aRegistration.getIsFatherContactInCaseEmergency()==true? 1:0);
-            cs.setString(17, aRegistration.getMotherFirstName());
-            cs.setString(18, aRegistration.getMotherMiddleName());
-            cs.setString(19, aRegistration.getMotherLastName());
-            cs.setString(20, aRegistration.getMotherOccupation());
-            cs.setString(21, aRegistration.getMotherOfficePhoneNo());
-            cs.setString(22, aRegistration.getMotherMobileNo());
-            cs.setInt(23, aRegistration.getIsMotherContactInCaseEmergency()==true? 1:0);
-            cs.setString(24, aRegistration.getGuardianLastName());
-            cs.setString(25, aRegistration.getGuardianFirstName());
-            cs.setString(26, aRegistration.getGuardianMiddleName());
-            cs.setString(27, aRegistration.getGuardianOccupation());
-            cs.setString(28, aRegistration.getGuardianOfficePhoneNo());
-            cs.setString(29, aRegistration.getGuardianMobileNo());
-            cs.setString(30, aRegistration.getGuardianRelationToStudent());
-            cs.setInt(31, aRegistration.getIsGuardianContactInCaseEmergency()==true? 1:0);
-            cs.setString(32, aRegistration.getSchoolLastAttended());
-            cs.setString(33, aRegistration.getSchoolLastAttendedAddress());
-            cs.setString(34, aRegistration.getAddressRoomOrHouseNo());
-            cs.setString(35, aRegistration.getAddressStreet());
-            cs.setString(36, aRegistration.getAddressBrgyOrSubd());
-            cs.setString(37, aRegistration.getAddressCity());
-            cs.setString(38, aRegistration.getProvince());
-            
-            GradeLevel gradeLevel = new GradeLevel();
-            gradeLevel.setLevel(aRegistration.getGradeLevel());
-            int gradeLevelId = new GradeLevelDaoImpl().getId(gradeLevel);
-//            JOptionPane.showMessageDialog(null,"grade level id: "+gradeLevelId);
-            
-            cs.setInt(39, gradeLevelId );
-            
-            int schoolYearNo = aRegistration.getSchoolYear().getYearFrom();
-            int schoolYearId = new SchoolYearDaoImpl().getId(schoolYearNo);
-//            JOptionPane.showMessageDialog(null,"School Year Id: "+schoolYearId);
-            cs.setInt(40, schoolYearId);
-            
-            
-            String paymentTerm = aRegistration.getPaymentTerm();
-//            JOptionPane.showMessageDialog(null, "Payment Term : "+aRegistration.getPaymentTerm());
-            Integer aPaymentTermId = paymentTermDaoImpl.getId(paymentTerm);
-//            JOptionPane.showMessageDialog(null, "Payment Term Id : "+aPaymentTermId);
-            cs.setInt(41, aPaymentTermId);
-            
-            cs.executeUpdate();
-            isAdded = true;
+                + "?,?,?,?,?,?,?,?,?,?,?,?) }" ;
+        String SQLb = "{CALL addAdmission(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            con.setAutoCommit(false);
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);) {
+                csa.setString(1, registration.getStudentType());
+                csa.setString(2, registration.getLastName());
+                csa.setString(3, registration.getFirstName());
+                csa.setString(4, registration.getMiddleName());
+                csa.setObject(5, registration.getDateOfBirth());
+                csa.setString(6, registration.getPlaceOfBirth());
+                csa.setString(7, registration.getNationality());
+                csa.setString(8, registration.getReligion());
+                csa.setInt(9, "Male".equals(registration.getGender()) ? 1 : 0);
+                csa.setString(10, registration.getFatherFirstName());
+                csa.setString(11, registration.getFatherMiddleName());
+                csa.setString(12, registration.getFatherLastName());
+                csa.setString(13, registration.getFatherOccupation());
+                csa.setString(14, registration.getFatherOfficePhoneNo());
+                csa.setString(15, registration.getFatherMobileNo());
+                csa.setInt(16, registration.getIsFatherContactInCaseEmergency() == true ? 1 : 0);
+                csa.setString(17, registration.getMotherFirstName());
+                csa.setString(18, registration.getMotherMiddleName());
+                csa.setString(19, registration.getMotherLastName());
+                csa.setString(20, registration.getMotherOccupation());
+                csa.setString(21, registration.getMotherOfficePhoneNo());
+                csa.setString(22, registration.getMotherMobileNo());
+                csa.setInt(23, registration.getIsMotherContactInCaseEmergency() == true ? 1 : 0);
+                csa.setString(24, registration.getGuardianLastName());
+                csa.setString(25, registration.getGuardianFirstName());
+                csa.setString(26, registration.getGuardianMiddleName());
+                csa.setString(27, registration.getGuardianOccupation());
+                csa.setString(28, registration.getGuardianOfficePhoneNo());
+                csa.setString(29, registration.getGuardianMobileNo());
+                csa.setString(30, registration.getGuardianRelationToStudent());
+                csa.setInt(31, registration.getIsGuardianContactInCaseEmergency() == true ? 1 : 0);
+                csa.setString(32, registration.getSchoolLastAttended());
+                csa.setString(33, registration.getSchoolLastAttendedAddress());
+                csa.setString(34, registration.getAddressRoomOrHouseNo());
+                csa.setString(35, registration.getAddressStreet());
+                csa.setString(36, registration.getAddressBrgyOrSubd());
+                csa.setString(37, registration.getAddressCity());
+                csa.setString(38, registration.getProvince());
+                
+                GradeLevel gradeLevel = new GradeLevel();
+                gradeLevel.setLevel(registration.getGradeLevel());
+                int gradeLevelId = new GradeLevelDaoImpl().getId(gradeLevel);
+
+                csa.setInt(39, gradeLevelId);
+
+                int schoolYearNo = registration.getSchoolYear().getYearFrom();
+                int schoolYearId = new SchoolYearDaoImpl().getId(schoolYearNo);
+                csa.setInt(40, schoolYearId);
+
+                String paymentTerm = registration.getPaymentTerm();
+                Integer aPaymentTermId = paymentTermDaoImpl.getId(paymentTerm);
+                csa.setInt(41, aPaymentTermId);
+                csa.registerOutParameter(42, Types.INTEGER);
+
+                csa.executeUpdate();
+                int registrationId = csa.getInt(42);
+                
+                csb.setInt(1, registrationId);
+                csb.executeUpdate();
+                
+                con.commit();
+                isAdded = true;
+            } catch (SQLException e) {
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
+            }
         } catch (SQLException e) {
             isAdded = false;
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
         }
         return isAdded;
     }
@@ -412,185 +417,6 @@ public class RegistrationDaoImpl implements IRegistration{
  
     
 // OLD =================OLD ======================= OLD ===================== OLD =========================    
-    
-    public Boolean submit
-        (String aStudentType, String aLastName, String aFirstName, String aMiddleName, int aDateOfBirth, String aPlaceOfBirth,
-        String aNationality, String aReligion, int aGender, String aFatherFirstName, String aFatherMiddleName, String aFatherLastName,
-        String aFatherOccupation, String aFatherOfficePhoneNo, String aMotherFirstName, String aMotherMiddleName, String aMotherLastName,
-        String aMotherOccupation, String aMotherOfficePhoneNo, String aFatherMobileNo, String aMotherMobileNo, String aGuardianLastName,
-        String aGuardianFirstName, String aGuardianMiddleName, String aGuardianOccupation, String aGuardianOfficePhoneNo, String aGuardianMobileNo,
-        String aGuardianRelationToStudent, int isFatherContactEmergency, int isMotherContactEmergency, int isGuardianContactEmergency, int aSchoolYearId,
-        int aGradeLevelId,String aSchoolLastAttended, String aSchoolAddress, String aRoomOrHouseNo, String aStreet, String aBrgySubd, String aCity, String aProvince,
-        String aPaymentTerm)
-        {
-            
-        
-            
-        Boolean isSuccessful;    
-        String SQL = "{CALL register(?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?,?,"
-                                  + "?,?,?,?) }";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1,aStudentType);
-            cs.setString(2,aLastName);
-            cs.setString(3,aFirstName);
-            cs.setString(4,aMiddleName);
-            cs.setObject(5,aDateOfBirth);
-            cs.setString(6,aPlaceOfBirth);
-            cs.setString(7,aNationality);
-            cs.setString(8,aReligion);
-            cs.setInt(9,aGender);
-            cs.setString(10,aFatherFirstName);
-            cs.setString(11,aFatherMiddleName);
-            cs.setString(12,aFatherLastName);
-            cs.setString(13,aFatherOccupation);
-            cs.setString(14,aFatherOfficePhoneNo);
-            cs.setString(15,aMotherFirstName);
-            cs.setString(16,aMotherMiddleName);
-            cs.setString(17,aMotherLastName);
-            cs.setString(18,aMotherOccupation);
-            cs.setString(19,aMotherOfficePhoneNo);
-            cs.setString(20,aFatherMobileNo);
-            cs.setString(21,aMotherMobileNo);
-            cs.setString(22,aGuardianLastName);
-            cs.setString(23,aGuardianFirstName);
-            cs.setString(24,aGuardianMiddleName);
-            cs.setString(25,aGuardianOccupation);
-            cs.setString(26,aGuardianOfficePhoneNo);
-            cs.setString(27,aGuardianMobileNo);
-            cs.setString(28,aGuardianRelationToStudent);
-            cs.setInt(29,isFatherContactEmergency);
-            cs.setInt(30,isMotherContactEmergency);
-            cs.setInt(31,isGuardianContactEmergency);
-            cs.setInt(32,aSchoolYearId);
-            cs.setInt(33,aGradeLevelId);
-            cs.setString(34,aSchoolLastAttended);
-            cs.setString(35,aSchoolAddress);
-            cs.setInt(36, LoginDaoImpl.getUserId());
-            cs.setString(37, aRoomOrHouseNo);
-            cs.setString(38, aStreet);
-            cs.setString(39, aBrgySubd);
-            cs.setString(40, aCity);
-            cs.setString(41, aProvince);
-//            cs.setInt(42, myHasBirthCertificate);
-//            cs.setInt(43, myHasBaptismalCertificate);
-//            cs.setInt(44, myHasMedicalCertificate);
-//            cs.setInt(45, myHasIdPicture);
-//            cs.setInt(46, myHasReportCard);
-//            cs.setInt(47, myHasCertificateOfGoodMoral);
-            cs.setInt(48, PaymentDaoImpl_OLD.Term.getId(aPaymentTerm.trim()));
-            cs.registerOutParameter(49, Types.INTEGER);
-            
-            cs.executeUpdate();
-            
-            int registrationId = cs.getInt("op_registrationId");
-            
-            JOptionPane.showMessageDialog(null,"Successfully registered.\nYou registration ID is: "+registrationId);
-            isSuccessful = true;
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error at: "+e.getClass().getSimpleName()+"\nError Message: "+e.getMessage()+"\n"+e.getErrorCode() );
-            isSuccessful = false;
-        }//end of catch
-        return isSuccessful;
-    }
-        
-      
-    public static Boolean updateDetails
-        (String aStudentType, String aLastName, String aFirstName, String aMiddleName, int aDateOfBirth, String aPlaceOfBirth,
-        String aNationality, String aReligion, int aGender, String aFatherFirstName, String aFatherMiddleName, String aFatherLastName,
-        String aFatherOccupation, String aFatherOfficePhoneNo, String aMotherFirstName, String aMotherMiddleName, String aMotherLastName,
-        String aMotherOccupation, String aMotherOfficePhoneNo, String aFatherMobileNo, String aMotherMobileNo, String aGuardianLastName,
-        String aGuardianFirstName, String aGuardianMiddleName, String aGuardianOccupation, String aGuardianOfficePhoneNo, String aGuardianMobileNo,
-        String aGuardianRelationToStudent, int isFatherContactEmergency, int isMotherContactEmergency, int isGuardianContactEmergency, int aSchoolYearId,
-        int aGradeLevelId,String aSchoolLastAttended, String aSchoolAddress, String aRoomOrHouseNo, String aStreet, String aBrgySubd, 
-        String aCity, String aProvince, boolean hasBirthCertificate, boolean hasBaptismalCertificate, boolean hasMedicalCertificate, boolean hasIdPicture, boolean hasReportCard,
-        boolean hasCertificateOfGoodMoral, String aPaymentTerm, int aRegistrationId)
-        {
-            
-        int myHasBirthCertificate = (hasBirthCertificate)? 1:0;
-        int myHasBaptismalCertificate = (hasBaptismalCertificate)? 1:0;
-        int myHasMedicalCertificate = (hasMedicalCertificate)? 1:0;
-        int myHasIdPicture = (hasIdPicture)? 1:0;
-        int myHasReportCard = (hasReportCard)? 1:0;
-        int myHasCertificateOfGoodMoral = (hasCertificateOfGoodMoral)? 1:0;    
-            
-        Boolean bool;
-        String SQL = "{CALL updateRegistrationDetails("
-                + "?,?,?,?,?,?,?,?,?,?,"
-                + "?,?,?,?,?,?,?,?,?,?,"
-                + "?,?,?,?,?,?,?,?,?,?,"
-                + "?,?,?,?,?,?,?,?,?,?,"
-                + "?,?,?,?,?,?,?,?,?)}";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            
-            
-            cs.setString(1,aStudentType);
-            cs.setString(2,aLastName);
-            cs.setString(3,aFirstName);
-            cs.setString(4,aMiddleName);
-            cs.setObject(5,aDateOfBirth);
-            cs.setString(6,aPlaceOfBirth);
-            cs.setString(7,aNationality);
-            cs.setString(8,aReligion);
-            cs.setInt(9,aGender);
-            cs.setString(10,aFatherFirstName);
-            cs.setString(11,aFatherMiddleName);
-            cs.setString(12,aFatherLastName);
-            cs.setString(13,aFatherOccupation);
-            cs.setString(14,aFatherOfficePhoneNo);
-            cs.setString(15,aMotherFirstName);
-            cs.setString(16,aMotherMiddleName);
-            cs.setString(17,aMotherLastName);
-            cs.setString(18,aMotherOccupation);
-            cs.setString(19,aMotherOfficePhoneNo);
-            cs.setString(20,aFatherMobileNo);
-            cs.setString(21,aMotherMobileNo);
-            cs.setString(22,aGuardianLastName);
-            cs.setString(23,aGuardianFirstName);
-            cs.setString(24,aGuardianMiddleName);
-            cs.setString(25,aGuardianOccupation);
-            cs.setString(26,aGuardianOfficePhoneNo);
-            cs.setString(27,aGuardianMobileNo);
-            cs.setString(28,aGuardianRelationToStudent);
-            cs.setInt(29,isFatherContactEmergency);
-            cs.setInt(30,isMotherContactEmergency);
-            cs.setInt(31,isGuardianContactEmergency);
-            cs.setInt(32,aSchoolYearId);
-            cs.setInt(33,aGradeLevelId);
-            cs.setString(34,aSchoolLastAttended);
-            cs.setString(35,aSchoolAddress);
-            cs.setInt(36, LoginDaoImpl.getUserId());
-            cs.setString(37, aRoomOrHouseNo);
-            cs.setString(38, aStreet);
-            cs.setString(39, aBrgySubd);
-            cs.setString(40, aCity);
-            cs.setString(41, aProvince);
-            cs.setInt(42,myHasBirthCertificate);
-            cs.setInt(43,myHasBaptismalCertificate);
-            cs.setInt(44,myHasMedicalCertificate);
-            cs.setInt(45,myHasIdPicture);
-            cs.setInt(46,myHasReportCard);
-            cs.setInt(47,myHasCertificateOfGoodMoral);
-            cs.setInt(48,PaymentDaoImpl_OLD.Term.getId(aPaymentTerm.trim()) );
-            cs.setInt(49, aRegistrationId);
-            
-            cs.executeUpdate();
-            bool = true;
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error at: "+e.getClass().getSimpleName()+"\nError Message: "+e.getMessage()+"\n"+e.getErrorCode() );
-            bool = false;
-        }
-        return bool;
-    } 
         
     public static DefaultTableModel getRegistrationEntries(JTable aJtable){
         DefaultTableModel myModel = (DefaultTableModel) aJtable.getModel();

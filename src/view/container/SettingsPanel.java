@@ -22,6 +22,7 @@ import component_model_loader.CredentialML;
 import utility.component.JPanelUtil;
 import component_model_loader.NavigationImpl;
 import java.awt.Component;
+import java.awt.GridBagConstraints;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -506,7 +507,11 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private void addFacultyPanel(){
         NewFaculty nf = new NewFaculty();
-        jpnlFacultyContainer.add(nf);
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.BOTH;
+        gc.weightx = 0.5;
+        gc.weighty = 0.5;
+        jpnlFacultyContainer.add(nf,gc);
     }
     
     private void addPaymentSchedule(){

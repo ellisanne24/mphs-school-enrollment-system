@@ -20,6 +20,7 @@ public class GradeLevelML {
             GradeLevel g = (GradeLevel)o;
             dcm.addElement(g.getLevel());
         }
+        dcm.setSelectedItem(null);
         return dcm;
     }
     

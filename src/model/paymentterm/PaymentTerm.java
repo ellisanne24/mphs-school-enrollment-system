@@ -15,7 +15,7 @@ import model.period.Period;
 public class PaymentTerm {
 
     private List<Period> periods; //Sem1, Sem2, Q1,Q1,Q3,Q4, Mo1, Mo2, Mo3....
-    private int paymentTermId;
+    private int id;
     private String name;
     private boolean isActive;
     private double penaltyAmount;
@@ -54,12 +54,12 @@ public class PaymentTerm {
         this.penaltyAmount = penaltyAmount;
     }
 
-    public int getPaymentTermId() {
-        return paymentTermId;
+    public int getId() {
+        return id;
     }
 
-    public void setPaymentTermId(int paymentTermId) {
-        this.paymentTermId = paymentTermId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

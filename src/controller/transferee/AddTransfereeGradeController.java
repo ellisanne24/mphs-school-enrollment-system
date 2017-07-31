@@ -29,11 +29,11 @@ public class AddTransfereeGradeController implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         boolean transferee = jcbTransferee.isSelected();
         if (transferee) {
-            AddGrade addGrade = new AddGrade(null, true, registrationId);
-            addGrade.setPreferredSize(new Dimension(650, 300));
-            addGrade.pack();
-            addGrade.setLocationRelativeTo(null);
-            addGrade.setVisible(true);
+//            AddGrade addGrade = new AddGrade(null, true, registrationId);
+//            addGrade.setPreferredSize(new Dimension(650, 300));
+//            addGrade.pack();
+//            addGrade.setLocationRelativeTo(null);
+//            addGrade.setVisible(true);
         }else{
             
         }

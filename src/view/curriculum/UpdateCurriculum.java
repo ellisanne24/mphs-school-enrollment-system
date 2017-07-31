@@ -22,11 +22,11 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import utility.layout.CurriculumUtility;
 import model.curriculum.Curriculum;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.subject.Subject;
+import utility.layout.CurriculumUtility;
 import validation.CurriculumValidation;
 
 /**
@@ -150,6 +150,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
         jLabel4.setText("Curriculum Name:");
         jPanel11.add(jLabel4, new java.awt.GridBagConstraints());
 
+        cbFilterControlCurriculumName.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         cbFilterControlCurriculumName.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFilterControlCurriculumNameItemStateChanged(evt);
@@ -439,6 +440,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
             curriculum.setCurriculumTitle((String) cbFilterControlCurriculumName.getSelectedItem());
             
             //Setter call from Curriclum & Method call from CurriculumDaoImpl
+            cdi.getCurriculumId(curriculum);
             curriculum.setCurriculumId(cdi.getCurriculumId(curriculum));
             
             //Set model on cbCurriculumList & Method call from CurriculumML
@@ -499,7 +501,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         //Setter call from CurriculumDaoImpl
-        curriculum.setCurriculumId((int) getTblCreatedCurriculum().getValueAt(getTblCreatedCurriculum().getSelectedRow(), 0));
+//        curriculum.setCurriculumId((int) tblCreatedCurriculumList.getValueAt(tblCreatedCurriculumList.getSelectedRow(), 0));
         
         List list = new ArrayList();
         list.add(cbCreatedGradeLevel.getSelectedItem());
@@ -512,7 +514,6 @@ public class UpdateCurriculum extends javax.swing.JFrame {
             list.add(tblCreatedCurriculumList.getValueAt(i, 1));
             list.add(tblCreatedCurriculumList.getValueAt(i, 2));
         }
-        
         
         
         list.retainAll(new CurriculumValidation().checkCurriculumChanges(curriculum));
@@ -528,7 +529,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
             //Setter call from Curriculum
             //Get id from getTblCreatedCurriculum()
             curriculum.setCurriculumId((int) getTblCreatedCurriculum().getValueAt(getTblCreatedCurriculum().getSelectedRow(), 0));
-
+            
             //Method call from CurriculumDaoImpl
             cdi.deleteCreatedCurriculumById(curriculum);
 
@@ -551,8 +552,10 @@ public class UpdateCurriculum extends javax.swing.JFrame {
                 curriculum.setCurriculumTitle(tfCurriculumName.getText());
                 curriculum.setCurriculumDescription(taCurriculumDescription.getText());
 
+                System.out.println("CUR ID "+curriculum.getCurriculumId());
+                System.out.println("SUBJECT ID "+subject.getSubjectId());
                 //Method call from CurriculumDaoImpl
-                cdi.updateCreatedCurriculumById(curriculum, gradeLevel, schoolYear, subject);
+//                cdi.updateCreatedCurriculumById(curriculum, gradeLevel, schoolYear, subject);
             }
 
             JOptionPane.showMessageDialog(null, "Successfully updating curriculum "+tfCurriculumName.getText());
