@@ -9,6 +9,8 @@ import java.util.List;
 import model.curriculum.Curriculum;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.student.Student;
 import model.subject.Subject;
 
 /**
@@ -30,4 +32,5 @@ public interface ISubject {
     boolean updateCreatedSubjectById(Subject aSubject, GradeLevel aGradeLevel);
     boolean checkSubjectExists(Subject aSubject);
     List <Subject> checkSubjectChanges(Subject aSubject);
+    List <Subject> getAllStudentSubjectBySectionId(Section aSection);
 }

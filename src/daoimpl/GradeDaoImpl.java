@@ -6,8 +6,17 @@
 package daoimpl;
 
 import dao.IGrade;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.grade.Grade;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import utility.database.DBType;
+import utility.database.DBUtil;
 /**
  *
  * @author John Ferdinand Antonio
@@ -15,17 +24,174 @@ import model.grade.Grade;
 public class GradeDaoImpl implements IGrade{
 
     @Override
-    public boolean add(List<Grade> grade) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean createStudentGrade(Grade grade) 
+    {
+        String sql = "call createStudentGrade(?,?,?,?,?,?,?,?)";
+        boolean isSuccessful;
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql);)
+        {
+            cs.setInt(1, grade.subject.getSubjectId());
+            cs.setDouble(2, grade.getGrade());
+            cs.setInt(3, grade.schoolYear.getSchoolYearId());
+            cs.setInt(4, grade.getPeriodId());
+            cs.setDouble(5, grade.getFinalGrade());
+            cs.setDouble(6, grade.getGwa());
+            cs.setInt(7, grade.student.getStudentId());
+            cs.registerOutParameter(8, java.sql.Types.INTEGER);
+            
+            cs.executeUpdate();
+            
+            grade.setGwa(cs.getDouble(8));
+            
+            isSuccessful = true;
+        }
+        catch (SQLException ex) 
+        {
+            isSuccessful = false;
+            
+            System.err.println("Error at createGrade "+ex);
+        }
+        
+        return isSuccessful;
+    }   
+
+    @Override
+    public List<Grade> getAllStudentGradeByGradeLevelId(GradeLevel gradeLevel, SchoolYear aSchoolYear) 
+    {
+        String sql = "call getAllStudentGradeByGradeLevelId(?,?)";
+        
+        List <Grade> list = new ArrayList();
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql);)
+        {
+            cs.setInt(1, gradeLevel.getId());
+            cs.setInt(2, aSchoolYear.getSchoolYearId());
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Grade grade = new Grade();
+                    
+                    grade.student.setStudentId(rs.getInt("student_id"));
+                    grade.student.setFirstName(rs.getString("firstname"));
+                    grade.student.setMiddleName(rs.getString("middlename"));
+                    grade.student.setLastName(rs.getString("lastname"));
+                    grade.gradeLevel.setLevel(rs.getInt("grade_level"));
+                    grade.setGwa(rs.getDouble("gwa"));
+                    
+                    list.add(grade);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getAllStudentGradeByGradeLevelId "+ex);
+        }
+        
+        return list;
+    }
+    
+    @Override
+    public boolean promoteStudentById(Grade aGrade, GradeLevel aGradeLevel)
+    {
+        boolean isSuccessful;
+        String sql = "call promoteStudentById(?,?,?,?,?)";
+        
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql);)
+        {
+            cs.setInt(1, aGrade.schoolYear.getSchoolYearId());
+            cs.setInt(2, aGrade.student.getStudentId());
+            cs.setInt(3, aGradeLevel.getId());
+            cs.setBoolean(4, aGrade.getIsPassed());
+            cs.setBoolean(5, aGrade.getIsActive());
+            
+            cs.executeUpdate();
+            
+            isSuccessful = true;
+        }
+        catch(SQLException ex)
+        {
+            isSuccessful = false;
+            System.err.println("Error at promoteStudentById "+ex);
+        }
+        
+        return isSuccessful;
     }
 
     @Override
-    public List<Grade> get(int studentId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Grade> getAllPromotedBySchoolYearId(SchoolYear aSchoolYear) 
+    {
+        String sql = "call getAllPromotedBySchoolYearId(?)";
+        List <Grade> list = new ArrayList();
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql);)
+        {
+            cs.setInt(1, aSchoolYear.getSchoolYearId());
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Grade grade = new Grade();
+                    
+                    grade.student.setStudentId(rs.getInt("student_id"));
+                    grade.student.setFirstName(rs.getString("firstname"));
+                    grade.student.setMiddleName(rs.getString("middlename"));
+                    grade.student.setLastName(rs.getString("lastname"));
+                    grade.gradeLevel.setLevel(rs.getInt("grade_level"));
+                
+                    list.add(grade);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getAllPromotedBySchoolYearId "+ex);
+        }
+        
+        return list;
     }
 
     @Override
-    public List<Grade> get(int studentId, int schoolYearId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Grade> getAllPromotedStudent() 
+    {
+        String sql = "call getAllPromotedStudent()";
+        List <Grade> list = new ArrayList();
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql);)
+        {
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Grade grade = new Grade();
+                    
+                    grade.student.setStudentId(rs.getInt("student_id"));
+                    grade.student.setFirstName(rs.getString("firstname"));
+                    grade.student.setMiddleName(rs.getString("middlename"));
+                    grade.student.setLastName(rs.getString("lastname"));
+                    grade.gradeLevel.setLevel(rs.getInt("grade_level"));
+                
+                    list.add(grade);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getAllPromotedStudent "+ex);
+        }
+        
+        return list;
     }
+
+   
 }

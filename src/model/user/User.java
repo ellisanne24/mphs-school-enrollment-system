@@ -6,6 +6,8 @@
 package model.user;
 
 import java.util.Date;
+import model.role.Role;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -17,7 +19,52 @@ public class User {
     private String password;
     private boolean isActive;
     private boolean isLocked;
-    private Date lastLogin;
+    private String lastName;
+    private String firstName;
+    private String middleName;
+    private Date lastLoginDate;
+    private Date dateCreated;
+    private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
     public boolean isLocked() {
         return isLocked;
@@ -61,12 +108,12 @@ public class User {
         this.isActive = isActive;
     }
 
-    public Date getLastLogin() {
-        return lastLogin;
+    public Date getLastLoginDate() {
+        return lastLoginDate;
     }
 
-    public void setLastLogin(Date lastLogin) {
-        this.lastLogin = lastLogin;
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
     
     

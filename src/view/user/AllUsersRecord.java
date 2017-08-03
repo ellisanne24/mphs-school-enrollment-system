@@ -1,6 +1,7 @@
 
 package view.user;
 
+import component_model_loader.UserML;
 import controller.user.DisplayCreateUser;
 import controller.user.DisplayEditUser;
 import utility.component.JInternalFrameUtil;
@@ -10,6 +11,8 @@ public class AllUsersRecord extends javax.swing.JPanel {
         initComponents();
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
         initializeControllers();
+        jtblRecord.setAutoCreateRowSorter(true);
+        jtblRecord.setModel(new UserML().getAllUsers(jtblRecord));
     }
 
     private void initializeControllers(){
@@ -27,16 +30,9 @@ public class AllUsersRecord extends javax.swing.JPanel {
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jpnlYourContent = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jcbAllUsers = new javax.swing.JCheckBox();
-        jcbAdministrator = new javax.swing.JCheckBox();
-        jcbCashier = new javax.swing.JCheckBox();
-        jcbRegistrar = new javax.swing.JCheckBox();
-        jcbFaculty = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtblRecord = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jmiNewUser = new javax.swing.JMenuItem();
@@ -58,45 +54,9 @@ public class AllUsersRecord extends javax.swing.JPanel {
         jPanel3.setLayout(new java.awt.GridBagLayout());
         jpnlYourContent.add(jPanel3, new java.awt.GridBagConstraints());
 
-        jPanel4.setLayout(new java.awt.GridBagLayout());
-
-        jLabel1.setText("Sort by :");
-        jPanel4.add(jLabel1, new java.awt.GridBagConstraints());
-
-        buttonGroup1.add(jcbAllUsers);
-        jcbAllUsers.setText("All Users");
-        jPanel4.add(jcbAllUsers, new java.awt.GridBagConstraints());
-
-        buttonGroup1.add(jcbAdministrator);
-        jcbAdministrator.setText("Administrator");
-        jPanel4.add(jcbAdministrator, new java.awt.GridBagConstraints());
-
-        buttonGroup1.add(jcbCashier);
-        jcbCashier.setText("Cashier");
-        jPanel4.add(jcbCashier, new java.awt.GridBagConstraints());
-
-        buttonGroup1.add(jcbRegistrar);
-        jcbRegistrar.setText("Registrar");
-        jPanel4.add(jcbRegistrar, new java.awt.GridBagConstraints());
-
-        buttonGroup1.add(jcbFaculty);
-        jcbFaculty.setText("Faculty");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel4.add(jcbFaculty, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlYourContent.add(jPanel4, gridBagConstraints);
-
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtblRecord.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -112,8 +72,8 @@ public class AllUsersRecord extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        jtblRecord.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jtblRecord);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -174,24 +134,17 @@ public class AllUsersRecord extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JInternalFrame jInternalFrame1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JCheckBox jcbAdministrator;
-    private javax.swing.JCheckBox jcbAllUsers;
-    private javax.swing.JCheckBox jcbCashier;
-    private javax.swing.JCheckBox jcbFaculty;
-    private javax.swing.JCheckBox jcbRegistrar;
     private javax.swing.JMenuItem jmiEditUser;
     private javax.swing.JMenuItem jmiNewUser;
     private javax.swing.JPanel jpnlYourContent;
+    public static javax.swing.JTable jtblRecord;
     // End of variables declaration//GEN-END:variables
 }

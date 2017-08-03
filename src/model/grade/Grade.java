@@ -1,12 +1,11 @@
-package model.grade;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package model.grade;
 
-
+import java.util.Date;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
@@ -18,13 +17,16 @@ import model.subject.Subject;
  */
 public class Grade {
     private int id;
+    private int periodId;
     private double first_qtr;
     private double second_qtr;
     private double third_qtr;
     private double fourth_qtr;
     private double finalGrade;
     private double gwa;
+    private double grade;
     private boolean isPassed;
+    private boolean isActive;
     
     public Subject subject = new Subject();
     public Student student = new Student();
@@ -99,4 +101,33 @@ public class Grade {
         return isPassed;
     }
     
+    public void setIsActive(boolean isActive)
+    {
+        this.isActive = isActive;
+    }
+    
+    public boolean getIsActive()
+    {
+        return isActive;
+    }
+    
+    public void setGrade(double grade)
+    {
+        this.grade = grade;
+    }
+    
+    public double getGrade()
+    {
+        return grade;
+    }
+    
+    public void setPeriodId(int periodId)
+    {
+        this.periodId = periodId;
+    }
+    
+    public int getPeriodId()
+    {
+        return periodId;
+    }
 }

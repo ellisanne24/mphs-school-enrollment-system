@@ -54,7 +54,7 @@ public class SectionDaoImpl implements ISection {
             cs.setString(1, aSectionName);
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
-                    aSectionId = rs.getInt("aSectionId");
+                    aSectionId = rs.getInt("section_id");
                 }
             }
         } catch (SQLException e) {
@@ -360,5 +360,39 @@ public class SectionDaoImpl implements ISection {
         
         return list;
     }
-
+    
+    @Override
+    public List<Student> getAllStudentBySectionId(Section aSection, SchoolYear aSchoolYear) 
+    {
+        String sql = "{call getAllStudentBySectionId(?,?)}";
+        List <Student> list = new ArrayList();
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql);)
+        {
+            cs.setInt(1, aSection.getSectionId());
+            cs.setInt(2, aSchoolYear.getSchoolYearId());
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Student student = new Student();
+                    
+                    student.setStudentId(rs.getInt("student_id"));
+                    student.setFirstName(rs.getString("firstname"));
+                    student.setMiddleName(rs.getString("middlename"));
+                    student.setLastName(rs.getString("lastname"));
+                    
+                    list.add(student);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getAllStudentBySectionId "+ex);
+        }
+        
+        return list;
+    }
 }

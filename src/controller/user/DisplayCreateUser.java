@@ -5,9 +5,11 @@
  */
 package controller.user;
 
+import component_model_loader.RolesML;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.DefaultComboBoxModel;
 import view.user.UserInfo;
 
 /**
@@ -16,9 +18,13 @@ import view.user.UserInfo;
  */
 public class DisplayCreateUser implements ActionListener{
 
+    RolesML rolesML = new RolesML();
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        UserInfo userInfo = new UserInfo(null, true);
+        DefaultComboBoxModel rolesComboModel = rolesML.getAllRoleNames();
+        
+        UserInfo userInfo = new UserInfo(null, true,rolesComboModel);
         userInfo.setTitle("Create User");
         userInfo.setPreferredSize(new Dimension(450,450));
         userInfo.pack();

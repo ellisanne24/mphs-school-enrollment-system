@@ -10,6 +10,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import model.faculty.Faculty;
+import model.section.Section;
 import model.specialization.Specialization;
 import utility.database.DBType;
 import utility.database.DBUtil;
@@ -155,6 +156,36 @@ public class FacultyDaoImpl implements IFaculty {
             e.printStackTrace();
         }
         return isUpdated;
+    }
+    
+    @Override
+    public List<Section> getAllFacultySectionByFacultyId() 
+    {
+        String sql = "call getAllFacultySectionByFacultyId()";
+        
+        List <Section> list = new ArrayList();
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Section section = new Section();
+                    
+                    section.setSectionName(rs.getString("sectionName"));
+                    
+                    list.add(section);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getAllFacultySectionByFacultyId"+ex);
+        }
+        
+        return list;
     }
 
 }

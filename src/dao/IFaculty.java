@@ -2,6 +2,7 @@
 package dao;
 import java.util.List;
 import model.faculty.Faculty;
+import model.section.Section;
 
 public interface IFaculty {
     List<Faculty>getAll();
@@ -9,4 +10,5 @@ public interface IFaculty {
     boolean add(Faculty aFaculty);
     boolean update(Faculty aFaculty);
     List<Faculty> getById(int aFacultyID); 
+    List<Section> getAllFacultySectionByFacultyId();
 }

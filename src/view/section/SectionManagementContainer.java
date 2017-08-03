@@ -644,7 +644,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
                 {
                     //Setter call from Section
                     section.setSectionName(tfSubjectName.getText());
-                    section.setRequiredAverage((String) cbAverage.getSelectedItem());
+                    section.setRequiredAverage( cbAverage.getSelectedItem().toString().trim());
                     section.setSectionId(section.getSectionId());
                     //Setter call from SchoolYear
                     schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
@@ -659,7 +659,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
                 else {
                     //Setter call from Section
                     section.setSectionName(tfSubjectName.getText());
-                    section.setRequiredAverage((String) cbAverage.getSelectedItem());
+                    section.setRequiredAverage( cbAverage.getSelectedItem().toString().trim());
                     section.setSectionId(section.getSectionId());
                     //Setter call from SchoolYear
                     schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
@@ -678,7 +678,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         else {
             //Setter call from Section
             section.setSectionName(tfSubjectName.getText());
-            section.setRequiredAverage((String) cbAverage.getSelectedItem());
+            section.setRequiredAverage( cbAverage.getSelectedItem().toString().trim());
             section.setSectionId(section.getSectionId());
             //Setter call from SchoolYear
             schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());

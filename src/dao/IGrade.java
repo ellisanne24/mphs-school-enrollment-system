@@ -7,6 +7,8 @@ package dao;
 
 import java.util.List;
 import model.grade.Grade;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 
 
 
@@ -15,7 +17,9 @@ import model.grade.Grade;
  * @author John Ferdinand Antonio
  */
 public interface IGrade {
-    boolean add(List<Grade> grades);
-    List<Grade> get(int studentId);
-    List<Grade> get(int studentId, int schoolYearId);
+    boolean createStudentGrade(Grade grade);
+    boolean promoteStudentById(Grade aGrade, GradeLevel gradeLeve);
+    List <Grade> getAllStudentGradeByGradeLevelId(GradeLevel gradeLevel, SchoolYear aSchoolYear);
+    List <Grade> getAllPromotedBySchoolYearId(SchoolYear aSchoolYear);
+    List <Grade> getAllPromotedStudent();
 }

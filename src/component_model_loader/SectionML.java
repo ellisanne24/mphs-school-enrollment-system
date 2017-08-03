@@ -493,5 +493,14 @@ public class SectionML {
         
         return model;
     }
-          
+    
+    public DefaultListModel getAllStudentBySectionId(Section aSection,SchoolYear schoolYear) {
+        DefaultListModel model = new DefaultListModel();
+        Object[] obj = sectionDaoImpl.getAllStudentBySectionId(aSection,schoolYear).toArray();
+        for (Object o : obj) {
+            Student student = (Student) o;
+            model.addElement("(" + student.getStudentId() + ") " + student.getFirstName() + " " + student.getMiddleName() + ". " + student.getLastName());
+        }
+        return model;
+    }
 }

@@ -31,4 +31,5 @@ public interface ISection{
     List<Section> getAllNewStudentsByGradeLevelId(GradeLevel aGradeLevel);
     double getSectionAverageBySectionId(Section aSection);
     List<Section> getAllOldStudentsByGradeLevelId(GradeLevel aGradeLevel);
+    List<Student> getAllStudentBySectionId(Section aSection,SchoolYear schoolYear);
 }

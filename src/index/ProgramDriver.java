@@ -28,10 +28,8 @@ public class ProgramDriver {
             public void run() {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } 
-                catch (ClassNotFoundException | InstantiationException | 
-                        IllegalAccessException | UnsupportedLookAndFeelException ex) 
-                {
+                } catch (ClassNotFoundException | InstantiationException |
+                        IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     ex.printStackTrace();
                 }
                 LoginForm logInForm = new LoginForm();

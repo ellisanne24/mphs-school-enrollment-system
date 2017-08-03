@@ -1,13 +1,111 @@
 
-package gui;
+package view.grades;
 
-public class GradingGui extends javax.swing.JPanel {
+import component_model_loader.FacultyML;
+import component_model_loader.GradeLevelML;
+import component_model_loader.GradeML;
+import component_model_loader.SectionML;
+import component_model_loader.StudentML;
+import component_model_loader.SubjectML;
+import daoimpl.GradeDaoImpl;
+import daoimpl.GradeLevelDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
+import daoimpl.SectionDaoImpl;
+import daoimpl.StudentDaoImpl;
+import daoimpl.SubjectDaoImpl;
+import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
+import model.grade.Grade;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.student.Student;
+import model.subject.Subject;
 
-    public GradingGui() {
+
+public class GradingGui extends javax.swing.JPanel{
+    
+   GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
+   SubjectDaoImpl sbdi = new SubjectDaoImpl();
+   SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
+   StudentDaoImpl stdi = new StudentDaoImpl();
+   GradeDaoImpl gdi = new GradeDaoImpl();
+   SectionDaoImpl sdi = new SectionDaoImpl();
+   
+   GradeLevelML glml = new GradeLevelML();
+   StudentML sml = new StudentML();
+   GradeML gml = new GradeML();
+   SectionML scml = new SectionML();
+   FacultyML fml = new FacultyML();
+   SubjectML sbml = new SubjectML();
+   
+   Subject subject = new Subject();
+   Student student = new Student();
+   Grade grade = new Grade();
+   Section section = new Section();
+   SchoolYear schoolYear = new SchoolYear();
+   public GradingGui( ) {
         initComponents();
+        jTabbedPane1.add(new Promotion(), "Promotion");
+        jTabbedPane1.add(new Promoted(), "Promoted");
+        cbSectionList.setModel(fml.getAllFacultySectionByFacultyId());
+        jtbl_grades.getColumnModel().getColumn(0).setMinWidth(0);
+        jtbl_grades.getColumnModel().getColumn(0).setMaxWidth(0);
+        cbSectionList.setModel(new FacultyML().getAllFacultySectionByFacultyId());
+        
+        if(cbSectionList.getSelectedIndex() == 0)
+        {
+            section.setSectionName((String) cbSectionList.getSelectedItem());
+            section.setSectionId(sdi.getSectionIdByName(section.getSectionName()));
+            
+            //Setter call from SchoolYear
+            schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+            
+            jlistStudent.setModel(scml.getAllStudentBySectionId(section, schoolYear));
+            
+            jtbl_grades.setModel(sbml.getAllStudentSubjectBySectionId(section));
+            //Hide first column
+            jtbl_grades.getColumnModel().getColumn(0).setMinWidth(0);
+            jtbl_grades.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
     }
-     
+    
     @SuppressWarnings("unchecked")
+    
+    
+    private void computeFinal()
+    {
+        double finalGrade = 0;
+        double grades = 0;
+        double genAve = 0;
+        
+        DecimalFormat df = new DecimalFormat("#.##");
+        
+        
+        if(jtbl_grades.getRowCount() != 0)
+        {
+            for(int row = 0; row < jtbl_grades.getRowCount(); row++)
+            {
+                for(int column = 2; column < jtbl_grades.getColumnCount() - 1; column++)
+                {
+                    grades = Double.parseDouble(String.valueOf(jtbl_grades.getValueAt(row, column)));
+                    
+                    finalGrade += grades + 0.0;
+                }
+                jtbl_grades.setValueAt(finalGrade / 4, row, 6);
+                //Revert to 0.0 after loop
+                finalGrade = 0.0;
+                
+                genAve += Double.parseDouble(String.valueOf(jtbl_grades.getValueAt(row, 6)));
+            }
+            
+            //Settext at tfGenAve
+            tfGenAve.setText(df.format(genAve / jtbl_grades.getRowCount()));
+            
+        }
+        
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -16,42 +114,24 @@ public class GradingGui extends javax.swing.JPanel {
         jPanel7 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel31 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jlistStudent = new javax.swing.JList<>();
+        jPanel37 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        cbSectionList = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jPanel49 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel15 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jtbl_grades = new javax.swing.JTable();
         jPanel12 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel15 = new javax.swing.JPanel();
-        jPanel14 = new javax.swing.JPanel();
-        jLabel17 = new javax.swing.JLabel();
-        jPanel16 = new javax.swing.JPanel();
-        jLabel19 = new javax.swing.JLabel();
-        jPanel13 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable6 = new javax.swing.JTable();
+        tfGenAve = new javax.swing.JTextField();
         jPanel17 = new javax.swing.JPanel();
+        Save = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -100,18 +180,6 @@ public class GradingGui extends javax.swing.JPanel {
         jPanel11 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jPanel31 = new javax.swing.JPanel();
-        jPanel39 = new javax.swing.JPanel();
-        jPanel37 = new javax.swing.JPanel();
-        jLabel36 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jPanel41 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jPanel40 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel43 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
         jPanel42 = new javax.swing.JPanel();
         jPanel44 = new javax.swing.JPanel();
         jPanel45 = new javax.swing.JPanel();
@@ -132,147 +200,42 @@ public class GradingGui extends javax.swing.JPanel {
 
         jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel9.setMaximumSize(new java.awt.Dimension(0, 0));
-        jPanel9.setLayout(new java.awt.GridBagLayout());
+        jPanel9.setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setPreferredSize(new java.awt.Dimension(250, 554));
-        jPanel2.setLayout(new java.awt.GridBagLayout());
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel1.setText("Student Number:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel1, gridBagConstraints);
+        jPanel31.setPreferredSize(new java.awt.Dimension(100, 218));
+        jPanel31.setLayout(new java.awt.BorderLayout());
 
-        jTextField1.setColumns(10);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel2.add(jTextField1, gridBagConstraints);
+        jScrollPane4.setViewportView(jlistStudent);
 
-        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel2.setText("First Name:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel2, gridBagConstraints);
+        jPanel31.add(jScrollPane4, java.awt.BorderLayout.CENTER);
 
-        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel3.setText("FirstNameLabel");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel3, gridBagConstraints);
+        jPanel2.add(jPanel31, java.awt.BorderLayout.CENTER);
 
-        jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel4.setText("Last Name:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel4, gridBagConstraints);
+        jPanel37.setLayout(new java.awt.GridBagLayout());
 
-        jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel5.setText("Last NameLabel");
+        jLabel1.setText("Section:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel5, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanel37.add(jLabel1, gridBagConstraints);
 
-        jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel6.setText("Middle Name:");
+        cbSectionList.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbSectionListItemStateChanged(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel6, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanel37.add(cbSectionList, gridBagConstraints);
 
-        jLabel7.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel7.setText("MiddleNameLabel");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel7, gridBagConstraints);
+        jPanel2.add(jPanel37, java.awt.BorderLayout.NORTH);
 
-        jLabel8.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel8.setText("Grade Level:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel8, gridBagConstraints);
-
-        jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel9.setText("GradeLevelLabel");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel9, gridBagConstraints);
-
-        jLabel10.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel10.setText("Section:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel10, gridBagConstraints);
-
-        jLabel11.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel11.setText("SectionLabel");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel11, gridBagConstraints);
-
-        jLabel12.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel12.setText("Room:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel12, gridBagConstraints);
-
-        jLabel13.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel13.setText("RoomLabel");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
-        jPanel2.add(jLabel13, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel9.add(jPanel2, gridBagConstraints);
+        jPanel9.add(jPanel2, java.awt.BorderLayout.WEST);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.setPreferredSize(new java.awt.Dimension(751, 554));
@@ -280,109 +243,76 @@ public class GradingGui extends javax.swing.JPanel {
 
         jPanel49.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel49.setPreferredSize(new java.awt.Dimension(384, 544));
-        jPanel49.setLayout(new java.awt.GridBagLayout());
+        jPanel49.setLayout(new java.awt.BorderLayout());
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setBorder(null);
         jPanel5.setPreferredSize(new java.awt.Dimension(374, 50));
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
         jLabel14.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel14.setText("ACADEMIC ACHIEVEMENTS");
+        jLabel14.setText("REPORT CARD");
         jPanel5.add(jLabel14, new java.awt.GridBagConstraints());
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
-        jPanel49.add(jPanel5, gridBagConstraints);
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel6.setPreferredSize(new java.awt.Dimension(374, 50));
-        jPanel6.setLayout(new java.awt.GridBagLayout());
-
-        jLabel15.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        jLabel15.setText("Learning");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel6.add(jLabel15, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
-        jPanel49.add(jPanel6, gridBagConstraints);
+        jPanel49.add(jPanel5, java.awt.BorderLayout.NORTH);
 
         jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel10.setPreferredSize(new java.awt.Dimension(374, 384));
         jPanel10.setLayout(new java.awt.BorderLayout());
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jtbl_grades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
-                "Subjects", "1", "2", "3", "4", "Final Rating"
+                "Id", "Grading Period", "1st Grading", "2nd Grading", "3rd Grading", "4th Grading", "Final Rating"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable3.setRowHeight(30);
-        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+        jtbl_grades.setRowHeight(30);
+        jtbl_grades.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable3MouseClicked(evt);
+                jtbl_gradesMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable3);
-        if (jTable3.getColumnModel().getColumnCount() > 0) {
-            jTable3.getColumnModel().getColumn(0).setResizable(false);
-            jTable3.getColumnModel().getColumn(0).setPreferredWidth(150);
-            jTable3.getColumnModel().getColumn(1).setResizable(false);
-            jTable3.getColumnModel().getColumn(1).setPreferredWidth(30);
-            jTable3.getColumnModel().getColumn(2).setResizable(false);
-            jTable3.getColumnModel().getColumn(2).setPreferredWidth(30);
-            jTable3.getColumnModel().getColumn(3).setResizable(false);
-            jTable3.getColumnModel().getColumn(3).setPreferredWidth(30);
-            jTable3.getColumnModel().getColumn(4).setResizable(false);
-            jTable3.getColumnModel().getColumn(4).setPreferredWidth(30);
-            jTable3.getColumnModel().getColumn(5).setResizable(false);
-            jTable3.getColumnModel().getColumn(5).setPreferredWidth(80);
+        jtbl_grades.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtbl_gradesKeyPressed(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jtbl_grades);
+        if (jtbl_grades.getColumnModel().getColumnCount() > 0) {
+            jtbl_grades.getColumnModel().getColumn(0).setResizable(false);
+            jtbl_grades.getColumnModel().getColumn(1).setResizable(false);
+            jtbl_grades.getColumnModel().getColumn(1).setPreferredWidth(150);
+            jtbl_grades.getColumnModel().getColumn(2).setResizable(false);
+            jtbl_grades.getColumnModel().getColumn(2).setPreferredWidth(30);
+            jtbl_grades.getColumnModel().getColumn(3).setResizable(false);
+            jtbl_grades.getColumnModel().getColumn(3).setPreferredWidth(30);
+            jtbl_grades.getColumnModel().getColumn(4).setResizable(false);
+            jtbl_grades.getColumnModel().getColumn(4).setPreferredWidth(30);
+            jtbl_grades.getColumnModel().getColumn(5).setResizable(false);
+            jtbl_grades.getColumnModel().getColumn(5).setPreferredWidth(30);
+            jtbl_grades.getColumnModel().getColumn(6).setResizable(false);
+            jtbl_grades.getColumnModel().getColumn(6).setPreferredWidth(80);
         }
 
         jPanel10.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel49.add(jPanel10, gridBagConstraints);
+        jPanel49.add(jPanel10, java.awt.BorderLayout.CENTER);
 
         jPanel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel12.setPreferredSize(new java.awt.Dimension(374, 50));
@@ -396,19 +326,13 @@ public class GradingGui extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel12.add(jLabel16, gridBagConstraints);
 
-        jTextField2.setColumns(8);
+        tfGenAve.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel12.add(jTextField2, gridBagConstraints);
+        jPanel12.add(tfGenAve, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel49.add(jPanel12, gridBagConstraints);
+        jPanel49.add(jPanel12, java.awt.BorderLayout.PAGE_END);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -417,149 +341,34 @@ public class GradingGui extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel3.add(jPanel49, gridBagConstraints);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel4.setPreferredSize(new java.awt.Dimension(354, 544));
-        jPanel4.setLayout(new java.awt.GridBagLayout());
-
-        jPanel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel15.setPreferredSize(new java.awt.Dimension(344, 60));
-        jPanel15.setLayout(new java.awt.GridBagLayout());
-
-        jPanel14.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel14.setPreferredSize(new java.awt.Dimension(130, 50));
-        jPanel14.setLayout(new java.awt.GridBagLayout());
-
-        jLabel17.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        jLabel17.setText("2017-2018");
-        jPanel14.add(jLabel17, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
-        jPanel15.add(jPanel14, gridBagConstraints);
-
-        jPanel16.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel16.setPreferredSize(new java.awt.Dimension(205, 50));
-        jPanel16.setLayout(new java.awt.GridBagLayout());
-
-        jLabel19.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        jLabel19.setText("Grading Period");
-        jPanel16.add(jLabel19, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
-        jPanel15.add(jPanel16, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel4.add(jPanel15, gridBagConstraints);
-
-        jPanel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel13.setPreferredSize(new java.awt.Dimension(344, 475));
-        jPanel13.setLayout(new javax.swing.BoxLayout(jPanel13, javax.swing.BoxLayout.LINE_AXIS));
-
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Values", "1", "2", "3", "4"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTable6.setRowHeight(30);
-        jScrollPane1.setViewportView(jTable6);
-        if (jTable6.getColumnModel().getColumnCount() > 0) {
-            jTable6.getColumnModel().getColumn(0).setResizable(false);
-            jTable6.getColumnModel().getColumn(0).setPreferredWidth(180);
-            jTable6.getColumnModel().getColumn(1).setResizable(false);
-            jTable6.getColumnModel().getColumn(1).setPreferredWidth(30);
-            jTable6.getColumnModel().getColumn(2).setResizable(false);
-            jTable6.getColumnModel().getColumn(2).setPreferredWidth(30);
-            jTable6.getColumnModel().getColumn(3).setResizable(false);
-            jTable6.getColumnModel().getColumn(3).setPreferredWidth(30);
-            jTable6.getColumnModel().getColumn(4).setResizable(false);
-            jTable6.getColumnModel().getColumn(4).setPreferredWidth(30);
-        }
-
-        jPanel13.add(jScrollPane1);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel4.add(jPanel13, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel3.add(jPanel4, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel9.add(jPanel3, gridBagConstraints);
+        jPanel9.add(jPanel3, java.awt.BorderLayout.CENTER);
 
         jPanel17.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel17.setPreferredSize(new java.awt.Dimension(751, 50));
         jPanel17.setLayout(new java.awt.GridBagLayout());
 
-        jButton2.setText("SAVE");
-        jButton2.setPreferredSize(new java.awt.Dimension(100, 30));
+        Save.setText("Save");
+        Save.setPreferredSize(new java.awt.Dimension(77, 29));
+        Save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaveActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel17.add(jButton2, gridBagConstraints);
+        jPanel17.add(Save, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel9.add(jPanel17, gridBagConstraints);
+        jButton2.setText("Compute");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel17.add(jButton2, new java.awt.GridBagConstraints());
+
+        jPanel9.add(jPanel17, java.awt.BorderLayout.PAGE_END);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -567,7 +376,7 @@ public class GradingGui extends javax.swing.JPanel {
         gridBagConstraints.weighty = 0.5;
         jPanel7.add(jPanel9, gridBagConstraints);
 
-        jTabbedPane1.addTab("Add Grades", jPanel7);
+        jTabbedPane1.addTab("New", jPanel7);
 
         jPanel8.setLayout(new java.awt.BorderLayout());
 
@@ -1055,6 +864,11 @@ public class GradingGui extends javax.swing.JPanel {
 
         jButton1.setText("Update");
         jButton1.setPreferredSize(new java.awt.Dimension(90, 30));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -1083,109 +897,7 @@ public class GradingGui extends javax.swing.JPanel {
 
         jPanel8.add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("View Grades And Update", jPanel8);
-
-        jPanel31.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel31.setLayout(new java.awt.BorderLayout());
-
-        jPanel39.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel39.setLayout(new java.awt.GridBagLayout());
-
-        jPanel37.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel37.setPreferredSize(new java.awt.Dimension(950, 50));
-        jPanel37.setLayout(new java.awt.GridBagLayout());
-
-        jLabel36.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        jLabel36.setText("Search:");
-        jPanel37.add(jLabel36, new java.awt.GridBagConstraints());
-
-        jTextField5.setPreferredSize(new java.awt.Dimension(170, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel37.add(jTextField5, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel39.add(jPanel37, gridBagConstraints);
-
-        jPanel41.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel41.setPreferredSize(new java.awt.Dimension(950, 454));
-        jPanel41.setLayout(new java.awt.BorderLayout());
-
-        jPanel40.setLayout(new java.awt.BorderLayout());
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Student Number", "Student Name", "1", "2", "3", "4", "Final Grade"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTable1.setRowHeight(30);
-        jScrollPane4.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(120);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(120);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(35);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(35);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setPreferredWidth(35);
-            jTable1.getColumnModel().getColumn(5).setResizable(false);
-            jTable1.getColumnModel().getColumn(5).setPreferredWidth(35);
-            jTable1.getColumnModel().getColumn(6).setResizable(false);
-            jTable1.getColumnModel().getColumn(6).setPreferredWidth(65);
-        }
-
-        jPanel40.add(jScrollPane4, java.awt.BorderLayout.CENTER);
-
-        jScrollPane3.setViewportView(jPanel40);
-
-        jPanel41.add(jScrollPane3, java.awt.BorderLayout.CENTER);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        jPanel39.add(jPanel41, gridBagConstraints);
-
-        jPanel43.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel43.setPreferredSize(new java.awt.Dimension(950, 50));
-        jPanel43.setLayout(new java.awt.GridBagLayout());
-
-        jButton4.setText("Promote Student");
-        jButton4.setPreferredSize(new java.awt.Dimension(130, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel43.add(jButton4, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel39.add(jPanel43, gridBagConstraints);
-
-        jPanel31.add(jPanel39, java.awt.BorderLayout.CENTER);
-
-        jTabbedPane1.addTab("View Students for promotions", jPanel31);
+        jTabbedPane1.addTab("Existing", jPanel8);
 
         jPanel42.setLayout(new java.awt.BorderLayout());
 
@@ -1219,17 +931,17 @@ public class GradingGui extends javax.swing.JPanel {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Student Number", "Student Name", "1", "2", "3", "4", "Final Grade"
+                "Student Number", "First Name", "Last name", "Middle Name", "Grade Level", "General Average"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1240,19 +952,11 @@ public class GradingGui extends javax.swing.JPanel {
         jScrollPane8.setViewportView(jTable2);
         if (jTable2.getColumnModel().getColumnCount() > 0) {
             jTable2.getColumnModel().getColumn(0).setResizable(false);
-            jTable2.getColumnModel().getColumn(0).setPreferredWidth(120);
             jTable2.getColumnModel().getColumn(1).setResizable(false);
-            jTable2.getColumnModel().getColumn(1).setPreferredWidth(120);
             jTable2.getColumnModel().getColumn(2).setResizable(false);
-            jTable2.getColumnModel().getColumn(2).setPreferredWidth(35);
             jTable2.getColumnModel().getColumn(3).setResizable(false);
-            jTable2.getColumnModel().getColumn(3).setPreferredWidth(35);
             jTable2.getColumnModel().getColumn(4).setResizable(false);
-            jTable2.getColumnModel().getColumn(4).setPreferredWidth(35);
             jTable2.getColumnModel().getColumn(5).setResizable(false);
-            jTable2.getColumnModel().getColumn(5).setPreferredWidth(35);
-            jTable2.getColumnModel().getColumn(6).setResizable(false);
-            jTable2.getColumnModel().getColumn(6).setPreferredWidth(65);
         }
 
         jPanel48.add(jScrollPane8, java.awt.BorderLayout.CENTER);
@@ -1286,7 +990,7 @@ public class GradingGui extends javax.swing.JPanel {
 
         jPanel42.add(jPanel44, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Candidates for Summer Class", jPanel42);
+        jTabbedPane1.addTab("Summer Class", jPanel42);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -1314,34 +1018,118 @@ public class GradingGui extends javax.swing.JPanel {
     }//GEN-LAST:event_jTable5MouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       PrintGradesDialog grades = new PrintGradesDialog(null,true);
-      grades.setVisible(true);
+        PrintGradesDialog grades = new PrintGradesDialog(null,true);
+         grades.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+    private void jtbl_gradesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbl_gradesMouseClicked
         
       
-    }//GEN-LAST:event_jTable3MouseClicked
+    }//GEN-LAST:event_jtbl_gradesMouseClicked
+
+    private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
+        String selected = jlistStudent.getSelectedValue();
+        String result = selected.substring(selected.indexOf("(") + 1, selected.indexOf(")"));
+        
+        //Setter call
+        for(int row = 0; row < jtbl_grades.getModel().getRowCount(); row++)
+        {
+            for(int column = 2; column < jtbl_grades.getModel().getColumnCount() - 1; column++)
+            {
+                grade.subject.setSubjectId(Integer.parseInt(String.valueOf(jtbl_grades.getValueAt(row, 0))));
+                System.out.println("Subject Id "+grade.subject.getSubjectId());
+                grade.setFinalGrade(Double.parseDouble(String.valueOf(jtbl_grades.getValueAt(row, 6))));
+                System.out.println("Final Grade "+grade.getFinalGrade());
+                grade.setGwa(Double.parseDouble(tfGenAve.getText()));
+                System.out.println("GWA "+grade.getGwa());
+                grade.setGrade(Double.parseDouble(String.valueOf(jtbl_grades.getValueAt(row, column))));
+                System.out.println("Grade "+grade.getGrade());
+                grade.schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+                
+                if(column == 2)
+                {
+                    grade.setPeriodId(7000);
+                }
+                else if(column == 3)
+                {
+                    grade.setPeriodId(7001);
+                }
+                else if(column == 4)
+                {
+                    grade.setPeriodId(7002);
+                }
+                else
+                {
+                    grade.setPeriodId(7003);
+                }
+                
+                grade.student.setStudentId(Integer.parseInt(result));
+
+                gdi.createStudentGrade(grade);
+
+//                if(row == jtbl_grades.getModel().getRowCount() - 1)
+//                {
+//                    JOptionPane.showMessageDialog(null, "Successful!");
+//                }
+            }
+            
+            
+        }
+        JOptionPane.showMessageDialog(null, "Successful!");
+        
+    }//GEN-LAST:event_SaveActionPerformed
+
+    private void jtbl_gradesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtbl_gradesKeyPressed
+//        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+//        
+//            DefaultTableModel dtm = (DefaultTableModel)jtbl_grades.getModel();
+//            dtm.addRow(new Object[]{});
+//        }
+//        else if(evt.getKeyCode()==KeyEvent.VK_BACK_SPACE)
+//        {
+//            DefaultTableModel dtm = (DefaultTableModel)jtbl_grades.getModel();
+//            dtm.removeRow(jtbl_grades.getSelectedRow());
+//        }
+    }//GEN-LAST:event_jtbl_gradesKeyPressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbSectionListItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSectionListItemStateChanged
+        //Setter call from Section
+        section.setSectionName((String) cbSectionList.getSelectedItem());
+        section.setSectionId(sdi.getSectionIdByName(section.getSectionName()));
+        //Setter call from SchoolYear
+        schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+        
+        //Set model on jlist
+        jlistStudent.setModel(scml.getAllStudentBySectionId(section, schoolYear));
+        
+        //Set model on jtable
+        jtbl_grades.setModel(sbml.getAllStudentSubjectBySectionId(section));
+        //Hide first column
+        jtbl_grades.getColumnModel().getColumn(0).setMinWidth(0);
+        jtbl_grades.getColumnModel().getColumn(0).setMaxWidth(0);
+        
+    }//GEN-LAST:event_cbSectionListItemStateChanged
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        computeFinal();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Save;
+    private javax.swing.JComboBox<String> cbSectionList;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -1352,29 +1140,17 @@ public class GradingGui extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
@@ -1399,12 +1175,7 @@ public class GradingGui extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel36;
     private javax.swing.JPanel jPanel37;
     private javax.swing.JPanel jPanel38;
-    private javax.swing.JPanel jPanel39;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel40;
-    private javax.swing.JPanel jPanel41;
     private javax.swing.JPanel jPanel42;
-    private javax.swing.JPanel jPanel43;
     private javax.swing.JPanel jPanel44;
     private javax.swing.JPanel jPanel45;
     private javax.swing.JPanel jPanel46;
@@ -1412,30 +1183,24 @@ public class GradingGui extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel48;
     private javax.swing.JPanel jPanel49;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable5;
-    private javax.swing.JTable jTable6;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JList<String> jlistStudent;
+    private javax.swing.JTable jtbl_grades;
+    private javax.swing.JTextField tfGenAve;
     // End of variables declaration//GEN-END:variables
 }

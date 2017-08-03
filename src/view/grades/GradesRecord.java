@@ -5,9 +5,9 @@
  */
 package view.grades;
 
-import utility.component.JInternalFrameUtil;
 import java.awt.GridBagConstraints;
-import view.container.TopContainer;
+import utility.component.JInternalFrameUtil;
+import view.container.Dashboard;
 
 /**
  *
@@ -15,13 +15,17 @@ import view.container.TopContainer;
  */
 public class GradesRecord extends javax.swing.JPanel {
 
+
+
     /**
      * Creates new form GradesRecord
      */
-    public GradesRecord() {
+    public GradesRecord( ) {
         initComponents();
+       
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
-        jpnlContent.add(new gui.GradingGui(),getLayoutConstraint());
+        
+        jpnlContent.add(new view.grades.GradingGui(),getLayoutConstraint());
     }
 
     @SuppressWarnings("unchecked")
@@ -111,7 +115,7 @@ public class GradesRecord extends javax.swing.JPanel {
     }
     
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        TopContainer.jtpTopTabbedPane.remove(this);
+        Dashboard.jtpTopTabbedPane.remove(this);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
 

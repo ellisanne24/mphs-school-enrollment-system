@@ -12,6 +12,7 @@ import dao.ISubject;
 import model.curriculum.Curriculum;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
+import model.section.Section;
 import model.subject.Subject;
 import utility.database.DBType;
 import utility.database.DBUtil;
@@ -20,6 +21,32 @@ public class SubjectDaoImpl implements ISubject {
 
     GradeLevel gl = new GradeLevel();
     Subject subject = new Subject();
+
+    @Override
+    public List<Subject> getAllStudentSubjectBySectionId(Section aSection) {
+        String sql = "call getAllStudentSubjectBySectionId(?)";
+        List<Subject> list = new ArrayList();
+
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(sql);) {
+            cs.setInt(1, aSection.getSectionId());
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Subject subject = new Subject();
+
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectTitle(rs.getString("title"));
+
+                    list.add(subject);
+                }
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error at getAllStudentSubjectByStudentId " + ex);
+        }
+
+        return list;
+    }
 
     @Override
     public boolean subjectExists(Subject aSubject) {

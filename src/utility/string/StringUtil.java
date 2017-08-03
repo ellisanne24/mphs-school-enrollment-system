@@ -20,4 +20,8 @@ public class StringUtil {
         String cleansed = s.replaceAll("\\s+", ""); // removes all whitespace
         return cleansed;
     }
+    
+    public static boolean hasSpecialCharaters(String s) {
+        return (s == null) ? false : s.matches("[^A-Za-z0-9 ]");
+    }
 }

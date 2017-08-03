@@ -21,9 +21,9 @@ import model.payment.Payment;
 import model.tuitionfee.TuitionFee;
 import org.joda.time.LocalDate;
 import service.PaymentProcessor;
-import view.container.TopContainer;
-import static view.container.TopContainer.jtpTopTabbedPane;
-import static view.container.TopContainer.setENROLLMENT_INSTANCE;
+import view.container.Dashboard;
+import static view.container.Dashboard.jtpTopTabbedPane;
+import static view.container.Dashboard.setENROLLMENT_INSTANCE;
 import view.enrollment.EnrollmentPanel;
 import view.receipt.Receipt;
 
@@ -322,7 +322,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
         isEnrolled = enrollmentDaoImpl.enrollStudent(s);
         if (isEnrolled) {
             JOptionPane.showMessageDialog(null, "Student is now active.");
-            int enrollmentInstance = TopContainer.getENROLLMENT_INSTANCE();
+            int enrollmentInstance = Dashboard.getENROLLMENT_INSTANCE();
             if (enrollmentInstance <= 0) {
                 EnrollmentPanel enrollmentPanel = new EnrollmentPanel();
                 jtpTopTabbedPane.add("Enrollment", enrollmentPanel);

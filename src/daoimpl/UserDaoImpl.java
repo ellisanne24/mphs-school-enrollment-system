@@ -1,245 +1,157 @@
 package daoimpl;
 
 import dao.IUser;
-import utility.database.DBType;
-import utility.database.DBUtil;
-import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+import model.role.Role;
 import model.user.User;
+import utility.database.DBType;
+import utility.database.DBUtil;
 
 public class UserDaoImpl implements IUser{
 
     @Override
-    public User getById(int userId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean add(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean update(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public String getUserRole(String aUsername) {
-        String SQL = "SELECT Role FROM user WHERE USERNAME = ?";
-        String userType = null;
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            PreparedStatement ps = con.prepareStatement(SQL);){
-            ps.setString(1, aUsername);
-            try(ResultSet rs = ps.executeQuery();){
-                while(rs.next()){
-                    userType = rs.getString("Role");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode()+" "+e.getMessage()+" @ "+e.getClass().getSimpleName());
-        }
-        return userType;
-    }
-    
-    public String getFullName(String aUsername){
-        
-        String SQL = "{CALL getCompleteNameByUserName(?)}";
-        String fullname;
-        String lastname = null;
-        String firstname = null;
-        String middlename = null;
+    public Integer getIdByUsername(String username) {
+        Integer userId = null;
+        String SQL = "{CALL getUserIdByUserName(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setString(1, aUsername);
-            try (ResultSet rs = cs.executeQuery();) {
-                while (rs.next()) {
-                    lastname = rs.getString("LastName");
-                    firstname = rs.getString("FirstName");
-                    middlename = rs.getString("MiddleName");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error@ " + getClass() + " " + e.getMessage());
-        }
-        fullname = lastname + ", " + firstname + " " + middlename;
-
-        return fullname;
-    }
-    
-    public String getFirstName(String aUsername){
-        
-        String SQL = "SELECT FirstName FROM user WHERE USERNAME = ?";
-        String firstname = null;
-
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);) {
-            ps.setString(1, aUsername);
-            try (ResultSet rs = ps.executeQuery();) {
-                while (rs.next()) {
-                    firstname = rs.getString("FirstName");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error@ " + getClass() + " " + e.getMessage());
-        }
-        return firstname;
-    }
-    
-    public String getMiddleName(String aUsername){
-        
-        String SQL = "SELECT MiddleName FROM user WHERE USERNAME = ?";
-        String middleName = null;
-
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);) {
-            ps.setString(1, aUsername);
-            try (ResultSet rs = ps.executeQuery();) {
-                while (rs.next()) {
-                    middleName = rs.getString("MiddleName");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error@ " + getClass() + " " + e.getMessage());
-        }
-        return middleName;
-    }
-    
-    public String getLastName(String aUsername){
-        
-        String SQL = "SELECT LastName FROM user WHERE USERNAME = ?";
-        String lastName = null;
-
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);) {
-            ps.setString(1, aUsername);
-            try (ResultSet rs = ps.executeQuery();) {
-                while (rs.next()) {
-                    lastName = rs.getString("LastName");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error@ " + getClass() + " " + e.getMessage());
-        }
-        return lastName;
-    }
-    
-    public String getPassword(String aUsername){
-        
-        String SQL = "SELECT Password FROM user WHERE USERNAME = ?";
-        String password = null;
-
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);) {
-            ps.setString(1, aUsername);
-            try (ResultSet rs = ps.executeQuery();) {
-                while (rs.next()) {
-                    password = rs.getString("Password");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error at: " + getClass() + " " + e.getMessage());
-        }
-        return password;
-    }
-    
-    public ImageIcon getProfilePicture(String aUsername, JLabel anImageHolder) {
-        String SQL = "SELECT PROFILE_PIC from users_profile_picture WHERE USERNAME =?";
-        ImageIcon finalImage = null;
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);) {
-            ps.setString(1, aUsername);
-
-            try (ResultSet rs = ps.executeQuery();) {
-                if (rs.next()) {
-                    byte[] img = rs.getBytes("PROFILE_PIC");
-                    ImageIcon myImageIcon = new ImageIcon(img);
-                    Image image = myImageIcon.getImage();
-                    Image myImage = image.getScaledInstance(anImageHolder.getWidth(), anImageHolder.getHeight(), Image.SCALE_SMOOTH);
-                    finalImage = new ImageIcon(myImage);
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error at: "+e.getClass()+ " " + e.getMessage());
-        }
-        return finalImage;
-    }
-    
-    public Boolean updatePassword(String aUsername, String aNewPassword) {
-        Boolean result;
-        String SQL = "UPDATE user SET Password = ? WHERE Username = ?";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);) {
-            ps.setString(1, aNewPassword);
-            ps.setString(2, aUsername);
-            ps.executeUpdate();
-            result = true;
-        } catch (SQLException e) {
-            result = false;
-            JOptionPane.showMessageDialog(null, "Error at: " + getClass() + "\n" + e.getMessage());
-        }
-        return result;
-    }
-    
-    public Boolean updateUserName(int aUserId, String aUsername){
-        Boolean result;
-        String SQL = "{CALL updateUserName(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, aUserId); //assign value to 1st ?
-            cs.setString(2, aUsername); //assign value to 2nd ?
-            cs.executeUpdate();
-            result = true;
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error at: " + getClass() + "\n" + e.getMessage());
-            result = false;
-        }
-        return result;
-    }
-    
-    public int getUserId(String aUsername){
-        int userId = 0;
-        String SQL = "SELECT UserId FROM user WHERE USERNAME = ?";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);){
-                ps.setString(1, aUsername);
-            try(ResultSet rs = ps.executeQuery();){
+            cs.setString(1,username);
+            try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    userId = rs.getInt("USERID");
+                    userId = rs.getInt("user_id");
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error at: " + e.getClass() + " " + e.getErrorCode());
+            e.printStackTrace();
         }
         return userId;
     }
     
-    public Boolean updateProfilePicture(String aUsername, String imageFilePath) {
-        String SQL = "UPDATE users_profile_picture SET PROFILE_PIC = ? WHERE USERNAME = ?";
-        Boolean result;
+    @Override
+    public User getById(int userId) {
+        User user = new User();
+        Role role = new Role();
+        String SQLa = "{CALL getUserById(?)}";
+        String SQLb = "{CALL getRoleByUserId(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL)) {
-            InputStream myInputStream = new FileInputStream(new File(imageFilePath));
-            ps.setBlob(1, myInputStream);
-            ps.setString(2, LoginDaoImpl.getUsername());
-            ps.executeUpdate();
-            result = true;  
-            JOptionPane.showMessageDialog(null, "Successfully uploaded image");
-        } catch (SQLException | FileNotFoundException e) {
-            result = false;
-            JOptionPane.showMessageDialog(null, "Error uploading the file\n" + e.getMessage());
+                CallableStatement csa = con.prepareCall(SQLa);
+                CallableStatement csb = con.prepareCall(SQLb);) {
+            csa.setInt(1,userId);
+            csb.setInt(1,userId);
+            try (ResultSet rsa = csa.executeQuery();) {
+                while (rsa.next()) {
+                    user.setDateCreated(rsa.getDate("dateCreated"));
+                    user.setFirstName(rsa.getString("firstname"));
+                    user.setId(rsa.getInt("user_id"));
+                    user.setIsActive(rsa.getBoolean("isActive"));
+                    user.setIsLocked(rsa.getBoolean("isLocked"));
+                    user.setLastLoginDate(rsa.getTimestamp("lastLoginDate"));
+                    user.setLastName(rsa.getString("lastname"));
+                    user.setMiddleName(rsa.getString("middlename"));
+                    user.setPassword("password");
+                }
+            }
+            try(ResultSet rsb = csb.executeQuery();){
+                while(rsb.next()){
+                    role.setId(rsb.getInt("role_id"));
+                    role.setRoleName(rsb.getString("role"));
+                    role.setIsActive(rsb.getBoolean("isActive"));
+                    user.setRole(role);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        
-        return result;
+        return user;
+    }
+
+    @Override
+    public List<User> getAll() {
+        List<User> userList = new ArrayList<>();
+        String SQL = "{CALL getAllUserInfo()}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    User u = new User();
+                    u.setFirstName(rs.getString("firstname"));
+                    u.setMiddleName(rs.getString("middlename"));
+                    u.setLastName(rs.getString("lastname"));
+                    u.setUsername(rs.getString("username"));
+                    u.setId(rs.getInt("user_id"));
+                    Role role = new Role();
+                    int roleId = rs.getInt("role_id");
+                    String roleName = rs.getString("role");
+                    role.setId(roleId);
+                    role.setRoleName(roleName);
+                    u.setRole(role);
+                    
+                    userList.add(u);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
+
+    
+    
+    @Override
+    public boolean add(User user) {
+        boolean isAdded = false;
+        String SQLa = "{CALL addUser(?,?,?,?,?,?)}";
+        String SQLb = "{CALL addUserRole(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+            con.setAutoCommit(false);
+            try(CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);){
+            csa.setString(1, user.getUsername());
+            csa.setString(2, user.getPassword());
+            csa.setString(3, user.getLastName().trim());
+            csa.setString(4, user.getFirstName().trim());
+            csa.setString(5, user.getMiddleName().trim());
+            csa.registerOutParameter(6, Types.INTEGER);
+            csa.executeUpdate();
+            int userId = csa.getInt(6);
+            
+            csb.setInt(1,userId);
+            csb.setInt(2, user.getRole().getId());
+            csb.executeUpdate();
+            
+            con.commit();
+            isAdded = true;
+            }catch(SQLException e ){
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isAdded;
+    }
+
+    @Override
+    public boolean update(User user) {
+        boolean isUpdated = false;
+        String SQL = "{CALL updateUser(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,user.getId());
+            cs.setString(2, user.getUsername());
+            cs.setString(3, user.getPassword());
+            cs.executeUpdate();
+            isUpdated = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isUpdated;
     }
 }

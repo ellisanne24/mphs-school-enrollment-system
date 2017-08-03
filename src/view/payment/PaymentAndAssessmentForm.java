@@ -49,7 +49,7 @@ import model.schoolfees.SchoolFees;
 import model.tuitionfee.TuitionFee;
 import service.TuitionFeeProcessor;
 import threads.SchoolYearLoaderThread;
-import view.container.TopContainer;
+import view.container.Dashboard;
 
 /**
  *
@@ -1810,9 +1810,9 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     private void jbtnExitPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExitPaymentActionPerformed
         int choice = JOptionPane.showConfirmDialog(null, "Exit Payment?", "Exit", JOptionPane.WARNING_MESSAGE);
         if(choice == JOptionPane.YES_OPTION){
-            int index = TopContainer.jtpTopTabbedPane.getSelectedIndex();
-            TopContainer.jtpTopTabbedPane.remove(index);
-            TopContainer.setPAYMENTS_INSTANCE(0);
+            int index = Dashboard.jtpTopTabbedPane.getSelectedIndex();
+            Dashboard.jtpTopTabbedPane.remove(index);
+            Dashboard.setPAYMENTS_INSTANCE(0);
         }
     }//GEN-LAST:event_jbtnExitPaymentActionPerformed
 

@@ -9,6 +9,8 @@ import daoimpl.SubjectDaoImpl;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.gradelevel.GradeLevel;
+import model.section.Section;
+import model.student.Student;
 import model.subject.Subject;
 
 /**
@@ -104,6 +106,47 @@ public class SubjectML {
             model.addRow(new Object[]{s.getSubjectId(),s.getSubjectTitle(),s.getSubjectCode(),s.getSubjectDescription(),s.getIsActive() == false?"Inactive":"Active"});
         }
 
+        return model;
+    }
+    
+    public DefaultTableModel getAllStudentSubjectBySectionId(Section aSection)
+    {
+        Object[] obj = subjectDaoImpl.getAllStudentSubjectBySectionId(aSection).toArray();
+        Object[] columnSubjectId = new Object[subjectDaoImpl.getAllStudentSubjectBySectionId(aSection).size()];
+        Object[] columnSubjectTitle = new Object[subjectDaoImpl.getAllStudentSubjectBySectionId(aSection).size()];
+        Object[][] data = new Object[subjectDaoImpl.getAllStudentSubjectBySectionId(aSection).size()][5];
+        int counterSubjectId = 0;
+        int counterSubjectTitle = 0;
+        
+        int counterOne = 0;
+        int counterTwo = 0;
+        
+        for(Object o : obj)
+        {
+            Subject subject = (Subject)o;
+            
+            columnSubjectId[counterSubjectId++] = subject.getSubjectId();
+            columnSubjectTitle[counterSubjectTitle++] = subject.getSubjectTitle();
+        }
+        
+        for(int row = 0; row < data.length; row++)
+        {
+            for(int column = 0; column < data[row].length; column++)
+            {
+                switch(column)
+                {
+                    case 0:
+                        data[row][column] = columnSubjectId[counterOne++];
+                        break;
+                    case 1:
+                        data[row][column] = columnSubjectTitle[counterTwo++];
+                        break;
+                }
+            }
+        }
+        
+        DefaultTableModel model = new DefaultTableModel(data, new Object[]{"Id", "Grading Period", "1st Grading", "2nd Grading", "3rd Grading", "4th Grading", "Final Rating"});
+        
         return model;
     }
 }

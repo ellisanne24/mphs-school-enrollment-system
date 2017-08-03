@@ -27,7 +27,7 @@ import model.schoolyear.SchoolYear;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import component_renderers.JComboBoxRenderer_Master;
 import view.enrollment.EnrollmentPanel;
-import view.container.TopContainer;
+import view.container.Dashboard;
 
 /**
  *
@@ -1331,9 +1331,9 @@ public class RegistrationForm extends javax.swing.JPanel {
     private void jbtnCancelRegistrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelRegistrationActionPerformed
         int choice = JOptionPane.showConfirmDialog(null, "Exit Registration?", "Exit", JOptionPane.WARNING_MESSAGE);
         if(choice == JOptionPane.YES_OPTION){
-            CardLayoutUtil.flipCardTo(TopContainer.jpnlTopCardContainer,TopContainer.jpnlTopCard);
-            TopContainer.jtpTopTabbedPane.remove(this);
-            TopContainer.setREGISTRATION_INSTANCE(0);
+            CardLayoutUtil.flipCardTo(Dashboard.jpnlTopCardContainer,Dashboard.jpnlTopCard);
+            Dashboard.jtpTopTabbedPane.remove(this);
+            Dashboard.setREGISTRATION_INSTANCE(0);
         }
         
     }//GEN-LAST:event_jbtnCancelRegistrationActionPerformed

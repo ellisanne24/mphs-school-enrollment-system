@@ -6,19 +6,21 @@ import javax.swing.JOptionPane;
 import utility.component.ImageUtil;
 import utility.password.PasswordUtil;
 import daoimpl.LoginDaoImpl;
+import daoimpl.UserDaoImpl;
 import utility.database.DBUtil;
 import java.awt.Graphics;
 import java.awt.Image;
-import view.container.TopContainer;
+import model.user.User;
+import view.container.Dashboard;
 
 public class LoginForm extends javax.swing.JFrame {
 //ImageIcon is used for JLABELs
     // Image is used for JPANELS
 
     private static int loginAttemptCount = 0;
-    Image usernameIcon;
-    Image passwordIcon;
-    Image loginBgIcon;
+    private final Image usernameIcon;
+    private final Image passwordIcon;
+    private final Image loginBgIcon;
 
     public LoginForm() {
         initComponents();
@@ -26,7 +28,6 @@ public class LoginForm extends javax.swing.JFrame {
 
         usernameIcon = new ImageUtil().getResourceImage("assets/usernameIcon.png", jpnlUserNameIconContainer);
         passwordIcon = new ImageUtil().getResourceImage("assets/password.png", jpnlPasswordIconContainer);
-        
     }
 
     @SuppressWarnings("unchecked")
@@ -355,7 +356,7 @@ public class LoginForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void validateLogin(){
+    private void validateLogin() {
         String usernameStr = jtfUserName.getText().trim();
         char[] charPassword = jpfPasswordField.getPassword();
         String stringPassword = PasswordUtil.toString(charPassword);
@@ -373,17 +374,7 @@ public class LoginForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Your account is locked.\n Please contact your administrator to gain access.");
             } else {
                 this.dispose();
-                TopContainer mainFrame = new TopContainer();
-                mainFrame.setPreferredSize(new Dimension(1300, 768)); //set it's dimensions or it's size
-                mainFrame.setVisible(true); //sets it's initial visibility to true so it shows on the screen when objects are created from this class
-                mainFrame.setResizable(true);
-                mainFrame.setTitle("Mother Of Perpetual Help Enrollment System");
-                mainFrame.setMinimumSize(new Dimension(800,600));
-                //always put pack() first before setLocationRelativeTo(null)
-                mainFrame.pack();
-                mainFrame.setLocationRelativeTo(null);
-
-                LoginDaoImpl.setLastLoginDate(usernameStr);
+                displayProgramUI(usernameStr);
             }
         } else if (!LoginDaoImpl.isValid(usernameStr, stringPassword)) {
             if (!LoginDaoImpl.exists(usernameStr)) {
@@ -402,6 +393,24 @@ public class LoginForm extends javax.swing.JFrame {
                 }
             }//end of nested ifelse
         }
+    }
+    
+    private void displayProgramUI(String username) {
+        UserDaoImpl userDaoImpl = new UserDaoImpl();
+        int userId = userDaoImpl.getIdByUsername(username);
+        User user = userDaoImpl.getById(userId);
+
+        Dashboard topContainer = new Dashboard(user);
+        topContainer.setPreferredSize(new Dimension(1300, 768));
+        topContainer.setVisible(true);
+        topContainer.setResizable(true);
+        topContainer.setTitle("Mother Of Perpetual Help Enrollment System");
+        topContainer.setMinimumSize(new Dimension(800, 600));
+
+        //always put pack() first before setLocationRelativeTo(null)
+        topContainer.pack();
+        topContainer.setLocationRelativeTo(null);
+        LoginDaoImpl.setLastLoginDate(username);
     }
     
     private void jbtnSignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSignInActionPerformed
