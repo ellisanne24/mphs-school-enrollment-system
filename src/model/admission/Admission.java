@@ -9,11 +9,31 @@ import model.schoolfees.SchoolFees;
 public class Admission {
     private int studentId;
     private int schoolYearId;
+    private int gradeLevelId;
+    private int gradeLevel;
     private SchoolFees schoolFees;
     private int admissionId;
     private Registration registration;
     private boolean isCompleted;
     private Date completionDate;
+
+    public int getGradeLevel() {
+        return gradeLevel;
+    }
+
+    public void setGradeLevel(int gradeLevel) {
+        this.gradeLevel = gradeLevel;
+    }
+    
+    
+
+    public int getGradeLevelId() {
+        return gradeLevelId;
+    }
+
+    public void setGradeLevelId(int gradeLevelId) {
+        this.gradeLevelId = gradeLevelId;
+    }
 
     public int getSchoolYearId() {
         return schoolYearId;

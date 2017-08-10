@@ -169,15 +169,15 @@ public class SubjectDaoImpl implements ISubject {
     @Override
     public int getSubjectId(Subject aSubject) {
         int id = 0;
-        String sql = "{call getSubjectId(?)}";
+        String sql = "{call getSubjectIdByCode(?)}";
 
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(sql);) {
-            cs.setString(1, aSubject.getSubjectTitle());
+            cs.setString(1, aSubject.getSubjectCode());
 
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
-                    id = rs.getInt(1);
+                    id = rs.getInt("subject_id");
                 }
             }
         } catch (SQLException ex) {

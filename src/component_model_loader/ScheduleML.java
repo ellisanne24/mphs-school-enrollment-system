@@ -24,7 +24,7 @@ public class ScheduleML {
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
                 s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectName(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;
@@ -38,7 +38,7 @@ public class ScheduleML {
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
                 s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectName(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;
@@ -52,7 +52,7 @@ public class ScheduleML {
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
                 s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectName(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;

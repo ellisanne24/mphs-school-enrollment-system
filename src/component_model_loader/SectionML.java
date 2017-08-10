@@ -4,6 +4,7 @@ import daoimpl.SectionDaoImpl;
 import daoimpl.StudentDaoImpl;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
@@ -15,7 +16,7 @@ import model.student.Student;
 public class SectionML {
     private final SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();
     private StudentDaoImpl sdi = new StudentDaoImpl();
-    private Object[] column = new Object[]{"Id", "Student Name", "General Average"};
+    private Object[] column = new Object[]{"Student Number", "Student Name", "General Average"};
     private Object[] columnStudent = new Object[]{"Id", "Student Name", "Grade Level", "General Average", "Entrance Exam Average"};
     private Object[] columnStudentBySection = new Object[]{"Id", "Student Name"};
     private SchoolYear aSchoolYear = new SchoolYear();
@@ -43,6 +44,8 @@ public class SectionML {
 
         Object[] columnSectionId = new Object[sectionDaoImpl.getAllSections().size()];
         Object[] columnSectionName = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnGradeLevel = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnAdviser = new Object[sectionDaoImpl.getAllSections().size()];
         Object[] columnRequiredGrade = new Object[sectionDaoImpl.getAllSections().size()];
         Object[] columnSession = new Object[sectionDaoImpl.getAllSections().size()];
         Object[] columnSchoolYear = new Object[sectionDaoImpl.getAllSections().size()];
@@ -51,6 +54,8 @@ public class SectionML {
 
         int counterSectionId = 0;
         int counterSectionName = 0;
+        int counterGradeLevel = 0;
+        int counterAdviser = 0;
         int counterRequiredGrade = 0;
         int counterSession = 0;
         int counterSchoolYear = 0;
@@ -62,15 +67,30 @@ public class SectionML {
         int counterFour = 0;
         int counterFive = 0;
         int counterSix = 0;
+        int counterSeven = 0;
+        int counterEight = 0;
         
         for (Object o : obj) {
             Section aSection = (Section) o;
 
             columnSectionId[counterSectionId++] = aSection.getSectionId();
             columnSectionName[counterSectionName++] = aSection.getSectionName();
+            columnGradeLevel[counterGradeLevel++] = aSection.gradeLevel.getLevel();
             columnRequiredGrade[counterRequiredGrade++] = aSection.getRequiredAverage();
             columnSession[counterSession++] = aSection.session.getSessionTitle();
             columnSchoolYear[counterSchoolYear++] = aSection.schoolYear.getYearFrom() + "-" + aSection.schoolYear.getYearTo();
+            
+            if(aSection.faculty.getFirstName() == null && 
+               aSection.faculty.getMiddleName() == null && 
+               aSection.faculty.getLastName() == null)
+            {
+                columnAdviser[counterAdviser++] = "No adviser";
+            }
+            else
+            {
+                columnAdviser[counterAdviser++] = aSection.faculty.getFirstName() + " " + aSection.faculty.getMiddleName() + ". " + aSection.faculty.getLastName();
+            }
+                
             
             if (aSection.getIsActive() == 1) {
                 columnStatus[counterStatus++] = true;
@@ -90,22 +110,28 @@ public class SectionML {
                         data[row][column] = columnSectionName[counterTwo++];
                         break;
                     case 2:
-                        data[row][column] = columnRequiredGrade[counterThree++];
+                        data[row][column] = columnGradeLevel[counterThree++];
                         break;
                     case 3:
-                        data[row][column] = columnSession[counterFour++];
+                        data[row][column] = columnAdviser[counterFour++];
                         break;
                     case 4:
-                        data[row][column] = columnSchoolYear[counterFive++];
+                        data[row][column] = columnRequiredGrade[counterFive++];
                         break;
                     case 5:
-                        data[row][column] = columnStatus[counterSix++];
+                        data[row][column] = columnSession[counterSix++];
+                        break;
+                    case 6:
+                        data[row][column] = columnSchoolYear[counterSeven++];
+                        break;
+                    case 7:
+                        data[row][column] = columnStatus[counterEight++];
                         break;
                 }
             }
         }
 
-        DefaultTableModel model = new DefaultTableModel(data, new Object[]{"Id","Section Name", "Required Grade", "Session", "School Year", "Status"}) {
+        DefaultTableModel model = new DefaultTableModel(data, new Object[]{"Id","Section Name", "Grade Level", "Adviser", "Required Grade", "Session", "School Year", "Status"}) {
             @Override
             public Class getColumnClass(int column) 
             {
@@ -132,16 +158,20 @@ public class SectionML {
     public DefaultTableModel getAllSectionsByGradeLevelId(GradeLevel aGradeLevel) {
         Object[] obj = sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).toArray();
 
-        Object[] columnSectionId = new Object[sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnSectionName = new Object[sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnRequiredGrade = new Object[sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnSession = new Object[sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnSchoolYear = new Object[sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnStatus = new Object[sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).size()];
-        Object[][] data = new Object[sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).size()][7];
+        Object[] columnSectionId = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnSectionName = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnGradeLevel = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnAdviser = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnRequiredGrade = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnSession = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnSchoolYear = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[] columnStatus = new Object[sectionDaoImpl.getAllSections().size()];
+        Object[][] data = new Object[sectionDaoImpl.getAllSections().size()][9];
 
         int counterSectionId = 0;
         int counterSectionName = 0;
+        int counterGradeLevel = 0;
+        int counterAdviser = 0;
         int counterRequiredGrade = 0;
         int counterSession = 0;
         int counterSchoolYear = 0;
@@ -153,15 +183,30 @@ public class SectionML {
         int counterFour = 0;
         int counterFive = 0;
         int counterSix = 0;
+        int counterSeven = 0;
+        int counterEight = 0;
         
         for (Object o : obj) {
             Section aSection = (Section) o;
 
             columnSectionId[counterSectionId++] = aSection.getSectionId();
             columnSectionName[counterSectionName++] = aSection.getSectionName();
+            columnGradeLevel[counterGradeLevel++] = aSection.gradeLevel.getLevel();
             columnRequiredGrade[counterRequiredGrade++] = aSection.getRequiredAverage();
             columnSession[counterSession++] = aSection.session.getSessionTitle();
             columnSchoolYear[counterSchoolYear++] = aSection.schoolYear.getYearFrom() + "-" + aSection.schoolYear.getYearTo();
+            
+            if(aSection.faculty.getFirstName() == null && 
+               aSection.faculty.getMiddleName() == null && 
+               aSection.faculty.getLastName() == null)
+            {
+                columnAdviser[counterAdviser++] = "No adviser";
+            }
+            else
+            {
+                columnAdviser[counterAdviser++] = aSection.faculty.getFirstName() + " " + aSection.faculty.getMiddleName() + ". " + aSection.faculty.getLastName();
+            }
+                
             
             if (aSection.getIsActive() == 1) {
                 columnStatus[counterStatus++] = true;
@@ -181,22 +226,28 @@ public class SectionML {
                         data[row][column] = columnSectionName[counterTwo++];
                         break;
                     case 2:
-                        data[row][column] = columnRequiredGrade[counterThree++];
+                        data[row][column] = columnGradeLevel[counterThree++];
                         break;
                     case 3:
-                        data[row][column] = columnSession[counterFour++];
+                        data[row][column] = columnAdviser[counterFour++];
                         break;
                     case 4:
-                        data[row][column] = columnSchoolYear[counterFive++];
+                        data[row][column] = columnRequiredGrade[counterFive++];
                         break;
                     case 5:
-                        data[row][column] = columnStatus[counterSix++];
+                        data[row][column] = columnSession[counterSix++];
+                        break;
+                    case 6:
+                        data[row][column] = columnSchoolYear[counterSeven++];
+                        break;
+                    case 7:
+                        data[row][column] = columnStatus[counterEight++];
                         break;
                 }
             }
         }
 
-        DefaultTableModel model = new DefaultTableModel(data, new Object[]{"Id","Section Name", "Required Grade", "Session", "School Year", "Status"}) {
+        DefaultTableModel model = new DefaultTableModel(data, new Object[]{"Id","Section Name", "Grade Level", "Adviser", "Required Grade", "Session", "School Year", "Status"}) {
             @Override
             public Class getColumnClass(int column) 
             {
@@ -216,6 +267,7 @@ public class SectionML {
                 }
             }
         };
+
         return model;
     }
     
@@ -352,72 +404,11 @@ public class SectionML {
         return model;
     }
     
-    public DefaultTableModel getAllNewStudentsByGradeLevelId(GradeLevel aGradeLevel)
-    {
-        Object[] obj = sectionDaoImpl.getAllNewStudentsByGradeLevelId(aGradeLevel).toArray();
-        
-        Object[] columnId = new Object[sectionDaoImpl.getAllNewStudentsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnStudentName = new Object[sectionDaoImpl.getAllNewStudentsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnGWA = new Object[sectionDaoImpl.getAllNewStudentsByGradeLevelId(aGradeLevel).size()];
-        
-        Object[][] data = new Object[sectionDaoImpl.getAllNewStudentsByGradeLevelId(aGradeLevel).size()][3];
-        
-        int counterColumnId = 0;
-        int counterColumnStudentName = 0;
-        int counterColumnGWA = 0;
-        
-        int counterOne = 0;
-        int counterTwo = 0;
-        int counterThree = 0;
-        
-        for(Object o : obj)
-        {
-            Section section = (Section)o;
-            
-            columnId[counterColumnId++] = section.student.getStudentId();
-            columnStudentName[counterColumnStudentName++] = section.student.getLastName() + " " + section.student.getMiddleName() + ". " + section.student.getLastName();
-            columnGWA[counterColumnGWA++] = section.grade.getGwa();
-        }
-        
-        for(int row = 0; row < data.length; row++)
-        {
-            for(int column = 0; column < data[row].length; column++)
-            {
-                switch(column)
-                {
-                    case 0:
-                        data[row][column] = columnId[counterOne++];
-                        break;
-                    case 1:
-                        data[row][column] = columnStudentName[counterTwo++];
-                        break;
-                    case 2:
-                        data[row][column] = columnGWA[counterThree++];
-                        break;
-                }
-            }
-        }
-        
-        DefaultTableModel model = new DefaultTableModel(data, column)
-        {
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                //Note that the data/cell address is constant,
-                //no matter where the cell appears onscreen.
-                if (col < 3) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        };
-        
-        return model;
-    }
     
-    public DefaultComboBoxModel getAllSectionByGradeLevelId(GradeLevel aGradeLevel)
+    
+    public DefaultComboBoxModel getAllSectionNameByGradeLevelId(GradeLevel aGradeLevel)
     {
-        Object[] obj = sectionDaoImpl.getAllSectionsByGradeLevelId(aGradeLevel).toArray();
+        Object[] obj = sectionDaoImpl.getAllSectionNameByGradeLevelId(aGradeLevel).toArray();
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         
         for(Object o : obj)
@@ -431,15 +422,15 @@ public class SectionML {
         return model;
     }
     
-    public DefaultTableModel getAllOldStudentsByGradeLevelId(GradeLevel aGradeLevel)
+    public DefaultTableModel getAllStudentsByGradeLevelId(GradeLevel aGradeLevel)
     {
-        Object[] obj = sectionDaoImpl.getAllOldStudentsByGradeLevelId(aGradeLevel).toArray();
+        Object[] obj = sectionDaoImpl.getAllStudentsByGradeLevelId(aGradeLevel).toArray();
         
-        Object[] columnId = new Object[sectionDaoImpl.getAllOldStudentsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnStudentName = new Object[sectionDaoImpl.getAllOldStudentsByGradeLevelId(aGradeLevel).size()];
-        Object[] columnGWA = new Object[sectionDaoImpl.getAllOldStudentsByGradeLevelId(aGradeLevel).size()];
+        Object[] columnId = new Object[sectionDaoImpl.getAllStudentsByGradeLevelId(aGradeLevel).size()];
+        Object[] columnStudentName = new Object[sectionDaoImpl.getAllStudentsByGradeLevelId(aGradeLevel).size()];
+        Object[] columnGWA = new Object[sectionDaoImpl.getAllStudentsByGradeLevelId(aGradeLevel).size()];
         
-        Object[][] data = new Object[sectionDaoImpl.getAllOldStudentsByGradeLevelId(aGradeLevel).size()][3];
+        Object[][] data = new Object[sectionDaoImpl.getAllStudentsByGradeLevelId(aGradeLevel).size()][3];
         
         int counterColumnId = 0;
         int counterColumnStudentName = 0;
@@ -455,7 +446,15 @@ public class SectionML {
             
             columnId[counterColumnId++] = section.student.getStudentId();
             columnStudentName[counterColumnStudentName++] = section.student.getLastName() + " " + section.student.getMiddleName() + ". " + section.student.getLastName();
-            columnGWA[counterColumnGWA++] = section.grade.getGwa();
+            
+//            if(section.grade.getGwa() == 0.0)
+//            {
+//                columnGWA[counterColumnGWA++] = "";
+//            }
+//            else
+//            {
+                columnGWA[counterColumnGWA++] = section.grade.getGwa();
+//            }
         }
         
         for(int row = 0; row < data.length; row++)
@@ -501,6 +500,77 @@ public class SectionML {
             Student student = (Student) o;
             model.addElement("(" + student.getStudentId() + ") " + student.getFirstName() + " " + student.getMiddleName() + ". " + student.getLastName());
         }
+        return model;
+    }
+    
+    public DefaultTableModel getAllAddedStudentBySectionId(GradeLevel aGradeLevel, Section aSection)
+    {
+        Object[] obj = sectionDaoImpl.getAllAddedStudentBySectionId(aGradeLevel, aSection).toArray();
+        
+        Object[] columnId = new Object[sectionDaoImpl.getAllAddedStudentBySectionId(aGradeLevel, aSection).size()];
+        Object[] columnStudentName = new Object[sectionDaoImpl.getAllAddedStudentBySectionId(aGradeLevel, aSection).size()];
+        Object[] columnGWA = new Object[sectionDaoImpl.getAllAddedStudentBySectionId(aGradeLevel, aSection).size()];
+        
+        Object[][] data = new Object[sectionDaoImpl.getAllAddedStudentBySectionId(aGradeLevel, aSection).size()][3];
+        
+        int counterColumnId = 0;
+        int counterColumnStudentName = 0;
+        int counterColumnGWA = 0;
+        
+        int counterOne = 0;
+        int counterTwo = 0;
+        int counterThree = 0;
+        
+        for(Object o : obj)
+        {
+            Section section = (Section)o;
+            
+            columnId[counterColumnId++] = section.student.getStudentId();
+            columnStudentName[counterColumnStudentName++] = section.student.getLastName() + " " + section.student.getMiddleName() + ". " + section.student.getLastName();
+            
+//            if(section.grade.getGwa() == 0.0)
+//            {
+//                columnGWA[counterColumnGWA++] = "";
+//            }
+//            else
+//            {
+                columnGWA[counterColumnGWA++] = section.grade.getGwa();
+//            }
+        }
+        
+        for(int row = 0; row < data.length; row++)
+        {
+            for(int column = 0; column < data[row].length; column++)
+            {
+                switch(column)
+                {
+                    case 0:
+                        data[row][column] = columnId[counterOne++];
+                        break;
+                    case 1:
+                        data[row][column] = columnStudentName[counterTwo++];
+                        break;
+                    case 2:
+                        data[row][column] = columnGWA[counterThree++];
+                        break;
+                }
+            }
+        }
+        
+        DefaultTableModel model = new DefaultTableModel(data, column)
+        {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                //Note that the data/cell address is constant,
+                //no matter where the cell appears onscreen.
+                if (col < 3) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        };
+        
         return model;
     }
 }

@@ -33,4 +33,5 @@ public interface IStudent {
     
     Integer getRegistrationIdByStudentId(Integer aStudentId);
     List<Student> getAllRegisteredStudentsByGradeId(GradeLevel aGradeLevel);
+    List<Student> getAllStudent();
 }

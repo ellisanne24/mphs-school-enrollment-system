@@ -49,14 +49,14 @@ public class CompleteAdmissionController implements ActionListener{
         int choice = JOptionPane.showConfirmDialog(null, "Complete Admission?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             if (transferee) {
-                inputPreviousSchoolGrades();
-//                completeAdmission();
+//                inputPreviousSchoolGrades();
+                completeAdmission();
             } 
-//            else if (gradeSchool) {
-//                completeAdmission();
-//            } 
+            else if (gradeSchool) {
+                completeAdmission();
+            } 
             else {
-                inputEntranceExamGrade();
+//                inputEntranceExamGrade();
                 completeAdmission();
             }
         }
@@ -82,6 +82,7 @@ public class CompleteAdmissionController implements ActionListener{
         admission.setRegistration(registration);
         admission.setSchoolFees(schoolFees);
         admission.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
+        admission.setGradeLevelId(gradeLevelId);
         
         isSuccessful = admissionDaoImpl.completeAdmission(admission);
         if (isSuccessful) {

@@ -400,17 +400,19 @@ public class LoginForm extends javax.swing.JFrame {
         int userId = userDaoImpl.getIdByUsername(username);
         User user = userDaoImpl.getById(userId);
 
-        Dashboard topContainer = new Dashboard(user);
-        topContainer.setPreferredSize(new Dimension(1300, 768));
-        topContainer.setVisible(true);
-        topContainer.setResizable(true);
-        topContainer.setTitle("Mother Of Perpetual Help Enrollment System");
-        topContainer.setMinimumSize(new Dimension(800, 600));
+        Dashboard dashboard = new Dashboard(user);
+        dashboard.setPreferredSize(new Dimension(1300, 768));
+        dashboard.setVisible(true);
+        dashboard.setResizable(true);
+        dashboard.setTitle("Mother Of Perpetual Help Enrollment System");
+        dashboard.setMinimumSize(new Dimension(800, 600));
 
         //always put pack() first before setLocationRelativeTo(null)
-        topContainer.pack();
-        topContainer.setLocationRelativeTo(null);
+        dashboard.pack();
+        dashboard.setLocationRelativeTo(null);
         LoginDaoImpl.setLastLoginDate(username);
+        dashboard.setVisible(true);
+        dashboard.requestFocus();
     }
     
     private void jbtnSignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSignInActionPerformed

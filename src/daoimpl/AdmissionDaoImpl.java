@@ -41,22 +41,36 @@ public class AdmissionDaoImpl implements IAdmission {
         boolean isSuccessful = false;
         int registrationId = admission.getRegistration().getRegistrationId();
         int schoolYearId = admission.getSchoolYearId();
+        int gradeLevelId = admission.getGradeLevelId();
         String studentType = admission.getRegistration().getStudentType();
 
-        String SQLa = "{CALL completeAdmission(?,?)}";
-        String SQLb = "{CALL assignFeesToStudent(?,?,?)}";
-        String SQLc = "{CALL addTransferee(?)}";
+        
+        String setAdmissionGradeLevel = "{CALL setAdmissionGradeLevel(?,?)}";
+        String addAsStudent = "{CALL addAsStudent(?,?)}";
+        String completeAdmission = "{CALL completeAdmission(?)}";
+        String assignFeesToStudent = "{CALL assignFeesToStudent(?,?,?)}";
+        String addTransferee = "{CALL addTransferee(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement csa = con.prepareCall(SQLa);
-                    CallableStatement csb = con.prepareCall(SQLb);
-                    CallableStatement csc = con.prepareCall(SQLc);) {
-                csa.setInt(1, registrationId);
-                csa.registerOutParameter(2, Types.INTEGER);
+            try (CallableStatement csa = con.prepareCall(setAdmissionGradeLevel);
+                    CallableStatement csb = con.prepareCall(addAsStudent);
+                    CallableStatement csc = con.prepareCall(completeAdmission);
+                    CallableStatement csd = con.prepareCall(assignFeesToStudent);
+                    CallableStatement cse = con.prepareCall(addTransferee);) {
+                csa.setInt(1, gradeLevelId);
+                csa.setInt(2, registrationId);
                 csa.executeUpdate();
-                isSuccessful = true;
-                int studentId = csa.getInt(2);
+                
+                csb.setInt(1, registrationId);
+                csb.registerOutParameter(2, Types.INTEGER);
+                csb.executeUpdate();
+                int studentId = csb.getInt(2);
+                
+                csc.setInt(1,registrationId);
+                csc.executeUpdate();
 
+                isSuccessful = true;
+                
                 SchoolFees schoolFees = admission.getSchoolFees();
                 BasicFee basic = schoolFees.getBasicFee();
                 DownPaymentFee downPayment = schoolFees.getDownPaymentFee();
@@ -66,34 +80,34 @@ public class AdmissionDaoImpl implements IAdmission {
                 List<Fee> miscFeeList = misc.getFees();
                 List<Fee> otherFeeList = other.getFees();
 
-                csb.setInt(1, studentId);
-                csb.setInt(2, downPayment.getId());
-                csb.setInt(3, schoolYearId);
-                csb.executeUpdate();
+                csd.setInt(1, studentId);
+                csd.setInt(2, downPayment.getId());
+                csd.setInt(3, schoolYearId);
+                csd.executeUpdate();
 
-                csb.setInt(1, studentId);
-                csb.setInt(2, basic.getId());
-                csb.setInt(3, schoolYearId);
-                csb.executeUpdate();
+                csd.setInt(1, studentId);
+                csd.setInt(2, basic.getId());
+                csd.setInt(3, schoolYearId);
+                csd.executeUpdate();
 
                 for (Fee f : miscFeeList) {
-                    csb.setInt(1, studentId);
-                    csb.setInt(2, f.getId());
-                    csb.setInt(3, schoolYearId);
-                    csb.executeUpdate();
+                    csd.setInt(1, studentId);
+                    csd.setInt(2, f.getId());
+                    csd.setInt(3, schoolYearId);
+                    csd.executeUpdate();
                 }
 
                 for (Fee f : otherFeeList) {
-                    csb.setInt(1, studentId);
-                    csb.setInt(2, f.getId());
-                    csb.setInt(3, schoolYearId);
-                    csb.executeUpdate();
+                    csd.setInt(1, studentId);
+                    csd.setInt(2, f.getId());
+                    csd.setInt(3, schoolYearId);
+                    csd.executeUpdate();
                 }
                 
-//                if(studentType.equalsIgnoreCase("transferee")){
-//                    csc.setInt(1, studentId);
-//                    csc.executeUpdate();
-//                }
+                if(studentType.equalsIgnoreCase("transferee")){
+                    cse.setInt(1, studentId);
+                    cse.executeUpdate();
+                }
 
                 con.commit();
                 isSuccessful = true;

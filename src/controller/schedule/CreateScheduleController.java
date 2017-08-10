@@ -8,16 +8,20 @@ package controller.schedule;
 import daoimpl.FacultyDaoImpl;
 import daoimpl.ScheduleDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
+import daoimpl.SectionDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import model.faculty.Faculty;
 import model.schedule.Schedule;
-import utility.string.StringUtil;
 
 /**
  *
@@ -25,13 +29,19 @@ import utility.string.StringUtil;
  */
 public class CreateScheduleController implements ActionListener{
 
+    FacultyDaoImpl facultyDaoImpl;
+    SectionDaoImpl sectionDaoImpl;
     private final JTable jtblSchedule;
     private List<Schedule> scheduleList;
     private final JDialog jdlgCreateSchedule;
+    private final JComboBox jcmbSection;
             
-    public CreateScheduleController(JTable jtblSchedule,JDialog jdlgCreateSchedule){
+    public CreateScheduleController(JTable jtblSchedule,JDialog jdlgCreateSchedule,JComboBox jcmbSection){
         this.jtblSchedule = jtblSchedule;
         this.jdlgCreateSchedule = jdlgCreateSchedule;
+        this.jcmbSection = jcmbSection;
+        facultyDaoImpl = new FacultyDaoImpl();
+        sectionDaoImpl = new SectionDaoImpl();
     }
     
     @Override
@@ -47,6 +57,7 @@ public class CreateScheduleController implements ActionListener{
         int choice = JOptionPane.showConfirmDialog(null, "Save Schedule?","Confirmation",JOptionPane.YES_NO_CANCEL_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             setScheduleList();
+            
             ScheduleDaoImpl scheduleDaoImpl = new ScheduleDaoImpl();
             boolean isAdded = scheduleDaoImpl.add(scheduleList);
             if (isAdded) {
@@ -64,33 +75,46 @@ public class CreateScheduleController implements ActionListener{
         scheduleList = new ArrayList<>();
         for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
             String day = jtblSchedule.getValueAt(row, 0).toString().trim();
-            int startTime = Integer.parseInt(jtblSchedule.getValueAt(row, 1).toString());
-            int endtime = Integer.parseInt(jtblSchedule.getValueAt(row, 2).toString());
+            int startTime = getTime(jtblSchedule.getValueAt(row, 1).toString().trim());
+            int endTime = getTime(jtblSchedule.getValueAt(row, 2).toString().trim());
             String subjectName = jtblSchedule.getValueAt(row, 3).toString().trim();
-            String setionName = jtblSchedule.getValueAt(row, 4).toString().trim();
+            String facultyName = jtblSchedule.getValueAt(row, 4).toString().trim();
             String roomName = jtblSchedule.getValueAt(row, 5).toString().trim();
             
-            String facultyName = jtblSchedule.getValueAt(row,6).toString().trim();
-            String strFacultyId = StringUtil.getNumbers(facultyName).trim();
-            int facultyId = Integer.parseInt(strFacultyId);
-//            System.out.println("facultyId :"+strFacultyId);
-            
-            
+            String[] parts = facultyName.split("-");
+            int facultyId = Integer.parseInt(parts[0].trim());
             Faculty faculty = new Faculty();
             faculty.setFacultyID(facultyId);
+            
+            String sectionName = jcmbSection.getSelectedItem().toString();
+
+            System.out.println("Start Time: "+startTime);
+            System.out.println("End Time: "+endTime);
             
             Schedule schedule = new Schedule();
             schedule.setDay(day);
             schedule.setStartTime(startTime);
-            schedule.setEndTime(endtime);
-            schedule.setSubjectName(subjectName);
-            schedule.setSectionName(setionName);
+            schedule.setEndTime(endTime);
+            schedule.setSubjectCode(subjectName);
+            schedule.setSectionName(sectionName);
             schedule.setRoomName(roomName);
             schedule.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
             schedule.setFaculty(faculty);
-            
+
             scheduleList.add(schedule);
         }
     }
+    private int getTime(String s){
+        Integer time;
+        String[] parts = s.split(":");
+        String hour = parts[0].trim();
+        int hr = Integer.parseInt(hour)*100;
+        String minutes =parts[1].trim();
+        int mins = Integer.parseInt(minutes);
+        
+        time = hr+mins;
+        return time;
+    }
+    
     
 }

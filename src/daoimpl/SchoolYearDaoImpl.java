@@ -188,14 +188,14 @@ public class SchoolYearDaoImpl implements ISchoolYear{
 
     @Override
     public int getId(int aSchoolYearStart) {
-        int schoolYearId = 0;
+        Integer schoolYearId = null;
         String SQL = "{CALL getSchoolYearIdByYearFrom(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             cs.setInt(1, aSchoolYearStart);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    schoolYearId = rs.getInt(SchoolYearTable.SCHOOLYEARID);
+                    schoolYearId = rs.getInt("schoolyear_id");
                 }
             }
         } catch (SQLException e) {

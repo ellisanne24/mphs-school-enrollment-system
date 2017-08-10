@@ -13,11 +13,12 @@ import java.util.List;
 import jdk.internal.org.objectweb.asm.Type;
 import model.faculty.Faculty;
 import model.schedule.Schedule;
+import model.subject.Subject;
 
 
 public class ScheduleDaoImpl implements ISchedule{
 
-    SbjDaoImpl sbjDaoImpl = new SbjDaoImpl();
+    SubjectDaoImpl subjectDaoImpl = new SubjectDaoImpl();
     RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
     SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();
 
@@ -44,7 +45,7 @@ public class ScheduleDaoImpl implements ISchedule{
                     s.setEndTime(rs.getInt("endTime"));
                     s.setRoomName(rs.getString("room_name_or_num"));
                     s.setSectionName(rs.getString("sectionName"));
-                    s.setSubjectName(rs.getString("title"));
+                    s.setSubjectCode(rs.getString("title"));
                     s.setSchoolYearId(rs.getInt("schoolyear_id"));
                     s.setFaculty(faculty);
                     scheduleList.add(s);
@@ -72,13 +73,17 @@ public class ScheduleDaoImpl implements ISchedule{
                     csa.setInt(2, s.getStartTime());
                     csa.setInt(3, s.getEndTime());
                     csa.setInt(4, s.getSchoolYearId());
-                    csa.setInt(5, sbjDaoImpl.getId(s.getSubjectName().trim()));
+
+                    Subject subject = new Subject();
+                    subject.setSubjectCode(s.getSubjectCode());
+                    csa.setInt(5, subjectDaoImpl.getSubjectId(subject));
+
                     csa.setInt(6, sectionDaoImpl.getSectionIdByName(s.getSectionName().trim()));
                     csa.setInt(7, roomDaoImpl.getId(s.getRoomName().trim()));
                     csa.registerOutParameter(8, Type.INT);
                     csa.executeUpdate();
                     int scheduleId = csa.getInt(8);
-                    
+
                     csb.setInt(1, s.getFaculty().getFacultyID());
                     csb.setInt(2, scheduleId);
                     csb.executeUpdate();
@@ -133,7 +138,7 @@ public class ScheduleDaoImpl implements ISchedule{
                     s.setEndTime(rs.getInt("endTime"));
                     s.setRoomName(rs.getString("room_name_or_num"));
                     s.setSectionName(rs.getString("sectionName"));
-                    s.setSubjectName(rs.getString("title"));
+                    s.setSubjectCode(rs.getString("title"));
                     s.setSchoolYearId(rs.getInt("schoolyear_id"));
                     s.setFaculty(faculty);
                     scheduleList.add(s);
@@ -168,7 +173,7 @@ public class ScheduleDaoImpl implements ISchedule{
                     s.setEndTime(rs.getInt("endTime"));
                     s.setRoomName(rs.getString("room_name_or_num"));
                     s.setSectionName(rs.getString("sectionName"));
-                    s.setSubjectName(rs.getString("title"));
+                    s.setSubjectCode(rs.getString("title"));
                     s.setSchoolYearId(rs.getInt("schoolyear_id"));
                     s.setFaculty(faculty);
                     scheduleList.add(s);

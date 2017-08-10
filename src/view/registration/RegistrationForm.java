@@ -48,7 +48,11 @@ public class RegistrationForm extends javax.swing.JPanel {
         UIManager.put("TextField.disabledBackground", new Color(255, 255, 255));
         UIManager.put("TextField.inactiveForeground", Color.BLACK);
         initComponents();
-        
+        jlblStudentType.setVisible(false);
+        jpnlSchoolLastAttended.setVisible(false);
+        jcbNewStudent.setSelected(true);
+        jcbNewStudent.setVisible(false);
+        jcbTransfereeeStudent.setVisible(false);
 //        jpnlPaymentTerm.setVisible(false);
         
         jcmbGradeLevel.setModel(gradeLevelGUIUtil.getAllGradeLevels());
@@ -134,7 +138,7 @@ public class RegistrationForm extends javax.swing.JPanel {
         jcmbSchoolYearStart = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
         jcmbSchoolYearEnd = new javax.swing.JComboBox<>();
-        jLabel45 = new javax.swing.JLabel();
+        jlblStudentType = new javax.swing.JLabel();
         jcbTransfereeeStudent = new javax.swing.JCheckBox();
         jcbNewStudent = new javax.swing.JCheckBox();
         jpnlHomeAddress = new javax.swing.JPanel();
@@ -672,13 +676,13 @@ public class RegistrationForm extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentType.add(jcmbSchoolYearEnd, gridBagConstraints);
 
-        jLabel45.setText("Student Type");
+        jlblStudentType.setText("Student Type");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlStudentType.add(jLabel45, gridBagConstraints);
+        jpnlStudentType.add(jlblStudentType, gridBagConstraints);
 
         studentTypeJcbGroup.add(jcbTransfereeeStudent);
         jcbTransfereeeStudent.setText("Transferee");
@@ -1519,7 +1523,6 @@ public class RegistrationForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel45;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1549,6 +1552,7 @@ public class RegistrationForm extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jcmbSchoolYearStart;
     private javax.swing.JLabel jlblSchoolLastAttended;
     private javax.swing.JLabel jlblSchoolLastAttendedName;
+    private javax.swing.JLabel jlblStudentType;
     private javax.swing.JList<String> jlstCredentialRequirements;
     private javax.swing.JPanel jpnlGuardianInfo;
     private javax.swing.JPanel jpnlHomeAddress;

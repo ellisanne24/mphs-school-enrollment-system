@@ -9,6 +9,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import utility.component.JTableUtil;
 
+
 public class UpdateCurriculumGUI extends javax.swing.JDialog {
 
     String      educationalStage;
@@ -517,7 +518,7 @@ public class UpdateCurriculumGUI extends javax.swing.JDialog {
         }
         if (evt.getClickCount() == 2) {
             JTableUtil jtm = new JTableUtil();
-            jtm.copyTableData(subjectsListJtbl, curriculumSubjectsJtbl);
+//            jtm.copyTableData(subjectsListJtbl, curriculumSubjectsJtbl);
         }
     }//GEN-LAST:event_subjectsListJtblMouseClicked
 

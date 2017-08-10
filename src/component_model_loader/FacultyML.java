@@ -11,6 +11,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
 import model.section.Section;
+import model.user.User;
 
 /**
  *
@@ -44,14 +45,45 @@ public class FacultyML {
     }
     
     // To be edited. Supply facultyId who's currently logged in.
-    public DefaultComboBoxModel getAllFacultySectionByFacultyId() {
+    public DefaultComboBoxModel getAllFacultySectionByFacultyId(User user) {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        Object[] obj = fdi.getAllFacultySectionByFacultyId().toArray();
+        Object[] obj = fdi.getAllFacultySectionByFacultyId(user).toArray();
         for (Object o : obj) {
             Section section = (Section) o;
             model.addElement(section.getSectionName());
         }
 
+        return model;
+    }
+    
+    public DefaultComboBoxModel getAllFacultyName()
+    {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        Object[] obj = fdi.getAllFaculty().toArray();
+
+        for(Object o : obj)
+        {
+            Faculty faculty = (Faculty) o;
+            
+            model.addElement(faculty.getFirstName() + " " + faculty.getMiddleName() + ". " + faculty.getLastName());
+        }
+        return model;
+    }
+    
+    public DefaultComboBoxModel getAllFacultyNameWithAssigned(String name)
+    {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        Object[] obj = fdi.getAllFaculty().toArray();
+
+        model.addElement(name);
+        
+        for(Object o : obj)
+        {
+            Faculty faculty = (Faculty) o;
+            
+            model.addElement(faculty.getFirstName() + " " + faculty.getMiddleName() + ". " + faculty.getLastName());
+        }
+        
         return model;
     }
 }

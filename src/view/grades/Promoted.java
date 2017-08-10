@@ -8,6 +8,8 @@ package view.grades;
 import component_model_loader.GradeLevelML;
 import component_model_loader.GradeML;
 import component_renderers.GradeLevelJComboBoxRenderer;
+import daoimpl.SchoolYearDaoImpl;
+import model.schoolyear.SchoolYear;
 
 
 /**
@@ -17,11 +19,14 @@ import component_renderers.GradeLevelJComboBoxRenderer;
 public class Promoted extends javax.swing.JPanel {
     
     GradeML gml = new GradeML();
+    SchoolYear schoolYear = new SchoolYear();
+    SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
     public Promoted() {
         initComponents();
         jComboBox1.setModel(new GradeLevelML().getAllGradeLevels());
         jComboBox1.setRenderer(new GradeLevelJComboBoxRenderer());
-        tblPromoted.setModel(gml.getAllPromotedStudent());
+        schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+        tblPromoted.setModel(gml.getAllPromotedStudent(schoolYear));
     }
 
     
@@ -51,7 +56,7 @@ public class Promoted extends javax.swing.JPanel {
                 {null, null, null}
             },
             new String [] {
-                "Student Number", "Student Name", "Current Level"
+                "Student Number", "Student Name", "Grade Level"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -62,6 +67,7 @@ public class Promoted extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblPromoted.setRowHeight(30);
         jScrollPane1.setViewportView(tblPromoted);
         if (tblPromoted.getColumnModel().getColumnCount() > 0) {
             tblPromoted.getColumnModel().getColumn(0).setResizable(false);

@@ -36,6 +36,7 @@ import model.gradelevel.CurrentGradeLevel;
 import model.student.Student;
 import component_renderers.PaymentJTableRenderer;
 import controller.payment.DisplayPaymentFormController;
+import controller.payment.SearchStudentController;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.RegistrationDaoImpl;
 import daoimpl.SchoolFeesDaoImpl;
@@ -83,6 +84,15 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         
 //        jtfStudentID.addKeyListener(new SearchStudentController(jcmbPaymentTerm, jtfStudentID,jcmbSchoolYearFrom));
         
+//        jtfStudentID.addKeyListener(new SearchStudentController(
+//                jcmbPaymentTerm, jtfStudentID, jcmbSchoolYearFrom, jlblStudentTypeText, 
+//                jlblLastNameText, jlblFirstNameText, jlblMiddleNameText, 
+//                jlblAdmissionGradeLevelText, jlblPresentGradeLevelText, 
+//                jlblStudentStatusText, jtfBasicFee, jtfMiscellaneousFee, 
+//                jtfOtherFee, jtfTotalFees, jtfTotalPaid, jtfRemainingBalance, 
+//                jcmbDiscount, jtfDiscountPercentage, jtfDiscounts, jtblBalanceBreakdown,
+//                jtblDownPaymentFee, jtblBasicFee, jtblMiscFees, jtblOtherFees));
+
         guiManager.setGUIComponentRenderers();
         guiManager.setGUIComponentModels();
         guiManager.setGUIComponentProperties();
@@ -1232,7 +1242,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         jlblPresentGradeLevelText.setText(prG);
     }
     
-    
     class GUIManager {
         private void resetForm(){
             jlblStudentStatusText.setText("");
@@ -1495,32 +1504,17 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         }
         
         private void setSchoolFees() {
-            CurrentGradeLevel presentGradeLevel = student.getCurrentGradeLevel();
-            int gradeLevelId = gradeLevelDaoImpl.getId(presentGradeLevel);
+            
+            CurrentGradeLevel currentGradeLevel = student.getCurrentGradeLevel();
+            int gradeLevelId = gradeLevelDaoImpl.getId(currentGradeLevel);
+            System.out.println("GRADELEVELID @setSChoolFees: "+gradeLevelId);
             
             DefaultTableModel downPaymentModel = (DefaultTableModel) schoolFeesML.getDownPayment(jtblDownPaymentFee, gradeLevelId);
-            for (int i = 0; i < jtblDownPaymentFee.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
-                jtblDownPaymentFee.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
-            }
             
             jtblDownPaymentFee.setModel(downPaymentModel);
             jtblBasicFee.setModel(schoolFeesML.getBasic(jtblBasicFee, gradeLevelId));
             jtblMiscFees.setModel(schoolFeesML.getMiscellaneous(jtblMiscFees, gradeLevelId));
             jtblOtherFees.setModel(schoolFeesML.getOther(jtblOtherFees, gradeLevelId));
-            
-            for (int i = 0; i < jtblBasicFee.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
-                jtblBasicFee.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
-            }
-            for (int i = 0; i < jtblMiscFees.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
-                jtblMiscFees.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
-            }
-            for (int i = 0; i < jtblOtherFees.getColumnCount(); i++) {
-                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
-                jtblOtherFees.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
-            }
         }
         
         private void applyDiscount(){
@@ -1640,6 +1634,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
                 guiManager.resetForm();
             }
         }
+
     }//GEN-LAST:event_jtfStudentIDKeyPressed
 
     private void jcmbPaymentTermItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbPaymentTermItemStateChanged

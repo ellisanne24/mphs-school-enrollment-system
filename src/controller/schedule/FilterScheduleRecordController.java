@@ -28,19 +28,15 @@ public class FilterScheduleRecordController {
     
 
     private final JComboBox jcmbSchoolYearFrom;
-    private final JComboBox jcmbSubject;
     private final JTable jtblScheduleRecord;
-    private final JCheckBox jcbAllSubjects;
     private final JComboBox jcmbFaculty;
 
     public FilterScheduleRecordController(
-            JComboBox jcmbSchoolYearFrom, JComboBox jcmbSubject, 
-            JTable jtblScheduleRecord, JCheckBox jcbAllSubjects,
+            JComboBox jcmbSchoolYearFrom, 
+            JTable jtblScheduleRecord, 
             JComboBox jcmbFaculty) {
         this.jcmbSchoolYearFrom = jcmbSchoolYearFrom;
-        this.jcmbSubject = jcmbSubject;
         this.jtblScheduleRecord = jtblScheduleRecord;
-        this.jcbAllSubjects = jcbAllSubjects;
         this.jcmbFaculty = jcmbFaculty;
     }
 
@@ -52,16 +48,10 @@ public class FilterScheduleRecordController {
             @Override
             public void itemStateChanged(ItemEvent e) {
 
-                if (jcmbSubject.getSelectedIndex() == -1 && jcmbSchoolYearFrom.getSelectedIndex() > -1) {
-                    int schoolyearId = schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString()));
-                    DefaultTableModel model = new ScheduleML().getAllBySchoolYearId(schoolyearId, jtblScheduleRecord);
-                    jtblScheduleRecord.setModel(model);
+                if (jcmbSchoolYearFrom.getSelectedIndex() > -1) {
+                    
                 } else {
-                    String subjectName = jcmbSubject.getSelectedItem().toString();
-                    int subjectId = sbjDaoImpl.getId(subjectName);
-                    int schoolyearId = schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString()));
-                    DefaultTableModel model = new ScheduleML().getAll(subjectId, schoolyearId, jtblScheduleRecord);
-                    jtblScheduleRecord.setModel(model);
+                    
                 }
             }
         };
@@ -70,14 +60,9 @@ public class FilterScheduleRecordController {
         subjectChange = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                String subjectName = jcmbSubject.getSelectedItem().toString();
-                int subjectId = sbjDaoImpl.getId(subjectName);
-                int schoolyearId = schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString()));
-                DefaultTableModel model = new ScheduleML().getAll(subjectId, schoolyearId, jtblScheduleRecord);
-                jtblScheduleRecord.setModel(model);
+                
             }
         };
-        jcmbSubject.addItemListener(subjectChange);
         
         facultyChange = new ItemListener() {
             @Override

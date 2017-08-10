@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.receipt;
 
+import controller.receipt.PrintReceipt;
 import daoimpl.SchoolYearDaoImpl;
-import daoimpl.StudentDaoImpl;
 import utility.component.ImageUtil;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -18,7 +13,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import model.schoolyear.SchoolYear;
@@ -42,18 +36,19 @@ public class Receipt extends javax.swing.JDialog {
     private final Student student;
     private final SchoolYear schoolYear;
     private final Particulars particulars;
-    
+
     public Receipt(OfficialReceipt officialReceipt) {
         super(null, ModalityType.APPLICATION_MODAL);
         initComponents();
+        initializeControllers();
         schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.jpg", 200, 200);
-        
+
         this.particulars = officialReceipt.getPayment().getParticulars();
         this.payment = officialReceipt.getPayment();
         this.student = officialReceipt.getStudent();
         this.schoolYear = officialReceipt.getPayment().getSchoolYear();
         setFormDetails();
-        
+
         JTableHeader header = jtblParticulars.getTableHeader();
         header.setBackground(Color.WHITE);
         header.setForeground(Color.BLACK);
@@ -61,54 +56,56 @@ public class Receipt extends javax.swing.JDialog {
         jtblParticulars.setShowHorizontalLines(false);
         jtblParticulars.setShowVerticalLines(false);
     }
-
     
-        private void setFormDetails(){
-            int studentId = student.getStudentId();
-            String firstName = student.getRegistration().getFirstName();
-            String lastName = student.getRegistration().getLastName();
-            String middleName = student.getRegistration().getMiddleName();
-            String studentName = lastName + ", " + firstName + " " + middleName;
-            String roomHouseNo = student.getRegistration().getAddressRoomOrHouseNo() + " ";
-            String street = student.getRegistration().getAddressStreet() + " ";
-            String brgyOrSubd = student.getRegistration().getAddressBrgyOrSubd() + " ";
-            String city = student.getRegistration().getAddressCity();
-            String address = roomHouseNo + street + brgyOrSubd + city;
-            String gradeLevel = student.getCurrentGradeLevel().getLevel()+"";
-                    
-            double amountTendered = payment.getAmountTendered();
-            double change = payment.getChange();
-            double particularsBalanceSum = particulars.getBalanceSum();
-            
-            int schoolYearFrom = schoolYear.getYearFrom();
-            int schoolYearTo = schoolYear.getYearTo();
-            
-            Date date = new Date();
-            jlblDateOfPayment.setText(dateFormat.format(date));
-            
-            jlblStudentIdText.setText(studentId+"");
-            jlblNameText.setText(studentName);
-            jlblAddressText.setText(address);
-            jlblTotalPaymentDueText.setText("\u20B1 "+decimalFormatter.format(particularsBalanceSum)+"");
-            jlblCashText.setText("\u20B1 " + decimalFormatter.format(particularsBalanceSum) + "");
-            jlblCashReceivedText.setText("\u20B1 " + decimalFormatter.format(amountTendered) + "");
-            jlblChangeText.setText("\u20B1 "+ decimalFormatter.format(change));
-            jlblGradeLevelText.setText(gradeLevel);
-            jlblSchoolYearText.setText(schoolYearFrom+" - "+schoolYearTo);
-            
-            DefaultTableModel tableModel = (DefaultTableModel) jtblParticulars.getModel();
-            tableModel.setRowCount(0);
+    private void initializeControllers(){
+        jmiPrintReceipt.addActionListener(new PrintReceipt(this));
+    }
 
-            for (Object o : particulars.getBalanceBreakDownFees()) {
-                BalanceBreakDownFee b = (BalanceBreakDownFee) o;
-                double balance = b.getBalance();
-                String description = b.getDescription();
-                tableModel.addRow(new Object[]{description, " (" + "\u20B1" + decimalFormatter.format(balance) + " )"});
-            }
-            jtblParticulars.setModel(tableModel);
+    private void setFormDetails() {
+        int studentId = student.getStudentId();
+        String firstName = student.getRegistration().getFirstName();
+        String lastName = student.getRegistration().getLastName();
+        String middleName = student.getRegistration().getMiddleName();
+        String studentName = lastName + ", " + firstName + " " + middleName;
+        String roomHouseNo = student.getRegistration().getAddressRoomOrHouseNo() + " ";
+        String street = student.getRegistration().getAddressStreet() + " ";
+        String brgyOrSubd = student.getRegistration().getAddressBrgyOrSubd() + " ";
+        String city = student.getRegistration().getAddressCity();
+        String address = roomHouseNo + street + brgyOrSubd + city;
+        String gradeLevel = student.getCurrentGradeLevel().getLevel() + "";
+
+        double amountTendered = payment.getAmountTendered();
+        double change = payment.getChange();
+        double particularsBalanceSum = particulars.getBalanceSum();
+
+        int schoolYearFrom = schoolYear.getYearFrom();
+        int schoolYearTo = schoolYear.getYearTo();
+
+        Date date = new Date();
+        jlblDateOfPayment.setText(dateFormat.format(date));
+
+        jlblStudentIdText.setText(studentId + "");
+        jlblNameText.setText(studentName);
+        jlblAddressText.setText(address);
+        jlblTotalPaymentDueText.setText("\u20B1 " + decimalFormatter.format(particularsBalanceSum) + "");
+        jlblCashText.setText("\u20B1 " + decimalFormatter.format(particularsBalanceSum) + "");
+        jlblCashReceivedText.setText("\u20B1 " + decimalFormatter.format(amountTendered) + "");
+        jlblChangeText.setText("\u20B1 " + decimalFormatter.format(change));
+        jlblGradeLevelText.setText(gradeLevel);
+        jlblSchoolYearText.setText(schoolYearFrom + " - " + schoolYearTo);
+
+        DefaultTableModel tableModel = (DefaultTableModel) jtblParticulars.getModel();
+        tableModel.setRowCount(0);
+
+        for (Object o : particulars.getBalanceBreakDownFees()) {
+            BalanceBreakDownFee b = (BalanceBreakDownFee) o;
+            double balance = b.getBalance();
+            String description = b.getDescription();
+            tableModel.addRow(new Object[]{description, " (" + "\u20B1" + decimalFormatter.format(balance) + " )"});
         }
-    
-    
+        jtblParticulars.setModel(tableModel);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -168,7 +165,7 @@ public class Receipt extends javax.swing.JDialog {
     jLabel2 = new javax.swing.JLabel();
     jMenuBar1 = new javax.swing.JMenuBar();
     jMenu1 = new javax.swing.JMenu();
-    jMenuItem1 = new javax.swing.JMenuItem();
+    jmiPrintReceipt = new javax.swing.JMenuItem();
     jMenuItem2 = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -608,9 +605,9 @@ public class Receipt extends javax.swing.JDialog {
 
     jMenu1.setText("File");
 
-    jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
-    jMenuItem1.setText("Print");
-    jMenu1.add(jMenuItem1);
+    jmiPrintReceipt.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+    jmiPrintReceipt.setText("Print");
+    jMenu1.add(jmiPrintReceipt);
 
     jMenuItem2.setText("Exit");
     jMenu1.add(jMenuItem2);
@@ -622,8 +619,6 @@ public class Receipt extends javax.swing.JDialog {
     pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -638,7 +633,6 @@ public class Receipt extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -664,6 +658,7 @@ public class Receipt extends javax.swing.JDialog {
     private javax.swing.JLabel jlblStudentIdText;
     private javax.swing.JLabel jlblTotalPaymentDueText;
     private javax.swing.JLabel jlblTransactionNo;
+    private javax.swing.JMenuItem jmiPrintReceipt;
     private javax.swing.JPanel jpnlContainer;
     private javax.swing.JPanel jpnlHeader;
     private javax.swing.JPanel jpnlLogo;

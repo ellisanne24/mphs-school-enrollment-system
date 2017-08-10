@@ -5,12 +5,14 @@
  */
 package component_model_loader;
 
+import component_renderers.PaymentJTableRenderer;
 import daoimpl.SchoolFeesDaoImpl;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import model.basicfee.BasicFee;
 import model.downpayment.DownPaymentFee;
 import model.fee.Fee;
@@ -74,6 +76,11 @@ public class SchoolFeesML {
             Object[] rowData = {name, decimalFormatter.format(amount)};
             defaultTableModel.addRow(rowData);
             defaultTableModel.setColumnIdentifiers(columns);
+            
+            for (int i = 0; i < jTable.getColumnCount(); i++) {
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
+                jTable.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
+            }
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null,"Error\n"+ e.getMessage());
         }
@@ -81,6 +88,7 @@ public class SchoolFeesML {
     }
     
     public DefaultTableModel getBasic(JTable jTable, int gradeLevelId){
+        System.out.println("GRADELEVELID @ getBasic: "+gradeLevelId);
         DefaultTableModel defaultTableModel = (DefaultTableModel)jTable.getModel();
         defaultTableModel.setRowCount(0);
         try {
@@ -89,8 +97,14 @@ public class SchoolFeesML {
             String name = basicFee.getName();
             double amount = basicFee.getAmount();
             Object[] rowData = {name,decimalFormatter.format(amount)};
+            
             defaultTableModel.addRow(rowData);
             defaultTableModel.setColumnIdentifiers(columns);
+            
+            for (int i = 0; i < jTable.getColumnCount(); i++) {
+                TableCellRenderer myJTableRenderer = new PaymentJTableRenderer();
+                jTable.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
+            }
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null,"Error\n"+e.getMessage());
         }

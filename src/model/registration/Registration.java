@@ -58,7 +58,34 @@ public class Registration {
     private String paymentTerm;
     private Date registrationDate;
     private boolean exists; 
+    private Integer gradeLevelId;
+    private Integer schoolYearId;
+    private Integer paymentTermId;
 
+    public Integer getPaymentTermId() {
+        return paymentTermId;
+    }
+
+    public void setPaymentTermId(Integer paymentTermId) {
+        this.paymentTermId = paymentTermId;
+    }
+    
+    public Integer getGradeLevelId() {
+        return gradeLevelId;
+    }
+
+    public void setGradeLevelId(Integer gradeLevelId) {
+        this.gradeLevelId = gradeLevelId;
+    }
+
+    public Integer getSchoolYearId() {
+        return schoolYearId;
+    }
+
+    public void setSchoolYearId(Integer schoolYearId) {
+        this.schoolYearId = schoolYearId;
+    }
+    
     public boolean exists() {
         return exists;
     }

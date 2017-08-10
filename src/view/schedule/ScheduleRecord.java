@@ -33,7 +33,7 @@ public class ScheduleRecord extends javax.swing.JPanel {
 
     private void initializeControllers() {
         FilterScheduleRecordController filterScheduleRecordController = new FilterScheduleRecordController(
-                jcmbSchoolYearFrom, jcmbSubject, jtblSchedule, jcbAllSubjects, jcmbFaculty);
+                jcmbSchoolYearFrom, jtblSchedule, jcmbFaculty);
         filterScheduleRecordController.control();
         jmiNewSchedule.addActionListener(new DisplayCreateController());
         jtblSchedule.addMouseListener(new ScheduleTableRecordController(jtblSchedule));
@@ -44,8 +44,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
     private void initializeModels() {
         jcmbSchoolYearFrom.setModel(new SchoolYearML().getAllSchoolYearStart());
         jcmbSchoolYearTo.setModel(new SchoolYearML().getAllSchoolYearEnd());
-        jcmbSubject.setModel(new SbjML().getSubjectNames());
-        jcmbSubject.setSelectedIndex(-1);
         jtblSchedule.setModel(new ScheduleML().getAllBySchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId(), jtblSchedule));
         jtblSchedule.setAutoCreateRowSorter(true);
         jcmbFaculty.setModel(new FacultyML().getAllFacultyNames());
@@ -67,11 +65,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jcmbSchoolYearFrom = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jcmbSchoolYearTo = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
-        jcmbSubject = new javax.swing.JComboBox<>();
-        jcbAllSubjects = new javax.swing.JCheckBox();
-        jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jlblFaculty = new javax.swing.JLabel();
         jcmbFaculty = new javax.swing.JComboBox<>();
         jpnlScheduleTable = new javax.swing.JPanel();
@@ -119,42 +112,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jcmbSchoolYearTo, gridBagConstraints);
-
-        jLabel3.setText("Subject");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel4.add(jLabel3, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel4.add(jcmbSubject, gridBagConstraints);
-
-        jcbAllSubjects.setText("All Subjects");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel4.add(jcbAllSubjects, gridBagConstraints);
-
-        jLabel4.setText("Day");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel4.add(jLabel4, gridBagConstraints);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" }));
-        jComboBox1.setSelectedIndex(-1);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel4.add(jComboBox1, gridBagConstraints);
 
         jlblFaculty.setText("Faculty");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -270,23 +227,18 @@ public class ScheduleRecord extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JCheckBox jcbAllSubjects;
     private javax.swing.JComboBox<String> jcmbFaculty;
     private javax.swing.JComboBox<String> jcmbSchoolYearFrom;
     private javax.swing.JComboBox<String> jcmbSchoolYearTo;
-    private javax.swing.JComboBox<String> jcmbSubject;
     private javax.swing.JLabel jlblFaculty;
     private javax.swing.JMenu jmenuFile;
     private javax.swing.JMenuItem jmiEdit;

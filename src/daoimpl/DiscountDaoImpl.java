@@ -116,4 +116,23 @@ public class DiscountDaoImpl implements IDiscount {
         return aDiscountId;
     }
 
+    @Override
+    public boolean update(Discount aDiscount) {
+        boolean isUpdated = false;
+        String SQL = "{CALL updateDiscount(?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setString(1,aDiscount.getDiscountName());
+            cs.setInt(2, aDiscount.getPercentOfDiscount());
+            cs.setString(3, aDiscount.getDescription());
+            cs.setInt(4, aDiscount.getId());
+            cs.executeUpdate();
+            isUpdated = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isUpdated;
+    }
+
+    
 }

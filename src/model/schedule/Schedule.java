@@ -14,7 +14,7 @@ public class Schedule {
     private Faculty faculty;
     private String sectionName;
     private int schoolYearId;
-    private String subjectName;
+    private String subjectCode;
 
     public String getDay() {
         return day;
@@ -24,12 +24,12 @@ public class Schedule {
         this.day = day;
     }
     
-    public String getSubjectName() {
-        return subjectName;
+    public String getSubjectCode() {
+        return subjectCode;
     }
 
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
     }
 
     public int getSchoolYearId() {

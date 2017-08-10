@@ -14,6 +14,7 @@ import model.discount.Discount;
  */
 public interface IDiscount {
     boolean add(Discount aDiscount);
+    boolean update(Discount aDiscount);
     List<Discount> get(); //both active and inactive
     List<Discount> getActive(); //active only
     List<Discount> getInactive(); //inactive only

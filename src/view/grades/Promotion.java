@@ -15,7 +15,9 @@ import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SubjectDaoImpl;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import model.student.Student;
 import model.grade.Grade;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
@@ -40,7 +42,7 @@ public class Promotion extends javax.swing.JPanel {
     Subject subject = new Subject();
     GradeLevel gradeLevel = new GradeLevel();
     SchoolYear schoolYear = new SchoolYear();
-    
+    Student student = new Student();
     public Promotion() {
         initComponents();
         cbGradeLevelPromotion.setModel(glml.getAllGradeLevels());
@@ -166,23 +168,20 @@ public class Promotion extends javax.swing.JPanel {
         schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
         
         //Set model on tblPromotion
-        tblPromotion.setModel(gml.getAllStudentGradeByGradeLevelId(gradeLevel, schoolYear));
+        tblPromotion.setModel(gml.getAllStudentRemarksByGradeLevelId(gradeLevel, schoolYear));
     }//GEN-LAST:event_cbGradeLevelPromotionItemStateChanged
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         for(int y = 0; y < tblPromotion.getRowCount(); y++)
         {
-            if(tblPromotion.getValueAt(tblPromotion.getSelectedRow(), 4) == "Failed")
+            if(tblPromotion.getValueAt(y, 4) == "Failed")
             {
-                grade.schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId() + 1);
-                grade.student.setStudentId((int) tblPromotion.getValueAt(tblPromotion.getSelectedRow(), 0));
+                student.setStudentId((int) tblPromotion.getValueAt(y, 0));
                 
-                gradeLevel.setLevel((Integer) tblPromotion.getValueAt(tblPromotion.getSelectedRow(), 2));
+                gradeLevel.setLevel((Integer) tblPromotion.getValueAt(y, 2));
                 gradeLevel.setId(gldi.getId(gradeLevel));
                 
                 grade.setIsPassed(false);
-                grade.setIsActive(true);
-                
                 
                 System.out.println("SC ID"+grade.schoolYear.getSchoolYearId());
                 System.out.println("STUD ID"+grade.student.getStudentId());
@@ -190,27 +189,24 @@ public class Promotion extends javax.swing.JPanel {
                 
                 
                 //Method call
-                if(gdi.promoteStudentById(grade, gradeLevel) == true)
+                if(gdi.promoteStudentById(grade, gradeLevel, student, schoolYear) == true)
                 {
                     JOptionPane.showMessageDialog(null, "Successful!");
                 }
             }
             else
             {
-                //Setter call
-                grade.schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId() + 1);
-                grade.student.setStudentId((int) tblPromotion.getValueAt(tblPromotion.getSelectedRow(), 0));
+                student.setStudentId((int) tblPromotion.getValueAt(y, 0));
                 
-                gradeLevel.setLevel((Integer) tblPromotion.getValueAt(tblPromotion.getSelectedRow(), 2));
-                gradeLevel.setId(gldi.getId(gradeLevel) + 1);
+                gradeLevel.setLevel((Integer) tblPromotion.getValueAt(y, 2));
+                gradeLevel.setId(gldi.getId(gradeLevel));
                 
                 grade.setIsPassed(true);
-                grade.setIsActive(true);
                 
                 System.out.println(gradeLevel.getId());
                 
                 //Method call
-                if(gdi.promoteStudentById(grade, gradeLevel) == true)
+                if(gdi.promoteStudentById(grade, gradeLevel, student, schoolYear) == true)
                 {
                     JOptionPane.showMessageDialog(null, "Successful!");
                 }
@@ -227,7 +223,7 @@ public class Promotion extends javax.swing.JPanel {
 //            {
             
     }//GEN-LAST:event_jButton5ActionPerformed
-
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbGradeLevelPromotion;

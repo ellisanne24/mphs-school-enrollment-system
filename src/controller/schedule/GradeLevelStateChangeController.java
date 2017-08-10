@@ -5,17 +5,23 @@
  */
 package controller.schedule;
 
+import component_editor.ScheduleSubjectCellEditor;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SectionDaoImpl;
-import daoimpl.SubjectDaoImpl;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import model.gradelevel.GradeLevel;
 import model.section.Section;
-import model.subject.Subject;
 
 /**
  *
@@ -25,12 +31,25 @@ public class GradeLevelStateChangeController implements ItemListener {
 
     private final JComboBox jcmbGradeLevel;
     private final JComboBox jcmbSections;
-    private final JComboBox jcmbSubjects;
+    private final JTable jtblSchedule;
+    private final JButton jbtnRemoveEntry;
 
-    public GradeLevelStateChangeController(JComboBox jcmbGradeLevel, JComboBox jcmbSections, JComboBox jcmbSubjects) {
+    public GradeLevelStateChangeController(JTable jtblSchedule,JComboBox jcmbGradeLevel, JComboBox jcmbSections, JButton jbtnRemoveEntry) {
         this.jcmbGradeLevel = jcmbGradeLevel;
         this.jcmbSections = jcmbSections;
-        this.jcmbSubjects = jcmbSubjects;
+        this.jtblSchedule = jtblSchedule;
+        this.jbtnRemoveEntry = jbtnRemoveEntry;
+        
+        jbtnRemoveEntry.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int [] rowsToDel = jtblSchedule.getSelectedRows();
+                for(int i : rowsToDel){
+                    DefaultTableModel model = (DefaultTableModel)jtblSchedule.getModel();
+                    model.removeRow(i);
+                }
+            }
+        });
     }
 
     @Override
@@ -42,22 +61,15 @@ public class GradeLevelStateChangeController implements ItemListener {
             GradeLevel gradeLevel = new GradeLevel();
             gradeLevel.setId(gradeLevelId);
 
+            clearScheduleTableModel();
+            enableScheduleTable();
+            TableColumnModel columnModel = jtblSchedule.getColumnModel();
+            TableColumn subjectColumn = columnModel.getColumn(3);
+            subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule,gradeLevelId));
+            
             jcmbSections.setModel(getGradeLevelSections(gradeLevel));
             jcmbSections.setEnabled(true);
-            jcmbSubjects.setModel(getGradeLevelSubjects(gradeLevel));
-            jcmbSubjects.setEnabled(true);
         }
-    }
-    
-    private DefaultComboBoxModel getGradeLevelSubjects(GradeLevel g){
-        SubjectDaoImpl sbjDaoImpl = new SubjectDaoImpl();
-        List<Subject> subjectList = sbjDaoImpl.getAllSubjectsByGradeLevelId(g);
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        for(Subject s : subjectList){
-            model.addElement(s.getSubjectTitle().trim());
-        }
-        model.setSelectedItem(null);
-        return model;
     }
     
     private DefaultComboBoxModel getGradeLevelSections(GradeLevel g){
@@ -69,5 +81,14 @@ public class GradeLevelStateChangeController implements ItemListener {
         }
         sectionModel.setSelectedItem(null);
         return sectionModel;
+    }
+    
+    private void enableScheduleTable(){
+        jtblSchedule.setEnabled(true);
+    }
+    
+    private void clearScheduleTableModel(){
+        DefaultTableModel model = (DefaultTableModel)jtblSchedule.getModel();
+        model.setRowCount(0);
     }
 }

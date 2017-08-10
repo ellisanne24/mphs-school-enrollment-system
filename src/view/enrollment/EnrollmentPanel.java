@@ -1,27 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.enrollment;
 
-import view.student.StudentInformationJDialog;
-import view.registration.UpdateRegistrationDetailsGUI;
+import view.student.JdlgStudentInfo;
+import view.registration.UpdateRegistration;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
 import component_model_loader.NavigationImpl;
 import component_model_loader.RegistrationML;
 import component_model_loader.StudentML;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import controller.enrollment.DisplayRegistrationInformation;
+import controller.enrollment.DisplayTablePopupMenu;
+import controller.enrollment.FilterStudentRecordBtStatus;
 import java.awt.event.KeyEvent;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import model.schoolyear.SchoolYear;
@@ -31,27 +21,18 @@ import model.schoolyear.SchoolYear;
  * @author Jordan
  */
 public class EnrollmentPanel extends javax.swing.JPanel {
-
-    JMenuItem menuItemCopyStudentId = new JMenuItem("Copy Student Id");
-    JMenuItem menuItemCopyRegistrationId = new JMenuItem("Copy Registration Id");
-    JMenuItem menuItemCopyLastName = new JMenuItem("Copy Last Name");
-    JPopupMenu popupMenu = new JPopupMenu();
     
-    private static final RegistrationML registrationModelLoader = new RegistrationML();
-    private static final StudentML STUDENT_GUI_UTIL = new StudentML();
-    private static final StudentDaoImpl STUDENT_DAO_IMPL = new StudentDaoImpl();
-    private static final SchoolYearDaoImpl SCHOOLYEAR_DAO_IMPL = new SchoolYearDaoImpl();
-    private final NavigationImpl navigation = new NavigationImpl();
+    private static RegistrationML registrationML;
+    private static StudentML studentML;
+    private static StudentDaoImpl studentDaoImpl;
+    private static SchoolYearDaoImpl schoolYearDaoImpl ;
+    private NavigationImpl navigationDaoImpl;
     
     public EnrollmentPanel() {
         initComponents();
-        
-        popupMenu.add(menuItemCopyStudentId);
-        popupMenu.add(menuItemCopyRegistrationId);
-        popupMenu.add(menuItemCopyLastName);
-        menuItemCopyStudentId.addActionListener(new MyStudentJTableActionListener());
-        menuItemCopyRegistrationId.addActionListener(new MyStudentJTableActionListener());
-        menuItemCopyLastName.addActionListener(new MyStudentJTableActionListener());
+        initializeModels();
+        initializeDaoImpl();
+        initializeControllers();
         
         loadActiveStudentsToJTable();
         loadRegisteredApplicantsToJTable();
@@ -59,7 +40,26 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         jtblStudentsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
+    private void initializeDaoImpl(){
+        studentDaoImpl  = new StudentDaoImpl();
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        navigationDaoImpl = new NavigationImpl();
+    }
     
+    private void initializeControllers(){
+        jtblStudentsList.addMouseListener(new DisplayTablePopupMenu(jtblStudentsList));
+        jtblRegistrationList.addMouseListener(new DisplayRegistrationInformation(jtblRegistrationList));
+        jcmbStatus.addActionListener(new FilterStudentRecordBtStatus(jtblStudentsList, jcmbStatus));
+    }
+    
+    private void initializeModels(){
+        studentML = new StudentML();
+        registrationML = new RegistrationML();
+    }
+    
+    private void initializeRenderers(){
+        
+    }
     
    
     @SuppressWarnings("unchecked")
@@ -83,7 +83,7 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         jpnlStudentsFilter = new javax.swing.JPanel();
         jlblSearch1 = new javax.swing.JLabel();
         jtfSearchStudents = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        jlblStatus = new javax.swing.JLabel();
         jcmbStatus = new javax.swing.JComboBox<>();
         jpnlStudentsControl = new javax.swing.JPanel();
         jbtnViewDetails = new javax.swing.JButton();
@@ -235,11 +235,11 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentsFilter.add(jtfSearchStudents, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setText("Status");
+        jlblStatus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jlblStatus.setText("Status");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlStudentsFilter.add(jLabel1, gridBagConstraints);
+        jpnlStudentsFilter.add(jlblStatus, gridBagConstraints);
 
         jcmbStatus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jcmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
@@ -341,30 +341,26 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     public static void loadRegisteredApplicantsToJTable(){
-        DefaultTableModel dtm = registrationModelLoader.getAllRegisteredApplicants(jtblRegistrationList);
+        DefaultTableModel dtm = registrationML.getAllRegisteredApplicants(jtblRegistrationList);
         jtblRegistrationList.setModel(dtm);
     }
     
-    
     private void jtfSearchRegisteredKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfSearchRegisteredKeyPressed
         if ((!jtfSearchRegistered.getText().isEmpty()) && (evt.getKeyCode() == KeyEvent.VK_ENTER)) {
-            DefaultTableModel dtm = registrationModelLoader.getAllRegisteredApplicantsByKeyword(jtblRegistrationList, jtfSearchRegistered.getText());
+            DefaultTableModel dtm = registrationML.getAllRegisteredApplicantsByKeyword(jtblRegistrationList, jtfSearchRegistered.getText());
             jtblRegistrationList.setModel(dtm);
         }else{
-            DefaultTableModel dtm = registrationModelLoader.getAllRegisteredApplicants(jtblRegistrationList);
+            DefaultTableModel dtm = registrationML.getAllRegisteredApplicants(jtblRegistrationList);
             jtblRegistrationList.setModel(dtm);
         }
     }//GEN-LAST:event_jtfSearchRegisteredKeyPressed
 
     private void jbtnViewRegistrationDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnViewRegistrationDetailsActionPerformed
-
-        boolean aRowIsSelected = jtblRegistrationList.getSelectedRow() > -1;
-
-        if (aRowIsSelected) {
+        if (jtblRegistrationList.getSelectedRow() > -1) {
             int selectedRow = jtblRegistrationList.getSelectedRow();
             String valueOfFirstRowFirstColumn = jtblRegistrationList.getValueAt(selectedRow, 0).toString();
             int registrationId = Integer.parseInt(valueOfFirstRowFirstColumn);
-            UpdateRegistrationDetailsGUI detailsGUI = new UpdateRegistrationDetailsGUI(registrationId);
+            UpdateRegistration detailsGUI = new UpdateRegistration(registrationId);
             detailsGUI.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Please select a row.");
@@ -372,22 +368,10 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jbtnViewRegistrationDetailsActionPerformed
 
     private void jtblRegistrationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblRegistrationListMouseClicked
-        if (evt.getClickCount() == 2) {
-            int selectedRow = jtblRegistrationList.getSelectedRow();
-            String valueOfFirstRowFirstColumn = jtblRegistrationList.getValueAt(selectedRow, 0).toString();
-            int registrationId = Integer.parseInt(valueOfFirstRowFirstColumn);
-            UpdateRegistrationDetailsGUI detailsGUI = new UpdateRegistrationDetailsGUI(registrationId);
-            detailsGUI.setLocationRelativeTo(null);
-            detailsGUI.setVisible(true);
-        }
+        
     }//GEN-LAST:event_jtblRegistrationListMouseClicked
 
     private void jtblRegistrationListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtblRegistrationListKeyPressed
-        if (jtblRegistrationList.getSelectedRow() > -1) {
-
-        } else {
-            JOptionPane.showMessageDialog(null, "Please select a row.");
-        }
     }//GEN-LAST:event_jtblRegistrationListKeyPressed
 
     private void jtfSearchStudentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfSearchStudentsActionPerformed
@@ -396,31 +380,21 @@ public class EnrollmentPanel extends javax.swing.JPanel {
 
     public static void loadAllStudentsToJTable(){
         int currentSchoolYearFrom = SchoolYearDaoImpl.getCurrentSchoolYearFrom();
-        int aSchoolYearId = SCHOOLYEAR_DAO_IMPL.getId(currentSchoolYearFrom);
+        int aSchoolYearId = schoolYearDaoImpl.getId(currentSchoolYearFrom);
         SchoolYear schoolYear = new SchoolYear();
         schoolYear.setSchoolYearId(aSchoolYearId);
 
-        jtblStudentsList.setModel(STUDENT_GUI_UTIL.getAllStudents(jtblStudentsList));
+        jtblStudentsList.setModel(studentML.getAllStudents(jtblStudentsList));
     }
     
     private void loadActiveStudentsToJTable(){
-        DefaultTableModel dtm = STUDENT_GUI_UTIL.getAllActiveStudentsOfCurrentSchoolYear(jtblStudentsList);
+        DefaultTableModel dtm = studentML.getAllActiveStudentsOfCurrentSchoolYear(jtblStudentsList);
             jtblStudentsList.setModel(dtm);
-    }
-    
-    private static String getGradeLevelValue(int aGradeLevel){
-        String gl="";
-        if(aGradeLevel == 0){
-            gl = "Kindergarten";
-        }else{
-            gl = "Grade "+aGradeLevel;
-        }
-        return gl;
     }
     
     private void jtfSearchStudentsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfSearchStudentsKeyPressed
         if(!jtfSearchStudents.getText().isEmpty() && evt.getKeyCode() == KeyEvent.VK_ENTER){
-            DefaultTableModel dtm = STUDENT_GUI_UTIL.getAllStudentByKeyword(jtblStudentsList, jtfSearchStudents.getText());
+            DefaultTableModel dtm = studentML.getAllStudentByKeyword(jtblStudentsList, jtfSearchStudents.getText());
             jtblStudentsList.setModel(dtm);
         }else if(jtfSearchStudents.getText().isEmpty()){
             loadAllStudentsToJTable();
@@ -428,38 +402,19 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jtfSearchStudentsKeyPressed
 
     private void jcmbStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbStatusItemStateChanged
-        boolean notStatus = jcmbStatus.getSelectedIndex() == -1;
-        boolean status = jcmbStatus.getSelectedIndex() > -1;
-        boolean inactive = jcmbStatus.getSelectedItem().toString().equals("Inactive");
-        boolean active = jcmbStatus.getSelectedItem().toString().equals("Active");
-
-        if(status && active ){
-            DefaultTableModel tableModel = STUDENT_GUI_UTIL.getAllActiveStudentsOfCurrentSchoolYear(jtblStudentsList);
-            jtblStudentsList.setModel(tableModel);
-        }else if(status && inactive){
-            DefaultTableModel tableModel = STUDENT_GUI_UTIL.getAllInactiveStudents(jtblStudentsList);
-            jtblStudentsList.setModel(tableModel);
-        }
+       
     }//GEN-LAST:event_jcmbStatusItemStateChanged
 
     private void jtblStudentsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblStudentsListMouseClicked
-        int mySelectedRow = jtblStudentsList.getSelectedRow();
-        Object objectStudentId = jtblStudentsList.getValueAt(mySelectedRow, 0);
-        int aStudentId = Integer.parseInt(objectStudentId.toString() );
-        if(evt.getClickCount() == 2){
-            StudentInformationJDialog enrollGui = new StudentInformationJDialog(aStudentId);
-            enrollGui.setLocationRelativeTo(null);
-            enrollGui.pack();
-            enrollGui.setVisible(true);
-        }
+        
     }//GEN-LAST:event_jtblStudentsListMouseClicked
 
     private void jbtnCloseEnrollmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCloseEnrollmentActionPerformed
-        navigation.exitEnrollment(this);
+        navigationDaoImpl.exitEnrollment(this);
     }//GEN-LAST:event_jbtnCloseEnrollmentActionPerformed
 
     private void jbtnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCloseActionPerformed
-        navigation.exitEnrollment(this);
+        navigationDaoImpl.exitEnrollment(this);
     }//GEN-LAST:event_jbtnCloseActionPerformed
 
     private void jbtnViewDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnViewDetailsActionPerformed
@@ -468,7 +423,7 @@ public class EnrollmentPanel extends javax.swing.JPanel {
             int mySelectedRow = jtblStudentsList.getSelectedRow();
             Object objectStudentId = jtblStudentsList.getValueAt(mySelectedRow, 0);
             int myStudentId = Integer.parseInt(objectStudentId.toString());
-            StudentInformationJDialog enrollGui = new StudentInformationJDialog(myStudentId);
+            JdlgStudentInfo enrollGui = new JdlgStudentInfo(myStudentId);
             enrollGui.setLocationRelativeTo(null);
             enrollGui.pack();
             enrollGui.setVisible(true);
@@ -476,58 +431,12 @@ public class EnrollmentPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please Select A Record To Pull Up.");
         }
     }//GEN-LAST:event_jbtnViewDetailsActionPerformed
-
-    
-    class MyStudentJTableActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            System.out.println("Selected: " + e.getActionCommand());
-            JMenuItem selectedMenuItem = (JMenuItem)e.getSource();
-            
-            if (selectedMenuItem == menuItemCopyStudentId) {
-                int row = jtblStudentsList.getSelectedRow();
-                int col = 0;
-            
-//                JOptionPane.showMessageDialog(null,"Row: "+row+"\nColumn: "+col);
-                StringSelection stringSelection = new StringSelection(String.valueOf(jtblStudentsList
-                        .getModel().getValueAt(row, col)));
-                Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clpbrd.setContents(stringSelection, null); //copies the value to clipboard
-            }
-            else if(selectedMenuItem == menuItemCopyRegistrationId){
-                int row = jtblStudentsList.getSelectedRow();
-                int col = 1;
-            
-//                JOptionPane.showMessageDialog(null,"Row: "+row+"\nColumn: "+col);
-                StringSelection stringSelection = new StringSelection(String.valueOf(jtblStudentsList
-                        .getModel().getValueAt(row, col)));
-                Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clpbrd.setContents(stringSelection, null); //copies the value to clipboard
-            }
-            else if(selectedMenuItem == menuItemCopyLastName){
-                int row = jtblStudentsList.getSelectedRow();
-                int col = 3;
-            
-//                JOptionPane.showMessageDialog(null,"Row: "+row+"\nColumn: "+col);
-                StringSelection stringSelection = new StringSelection(String.valueOf(jtblStudentsList
-                        .getModel().getValueAt(row, col)));
-                Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clpbrd.setContents(stringSelection, null); //copies the value to clipboard
-            }
-        }
-    }
     
     private void jtblStudentsListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblStudentsListMousePressed
-        jtblStudentsList.setComponentPopupMenu(popupMenu);
-        // selects the row at which point the mouse is clicked
-        Point point = evt.getPoint();
-        int currentRow = jtblStudentsList.rowAtPoint(point);
-        jtblStudentsList.setRowSelectionInterval(currentRow, currentRow);
     }//GEN-LAST:event_jtblStudentsListMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -541,6 +450,7 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jcmbStatus;
     private javax.swing.JLabel jlblSearch;
     private javax.swing.JLabel jlblSearch1;
+    private javax.swing.JLabel jlblStatus;
     private javax.swing.JPanel jpnlRegistered;
     private javax.swing.JPanel jpnlStudents;
     private javax.swing.JPanel jpnlStudentsControl;

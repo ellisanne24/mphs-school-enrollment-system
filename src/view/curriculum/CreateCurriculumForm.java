@@ -47,8 +47,6 @@ public class CreateCurriculumForm extends javax.swing.JPanel {
         jcmbSchoolYearYearFrom.setSelectedIndex(-1);
         jcmbSchoolYearYearTo.setModel(syu.getAllSchoolYearEnd());
         jcmbSchoolYearYearTo.setSelectedIndex(-1);
-        
-        
     }
 
     @SuppressWarnings("unchecked")
@@ -418,7 +416,7 @@ public class CreateCurriculumForm extends javax.swing.JPanel {
         if (evt.getSource().equals(subjectsListJtbl)) {
             if (evt.getClickCount() == 2) {
                 JTableUtil jtm = new JTableUtil();
-                jtm.copyTableData(subjectsListJtbl, curriculumSubjectsJtbl);
+//                jtm.copyTableData(subjectsListJtbl, curriculumSubjectsJtbl);
             }
         }
     }//GEN-LAST:event_subjectsListJtblMouseClicked

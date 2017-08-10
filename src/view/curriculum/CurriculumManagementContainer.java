@@ -615,6 +615,11 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("New");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
@@ -783,13 +788,15 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
                     curriculum.setCurriculumId(curriculum.getCurriculumId());
 
                     //Setter call from Subject
-                    subject.setSubjectTitle((String) curriculumSubjectsJtbl.getValueAt(i, 1));
+                    subject.setSubjectCode((String) curriculumSubjectsJtbl.getValueAt(i, 0));
 
                     subject.setSubjectHours((Double) curriculumSubjectsJtbl.getValueAt(i, 2));
 
                     //Setter call from Subject & Method call from SubjectDaoImpl
                     subject.setSubjectId(sdi.getSubjectId(subject));
-
+                    
+                    System.out.println(subject.getSubjectId());
+                    
                     //Method call from CurriculumDAOImpl
                     cdi.createCurriculumSubjects(curriculum, subject);
                 }
@@ -844,6 +851,10 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
     private void tblCreatedCurriculumMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCreatedCurriculumMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tblCreatedCurriculumMouseClicked
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     public static JComboBox getCbGradeLevel() {
         return cbGradeLevel;

@@ -1195,11 +1195,34 @@ public class FeesSetting extends javax.swing.JPanel {
     }//GEN-LAST:event_jbtnSaveDiscountCreateActionPerformed
 
     private void jbtnUpdateDiscountInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnUpdateDiscountInfoActionPerformed
-        String discountName = jtfDiscountNameCreate.getText();
-        int percentage = Integer.parseInt(jsprPercentOfDiscountCreate.getValue().toString());
-        String description = jtaDiscountDescriptionCreate.getText();
-
-
+        DiscountDaoImpl discountDaoImpl = new DiscountDaoImpl();
+        String discountName = jtfDiscountNameUpdate.getText();
+        int percentage = Integer.parseInt(jsprPercentOfDiscountUpdate.getValue().toString());
+        String description = jtaDiscountDescriptionUpdate.getText();
+        System.out.println("Discount Name : "+ discountName);
+        System.out.println("Percentage : "+ percentage);
+        System.out.println("Description : "+description);
+        System.out.println("Discount Id : "+discountDaoImpl.getId(discountName));
+        
+        Discount discount = new Discount();
+        discount.setDiscountName(discountName);
+        discount.setPercentOfDiscount(percentage);
+        discount.setDescription(description);
+        discount.setId(discountDaoImpl.getId(discountName));
+        
+        System.out.println("Discount Id: "+discountDaoImpl.getId(discountName));
+        
+        int choice = JOptionPane.showConfirmDialog(null, "Update discount settings?");
+        if (choice == JOptionPane.YES_OPTION) {
+            boolean isUpdated = discountDaoImpl.update(discount);
+            if (isUpdated) {
+                JOptionPane.showMessageDialog(null, "Successfully updated.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to update.");
+            }
+        }
+        
+        
     }//GEN-LAST:event_jbtnUpdateDiscountInfoActionPerformed
 
     private void jlstDiscountsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jlstDiscountsListValueChanged

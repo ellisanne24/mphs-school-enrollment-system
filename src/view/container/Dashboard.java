@@ -1,5 +1,6 @@
 package view.container;
 
+import controller.recordgenerator.DisplayRecordGeneratorController;
 import daoimpl.PermissionDaoImpl;
 import view.enrollment.EnrollmentPanel;
 import view.user.AllUsersRecord;
@@ -19,6 +20,7 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import model.permission.dashboardpermission.DashboardPermission;
@@ -71,16 +73,31 @@ public class Dashboard extends javax.swing.JFrame{
     private boolean hasSettingsAccess;
     
     private final User user;
+    public static int userId ; //inspect if not necessary
     
     public Dashboard(User user) {
         initComponents();
         this.user = user;
+        userId = user.getId();
+        setUILookAndFeel();
         guiManager.prepareImageBackgrounds();
         guiManager.setGUIComponentProperties();
         initDashboardPermissions();
         initializeThreads();
         setUserInfo();
-        System.out.println("Tab Count: "+jtpTopTabbedPane.getTabCount());
+        initializeControllers();
+    }
+    
+    private void setUILookAndFeel(){
+        try{
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    private void initializeControllers(){
+        jlblRoleLabel.addMouseListener(new DisplayRecordGeneratorController());
     }
     
     private void initializeThreads(){
@@ -370,7 +387,11 @@ public class Dashboard extends javax.swing.JFrame{
     setTitle("Enrollment System");
     setBounds(new java.awt.Rectangle(0, 0, 0, 0));
     setMinimumSize(new java.awt.Dimension(800, 600));
-    setUndecorated(true);
+    addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            formKeyPressed(evt);
+        }
+    });
     getContentPane().setLayout(new java.awt.GridBagLayout());
 
     jspTopMost.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -1309,6 +1330,10 @@ public class Dashboard extends javax.swing.JFrame{
         ea.setLocationRelativeTo(null);
         ea.setVisible(true);
     }//GEN-LAST:event_jlblChangePasswordMouseClicked
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        
+    }//GEN-LAST:event_formKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
