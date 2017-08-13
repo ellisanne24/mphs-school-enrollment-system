@@ -7,7 +7,9 @@ package component_model_loader;
 
 import daoimpl.GradeDaoImpl;
 import daoimpl.SubjectDaoImpl;
+import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
+import model.faculty.Faculty;
 import model.grade.Grade;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
@@ -433,4 +435,111 @@ public class GradeML
         
         return data;
     }
+    
+    public DefaultListModel getAllStudentByAdviserSectionId(Faculty aFaculty, SchoolYear aSchoolYear)
+    {
+        Object[] obj = gdi.getAllStudentByAdviserSectionId(aFaculty, aSchoolYear).toArray();
+        DefaultListModel model = new DefaultListModel();
+        for(Object o : obj)
+        {
+            Grade grade = (Grade) o;
+            
+            model.addElement("("+grade.student.getStudentId()+") " + grade.student.getFirstName() + " " + grade.student.getMiddleName() + ". " + grade.student.getLastName());
+        }
+        
+        return model;
+    }
+    
+    public DefaultTableModel getStudentGradeByFacultyStudentId(Faculty aFaculty, Student aStudent)
+    {
+        Object[] obj = gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).toArray();
+        Object[] columnSubjectId = new Object [gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()];
+        Object[] columnSubjectTitle = new Object [gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()];
+        Object[] columnGrade1st = new Object [gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()];
+        Object[] columnGrade2nd = new Object [gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()];
+        Object[] columnGrade3rd = new Object [gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()];
+        Object[] columnGrade4th = new Object [gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()];
+        Object[] columnGradeFinal = new Object [gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()];
+        Object[][] data = new Object[gdi.getStudentGradeByFacultyStudentId(aFaculty, aStudent).size()][7];
+        
+        int counterSubjectId = 0;
+        int counterSubjectTitle = 0;
+        int counterGrade1st = 0;
+        int counterGrade2nd = 0;
+        int counterGrade3rd = 0;
+        int counterGrade4th = 0;
+        int counterGradeFinal = 0;
+        
+        int counterOne = 0;
+        int counterTwo = 0;
+        int counterThree = 0;
+        int counterFour = 0;
+        int counterFive = 0;
+        int counterSix = 0;
+        int counterSeven = 0;
+        
+        for(Object o : obj)
+        {
+            Grade grade = (Grade)o;
+            
+            columnSubjectId[counterSubjectId++] = grade.subject.getSubjectId();
+            columnSubjectTitle[counterSubjectTitle++] = grade.subject.getSubjectTitle();
+            columnGrade1st[counterGrade1st++] = grade.getFirstQtr();
+            columnGrade2nd[counterGrade2nd++] = grade.getSecondQtr();
+            columnGrade3rd[counterGrade3rd++] = grade.getThirdQtr();
+            columnGrade4th[counterGrade4th++] = grade.getFourthQtr();
+            columnGradeFinal[counterGradeFinal++] = grade.getFinalGrade();
+        }
+        
+        for(int row = 0; row < data.length; row++)
+        {
+            for(int column = 0; column < data[row].length; column++)
+            {
+                switch(column)
+                {
+                    case 0:
+                        data[row][column] = columnSubjectId[counterOne++];
+                        break;
+                    case 1:
+                        data[row][column] = columnSubjectTitle[counterTwo++];
+                        break;
+                    case 2:
+                        data[row][column] = columnGrade1st[counterThree++];
+                        break;
+                    case 3:
+                        data[row][column] = columnGrade2nd[counterFour++];
+                        break;
+                    case 4:
+                        data[row][column] = columnGrade3rd[counterFive++];
+                        break;
+                    case 5:
+                        data[row][column] = columnGrade4th[counterSix++];
+                        break;
+                    case 6:
+                        data[row][column] = columnGradeFinal[counterSeven++];
+                        break;
+                }
+            }
+        }
+        
+        DefaultTableModel model = new DefaultTableModel(data, 
+                new Object[]{"Id", "Grading Period", "1st Grading", "2nd Grading", "3rd Grading", "4th Grading", "Final Rating"})
+        {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                //Note that the data/cell address is constant,
+                //no matter where the cell appears onscreen.
+                if (col == 1 || col == 6) {
+                    return false;
+                } else {
+                    return true;
+                }
+
+            }
+        };
+        
+        return model;
+    }
+    
+    
 }

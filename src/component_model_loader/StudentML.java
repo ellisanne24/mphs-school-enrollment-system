@@ -95,7 +95,7 @@ public class StudentML {
                 s.isActive() == true ? "Active" : "Inactive",
                 s.getIsGraduated() == true ? "Yes" : "No",
                 s.getAdmission().getGradeLevel() == 0 ? "Kindergarten" : "Grade " + s.getAdmission().getGradeLevel(),
-                s.getCurrentGradeLevel().getLevel() == 0 ? "Kindergarten" : "Grade" + s.getCurrentGradeLevel().getLevel()
+                s.getCurrentGradeLevel().getLevel() == 0 ? "Kindergarten" : "Grade "+s.getCurrentGradeLevel().getLevel()
             };
             tableModel.addRow(rowData);
         }

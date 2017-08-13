@@ -1,31 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.grades;
 
+import constants.DashboardMenuItem;
+import controller.navigation.UINavigationExit;
+import controller.printer.PrintController;
 import java.awt.GridBagConstraints;
 import utility.component.JInternalFrameUtil;
-import view.container.Dashboard;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
 public class GradesRecord extends javax.swing.JPanel {
-
-
-
-    /**
-     * Creates new form GradesRecord
-     */
     public GradesRecord( ) {
         initComponents();
-       
+        initializeControllers();
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
-        
-        jpnlContent.add(new view.grades.GradingGui(),getLayoutConstraint());
+        jpnlContent.add(new GradingGui(),getLayoutConstraint());
+    }
+    
+    private void initializeControllers(){
+        jmiExit.addActionListener(new UINavigationExit(this, DashboardMenuItem.GRADINGSYSTEM));
+//        jmiPrint.addActionListener(new PrintController(jPanel1)); replace JPanel with the panel containing what you want to print
     }
 
     @SuppressWarnings("unchecked")
@@ -33,74 +28,78 @@ public class GradesRecord extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel3 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jInternalFrame1 = new javax.swing.JInternalFrame();
+        jpnlContent = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jpnlContent = new javax.swing.JPanel();
+        jmiPrint = new javax.swing.JMenuItem();
+        jmiExit = new javax.swing.JMenuItem();
 
         setLayout(new java.awt.GridBagLayout());
 
-        jPanel3.setLayout(new java.awt.GridBagLayout());
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jInternalFrame1.setVisible(true);
         jInternalFrame1.getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        jpnlContent.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jInternalFrame1.getContentPane().add(jpnlContent, gridBagConstraints);
+
         jMenu1.setText("File");
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("New Record");
+        jMenuItem1.setText("New");
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setText("Edit Selected");
+        jMenuItem2.setText("Edit");
         jMenu1.add(jMenuItem2);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setText("Save");
         jMenu1.add(jMenuItem3);
 
-        jMenuItem4.setText("Exit");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem4);
+        jmiPrint.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        jmiPrint.setText("Print");
+        jMenu1.add(jmiPrint);
+
+        jmiExit.setText("Exit");
+        jMenu1.add(jmiExit);
 
         jMenuBar1.add(jMenu1);
 
         jInternalFrame1.setJMenuBar(jMenuBar1);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel3.add(jInternalFrame1, gridBagConstraints);
-
-        jpnlContent.setBorder(javax.swing.BorderFactory.createTitledBorder("Grade Content Here"));
-        jpnlContent.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel3.add(jpnlContent, gridBagConstraints);
+        jPanel2.add(jInternalFrame1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        jPanel1.add(jPanel2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(jPanel3, gridBagConstraints);
+        add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private GridBagConstraints getLayoutConstraint(){
@@ -114,10 +113,6 @@ public class GradesRecord extends javax.swing.JPanel {
         return gc;
     }
     
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        Dashboard.jtpTopTabbedPane.remove(this);
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JInternalFrame jInternalFrame1;
@@ -126,8 +121,10 @@ public class GradesRecord extends javax.swing.JPanel {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JMenuItem jmiExit;
+    private javax.swing.JMenuItem jmiPrint;
     private javax.swing.JPanel jpnlContent;
     // End of variables declaration//GEN-END:variables
 }

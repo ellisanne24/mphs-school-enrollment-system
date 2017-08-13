@@ -80,9 +80,10 @@ public class Dashboard extends javax.swing.JFrame{
         this.user = user;
         userId = user.getId();
         setUILookAndFeel();
+        initDashboardPermissions();
         guiManager.prepareImageBackgrounds();
         guiManager.setGUIComponentProperties();
-        initDashboardPermissions();
+        
         initializeThreads();
         setUserInfo();
         initializeControllers();
@@ -125,19 +126,19 @@ public class Dashboard extends javax.swing.JFrame{
     private void initDashboardPermissions(){
         PermissionDaoImpl pdi = new PermissionDaoImpl();
         DashboardPermission dbp = pdi.getDashBoardPermissionByRoleId(user.getRole().getId());
-        System.out.println("Role Id: "+user.getRole().getId());
+//        System.out.println("Role Id: "+user.getRole().getId());
         hasAccountsAccess = dbp.hasAccountsAccess();
-        System.out.println("hasAccountAccess: "+hasAccountsAccess);
+//        System.out.println("hasAccountAccess: "+hasAccountsAccess);
         hasEnrollmentAccess = dbp.hasEnrollmentAccess();
-        System.out.println("hasEnrollmentAccess: "+hasEnrollmentAccess);
+//        System.out.println("hasEnrollmentAccess: "+hasEnrollmentAccess);
         hasGradesAccess = dbp.hasGradeAccess();
-        System.out.println("hasGradesAccess: "+hasGradesAccess);
+//        System.out.println("hasGradesAccess: "+hasGradesAccess);
         hasPaymentAccess = dbp.hasPaymentAccess();
-        System.out.println("hasPaymentAccess: "+hasPaymentAccess);
+//        System.out.println("hasPaymentAccess: "+hasPaymentAccess);
         hasRegistrationAccess = dbp.hasRegistrationAccess();
-        System.out.println("hasRegistrationAccess: "+hasRegistrationAccess);
+//        System.out.println("hasRegistrationAccess: "+hasRegistrationAccess);
         hasSettingsAccess = dbp.hasSettingsAccess();
-        System.out.println("hasSettingsAccess: "+hasSettingsAccess);
+//        System.out.println("hasSettingsAccess: "+hasSettingsAccess);
     }
 
     public static int getREGISTRATION_INSTANCE() {
@@ -661,7 +662,7 @@ public class Dashboard extends javax.swing.JFrame{
 
     jlblGrades.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
     jlblGrades.setForeground(new java.awt.Color(255, 255, 255));
-    jlblGrades.setText("Grades");
+    jlblGrades.setText("Grading System");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
@@ -727,7 +728,7 @@ public class Dashboard extends javax.swing.JFrame{
 
     jlblAccounts.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
     jlblAccounts.setForeground(new java.awt.Color(255, 255, 255));
-    jlblAccounts.setText("Accounts");
+    jlblAccounts.setText("User Accounts");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
@@ -1069,15 +1070,28 @@ public class Dashboard extends javax.swing.JFrame{
         }
 
         private void prepareImageBackgrounds() {
+            String registrationImgPath = hasRegistrationAccess==true? 
+                    ("assets/registrationNoText.jpg"):("assets/registrationNoTextLocked.jpg");
+            String enrollmentImgPath = hasEnrollmentAccess==true? 
+                    ("assets/enrollmentNoText.jpg"):("assets/enrollmentNoTextLocked.jpg");
+            String gradesImgPath = hasGradesAccess==true? 
+                    ("assets/gradesNoText.jpg"):("assets/gradesNoTextLocked.jpg");
+            String settingsImgPath = hasSettingsAccess==true? 
+                    ("assets/managementNoText.jpg"):("assets/managementNoTextLocked.jpg");
+            String accountsImgPath = hasAccountsAccess==true? 
+                    ("assets/accountsNoText.jpg"):("assets/accountsNoTextLocked.jpg");
+            String paymentsImgPath = hasPaymentAccess==true? 
+                    ("assets/paymentsNotext.jpg"):("assets/paymentsNotextLocked.jpg");
+            
             imageHeader = new ImageUtil().getRenderedImageForJPanel("assets/headerNoText.jpg", jpnlHeader);
             imageSchoolLogo = new ImageUtil().getRenderedImageForJPanel("assets/LaunchPadBg.jpg", jpnlLaunchPad);
             imageReports = new ImageUtil().getRenderedImageForJPanel("assets/reportsNoText.jpg", jpnlReportsButton);
-            imageRegistration = new ImageUtil().getRenderedImageForJPanel("assets/registrationNoText.jpg", jpnlRegistrationButton);
-            imageEnrollment = new ImageUtil().getRenderedImageForJPanel("assets/enrollmentNoText.jpg", jpnlEnrollmentButton);
-            imageGrades = new ImageUtil().getRenderedImageForJPanel("assets/gradesNoText.jpg", jpnlGradesButton);
-            imageManagement = new ImageUtil().getRenderedImageForJPanel("assets/managementNoText.jpg", jpnlManagementButton);
-            imageAccounts = new ImageUtil().getRenderedImageForJPanel("assets/accountsNoText.jpg", jpnlAccountsButton);
-            imagePayments = new ImageUtil().getRenderedImageForJPanel("assets/paymentsNotext.jpg", jpnlPaymentButton);
+            imageRegistration = new ImageUtil().getRenderedImageForJPanel(registrationImgPath, jpnlRegistrationButton);
+            imageEnrollment = new ImageUtil().getRenderedImageForJPanel(enrollmentImgPath, jpnlEnrollmentButton);
+            imageGrades = new ImageUtil().getRenderedImageForJPanel(gradesImgPath, jpnlGradesButton);
+            imageManagement = new ImageUtil().getRenderedImageForJPanel(settingsImgPath, jpnlManagementButton);
+            imageAccounts = new ImageUtil().getRenderedImageForJPanel(accountsImgPath, jpnlAccountsButton);
+            imagePayments = new ImageUtil().getRenderedImageForJPanel(paymentsImgPath, jpnlPaymentButton);
             imageCalendar = new ImageUtil().getRenderedImageForJPanel("assets/calendarNoText.jpg", jpnlCalendar);
             imageUser = new ImageUtil().getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlUserImage);
             imageIconHome = new ImageUtil().getResourceAsImageIcon("/assets/home.png", 20, 20);

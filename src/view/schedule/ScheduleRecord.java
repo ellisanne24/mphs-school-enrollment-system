@@ -152,6 +152,7 @@ public class ScheduleRecord extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtblSchedule.setRowHeight(30);
         jtblSchedule.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblSchedule);
 

@@ -58,7 +58,7 @@ public class Receipt extends javax.swing.JDialog {
     }
     
     private void initializeControllers(){
-        jmiPrintReceipt.addActionListener(new PrintReceipt(this));
+        jmiPrintReceipt.addActionListener(new PrintReceipt(jpnlReceiptContainer));
     }
 
     private void setFormDetails() {
@@ -111,7 +111,7 @@ public class Receipt extends javax.swing.JDialog {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
+        jpnlReceiptContainer = new javax.swing.JPanel();
         jpnlHeader = new javax.swing.JPanel();
         jpnlLogo = new javax.swing.JPanel(){
             public void paintComponent(Graphics g){
@@ -122,7 +122,7 @@ public class Receipt extends javax.swing.JDialog {
                 g2d.setComposite(AlphaComposite.getInstance(
                     AlphaComposite.SRC_OVER, 0.8f));
             g2d.drawImage(schoolLogo, 0, 0, getWidth(), getHeight(), null);
-            jPanel1.repaint();
+            jpnlReceiptContainer.repaint();
         }
     };
     jPanel10 = new javax.swing.JPanel();
@@ -172,9 +172,9 @@ public class Receipt extends javax.swing.JDialog {
     setMinimumSize(new java.awt.Dimension(650, 650));
     getContentPane().setLayout(new java.awt.GridBagLayout());
 
-    jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-    jPanel1.setPreferredSize(new java.awt.Dimension(650, 750));
-    jPanel1.setLayout(new java.awt.GridBagLayout());
+    jpnlReceiptContainer.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlReceiptContainer.setPreferredSize(new java.awt.Dimension(650, 750));
+    jpnlReceiptContainer.setLayout(new java.awt.GridBagLayout());
 
     jpnlHeader.setBackground(new java.awt.Color(255, 255, 255));
     jpnlHeader.setForeground(new java.awt.Color(51, 51, 51));
@@ -255,7 +255,7 @@ public class Receipt extends javax.swing.JDialog {
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.5;
-    jPanel1.add(jpnlHeader, gridBagConstraints);
+    jpnlReceiptContainer.add(jpnlHeader, gridBagConstraints);
 
     jPanel2.setBackground(new java.awt.Color(255, 255, 255));
     jPanel2.setLayout(new java.awt.GridBagLayout());
@@ -270,7 +270,7 @@ public class Receipt extends javax.swing.JDialog {
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jPanel1.add(jPanel2, gridBagConstraints);
+    jpnlReceiptContainer.add(jPanel2, gridBagConstraints);
 
     jpnlContainer.setBackground(new java.awt.Color(255, 255, 255));
     jpnlContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
@@ -581,7 +581,7 @@ public class Receipt extends javax.swing.JDialog {
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-    jPanel1.add(jpnlContainer, gridBagConstraints);
+    jpnlReceiptContainer.add(jpnlContainer, gridBagConstraints);
 
     jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -595,13 +595,13 @@ public class Receipt extends javax.swing.JDialog {
     gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jPanel1.add(jPanel3, gridBagConstraints);
+    jpnlReceiptContainer.add(jPanel3, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
-    getContentPane().add(jPanel1, gridBagConstraints);
+    getContentPane().add(jpnlReceiptContainer, gridBagConstraints);
 
     jMenu1.setText("File");
 
@@ -634,7 +634,6 @@ public class Receipt extends javax.swing.JDialog {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -663,6 +662,7 @@ public class Receipt extends javax.swing.JDialog {
     private javax.swing.JPanel jpnlHeader;
     private javax.swing.JPanel jpnlLogo;
     private javax.swing.JPanel jpnlPaymentInformation;
+    private javax.swing.JPanel jpnlReceiptContainer;
     private javax.swing.JPanel jpnlRegistrationNo;
     private javax.swing.JPanel jpnlStudentInformation;
     private javax.swing.JTable jtblParticulars;

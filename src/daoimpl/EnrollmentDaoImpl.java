@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package daoimpl;
 
 import constants.EnrollmentTable;
@@ -15,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import model.enrollment.Enrollment;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
@@ -45,7 +40,7 @@ public class EnrollmentDaoImpl implements IEnrollment{
             }
                     
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         
         return isClosed;
@@ -79,7 +74,7 @@ public class EnrollmentDaoImpl implements IEnrollment{
             isSuccessfullyEnrolled = true;
         } catch (SQLException e) {
             isSuccessfullyEnrolled = false;
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            e.printStackTrace();
         }
         return isSuccessfullyEnrolled;
     }
@@ -109,7 +104,7 @@ public class EnrollmentDaoImpl implements IEnrollment{
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
         return list;
     }
@@ -139,7 +134,7 @@ public class EnrollmentDaoImpl implements IEnrollment{
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return enrollment;
     }

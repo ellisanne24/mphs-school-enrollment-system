@@ -5,6 +5,8 @@ import component_model_loader.UserML;
 import controller.user.DisplayCreateUser;
 import controller.user.DisplayEditUser;
 import utility.component.JInternalFrameUtil;
+import view.container.Dashboard;
+import static view.container.Dashboard.jtpTopTabbedPane;
 
 public class AllUsersRecord extends javax.swing.JPanel {
     public AllUsersRecord() {
@@ -38,6 +40,7 @@ public class AllUsersRecord extends javax.swing.JPanel {
         jmiNewUser = new javax.swing.JMenuItem();
         jmiEditUser = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -112,6 +115,14 @@ public class AllUsersRecord extends javax.swing.JPanel {
         jMenuItem3.setText("Save");
         jMenu1.add(jMenuItem3);
 
+        jMenuItem1.setText("Close");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
         jMenuBar1.add(jMenu1);
 
         jInternalFrame1.setJMenuBar(jMenuBar1);
@@ -131,11 +142,17 @@ public class AllUsersRecord extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        jtpTopTabbedPane.remove(this);
+        Dashboard.setACCOUNTS_INSTANCE(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

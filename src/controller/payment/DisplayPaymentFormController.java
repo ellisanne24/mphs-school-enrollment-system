@@ -147,7 +147,7 @@ public class DisplayPaymentFormController implements ActionListener {
             paymentTerm.setName(jcmbPaymentTerm.getSelectedItem().toString().trim());
             paymentTerm.setId(ptdi.getId(jcmbPaymentTerm.getSelectedItem().toString().trim()));
 
-            System.out.println("Test :"+jcmbPaymentTerm.getSelectedItem().toString().trim());
+            System.out.println("Payment Term :"+jcmbPaymentTerm.getSelectedItem().toString().trim());
             
             tuitionFee.setExists(false);
             tuitionFee.setDiscount(discount);

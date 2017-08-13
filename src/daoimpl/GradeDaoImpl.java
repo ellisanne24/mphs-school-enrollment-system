@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.faculty.Faculty;
 import model.student.Student;
 import model.grade.Grade;
 import model.gradelevel.GradeLevel;
@@ -293,6 +294,94 @@ public class GradeDaoImpl implements IGrade{
         }
         
         return gwa;
+    }
+
+    @Override
+    public void deleteGradeByStudentId(Grade grade) 
+    {
+        String sql = "call deleteGradeByStudentId(?)";
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, grade.student.getStudentId());
+            
+            cs.executeUpdate();
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at deleteGradeByStudentId "+ex);
+        }
+    }
+
+    @Override
+    public List<Grade> getAllStudentByAdviserSectionId(Faculty aFaculty, SchoolYear aSchoolYear) 
+    {
+        String sql = "call getAllStudentByAdviserSectionId(?,?)";
+        List <Grade> list = new ArrayList();
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aFaculty.getFacultyID());
+            cs.setInt(2, aSchoolYear.getSchoolYearId());
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Grade grade = new Grade();
+                    
+                    grade.student.setStudentId(rs.getInt(1));
+                    grade.student.setFirstName(rs.getString(2));
+                    grade.student.setMiddleName(rs.getString(3));
+                    grade.student.setLastName(rs.getString(4));
+                    
+                    list.add(grade);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getAllStudentByAdviserSectionId "+ex);
+        }
+        
+        return list;
+    }
+
+    @Override
+    public List<Grade> getStudentGradeByFacultyStudentId(Faculty aFaculty, Student aStudent) 
+    {
+        String sql = "call getStudentSubjectByFacultyStudentId(?,?)";
+        List<Grade> list = new ArrayList();
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aFaculty.getFacultyID());
+            cs.setInt(2, aStudent.getStudentId());
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Grade grade = new Grade();
+                    
+                    grade.subject.setSubjectId(rs.getInt(1));
+                    grade.subject.setSubjectTitle(rs.getString(2));
+                    grade.setFirsQtr(rs.getDouble(3));
+                    grade.setSecondQtr(rs.getDouble(4));
+                    grade.setThirdQtr(rs.getDouble(5));
+                    grade.setFourthQtr(rs.getDouble(6));
+                    grade.setFinalGrade(rs.getDouble(7));
+                    
+                    list.add(grade);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getStudentGradeByFacultyStudentId "+ex);
+        }
+        return list;
     }
 
    

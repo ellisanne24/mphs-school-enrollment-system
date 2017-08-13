@@ -6,6 +6,7 @@
 package dao;
 
 import java.util.List;
+import model.faculty.Faculty;
 import model.student.Student;
 import model.grade.Grade;
 import model.gradelevel.GradeLevel;
@@ -27,4 +28,7 @@ public interface IGrade {
     List <Grade> getAllSummerStudent();
     List <Grade> getAllStudentGradeByStudentId(Student aStudent);
     double getAllStudentGradeGWAByStudentId(Student aStudent);
+    void deleteGradeByStudentId(Grade grade);
+    List <Grade> getAllStudentByAdviserSectionId(Faculty aFaculty, SchoolYear aSchoolYear);
+    List <Grade> getStudentGradeByFacultyStudentId(Faculty aFaculty, Student aStudent);
 }

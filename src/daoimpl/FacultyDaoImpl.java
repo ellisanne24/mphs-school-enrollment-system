@@ -10,43 +10,13 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import model.faculty.Faculty;
-import model.role.Role;
 import model.section.Section;
 import model.specialization.Specialization;
-import model.user.User;
 import utility.database.DBType;
 import utility.database.DBUtil;
 
 public class FacultyDaoImpl implements IFaculty {
 
-    @Override
-    public List<Section> getAllFacultySectionByFacultyId(User user) 
-    {
-        String sql = "call getAllFacultySectionByFacultyId(?)";
-
-        List<Section> list = new ArrayList();
-
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(sql)) {
-
-            cs.setInt(1, user.getId());
-
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
-                    Section section = new Section();
-
-                    section.setSectionName(rs.getString("sectionName"));
-
-                    list.add(section);
-                }
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error at getAllFacultySectionByFacultyId" + ex);
-        }
-
-        return list;
-    }
-    
     @Override
     public int getIdByName(String lastName, String firstName, String middleName) {
         Integer facultyId = null;
@@ -127,58 +97,45 @@ public class FacultyDaoImpl implements IFaculty {
         boolean isAdded = false;
         String SQl_addFaculty = "{CALL addFaculty(?,?,?,?,?,?,?)}";
         String SQL_addFacultyAndSpecialization = "{CALL addFacultyandSpecialization(?,?)}";
-        String SQL_addFacultyAsUser = "{CALL addUser(?,?,?,?,?,?)}";
+        String SQL_addUser = "{CALL addUser(?,?,?,?,?,?)}";
         String SQL_addUserRole = "{CALL addUserRole(?,?)}";
-        
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement csA = con.prepareCall(SQl_addFaculty);
-                    CallableStatement csB = con.prepareCall(SQL_addFacultyAndSpecialization);
-                    CallableStatement csC = con.prepareCall(SQL_addFacultyAsUser);
-                    CallableStatement csD = con.prepareCall(SQL_addUserRole);) {
-                csA.setString(1, faculty.getFirstName());
-                csA.setString(2, faculty.getLastName());
-                csA.setString(3, faculty.getMiddleName());
-                csA.setString(4, faculty.getEmailAddress());
-                csA.setString(5, faculty.getContact());
-                csA.setString(6, faculty.getDegree());
-                csA.registerOutParameter(7, Types.INTEGER);
-                csA.executeUpdate();
-                int facultyId = csA.getInt(7);
+            try (CallableStatement cs1 = con.prepareCall(SQl_addFaculty);
+                    CallableStatement cs2 = con.prepareCall(SQL_addFacultyAndSpecialization);
+                    CallableStatement cs3 = con.prepareCall(SQL_addUser);
+                    CallableStatement cs4 = con.prepareCall(SQL_addUserRole);) {
+                cs1.setString(1, faculty.getFirstName());
+                cs1.setString(2, faculty.getLastName());
+                cs1.setString(3, faculty.getMiddleName());
+                cs1.setString(4, faculty.getEmailAddress());
+                cs1.setString(5, faculty.getContact());
+                cs1.setString(6, faculty.getDegree());
+                cs1.registerOutParameter(7, Types.INTEGER);
+                cs1.executeUpdate();
+                int facultyId = cs1.getInt(7);
 
                 List<Specialization> specializations = faculty.getSpecializations();
                 for (Specialization s : specializations) {
-                    csB.setInt(1, facultyId);
-                    csB.setInt(2, s.getId());
-                    csB.executeUpdate();
+                    cs2.setInt(1, facultyId);
+                    cs2.setInt(2, s.getId());
+                    cs2.executeUpdate();
                 }
                 
-                RoleDaoImpl roleDaoImpl = new RoleDaoImpl();
-                int roleId = roleDaoImpl.getId("Faculty");
-                Role role = new Role();
-                role.setId(roleId);
+                cs3.setString(1,faculty.getFirstName().toLowerCase());
+                cs3.setString(2,"facultymember");
+                cs3.setString(3,faculty.getLastName().toLowerCase());
+                cs3.setString(4,faculty.getFirstName().toLowerCase());
+                cs3.setString(5,faculty.getMiddleName().toLowerCase());
+                cs3.registerOutParameter(6, Types.INTEGER);
+                cs3.executeUpdate();
+                int userId = cs3.getInt(6);
                 
-                UserDaoImpl userDaoImpl = new UserDaoImpl();
-                User user = new User();
-                user.setRole(role);
-                user.setFirstName(faculty.getFirstName());
-                user.setMiddleName(faculty.getMiddleName());
-                user.setLastName(faculty.getLastName());
-                user.setPassword("facultymember");
-                user.setUsername(faculty.getFirstName().toLowerCase()+""+faculty.getLastName().toLowerCase());
-                
-                csC.setString(1, user.getUsername());
-                csC.setString(2, user.getPassword());
-                csC.setString(3, user.getLastName().trim());
-                csC.setString(4, user.getFirstName().trim());
-                csC.setString(5, user.getMiddleName().trim());
-                csC.registerOutParameter(6, Types.INTEGER);
-                csC.executeUpdate();
-                int userId = csC.getInt(6);
-                
-                csD.setInt(1, userId);
-                csD.setInt(2, user.getRole().getId());
-                csD.executeUpdate();
+                RoleDaoImpl rdi = new RoleDaoImpl();
+                int roleId = rdi.getId("Faculty");
+                cs4.setInt(1, userId);
+                cs4.setInt(2, roleId);
+                cs4.executeUpdate();
                 
                 con.commit();
                 isAdded = true;
@@ -220,16 +177,19 @@ public class FacultyDaoImpl implements IFaculty {
         return isUpdated;
     }
     
-//    @Override
-    public List<Section> getAllFacultySectionByFacultyId() 
+    @Override
+    public List<Section> getAllFacultySectionByFacultyId(Faculty aFaculty) 
     {
-        String sql = "call getAllFacultySectionByFacultyId()";
+        String sql = "call getAllFacultySectionByFacultyId(?)";
         
         List <Section> list = new ArrayList();
         
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql))
         {
+            
+            cs.setInt(1, aFaculty.getFacultyID());
+            
             try(ResultSet rs = cs.executeQuery())
             {
                 while(rs.next())
@@ -300,10 +260,45 @@ public class FacultyDaoImpl implements IFaculty {
         }
         catch(SQLException ex)
         {
-            System.out.println("Error at getAllFaculty "+ex);
+            System.err.println("Error at getAllFaculty "+ex);
         }
         return id;
     }
+
+    @Override
+    public List<Faculty> getAllFacultyByAdviserId(Faculty aFaculty) 
+    {
+        List <Faculty> list = new ArrayList();
+        String sql = "call getAllFacultyByAdviserId(?)";
+        
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aFaculty.getFacultyID());
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Faculty faculty = new Faculty();
+                    
+                    faculty.setFacultyID(rs.getInt(1));
+                    faculty.setFullName(rs.getString(2) + " " +rs.getString(3) + ". " + rs.getString(4));
+                    
+                    list.add(faculty);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getAllFacultyByAdviserId "+ex);
+        }
+        
+        return list;
+    }
+
+    
+
     
     
 

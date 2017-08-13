@@ -11,7 +11,8 @@ public interface IFaculty {
     boolean add(Faculty aFaculty);
     boolean update(Faculty aFaculty);
     List<Faculty> getById(int aFacultyID); 
-    List<Section> getAllFacultySectionByFacultyId(User user);
+    List<Section> getAllFacultySectionByFacultyId(Faculty aFaculty);
     List<Faculty> getAllFaculty();
     int getFacultyId(Faculty aFaculty);
+    List<Faculty> getAllFacultyByAdviserId(Faculty aFaculty);
 }

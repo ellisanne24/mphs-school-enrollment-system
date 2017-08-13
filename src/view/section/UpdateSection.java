@@ -463,22 +463,22 @@ public class UpdateSection extends javax.swing.JFrame {
                     section.setSectionName(tfSectionName.getText().trim());
                     //Setter call from SchoolYear
                     schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
-                    
-                    for(int y = 0; y < tblStudentSectionList.getRowCount(); y++)
-                    {
+                    sdi.deleteStudentSectionById(section);
+                    for (int y = 0; y < tblStudentSectionList.getRowCount(); y++) {
                         student.setStudentId((int) tblStudentSectionList.getValueAt(y, 0));
+                        sdi.createStudentSection(section, student, schoolYear);
+
                     }
                     System.out.println(section.getSectionId());
                     
                     System.out.println(faculty.getFacultyID());
             
                     //Method call
-                    sdi.deleteStudentSectionById(section);
-                    sdi.createStudentSection(section, student, schoolYear);
+                    
                     sdi.updateSectionName(section);
                     sdi.updateSectionSettingsById(schoolYear, gradeLevel, session, faculty, section);
                     
-                    JOptionPane.showMessageDialog(null, "Successful updated!");
+                    JOptionPane.showMessageDialog(null, "Successfully updated!");
                 }
                 
                 

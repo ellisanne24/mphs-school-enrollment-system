@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view.container;
 
 import view.fees.FeesSetting;
@@ -19,8 +15,9 @@ import daoimpl.CredentialDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import component_model_loader.CredentialML;
+import constants.DashboardMenuItem;
 import utility.component.JPanelUtil;
-import component_model_loader.NavigationImpl;
+import controller.navigation.UINavigationExit;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.event.KeyEvent;
@@ -31,13 +28,13 @@ import javax.swing.JOptionPane;
 import model.credential.Credential;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
+import utility.component.JInternalFrameUtil;
 import view.penalty.PenaltySettings;
 import view.section.SectionManagementContainer;
 
 
 public class SettingsPanel extends javax.swing.JPanel {
 
-    private final NavigationImpl navigation = new NavigationImpl();
     private final CredentialDaoImpl credentialDaoImpl = new CredentialDaoImpl();
     private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
     private final SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
@@ -45,6 +42,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     
     public SettingsPanel() {
         initComponents();
+        initializeComponents();
+        initializeControllers();
         setCredentialsJList();
         addFacultyPanel();
         addPaymentSchedule();
@@ -56,6 +55,10 @@ public class SettingsPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jPanel4 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jInternalFrame1 = new javax.swing.JInternalFrame();
+        jpnlContent = new javax.swing.JPanel();
         jtpManagementTabbedPane = new javax.swing.JTabbedPane();
         jspCurriculumManagement = new javax.swing.JScrollPane();
         jpnlCurriculumManagement = new javax.swing.JPanel();
@@ -112,11 +115,21 @@ public class SettingsPanel extends javax.swing.JPanel {
         jpnlPayment = new javax.swing.JPanel();
         jpnlPenalty = new javax.swing.JPanel();
         jpnlLanSettings = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jbtnExitManagement = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jmnFile = new javax.swing.JMenu();
+        jmiExit = new javax.swing.JMenuItem();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         setLayout(new java.awt.GridBagLayout());
+
+        jPanel4.setLayout(new java.awt.GridBagLayout());
+
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        jInternalFrame1.setVisible(true);
+        jInternalFrame1.getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        jpnlContent.setLayout(new java.awt.GridBagLayout());
 
         jtpManagementTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jtpManagementTabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -483,28 +496,50 @@ public class SettingsPanel extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(jtpManagementTabbedPane, gridBagConstraints);
-
-        jPanel1.setLayout(new java.awt.GridBagLayout());
-
-        jbtnExitManagement.setText("Exit");
-        jbtnExitManagement.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnExitManagementActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel1.add(jbtnExitManagement, gridBagConstraints);
+        jpnlContent.add(jtpManagementTabbedPane, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(jPanel1, gridBagConstraints);
+        jInternalFrame1.getContentPane().add(jpnlContent, gridBagConstraints);
+
+        jmnFile.setText("File");
+
+        jmiExit.setText("Exit");
+        jmnFile.add(jmiExit);
+
+        jMenuBar1.add(jmnFile);
+
+        jInternalFrame1.setJMenuBar(jMenuBar1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        jPanel1.add(jInternalFrame1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        jPanel4.add(jPanel1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        add(jPanel4, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void initializeComponents(){
+        JInternalFrameUtil.removeTitleBar(jInternalFrame1);
+    }
+    private void initializeControllers(){
+        jmiExit.addActionListener(new UINavigationExit(this,DashboardMenuItem.SETTINGS));
+    }
+    
     private void addFacultyPanel(){
         NewFaculty nf = new NewFaculty();
         GridBagConstraints gc = new GridBagConstraints();
@@ -567,10 +602,6 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_jtpManagementTabbedPaneMouseClicked
-
-    private void jbtnExitManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExitManagementActionPerformed
-        navigation.exitManagement(this);
-    }//GEN-LAST:event_jbtnExitManagementActionPerformed
 
     private void jcbKindergartenCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbKindergartenCtgItemStateChanged
         if(jcbKindergartenCtg.isSelected()){
@@ -727,14 +758,16 @@ public class SettingsPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtnClear;
     private javax.swing.JButton jbtnCreateCredential;
     private javax.swing.JButton jbtnDeleteCredential;
-    private javax.swing.JButton jbtnExitManagement;
     private javax.swing.JCheckBox jcbElementaryCtg;
     private javax.swing.JCheckBox jcbGradeEight;
     private javax.swing.JCheckBox jcbGradeFive;
@@ -754,6 +787,9 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jlblGradeLevel;
     private javax.swing.JLabel jlblYearCreated;
     private javax.swing.JList<String> jlstCredentialNamesList;
+    private javax.swing.JMenuItem jmiExit;
+    private javax.swing.JMenu jmnFile;
+    private javax.swing.JPanel jpnlContent;
     private javax.swing.JPanel jpnlCreateCredential;
     private javax.swing.JPanel jpnlCreateCredentialControls;
     private javax.swing.JPanel jpnlCreateNewCredentialDescription;

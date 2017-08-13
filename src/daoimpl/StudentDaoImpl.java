@@ -2,7 +2,6 @@ package daoimpl;
 
 import constants.AdmissionTable;
 import constants.RegistrationTable;
-import constants.SchoolYearTable;
 import constants.StudentTable;
 import utility.database.DBType;
 import utility.database.DBUtil;
@@ -23,6 +22,16 @@ import model.student.Student;
 import dao.IStudent;
 
 public class StudentDaoImpl implements IStudent {
+
+    private final AdmissionDaoImpl admissionDaoImpl;
+    private final RegistrationDaoImpl registrationDaoImpl;
+    private final GradeLevelDaoImpl gradeLevelDaoImpl;
+
+    public StudentDaoImpl() {
+        admissionDaoImpl = new AdmissionDaoImpl();
+        registrationDaoImpl = new RegistrationDaoImpl();
+        gradeLevelDaoImpl = new GradeLevelDaoImpl();
+    }
 
     @Override
     public boolean exists(int aStudentId, int aSchoolYearId) {
@@ -131,10 +140,13 @@ public class StudentDaoImpl implements IStudent {
 
                     csB.setInt(1, student.getStudentId());
                     ResultSet rsB = csB.executeQuery();
-                    rsB.next();
-                    int level = rsB.getInt("grade_level");
                     CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
-                    currentGradeLevel.setLevel(level);
+                    if (rsB.next()) {
+                        int level = rsB.getInt("grade_level");
+                        currentGradeLevel.setLevel(level);
+                    }
+                    int admissionLevel = (gradeLevelDaoImpl.getById(rsA.getInt("gradelevel_id"))).getLevel();
+                    admission.setGradeLevel(admissionLevel);
 
                     student.setAdmission(admission);
                     student.setRegistration(registration);
@@ -481,12 +493,15 @@ public class StudentDaoImpl implements IStudent {
                     student.setDateGraduated(rs.getDate("date_graduated"));
                     student.setIsActive(rs.getBoolean("aStudentStatus"));
 
+                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
                     csB.setInt(1, student.getStudentId());
                     ResultSet rsB = csB.executeQuery();
-                    rsB.next();
-                    int level = rsB.getInt("grade_level");
-                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
-                    currentGradeLevel.setLevel(level);
+                    if (rsB.next()) {
+                        int level = rsB.getInt("grade_level");
+                        currentGradeLevel.setLevel(level);
+                    }
+                    int admissionLevel = (gradeLevelDaoImpl.getById(rs.getInt("gradelevel_id"))).getLevel();
+                    admission.setGradeLevel(admissionLevel);
 
                     student.setAdmission(admission);
                     student.setRegistration(registration);
@@ -562,12 +577,15 @@ public class StudentDaoImpl implements IStudent {
                     student.setDateGraduated(rsA.getDate(StudentTable.DATEGRADUATED));
                     student.setIsActive(rsA.getBoolean("aStudentStatus"));
 
+                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
                     csB.setInt(1, student.getStudentId());
                     ResultSet rsB = csB.executeQuery();
-                    rsB.next();
-                    int level = rsB.getInt("grade_level");
-                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
-                    currentGradeLevel.setLevel(level);
+                    if (rsB.next()) {
+                        int level = rsB.getInt("grade_level");
+                        currentGradeLevel.setLevel(level);
+                    }
+                    int admissionLevel = (gradeLevelDaoImpl.getById(rsA.getInt("gradelevel_id"))).getLevel();
+                    admission.setGradeLevel(admissionLevel);
 
                     student.setAdmission(admission);
                     student.setRegistration(registration);
@@ -652,12 +670,15 @@ public class StudentDaoImpl implements IStudent {
                     schoolYear.setYearFrom(rsA.getInt("last_gradelevel_enrolled_schoolyear_yearFrom")); //ALIAS field
                     schoolYear.setYearTo(rsA.getInt("last_gradelevel_enrolled_schoolyear_yearTo")); //ALIAS field
 
+                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
                     csB.setInt(1, student.getStudentId());
                     ResultSet rsB = csB.executeQuery();
-                    rsB.next();
-                    int level = rsB.getInt("grade_level");
-                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
-                    currentGradeLevel.setLevel(level);
+                    if (rsB.next()) {
+                        int level = rsB.getInt("grade_level");
+                        currentGradeLevel.setLevel(level);
+                    }
+                    int admissionLevel = (gradeLevelDaoImpl.getById(rsA.getInt("gradelevel_id"))).getLevel();
+                    admission.setGradeLevel(admissionLevel);
 
                     student.setAdmission(admission);
                     student.setRegistration(registration);
@@ -735,12 +756,15 @@ public class StudentDaoImpl implements IStudent {
                     student.setDateGraduated(rs.getDate(StudentTable.DATEGRADUATED));
                     student.setIsActive(rs.getBoolean(StudentTable.ISACTIVE));
 
+                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
                     csB.setInt(1, student.getStudentId());
                     ResultSet rsB = csB.executeQuery();
-                    rsB.next();
-                    int level = rsB.getInt("grade_level");
-                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
-                    currentGradeLevel.setLevel(level);
+                    if (rsB.next()) {
+                        int level = rsB.getInt("grade_level");
+                        currentGradeLevel.setLevel(level);
+                    }
+                    int admissionLevel = (gradeLevelDaoImpl.getById(rs.getInt("gradelevel_id"))).getLevel();
+                    admission.setGradeLevel(admissionLevel);
 
                     student.setCurrentGradeLevel(currentGradeLevel);
                     student.setAdmission(admission);
@@ -817,12 +841,15 @@ public class StudentDaoImpl implements IStudent {
                     student.setDateGraduated(rsA.getDate(StudentTable.DATEGRADUATED));
                     student.setIsActive(rsA.getBoolean(StudentTable.ISACTIVE));
 
+                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
                     csB.setInt(1, student.getStudentId());
                     ResultSet rsB = csB.executeQuery();
-                    rsB.next();
-                    int level = rsB.getInt("grade_level");
-                    CurrentGradeLevel currentGradeLevel = new CurrentGradeLevel();
-                    currentGradeLevel.setLevel(level);
+                    if (rsB.next()) {
+                        Integer level = rsB.getInt("grade_level");
+                        currentGradeLevel.setLevel(level);
+                    }
+                    int admissionLevel = (gradeLevelDaoImpl.getById(rsA.getInt("gradelevel_id"))).getLevel();
+                    admission.setGradeLevel(admissionLevel);
 
                     student.setCurrentGradeLevel(currentGradeLevel);
                     student.setAdmission(admission);

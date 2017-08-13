@@ -692,17 +692,16 @@ public class SectionManagementContainer extends javax.swing.JPanel {
     }//GEN-LAST:event_tblAssignMouseClicked
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        if(sectionTab.getSelectedIndex() == 0)
-        {
-            jtu.copyTableSectionData(tblAssign, tblAM, grade.getGwa());
-        }
-        else if(sectionTab.getSelectedIndex() == 1)
-        {
-            jtu.copyTableSectionData(tblAssign, tblPM, grade.getGwa());
-        }
-        else
-        {
-            jtu.copyTableSectionData(tblAssign, tblDefault, grade.getGwa());
+        switch (sectionTab.getSelectedIndex()) {
+            case 0:
+                jtu.copyTableSectionData(tblAssign, tblAM, grade.getGwa());
+                break;
+            case 1:
+                jtu.copyTableSectionData(tblAssign, tblPM, grade.getGwa());
+                break;
+            default:
+                jtu.copyTableSectionData(tblAssign, tblDefault, grade.getGwa());
+                break;
         }
 
     }//GEN-LAST:event_btnAddActionPerformed

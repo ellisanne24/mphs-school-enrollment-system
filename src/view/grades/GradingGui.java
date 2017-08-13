@@ -1,6 +1,9 @@
 
 package view.grades;
 
+import view.enrollment.Promoted;
+import view.enrollment.SummerClass;
+import view.enrollment.Promotion;
 import component_model_loader.FacultyML;
 import component_model_loader.GradeLevelML;
 import component_model_loader.GradeML;
@@ -15,15 +18,13 @@ import daoimpl.StudentDaoImpl;
 import daoimpl.SubjectDaoImpl;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
+import model.faculty.Faculty;
 import model.grade.Grade;
-import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import model.student.Student;
 import model.subject.Subject;
-import model.user.User;
 import view.container.Dashboard;
-import view.login.LoginForm;
 
 
 public class GradingGui extends javax.swing.JPanel{
@@ -47,20 +48,18 @@ public class GradingGui extends javax.swing.JPanel{
    Grade grade = new Grade();
    Section section = new Section();
    SchoolYear schoolYear = new SchoolYear();
-   User user = new User();
+   Faculty faculty = new Faculty();
    
    String selected;
    String result;
    
    public GradingGui() {
         initComponents();
-        jTabbedPane1.add(new Promotion(), "Promotion");
-        jTabbedPane1.add(new Promoted(), "Promoted");
-        jTabbedPane1.add(new SummerClass(), "Summer Class");
+        jTabbedPane1.add(new Adviser(), "My Advisory");
         jTabbedPane1.add(new TOR(), "TOR");
         
-        user.setId(Dashboard.userId);
-        cbSectionList.setModel(fml.getAllFacultySectionByFacultyId(user));
+        faculty.setFacultyID(Dashboard.userId);
+        cbSectionList.setModel(fml.getAllFacultySectionByFacultyId(faculty));
         jtblGrades.getColumnModel().getColumn(0).setMinWidth(0);
         jtblGrades.getColumnModel().getColumn(0).setMaxWidth(0);
         
@@ -351,6 +350,7 @@ public class GradingGui extends javax.swing.JPanel{
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         add(jTabbedPane1, gridBagConstraints);
+        jTabbedPane1.getAccessibleContext().setAccessibleName("My Students");
     }// </editor-fold>//GEN-END:initComponents
 
     private void jtblGradesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblGradesMouseClicked
@@ -359,54 +359,58 @@ public class GradingGui extends javax.swing.JPanel{
     }//GEN-LAST:event_jtblGradesMouseClicked
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveActionPerformed
-        selected = jlistStudent.getSelectedValue();
-        result = selected.substring(selected.indexOf("(") + 1, selected.indexOf(")"));
-        
-        //Setter call
-        for(int row = 0; row < jtblGrades.getModel().getRowCount(); row++)
+        if(jlistStudent.getSelectedIndex() >= 0)
         {
-            for(int column = 2; column < jtblGrades.getModel().getColumnCount() - 1; column++)
+            selected = jlistStudent.getSelectedValue();
+            result = selected.substring(selected.indexOf("(") + 1, selected.indexOf(")"));
+            
+            grade.student.setStudentId(Integer.parseInt(result));
+            
+            gdi.deleteGradeByStudentId(grade);
+            
+            //Setter call
+            for(int row = 0; row < jtblGrades.getModel().getRowCount(); row++)
             {
-                grade.subject.setSubjectId(Integer.parseInt(String.valueOf(jtblGrades.getValueAt(row, 0))));
-                grade.setFinalGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, 6))));
-                grade.setGwa(Double.parseDouble(tfGenAve.getText()));
-                grade.setGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column))));
-                grade.schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+                for(int column = 2; column < jtblGrades.getModel().getColumnCount() - 1; column++)
+                {
+                    grade.subject.setSubjectId(Integer.parseInt(String.valueOf(jtblGrades.getValueAt(row, 0))));
+                    grade.setFinalGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, 6))));
+                    grade.setGwa(Double.parseDouble(tfGenAve.getText()));
+                    grade.setGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column))));
+                    grade.schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
                 
-                if(column == 2)
-                {
-                    grade.setPeriodId(7000);
-                }
-                else if(column == 3)
-                {
-                    grade.setPeriodId(7001);
-                }
-                else if(column == 4)
-                {
-                    grade.setPeriodId(7002);
-                }
-                else
-                {
-                    grade.setPeriodId(7003);
-                }
+                    if(column == 2)
+                    {
+                        grade.setPeriodId(7000);
+                    }
+                    else if(column == 3)
+                    {
+                        grade.setPeriodId(7001);
+                    }
+                    else if(column == 4)
+                    {
+                        grade.setPeriodId(7002);
+                    }
+                    else
+                    {
+                        grade.setPeriodId(7003);
+                    }
                 
-                grade.student.setStudentId(Integer.parseInt(result));
+                    
+                    
+                    
+                    gdi.createStudentGrade(grade);
 
-                gdi.createStudentGrade(grade);
-
-//                if(row == jtbl_grades.getModel().getRowCount() - 1)
-//                {
-//                    JOptionPane.showMessageDialog(null, "Successful!");
-//                }
+                }
             }
-            
-            
+        
+            JOptionPane.showMessageDialog(null, "Successful!");
+        
         }
-        
-        JOptionPane.showMessageDialog(null, "Successful!");
-        
-        
-        
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Please select student");
+        }
     }//GEN-LAST:event_SaveActionPerformed
 
     private void jtblGradesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtblGradesKeyPressed

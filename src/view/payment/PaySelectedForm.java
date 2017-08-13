@@ -5,6 +5,7 @@ import daoimpl.EnrollmentDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.StudentDaoImpl;
 import daoimpl.TuitionFeeDaoImpl;
+import java.awt.Dimension;
 import utility.input.InputUtil;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
@@ -147,7 +148,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
         jPanel1.add(jtfAmountEntered, gridBagConstraints);
 
         jlblChange.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jlblChange.setText("Change :");
+        jlblChange.setText("Balance");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -156,7 +157,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
         jPanel1.add(jlblChange, gridBagConstraints);
 
         jlblChangeText.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jlblChangeText.setText("ChangeText");
+        jlblChangeText.setText("BalanceText");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -277,6 +278,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
                         } else {
                             tuitionFee.setPayment(payment);
                             addTuitionFees(tuitionFee);
+                            payTuitionFee(tuitionFee);
                         }
                         displayReceipt(student, payment);
                     }
@@ -296,7 +298,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Transaction complete.");
             this.dispose();
         } else {
-            JOptionPane.showMessageDialog(null, "Error encountered while processing payment.");
+            JOptionPane.showMessageDialog(null, "Payment of Tuition Failed.\nPlease contact administrator.");
         }
         return isPaid;
     }
@@ -311,10 +313,12 @@ public class PaySelectedForm extends javax.swing.JDialog {
         OfficialReceipt officialReceipt = new OfficialReceipt();
         officialReceipt.setPayment(p);
         officialReceipt.setStudent(s);
+        
         Receipt receiptForm = new Receipt(officialReceipt);
-        receiptForm.setVisible(true);
+        receiptForm.setPreferredSize(new Dimension(640,640));
         receiptForm.pack();
         receiptForm.setLocationRelativeTo(null);
+        receiptForm.setVisible(true);
     }
     
     private boolean enrollStudent(Student s) {
@@ -342,7 +346,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Tuition Fees added.");
             enrollStudent(student);
         } else {
-            JOptionPane.showMessageDialog(null, "Error encountered while processing payment.");
+            JOptionPane.showMessageDialog(null, "Adding of Tuition Fees failed.");
         }
         return isAdded;
     }

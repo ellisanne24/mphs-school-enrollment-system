@@ -8,6 +8,7 @@ package component_model_loader;
 import daoimpl.FacultyDaoImpl;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
 import model.section.Section;
@@ -45,9 +46,9 @@ public class FacultyML {
     }
     
     // To be edited. Supply facultyId who's currently logged in.
-    public DefaultComboBoxModel getAllFacultySectionByFacultyId(User user) {
+    public DefaultComboBoxModel getAllFacultySectionByFacultyId(Faculty aFaculty) {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        Object[] obj = fdi.getAllFacultySectionByFacultyId(user).toArray();
+        Object[] obj = fdi.getAllFacultySectionByFacultyId(aFaculty).toArray();
         for (Object o : obj) {
             Section section = (Section) o;
             model.addElement(section.getSectionName());
@@ -82,6 +83,22 @@ public class FacultyML {
             Faculty faculty = (Faculty) o;
             
             model.addElement(faculty.getFirstName() + " " + faculty.getMiddleName() + ". " + faculty.getLastName());
+        }
+        
+        return model;
+    }
+    
+    public DefaultListModel getAllFacultyByAdviserId(Faculty aFaculty)
+    {
+        DefaultListModel model = new DefaultListModel();
+        
+        Object[] obj = fdi.getAllFacultyByAdviserId(aFaculty).toArray();
+        
+        for(Object o : obj)
+        {
+            Faculty faculty = (Faculty) o;
+            
+            model.addElement("("+faculty.getFacultyID()+")" + " " +faculty.getFullName());
         }
         
         return model;

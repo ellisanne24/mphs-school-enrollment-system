@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package daoimpl;
 
 import dao.ITuitionFee;
@@ -36,52 +32,55 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     public boolean add(TuitionFee tuitionFee) {
         boolean isAdded = true;
         PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
+        if(tuitionFee.getPayment() == null){
+            JOptionPane.showMessageDialog(null,"Null PaymentTerm");
+        }
         int paymentTermId = paymentTerm.getId();
 
         Discount discount = tuitionFee.getDiscount();
         int studentId = tuitionFee.getStudent().getStudentId();
         int schoolYearId = tuitionFee.getSchoolYear().getSchoolYearId();
 
-        String SQLa = "{CALL addBalanceBreakDownFee(?,?,?)}"; //add to balance_breakdown_fee master
-        String SQLb = "{CALL addTuitionFee(?,?,?)}"; 
-        String SQLc = "{CALL addStudentDiscount(?,?,?,?)}";
-        String SQLd = "{CALL addStudentPaymentTerm(?,?,?)}";
-        String SQLe = "{CALL addTransaction(?,?)}";
-        String SQLf = "{CALL payTuitionFee(?,?,?)}";
-        String SQLg = "{CALL addTransactionPayment(?,?)}";
+        String SQL_addBalanceBreakDownFee = "{CALL addBalanceBreakDownFee(?,?,?)}"; //add to balance_breakdown_fee master
+        String SQL_addTuitionFee = "{CALL addTuitionFee(?,?,?)}"; 
+        String SQL_addStudentDiscount = "{CALL addStudentDiscount(?,?,?,?)}";
+        String SQL_addStudentPaymentTerm = "{CALL addStudentPaymentTerm(?,?,?)}";
+        String SQL_addTransaction = "{CALL addTransaction(?,?)}";
+        String SQL_payTuitionFee = "{CALL payTuitionFee(?,?,?)}";
+        String SQL_addTransactionPayment = "{CALL addTransactionPayment(?,?)}";
 
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement csA = con.prepareCall(SQLa);
-                    CallableStatement csB = con.prepareCall(SQLb);
-                    CallableStatement csC = con.prepareCall(SQLc);
-                    CallableStatement csD = con.prepareCall(SQLd);) {
+            try (CallableStatement CS_addBalBreakDownFee = con.prepareCall(SQL_addBalanceBreakDownFee);
+                    CallableStatement CS_addTuitionFee = con.prepareCall(SQL_addTuitionFee);
+                    CallableStatement CS_addStudentDiscount = con.prepareCall(SQL_addStudentDiscount);
+                    CallableStatement CS_addStudentPaymentTerm = con.prepareCall(SQL_addStudentPaymentTerm);) {
                 
                 if (!tuitionFee.exists()) {
-                    for (BalanceBreakDownFee bbf : tuitionFee.getBalanceBreakDownFees()) {
-                        csA.setString(1, bbf.getDescription());
-                        csA.setDouble(2, bbf.getAmount());
-                        csA.registerOutParameter(3, Types.INTEGER);
-                        csA.executeUpdate(); // executes addBalanceBreakDownFee() sp
-                        int balanceBreakDownFeeId = csA.getInt(3);
+                    for (BalanceBreakDownFee breakDownFee : tuitionFee.getBalanceBreakDownFees()) {
+                        CS_addBalBreakDownFee.setString(1, breakDownFee.getDescription());
+                        CS_addBalBreakDownFee.setDouble(2, breakDownFee.getAmount());
+                        CS_addBalBreakDownFee.registerOutParameter(3, Types.INTEGER);
+                        CS_addBalBreakDownFee.executeUpdate(); // executes addBalanceBreakDownFee() sp
+                        int balanceBreakDownFeeId = CS_addBalBreakDownFee.getInt(3);
 
-                        csB.setInt(1, balanceBreakDownFeeId);
-                        csB.setInt(2, studentId);
-                        csB.setInt(3, schoolYearId);
-                        csB.executeUpdate();
+                        CS_addTuitionFee.setInt(1, balanceBreakDownFeeId);
+                        CS_addTuitionFee.setInt(2, studentId);
+                        CS_addTuitionFee.setInt(3, schoolYearId);
+                        CS_addTuitionFee.executeUpdate();
                     }
                     if (discount != null) {
-                        csC.setInt(1, studentId);
-                        csC.setInt(2, discount.getId());
-                        csC.setInt(3, schoolYearId);
-                        csC.setDouble(4,discount.getAmount());
-                        csC.executeUpdate();
+                        CS_addStudentDiscount.setInt(1, studentId);
+                        CS_addStudentDiscount.setInt(2, discount.getId());
+                        CS_addStudentDiscount.setInt(3, schoolYearId);
+                        CS_addStudentDiscount.setDouble(4,discount.getAmount());
+                        CS_addStudentDiscount.executeUpdate();
                     }
 
-                    csD.setInt(1, studentId);
-                    csD.setInt(2, paymentTermId);
-                    csD.setInt(3, schoolYearId);
-                    csD.executeUpdate();
+                    CS_addStudentPaymentTerm.setInt(1, studentId);
+                    CS_addStudentPaymentTerm.setInt(2, paymentTermId);
+                    CS_addStudentPaymentTerm.setInt(3, schoolYearId);
+                    CS_addStudentPaymentTerm.executeUpdate();
                 }
                 con.commit();
             } catch (SQLException e) {
@@ -216,30 +215,32 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     @Override
     public boolean pay(TuitionFee tuitionFee) {
         boolean isSuccessfullyPaid = false;
-        String SQLa = "{CALL addTransaction(?,?)}";
-        String SQLb = "{CALL payTuitionFee(?,?,?)}";
-        String SQLc = "{CALL addTransactionPayment(?,?)}";
+        String SQL_addTransaction = "{CALL addTransaction(?,?)}";
+        String SQL_payTuitionFee = "{CALL payTuitionFee(?,?,?)}";
+        String SQL_addTransactionPayment = "{CALL addTransactionPayment(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement csA = con.prepareCall(SQLa);
-                    CallableStatement csB = con.prepareCall(SQLb);
-                    CallableStatement csC = con.prepareCall(SQLc);) {
-                csA.setInt(1, tuitionFee.getStudent().getStudentId());
-                csA.registerOutParameter(2, Types.INTEGER);
-                csA.executeUpdate();
-                int aTransactionId = csA.getInt(2);
+            try (CallableStatement CS_AddTransaction = con.prepareCall(SQL_addTransaction);
+                    CallableStatement CS_PayTuitionFee = con.prepareCall(SQL_payTuitionFee);
+                    CallableStatement CS_AddTransactionPayment = con.prepareCall(SQL_addTransactionPayment);) {
+                CS_AddTransaction.setInt(1, tuitionFee.getStudent().getStudentId());
+                CS_AddTransaction.registerOutParameter(2, Types.INTEGER);
+                CS_AddTransaction.executeUpdate();
+                int transactionId = CS_AddTransaction.getInt(2);
                 
-                for(BalanceBreakDownFee b: tuitionFee.getPayment().getParticulars().getBalanceBreakDownFees()){
-
-                    csB.setInt(1, b.getId());
-                    csB.setDouble(2,tuitionFee.getPayment().getAmountTendered());
-                    csB.registerOutParameter(3, Types.INTEGER);
-                    csB.executeUpdate();
-                    int aPaymentId = csB.getInt(3);
+                List<BalanceBreakDownFee> breakDownFeeList = tuitionFee.getPayment().getParticulars().getBalanceBreakDownFees();
+                double amountTendered = tuitionFee.getPayment().getAmountTendered();
+                for(BalanceBreakDownFee breakDownFee: breakDownFeeList){
+                    System.out.println("BreakdownFeeId :"+breakDownFee.getId());
+                    CS_PayTuitionFee.setInt(1, breakDownFee.getId());
+                    CS_PayTuitionFee.setDouble(2,amountTendered);
+                    CS_PayTuitionFee.registerOutParameter(3, Types.INTEGER);
+                    CS_PayTuitionFee.executeUpdate();
+                    int paymentId = CS_PayTuitionFee.getInt(3);
                     
-                    csC.setInt(1, aTransactionId);
-                    csC.setInt(2, aPaymentId);
-                    csC.executeUpdate();
+                    CS_AddTransactionPayment.setInt(1, transactionId);
+                    CS_AddTransactionPayment.setInt(2, paymentId);
+                    CS_AddTransactionPayment.executeUpdate();
                 }
                 
                 con.commit();

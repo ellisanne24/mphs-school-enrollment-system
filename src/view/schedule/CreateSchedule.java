@@ -223,6 +223,7 @@ public class CreateSchedule extends javax.swing.JDialog {
             }
         ));
         jtblSchedule.setEnabled(false);
+        jtblSchedule.setRowHeight(30);
         jtblSchedule.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblSchedule);
 

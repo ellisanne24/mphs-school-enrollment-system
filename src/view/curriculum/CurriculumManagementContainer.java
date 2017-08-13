@@ -356,6 +356,7 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         jPanel13.add(jLabel10, gridBagConstraints);
 
+        cbGradeLevel.setEnabled(false);
         cbGradeLevel.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbGradeLevelItemStateChanged(evt);
@@ -662,6 +663,7 @@ public class CurriculumManagementContainer extends javax.swing.JPanel {
 
     private void jcmbGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbGradeLevelItemStateChanged
         if (jcmbGradeLevel.getSelectedIndex() != -1) {
+            cbGradeLevel.setSelectedItem(jcmbGradeLevel.getSelectedItem());
             gradeLevel.setLevel((int) jcmbGradeLevel.getSelectedItem());
 
             sdi.getEachSubjectByGradeLevelForCurriculum(gradeLevel);
