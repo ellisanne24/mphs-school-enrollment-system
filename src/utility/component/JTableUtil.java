@@ -2,7 +2,6 @@ package utility.component;
 
 import java.awt.Component;
 import java.util.Arrays;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -12,14 +11,76 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 public class JTableUtil {
-    
-    
     public static void deleteAllRows(final DefaultTableModel model) {
         for (int i = model.getRowCount() - 1; i >= 0; i--) {
             model.removeRow(i);
         }
     }
 
+    public void sample(JTable aSourceJTable, JTable aDestinationTable, double gwa)
+    {
+        DefaultTableModel sectionDestinationModel = null;
+        DefaultTableModel sectionSourceModel = (DefaultTableModel) aSourceJTable.getModel();
+        
+        for(int x = 0; x < aSourceJTable.getRowCount(); x++)
+        {
+            Boolean isChecked = (Boolean) aSourceJTable.getValueAt(x, 3);
+            if(isChecked)
+            {
+                JOptionPane.showMessageDialog(null, "HAHA");
+//                sectionSourceModel.removeRow(x);
+//                    x--;
+//                if(Double.parseDouble(String.valueOf(aSourceJTable.getValueAt(aSourceJTable.getSelectedRow(), 2))) < gwa)
+//                {
+//                    Object[] options = {"Yes, please",
+//                                        "No!"};
+//                    int n = JOptionPane.showOptionDialog(null, aSourceJTable.getValueAt(aSourceJTable.getSelectedRow(), 1)+
+//                                        " doesn't meet requirements. Still add this student?",
+//                                        "Message",
+//                                        JOptionPane.YES_NO_OPTION,
+//                                        JOptionPane.INFORMATION_MESSAGE,
+//                                        null,     //do not use a custom Icon
+//                                        options,  //the titles of buttons
+//                                        options[1]); //default button title
+//        
+//                    if(n == JOptionPane.YES_OPTION)
+//                    {
+//                        sectionDestinationModel = (DefaultTableModel) aDestinationTable.getModel();
+//
+//                        Object[] rowData = new Object[aSourceJTable.getColumnCount()];
+//                        int selectedRowIndex = aSourceJTable.getSelectedRow();
+//                
+//                        for (int i = 0; i < aSourceJTable.getColumnCount(); i++) 
+//                        {
+//                            rowData[i] = aSourceJTable.getValueAt(selectedRowIndex, i);
+//                        }
+//
+//                        sectionDestinationModel.addRow(rowData);
+////                        aDestinationTable.setModel(sectionDestinationModel);
+////                        sectionSourceModel.removeRow(selectedRowIndex);
+//                    }
+//                }
+//                else
+//                {
+//                    sectionDestinationModel = (DefaultTableModel) aDestinationTable.getModel();
+//
+//                    Object[] rowData = new Object[aSourceJTable.getColumnCount()];
+//                    for (int i = 0; i < aSourceJTable.getColumnCount(); i++) 
+//                    {
+//                        rowData[i] = aSourceJTable.getValueAt(x, i);
+//                    }
+//                    sectionDestinationModel.addRow(rowData);
+//                    
+//                    sectionSourceModel.removeRow(x);
+//                    x--;
+//                }
+            }
+//            aDestinationTable.setModel(sectionDestinationModel);
+        }
+        
+        
+    }
+    
     public void copyTableSectionData(JTable aSourceJTable, JTable aDestinationTable, double gwa) {
         int selectedRow = aSourceJTable.getSelectedRow(); //selected row which has the data to be added
         int destinationRows = aDestinationTable.getRowCount();
@@ -64,8 +125,6 @@ public class JTableUtil {
                 aDestinationTable.setModel(sectionDestinationModel);
                 sectionSourceModel.removeRow(selectedRowIndex);
             }
-            
-            
         }
         
         else
@@ -116,15 +175,52 @@ public class JTableUtil {
     public void copyTableCurriculumData(JTable aSourceJTable, JTable aDestinationJTable)
     {
         int selectedRow = aSourceJTable.getSelectedRow(); //selected row which has the data to be added
-        int destinationRows = aDestinationJTable.getRowCount();
-        Object selected = aSourceJTable.getValueAt(selectedRow, 1);//get value at selected
-        Object[] destinationObj = new Object[destinationRows];
+        Object selectedSubjCode = aSourceJTable.getValueAt(selectedRow, 1);
+        int rows = aDestinationJTable.getRowCount();
+        Object[] curriculumSubjects = new Object[rows];
         
-        DefaultTableModel sectionDestinationModel = null;
-        DefaultTableModel sectionSourceModel = (DefaultTableModel) aSourceJTable.getModel();
+        DefaultTableModel aSourceModel = (DefaultTableModel) aSourceJTable.getModel();
+        DefaultTableModel aDestinationModel = (DefaultTableModel) aDestinationJTable.getModel();
 
-        for (int j = 0; j < destinationRows; j++) {
-            destinationObj[j] = aDestinationJTable.getValueAt(j, 1);
+        for (int j = 0; j < rows; j++) {
+            curriculumSubjects[j] = aDestinationJTable.getValueAt(j, 1);
+        }
+
+        if (Arrays.asList(curriculumSubjects).contains(selectedSubjCode)) {
+            JOptionPane.showMessageDialog(null, selectedSubjCode + " is already on the list.");
+        } else {
+            int counter = 0;
+
+            int selectedRowIndex = aSourceJTable.getSelectedRow();
+
+            if (aSourceJTable.getColumnCount() == 4) {
+                Object[] rowData = new Object[aSourceJTable.getColumnCount() + 1];
+                for (int i = 0; i < aSourceJTable.getColumnCount() + 1; i++) {
+
+                    if (i == 3) {
+                        rowData[i] = 1.00;
+                    } else {
+                        rowData[i] = aSourceJTable.getValueAt(selectedRowIndex, counter++);
+                    }
+                }
+
+                aDestinationModel.addRow(rowData);
+                aDestinationJTable.setModel(aDestinationModel);
+                aSourceModel.removeRow(selectedRowIndex);
+            } else {
+                Object[] rowData = new Object[aSourceJTable.getColumnCount()];
+                for (int i = 0; i < aSourceJTable.getColumnCount(); i++) {
+
+                    rowData[i] = aSourceJTable.getValueAt(selectedRowIndex, counter++);
+
+                }
+
+                aDestinationModel.addRow(rowData);
+                aDestinationJTable.setModel(aDestinationModel);
+                aSourceModel.removeRow(selectedRowIndex);
+
+            }
+
         }
     }
     

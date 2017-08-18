@@ -57,7 +57,10 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     CallableStatement CS_addStudentPaymentTerm = con.prepareCall(SQL_addStudentPaymentTerm);) {
                 
                 if (!tuitionFee.exists()) {
+                    System.out.println("Size: "+tuitionFee.getBalanceBreakDownFees().size());
                     for (BalanceBreakDownFee breakDownFee : tuitionFee.getBalanceBreakDownFees()) {
+                        System.out.println("Balance Breakdown Fee Description : "+breakDownFee.getDescription());
+                        System.out.println("Balance Breakdown Fee Amount : "+breakDownFee.getAmount());
                         CS_addBalBreakDownFee.setString(1, breakDownFee.getDescription());
                         CS_addBalBreakDownFee.setDouble(2, breakDownFee.getAmount());
                         CS_addBalBreakDownFee.registerOutParameter(3, Types.INTEGER);
@@ -154,7 +157,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 csC.setInt(2, schoolyearId);
                 try (ResultSet rsc = csC.executeQuery();) {
                     while (rsc.next()) {
-                        tuitionFee.setSum(rsc.getDouble("tuitionFeeSum"));
+                        tuitionFee.setTotalFees(rsc.getDouble("tuitionFeeSum"));
                     }
                 }
 

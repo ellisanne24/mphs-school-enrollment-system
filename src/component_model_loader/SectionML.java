@@ -472,12 +472,35 @@ public class SectionML {
                     case 2:
                         data[row][column] = columnGWA[counterThree++];
                         break;
+                    case 3:
+                        data[row][column] = new Boolean(false);
+                        break;
                 }
             }
         }
         
         DefaultTableModel model = new DefaultTableModel(data, column)
         {
+            
+            @Override
+            public Class getColumnClass(int c) {
+                switch (c) {
+                    case 0:
+                        return Number.class;
+                    case 1:
+                        return String.class;
+                    case 2:
+                        return Double.class;
+                    default:
+                        return Boolean.class;
+                }
+                
+                
+                //If column has null
+//                Object value = this.getValueAt(0,c);
+//                return (value == null ? Boolean.class:value.getClass());
+            }
+            
             @Override
             public boolean isCellEditable(int row, int col) {
                 //Note that the data/cell address is constant,
@@ -488,6 +511,7 @@ public class SectionML {
                     return true;
                 }
             }
+             
         };
         
         return model;

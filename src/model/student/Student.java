@@ -7,6 +7,7 @@ import model.admission.Admission;
 import model.gradelevel.GradeLevel;
 import model.gradelevel.CurrentGradeLevel;
 import model.gradelevel.PromotedGradeLevel;
+import model.paymentterm.PaymentTerm;
 import model.registration.Registration;
 import model.schoolyear.SchoolYear;
 
@@ -17,6 +18,7 @@ public class Student {
     private Registration registration;
     private Admission admission;
     private GradeLevel admissionGradeLevel;
+    private PaymentTerm paymentTerm;
     private PromotedGradeLevel promotedGradeLevel;
     private SchoolYear schoolYearEnrolled;
     private CurrentGradeLevel currentGradeLevel;
@@ -35,6 +37,14 @@ public class Student {
     private String middleName;
     public GradeLevel gradeLevel;
 
+    public PaymentTerm getPaymentTerm() {
+        return paymentTerm;
+    }
+
+    public void setPaymentTerm(PaymentTerm paymentTerm) {
+        this.paymentTerm = paymentTerm;
+    }
+    
     public boolean isNew() {
         return isNew;
     }

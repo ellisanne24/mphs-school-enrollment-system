@@ -18,6 +18,7 @@ import daoimpl.StudentDaoImpl;
 import daoimpl.SubjectDaoImpl;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
 import model.grade.Grade;
 import model.schoolyear.SchoolYear;
@@ -56,7 +57,7 @@ public class GradingGui extends javax.swing.JPanel{
    public GradingGui() {
         initComponents();
         jTabbedPane1.add(new Adviser(), "My Advisory");
-        jTabbedPane1.add(new TOR(), "TOR");
+//        jTabbedPane1.add(new TOR(), "TOR");
         
         faculty.setFacultyID(Dashboard.userId);
         cbSectionList.setModel(fml.getAllFacultySectionByFacultyId(faculty));
@@ -88,7 +89,7 @@ public class GradingGui extends javax.swing.JPanel{
         double finalGrade = 0;
         double grades = 0;
         double genAve = 0;
-        
+        int counter = 0;
         DecimalFormat df = new DecimalFormat("#.##");
         
         
@@ -98,23 +99,44 @@ public class GradingGui extends javax.swing.JPanel{
             {
                 for(int column = 2; column < jtblGrades.getColumnCount() - 1; column++)
                 {
-                    grades = Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column)));
-                    
+                    if(jtblGrades.getValueAt(row, column) != null)
+                    {
+                        grades = Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column)));
+                        counter++;
+                    }
+                    else
+                    {
+                        grades = 0.0;
+                    }
                     finalGrade += grades + 0.0;
                 }
-                jtblGrades.setValueAt(finalGrade / 4, row, 6);
+                
+                if(counter == 4)
+                {
+                    jtblGrades.setValueAt(finalGrade / 4, row, 6);
+                    
+                    //Collect all value that is not null at column 6
+                    if(jtblGrades.getValueAt(row, 6) != null)
+                    {
+                        genAve += Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, 6)));
+                    }
+                    
+                    //Set text to the last loop
+                    if(row == jtblGrades.getRowCount() - 1)
+                    {
+                        //Settext at tfGenAve
+                        tfGenAve.setText(df.format(genAve / jtblGrades.getRowCount()));
+                    }
+                    
+                }
                 //Revert to 0.0 after loop
                 finalGrade = 0.0;
-                
-                genAve += Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, 6)));
+                counter = 0;
             }
-            
-            //Settext at tfGenAve
-            tfGenAve.setText(df.format(genAve / jtblGrades.getRowCount()));
-            
         }
         
     }
+    
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -149,15 +171,12 @@ public class GradingGui extends javax.swing.JPanel{
 
         jPanel7.setLayout(new java.awt.GridBagLayout());
 
-        jPanel9.setBorder(null);
         jPanel9.setMaximumSize(new java.awt.Dimension(0, 0));
         jPanel9.setLayout(new java.awt.BorderLayout());
 
-        jPanel2.setBorder(null);
         jPanel2.setPreferredSize(new java.awt.Dimension(250, 554));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jPanel31.setBorder(null);
         jPanel31.setPreferredSize(new java.awt.Dimension(100, 218));
         jPanel31.setLayout(new java.awt.BorderLayout());
 
@@ -177,7 +196,6 @@ public class GradingGui extends javax.swing.JPanel{
 
         jPanel2.add(jPanel31, java.awt.BorderLayout.CENTER);
 
-        jPanel37.setBorder(null);
         jPanel37.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setText("Section:");
@@ -200,15 +218,12 @@ public class GradingGui extends javax.swing.JPanel{
 
         jPanel9.add(jPanel2, java.awt.BorderLayout.WEST);
 
-        jPanel3.setBorder(null);
         jPanel3.setPreferredSize(new java.awt.Dimension(751, 554));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        jPanel49.setBorder(null);
         jPanel49.setPreferredSize(new java.awt.Dimension(384, 544));
         jPanel49.setLayout(new java.awt.BorderLayout());
 
-        jPanel5.setBorder(null);
         jPanel5.setPreferredSize(new java.awt.Dimension(374, 50));
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
@@ -218,7 +233,6 @@ public class GradingGui extends javax.swing.JPanel{
 
         jPanel49.add(jPanel5, java.awt.BorderLayout.NORTH);
 
-        jPanel10.setBorder(null);
         jPanel10.setPreferredSize(new java.awt.Dimension(374, 384));
         jPanel10.setLayout(new java.awt.BorderLayout());
 
@@ -277,7 +291,6 @@ public class GradingGui extends javax.swing.JPanel{
 
         jPanel49.add(jPanel10, java.awt.BorderLayout.CENTER);
 
-        jPanel12.setBorder(null);
         jPanel12.setPreferredSize(new java.awt.Dimension(374, 50));
         jPanel12.setLayout(new java.awt.GridBagLayout());
 
@@ -306,7 +319,6 @@ public class GradingGui extends javax.swing.JPanel{
 
         jPanel9.add(jPanel3, java.awt.BorderLayout.CENTER);
 
-        jPanel17.setBorder(null);
         jPanel17.setPreferredSize(new java.awt.Dimension(751, 50));
         jPanel17.setLayout(new java.awt.GridBagLayout());
 
@@ -342,7 +354,7 @@ public class GradingGui extends javax.swing.JPanel{
         gridBagConstraints.weighty = 0.5;
         jPanel7.add(jPanel9, gridBagConstraints);
 
-        jTabbedPane1.addTab("New", jPanel7);
+        jTabbedPane1.addTab("My Students", jPanel7);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -368,39 +380,106 @@ public class GradingGui extends javax.swing.JPanel{
             
             gdi.deleteGradeByStudentId(grade);
             
+            
+            
             //Setter call
             for(int row = 0; row < jtblGrades.getModel().getRowCount(); row++)
             {
                 for(int column = 2; column < jtblGrades.getModel().getColumnCount() - 1; column++)
                 {
                     grade.subject.setSubjectId(Integer.parseInt(String.valueOf(jtblGrades.getValueAt(row, 0))));
-                    grade.setFinalGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, 6))));
-                    grade.setGwa(Double.parseDouble(tfGenAve.getText()));
-                    grade.setGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column))));
                     grade.schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
-                
+                    
+                    if(jtblGrades.getValueAt(row, 6) == null)
+                    {
+                        grade.setFinalGrade(0.0);
+                    }
+                    else
+                    {
+                        grade.setFinalGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, 6))));
+                    }
+                    
                     if(column == 2)
                     {
                         grade.setPeriodId(7000);
+                        
+                        if(jtblGrades.getValueAt(row, column) != null)
+                        {
+                            grade.setGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column))));
+                            
+                            if(tfGenAve.getText().isEmpty())
+                            {
+                                grade.setGwa(0.0);
+                            }
+                            else
+                            {
+                                grade.setGwa(Double.parseDouble(tfGenAve.getText()));
+                            }
+                            
+                            gdi.createStudentGrade(grade);
+                            
+                        }
                     }
                     else if(column == 3)
                     {
                         grade.setPeriodId(7001);
+                    
+                        if(jtblGrades.getValueAt(row, column) != null)
+                        {
+                            grade.setGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column))));
+                            
+                            if(tfGenAve.getText().isEmpty())
+                            {
+                                grade.setGwa(0.0);
+                            }
+                            else
+                            {
+                                grade.setGwa(Double.parseDouble(tfGenAve.getText()));
+                            }
+                            
+                            gdi.createStudentGrade(grade);
+                        }
                     }
                     else if(column == 4)
                     {
                         grade.setPeriodId(7002);
+                    
+                        if(jtblGrades.getValueAt(row, column) != null)
+                        {
+                            grade.setGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column))));
+                            
+                            if(tfGenAve.getText().isEmpty())
+                            {
+                                grade.setGwa(0.0);
+                            }
+                            else
+                            {
+                                grade.setGwa(Double.parseDouble(tfGenAve.getText()));
+                            }
+                            
+                            gdi.createStudentGrade(grade);
+                        }
                     }
-                    else
+                    else if(column == 5)
                     {
                         grade.setPeriodId(7003);
+                    
+                        if(jtblGrades.getValueAt(row, column) != null)
+                        {
+                            grade.setGrade(Double.parseDouble(String.valueOf(jtblGrades.getValueAt(row, column))));
+                            
+                            if(tfGenAve.getText().isEmpty())
+                            {
+                                grade.setGwa(0.0);
+                            }
+                            else
+                            {
+                                grade.setGwa(Double.parseDouble(tfGenAve.getText()));
+                            }
+                            
+                            gdi.createStudentGrade(grade);
+                        }
                     }
-                
-                    
-                    
-                    
-                    gdi.createStudentGrade(grade);
-
                 }
             }
         
@@ -453,66 +532,32 @@ public class GradingGui extends javax.swing.JPanel{
     }//GEN-LAST:event_jlistStudentMouseClicked
 
     private void jlistStudentValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jlistStudentValueChanged
-        if(jlistStudent.getSelectedIndex() > 0)
-        {
+//        if(jlistStudent.getSelectedIndex() >= 0)
+//        {
             selected = jlistStudent.getSelectedValue();
             result = selected.substring(selected.indexOf("(") + 1, selected.indexOf(")"));
-            
             //Setter call from Student
             student.setStudentId(Integer.parseInt(result));
-        
-            if(gml.getAllStudentGradeByStudentId(student).length == 0)
-            {
-                //Set model on jtable
-                jtblGrades.setModel(sbml.getAllStudentSubjectBySectionId(section));
-                tfGenAve.setText("");
-            }
-            else
-            {
-                for(int row = 0; row < jtblGrades.getRowCount(); row++)
-                {
-                    for(int column = 0; column < jtblGrades.getColumnCount(); column++)
-                    {
-                        switch(column)
-                        {
-                            case 0:
-                                jtblGrades.setValueAt(gml.getAllStudentGradeByStudentId(student)[row][column], row, 0);
-                                break;
-                            case 1:
-                                jtblGrades.setValueAt(gml.getAllStudentGradeByStudentId(student)[row][column], row, 1);
-                                break;
-                            case 2:
-                                jtblGrades.setValueAt(gml.getAllStudentGradeByStudentId(student)[row][column], row, 2);
-                                break;
-                            case 3:
-                                jtblGrades.setValueAt(gml.getAllStudentGradeByStudentId(student)[row][column], row, 3);
-                                break;
-                            case 4:
-                                jtblGrades.setValueAt(gml.getAllStudentGradeByStudentId(student)[row][column], row, 4);
-                                break;
-                            case 5:
-                                jtblGrades.setValueAt(gml.getAllStudentGradeByStudentId(student)[row][column], row, 5);
-                                break;
-                            case 6:
-                                jtblGrades.setValueAt(gml.getAllStudentGradeByStudentId(student)[row][column], row, 6);
-                                break;
-                        }
-                    }
-                }
-            
-                tfGenAve.setText(String.valueOf(gdi.getAllStudentGradeGWAByStudentId(student)));
-            }
-            
+//            //Setter call from Student
+//            student.setStudentId(Integer.parseInt(result));
+//            jtblGrades.setModel(gml.getAllStudentGradeByStudentId(student));
+//            
+//            tfGenAve.setText(String.valueOf(gdi.getAllStudentGradeGWAByStudentId(student)));
+//            
+//        }
+//        else
+//        {
+//            jtblGrades.setModel(sbml.getAllStudentSubjectBySectionId(section));
+//        }
+        if(!gdi.getAllStudentGradeByStudentId(student).isEmpty())
+        {
+            jtblGrades.setModel(gml.getAllStudentGradeByStudentId(student));
         }
         else
         {
             jtblGrades.setModel(sbml.getAllStudentSubjectBySectionId(section));
         }
-        
-        
 
-        
-        
         //Hide first column
         jtblGrades.getColumnModel().getColumn(0).setMinWidth(0);
         jtblGrades.getColumnModel().getColumn(0).setMaxWidth(0);

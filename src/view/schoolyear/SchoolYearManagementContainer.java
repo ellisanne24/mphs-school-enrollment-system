@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view.schoolyear;
 
 import utility.calendar.CalendarUtil;
@@ -31,6 +27,7 @@ import java.awt.Dimension;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.DefaultListModel;
+import javax.swing.JTable;
 import model.holiday.Holiday;
 import model.summerclassschedule.SummerClassSchedule;
 import view.holiday.AddHolidayToSchoolYear;
@@ -58,7 +55,8 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         UIManager.put("TextField.inactiveForeground", Color.BLACK);
         
         initComponents();
-        jspCreateSchoolYear.getVerticalScrollBar().setUnitIncrement(66);
+        jspCreateSchoolYear.getVerticalScrollBar().setUnitIncrement(40);
+        jScrollPane2.getVerticalScrollBar().setUnitIncrement(40);
         
         loadJListHolidayRecord();
         setHolidayJComboBoxModels();
@@ -95,6 +93,11 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         //JComboBox INITIAL SELECTED ITEM
         jcmbSchoolYearStartDateYear.setSelectedItem(CURRENT_YEAR);
 
+        
+        jtblSchoolYearList.setRowHeight(30);
+        jtblEnrollmentSchedule.setRowHeight(30);
+        jtblEnrollmentSchedule.setRowHeight(30);
+        
         //JTABLE
         setjtblSchoolYearList();
         setjtblEnrollmentScheduleList();
@@ -291,9 +294,12 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        setPreferredSize(new java.awt.Dimension(730, 590));
         setLayout(new java.awt.GridBagLayout());
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "School Year List"));
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+
+        jScrollPane2.setBorder(null);
 
         jtblSchoolYearList.setAutoCreateRowSorter(true);
         jtblSchoolYearList.setModel(new javax.swing.table.DefaultTableModel(
@@ -319,9 +325,11 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("School Year", jScrollPane2);
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
+        jScrollPane1.setBorder(null);
+
+        jtblEnrollmentSchedule.setAutoCreateRowSorter(true);
         jtblEnrollmentSchedule.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -345,7 +353,6 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jScrollPane1, gridBagConstraints);
 
         jTabbedPane1.addTab("Enrollment Schedule", jPanel5);
@@ -355,7 +362,6 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         jspCreateSchoolYear.setMinimumSize(new java.awt.Dimension(568, 500));
         jspCreateSchoolYear.setPreferredSize(new java.awt.Dimension(720, 700));
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Create School Year"));
         jPanel4.setPreferredSize(new java.awt.Dimension(1000, 675));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
@@ -484,7 +490,6 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jpnlHolidays, gridBagConstraints);
 
-        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Quarters"));
         jPanel9.setLayout(new java.awt.GridBagLayout());
 
         jpnlFirstQuarterSchedule.setBorder(javax.swing.BorderFactory.createTitledBorder("1st Quarter"));
@@ -1276,7 +1281,6 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jPanel9, gridBagConstraints);
 
-        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel11.setLayout(new java.awt.GridBagLayout());
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("School Year"));
@@ -1927,6 +1931,8 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
 
         jpnlHolidaySets.setLayout(new java.awt.GridBagLayout());
 
+        jTabbedPane3.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jlblHolidayName.setText("Holiday Name");
@@ -2486,10 +2492,17 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
         }
         jtblSchoolYearList.setModel(tModel);
         int tColCount = jtblSchoolYearList.getColumnCount();
-        for (int i = 0; i < tColCount; i++) {
-            TableCellRenderer myJTableRenderer = new SchoolYearJTableRenderer();
-            jtblSchoolYearList.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
-        }
+        TableCellRenderer myJTableRenderer = new SchoolYearJTableRenderer();
+//        for (int i = 0; i < tColCount; i++) {
+//            jtblSchoolYearList.getColumnModel().getColumn(i).setCellRenderer(myJTableRenderer);
+//        }
+        
+        jtblSchoolYearList.getColumnModel().getColumn(0).setPreferredWidth(30);
+        jtblSchoolYearList.getColumnModel().getColumn(1).setPreferredWidth(30);
+        jtblSchoolYearList.getColumnModel().getColumn(2).setPreferredWidth(30);
+        jtblSchoolYearList.getColumnModel().getColumn(3).setPreferredWidth(30);
+        jtblSchoolYearList.getColumnModel().getColumn(4).setPreferredWidth(30);
+        jtblSchoolYearList.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 
     private Quarter getFirstQuarterSchedule() {

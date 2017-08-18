@@ -1,19 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model.paymentterm;
 
 import java.util.List;
 import model.period.Period;
 
-/**
- *
- * @author Acer
- */
 public class PaymentTerm {
-
     private List<Period> periods; //Sem1, Sem2, Q1,Q1,Q3,Q4, Mo1, Mo2, Mo3....
     private int id;
     private String name;

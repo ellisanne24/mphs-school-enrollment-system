@@ -31,4 +31,7 @@ public interface IGrade {
     void deleteGradeByStudentId(Grade grade);
     List <Grade> getAllStudentByAdviserSectionId(Faculty aFaculty, SchoolYear aSchoolYear);
     List <Grade> getStudentGradeByFacultyStudentId(Faculty aFaculty, Student aStudent);
+    List <Grade> getStudentFailedSubjectById(Student aStudent);
+    boolean createStudentSummer(SchoolYear aSchoolYear, Student aStudent, GradeLevel gradeLevel, Subject aSubject, Grade aGrade);
+    boolean promoteSummerStudentById(GradeLevel gradeLevel, Student aStudent, SchoolYear aSchoolYear);
 }

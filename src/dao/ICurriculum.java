@@ -17,9 +17,9 @@ public interface ICurriculum {
     SchoolYear getCurriculumSchoolYear();
     List<Subject> getAllSubjectForCurriculum();
     boolean createCurriculum(Curriculum aCurriculum, SchoolYear aSchoolYear, GradeLevel aGradeLevel);
-    boolean createCurriculumSubjects(Curriculum aCurriculum, Subject aSubject);
+    boolean createCurriculumSubjects(Curriculum aCurriculum, Subject aSubject, GradeLevel aGradeLevel);
     boolean curriculumExists(Curriculum aCurriculum); // to check for duplicates
-    boolean checkCurriculumExists(Curriculum aCurriculum, GradeLevel aGradeLevel, SchoolYear aSchoolYear);
+    boolean checkCurriculumExists(Curriculum aCurriculum, SchoolYear aSchoolYear);
     boolean checkCurriculumSubjectExists(Curriculum aCurriculum);
     int getCurriculumId(Curriculum aCurriculum);    
     List<Curriculum> getAllCurriculum();
@@ -27,10 +27,11 @@ public interface ICurriculum {
     List<SchoolYear> getCurriculumYearStartEndByGradeLevel(GradeLevel aGradeLevel);
     List<Curriculum> getAllCurriculumByStartYear(SchoolYear aSchoolYear);
     List<Curriculum> getAllSubjectsOfCurriculumByName(Curriculum aCurriculum);
-    List<Curriculum> getCreatedCurriculumInfoById(Curriculum aCurriculum);
+    List<Curriculum> getCreatedCurriculumById(Curriculum aCurriculum);
     List<Curriculum> getAllCreatedCurriculumInfo();
     List<Curriculum> getAllCurriculumNameByGradeLevel(GradeLevel aGradeLevel);
-    boolean updateCreatedCurriculumById(Curriculum aCurriculum, GradeLevel aGradeLevel, SchoolYear aSchoolYear, Subject aSubject);
-    void deleteCreatedCurriculumById(Curriculum aCurriculum);
     List<Curriculum> checkCurriculumChanges(Curriculum aCurriculum);
+    void deleteCurriculumById(Curriculum aCurriculum);
+    boolean updateCurriculumById(Curriculum aCurriculum, SchoolYear aSchoolYear);
+    boolean updateSubjectIsAddedById(Subject aSubject);
 }

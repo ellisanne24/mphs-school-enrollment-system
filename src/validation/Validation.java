@@ -46,7 +46,7 @@ public class Validation extends InputVerifier {
                 schoolYear.getSchoolYearId();
                 curriculum.setCurriculumTitle(tfCurriculumText);
 
-                if (cdi.checkCurriculumExists(curriculum, gradeLevel, schoolYear) == false) {
+                if (cdi.checkCurriculumExists(curriculum,schoolYear) == false) {
                     input.setBackground(Color.WHITE);
 //                    getCbSchoolYearStart().setBackground(Color.WHITE);
 //                    getCbSchoolYearEnd().setBackground(Color.WHITE);

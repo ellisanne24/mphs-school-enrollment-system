@@ -12,6 +12,7 @@ import daoimpl.FacultyDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
@@ -695,6 +696,7 @@ public class SectionManagementContainer extends javax.swing.JPanel {
         switch (sectionTab.getSelectedIndex()) {
             case 0:
                 jtu.copyTableSectionData(tblAssign, tblAM, grade.getGwa());
+//                jtu.sample(tblAssign, tblAM, grade.getGwa());
                 break;
             case 1:
                 jtu.copyTableSectionData(tblAssign, tblPM, grade.getGwa());
@@ -840,15 +842,24 @@ public class SectionManagementContainer extends javax.swing.JPanel {
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void tblAMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAMMouseClicked
-        jtu.returnCopyData(tblAM, tblAssign);
+        if(evt.getClickCount() == 2)
+        {
+            jtu.returnCopyData(tblAM, tblAssign);
+        }
     }//GEN-LAST:event_tblAMMouseClicked
 
     private void tblPMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPMMouseClicked
-        jtu.returnCopyData(tblPM, tblAssign);
+        if(evt.getClickCount() == 2)
+        {
+            jtu.returnCopyData(tblPM, tblAssign);
+        }
     }//GEN-LAST:event_tblPMMouseClicked
 
     private void tblDefaultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDefaultMouseClicked
-        jtu.returnCopyData(tblDefault, tblAssign);
+        if(evt.getClickCount() == 2)
+        {
+            jtu.returnCopyData(tblDefault, tblAssign);
+        }
     }//GEN-LAST:event_tblDefaultMouseClicked
 
     public JTable getTblCreatedSection()

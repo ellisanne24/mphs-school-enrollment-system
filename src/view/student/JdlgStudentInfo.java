@@ -8,7 +8,6 @@ package view.student;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
 import utility.component.ImageUtil;
 import java.awt.AlphaComposite;
@@ -17,34 +16,21 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.print.PrinterJob;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.JTableHeader;
-import model.schoolyear.SchoolYear;
-import model.student.Student;
 
 public class JdlgStudentInfo extends javax.swing.JDialog {
 
     private final int studentId;
-    private final GUIManager gUIManager = new GUIManager();
-    private final StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
     private Image schoolLogo, studentPhoto;
     
-    public JdlgStudentInfo(int aStudentId) {
+    public JdlgStudentInfo(int studentId) {
         super(null, ModalityType.APPLICATION_MODAL);
+        this.studentId = studentId;
         initComponents();
-        UIManager.put("ComboBox.disabledBackground", new Color(212, 212, 210));
-        UIManager.put("ComboBox.disabledForeground", Color.BLACK);
-        gUIManager.setGUIInitialState();
+        initializeComponents();
+        initializeControllers();
+        initializeRenderers();
         
-        
-        this.studentId = aStudentId;
-        setSchoolYearJComboBoxModel();
-        setFormDetails();
-        jlblAccuntingClearedText.setText("");
-        jlblAccountingCleared.setText("");
-        
-        
-        setStudentDetails();
     }
 
     @SuppressWarnings("unchecked")
@@ -56,26 +42,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
         jPanel6 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
-        jpnlAdmission = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jlblAdmissionIdText = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jlblAdmissionStatusText = new javax.swing.JLabel();
-        jlblAdmissionCompletion = new javax.swing.JLabel();
-        jlblAdmissionCompletionDateText = new javax.swing.JLabel();
-        jpnlAccounting = new javax.swing.JPanel();
-        jlblAccountingCleared = new javax.swing.JLabel();
-        jlblAccuntingClearedText = new javax.swing.JLabel();
-        jpnlGradeLevel = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        jlblPresentGradeLevelText = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jlblPassedText = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jlblRecommendedForGradeLevelText = new javax.swing.JLabel();
-        jlblAdmissionGradeLevel = new javax.swing.JLabel();
-        jlblAdmissionGradeLevelText = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        jpnlRegistration = new javax.swing.JPanel();
         jpnlHeader = new javax.swing.JPanel();
         jpnlLogo = new javax.swing.JPanel(){
             public void paintComponent(Graphics g){
@@ -188,166 +155,11 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
 
     jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jPanel2.setLayout(new java.awt.GridBagLayout());
-
-    jpnlAdmission.setBorder(javax.swing.BorderFactory.createTitledBorder("Admission"));
-    jpnlAdmission.setLayout(new java.awt.GridBagLayout());
-
-    jLabel1.setText("Admission Id : ");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAdmission.add(jLabel1, gridBagConstraints);
-
-    jlblAdmissionIdText.setText("AdmissionIdText");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAdmission.add(jlblAdmissionIdText, gridBagConstraints);
-
-    jLabel3.setText("Status : ");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAdmission.add(jLabel3, gridBagConstraints);
-
-    jlblAdmissionStatusText.setText("Admission Status Text  ");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAdmission.add(jlblAdmissionStatusText, gridBagConstraints);
-
-    jlblAdmissionCompletion.setText("Completion Date :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAdmission.add(jlblAdmissionCompletion, gridBagConstraints);
-
-    jlblAdmissionCompletionDateText.setText("Completion Date Text");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAdmission.add(jlblAdmissionCompletionDateText, gridBagConstraints);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jPanel2.add(jpnlAdmission, gridBagConstraints);
-
-    jpnlAccounting.setBorder(javax.swing.BorderFactory.createTitledBorder("Accounting"));
-    jpnlAccounting.setLayout(new java.awt.GridBagLayout());
-
-    jlblAccountingCleared.setText("Cleared : ");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAccounting.add(jlblAccountingCleared, gridBagConstraints);
-
-    jlblAccuntingClearedText.setText("Yes Or No Text");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlAccounting.add(jlblAccuntingClearedText, gridBagConstraints);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.weighty = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jPanel2.add(jpnlAccounting, gridBagConstraints);
-
-    jpnlGradeLevel.setBorder(javax.swing.BorderFactory.createTitledBorder("Grade Level"));
-    jpnlGradeLevel.setLayout(new java.awt.GridBagLayout());
-
-    jLabel6.setText("Present GradeLevel :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jLabel6, gridBagConstraints);
-
-    jlblPresentGradeLevelText.setText("Previous Grade Level Text");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jlblPresentGradeLevelText, gridBagConstraints);
-
-    jLabel11.setText("Passed :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 4;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jLabel11, gridBagConstraints);
-
-    jlblPassedText.setText("Yes Or No Text");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 4;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jlblPassedText, gridBagConstraints);
-
-    jLabel13.setText("Recommended For :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jLabel13, gridBagConstraints);
-
-    jlblRecommendedForGradeLevelText.setText("Recommended For Grade Level Text");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jlblRecommendedForGradeLevelText, gridBagConstraints);
-
-    jlblAdmissionGradeLevel.setText("Admission GradeLevel :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jlblAdmissionGradeLevel, gridBagConstraints);
-
-    jlblAdmissionGradeLevelText.setText("AdmissionGradeLevelText");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlGradeLevel.add(jlblAdmissionGradeLevelText, gridBagConstraints);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.weighty = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jPanel2.add(jpnlGradeLevel, gridBagConstraints);
-
     jTabbedPane1.addTab("Student", jPanel2);
 
-    jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-    jPanel4.setForeground(new java.awt.Color(255, 255, 255));
-    jPanel4.setLayout(new java.awt.GridBagLayout());
+    jpnlRegistration.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlRegistration.setForeground(new java.awt.Color(255, 255, 255));
+    jpnlRegistration.setLayout(new java.awt.GridBagLayout());
 
     jpnlHeader.setBackground(new java.awt.Color(255, 255, 255));
     jpnlHeader.setForeground(new java.awt.Color(51, 51, 51));
@@ -446,7 +258,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.5;
-    jPanel4.add(jpnlHeader, gridBagConstraints);
+    jpnlRegistration.add(jpnlHeader, gridBagConstraints);
 
     jpnlCertificateOfRegistration.setBackground(new java.awt.Color(255, 255, 255));
     jpnlCertificateOfRegistration.setLayout(new java.awt.GridBagLayout());
@@ -463,7 +275,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 10);
-    jPanel4.add(jpnlCertificateOfRegistration, gridBagConstraints);
+    jpnlRegistration.add(jpnlCertificateOfRegistration, gridBagConstraints);
 
     jPanel9.setBackground(new java.awt.Color(255, 255, 255));
     jPanel9.setLayout(new java.awt.GridBagLayout());
@@ -862,9 +674,9 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
-    jPanel4.add(jPanel9, gridBagConstraints);
+    jpnlRegistration.add(jPanel9, gridBagConstraints);
 
-    jTabbedPane1.addTab("Certificate Of Registration", jPanel4);
+    jTabbedPane1.addTab("Certificate Of Registration", jpnlRegistration);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -899,7 +711,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jlblStudentId.setText("Student ID :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblStudentId, gridBagConstraints);
 
@@ -914,7 +726,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jlblStatus.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblStatus.setText("Status : ");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblStatus, gridBagConstraints);
 
@@ -929,7 +741,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jlblLastName.setText("Last Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 3;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblLastName, gridBagConstraints);
 
@@ -945,7 +757,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jlblFirstName.setText("First Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 4;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblFirstName, gridBagConstraints);
 
@@ -963,7 +775,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 5;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblMiddleName, gridBagConstraints);
 
@@ -982,7 +794,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jLabel2, gridBagConstraints);
 
@@ -1052,117 +864,34 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void setStudentDetails(){
-            Student s = studentDaoImpl.getStudentById(studentId);
-            Integer aRegistrationId = studentDaoImpl.getRegistrationId(studentId);
-        String aAdmissionGradeLevel = studentDaoImpl.getAdmissionGradeLevelByRegistrationId(aRegistrationId)==0?
-                "Kindergarten":studentDaoImpl.getAdmissionGradeLevelByRegistrationId(aRegistrationId)+"";
-        String aPresentGradeLevel = studentDaoImpl.getPresentGradeLevelByStudentId(studentId)==0?
-                "Kindergarten":studentDaoImpl.getPresentGradeLevelByStudentId(studentId)+"";
-        String aRecommendedGradeLevel = studentDaoImpl.getRecommendedGradeLevel(studentId)==0?
-                "Kindergarten":studentDaoImpl.getRecommendedGradeLevel(studentId)+"";
-        String aStudentId = s.getStudentId()+"";
-        String aStatus = s.isActive()==true? "Active":"Inactive" ;
-        String aStudentType = s.getStudentType()==1?"New":"Old";
-        String aLastName = s.getRegistration().getLastName();
-        String aFirstName = s.getRegistration().getFirstName();
-        String aMiddleName = s.getRegistration().getMiddleName();
-        String aAdmissionId = s.getAdmission().getAdmissionId()+"";
-        String aAdmissionStatus = s.getAdmission().isCompleted()==true?"Complete":"Pending";
-        String aAdmissionCompletionDate = s.getAdmission().getCompletionDate()==null?"--":s.getAdmission().getCompletionDate()+"";
-        String isPassed = s.getCurrentGradeLevel().getIsPassed()==null?
-                "":s.getCurrentGradeLevel().getIsPassed()+"";
+    private void initializeComponents(){
+        UIManager.put("ComboBox.disabledBackground", new Color(212, 212, 210));
+        UIManager.put("ComboBox.disabledForeground", Color.BLACK);
         
-        String aAddress = s.getRegistration().getAddressRoomOrHouseNo()+" "+s.getRegistration().getAddressStreet()+
-                s.getRegistration().getAddressBrgyOrSubd()+" "+s.getRegistration().getAddressCity();
+        ImageUtil imageUtil = new ImageUtil();
+        schoolLogo = imageUtil.getRenderedImageForJPanel("assets/logo.jpg", jpnlLogo);
+        studentPhoto = imageUtil.getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlStudentPhoto);
         
-        String aRegistrationDate = s.getRegistration().getRegistrationDate()==null?"":s.getRegistration().getRegistrationDate()+"";
-        
-        jlblNameText.setText(aLastName.toUpperCase()+", "+aFirstName.toUpperCase()+" "+aMiddleName.toUpperCase());
-        jlblAddressText.setText(aAddress);
-        jlblStudentIdRegistrationText.setText(aStudentId);
-        jlblStudentTypeRegForm.setText(aStudentType);
-        jlblGradeLevelText.setText(aPresentGradeLevel);
-        jlblRegistrationIdText.setText(aRegistrationId+"");
-        jlblRegistrationDateText.setText(aRegistrationDate);
-        jlblSectionText.setText("");
-        jlblSchoolYearText.setText(s.getRegistration().getSchoolYear().getYearFrom()+"-"+
-                s.getRegistration().getSchoolYear().getYearTo());
-        
-        }
-    
-    public class GUIManager{
-        private void setGUIInitialState() {
-            JTableHeader header = jtblRegformSchedule.getTableHeader();
-            header.setBackground(Color.WHITE);
-            header.setForeground(Color.BLACK);
-            jtblRegformSchedule.setShowGrid(false);
-            jtblRegformSchedule.setShowHorizontalLines(false);
-            jtblRegformSchedule.setShowVerticalLines(false);
-            
-            schoolLogo = new ImageUtil().getRenderedImageForJPanel("assets/logo.jpg", jpnlLogo);
-            studentPhoto = new ImageUtil().getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlStudentPhoto);
-        }
+        JTableHeader jtblHeader = jtblRegformSchedule.getTableHeader();
+        jtblHeader.setBackground(Color.WHITE);
+        jtblHeader.setForeground(Color.BLACK);
+        jtblRegformSchedule.setShowGrid(false);
+        jtblRegformSchedule.setShowHorizontalLines(false);
+        jtblRegformSchedule.setShowVerticalLines(false);
     }
     
-    private void setSchoolYearJComboBoxModel(){
-        SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
-        Object[] syStart = sydi.getAllStart().toArray();
-        DefaultComboBoxModel syStartModel = new DefaultComboBoxModel();
-        for(Object o : syStart){
-            SchoolYear s = (SchoolYear)o;
-            syStartModel.addElement(s.getYearFrom());
-        }
-        
-        Object[] syEnd = sydi.getAllEnd().toArray();
-        DefaultComboBoxModel syEndModel = new DefaultComboBoxModel();
-        for(Object o : syEnd){
-            SchoolYear s = (SchoolYear)o;
-            syEndModel.addElement(s.getYearTo());
-        }
+    private void initializeControllers(){
         
     }
     
-    private void setFormDetails(){
-        Student student =studentDaoImpl.getStudentById(studentId);
-        Integer aRegistrationId = studentDaoImpl.getRegistrationId(studentId);
-        String aAdmissionGradeLevel = studentDaoImpl.getAdmissionGradeLevelByRegistrationId(aRegistrationId)==0?
-                "Kindergarten":studentDaoImpl.getAdmissionGradeLevelByRegistrationId(aRegistrationId)+"";
-        String aPresentGradeLevel = studentDaoImpl.getPresentGradeLevelByStudentId(studentId)==0?
-                "Kindergarten":studentDaoImpl.getPresentGradeLevelByStudentId(studentId)+"";
-        String aRecommendedGradeLevel = studentDaoImpl.getRecommendedGradeLevel(studentId)==0?
-                "Kindergarten":studentDaoImpl.getRecommendedGradeLevel(studentId)+"";
-        String aStudentId = student.getStudentId()+"";
-        String aStatus = student.isActive()==true? "Active":"Inactive" ;
-        String aStudentType = student.getStudentType()==1?"New":"Old";
-        String aLastName = student.getRegistration().getLastName();
-        String aFirstName = student.getRegistration().getFirstName();
-        String aMiddleName = student.getRegistration().getMiddleName();
-        String aAdmissionId = student.getAdmission().getAdmissionId()+"";
-        String aAdmissionStatus = student.getAdmission().isCompleted()==true?"Complete":"Pending";
-        String aAdmissionCompletionDate = student.getAdmission().getCompletionDate()==null?"--":student.getAdmission().getCompletionDate()+"";
-        String isPassed = student.getCurrentGradeLevel().getIsPassed()==null?
-                "":student.getCurrentGradeLevel().getIsPassed()+"";
-        String aDateOfRegistration = student.getRegistration().getRegistrationDate()+"";
+    private void initializeRenderers(){
         
-        jlblStatusText.setText(aStatus);
-        jlblStudentIdText.setText(aStudentId);
-        jlblStudentTypeText.setText(aStudentType);
-        jlblRecommendedForGradeLevelText.setText(aRecommendedGradeLevel+"");
-        jlblLastNameText.setText(aLastName);
-        jlblFirstNameText.setText(aFirstName);
-        jlblMiddleNameText.setText(aMiddleName);
-        jlblAdmissionIdText.setText(aAdmissionId);
-        jlblAdmissionStatusText.setText(aAdmissionStatus);
-        jlblAdmissionCompletionDateText.setText(aAdmissionCompletionDate);
-        jlblPresentGradeLevelText.setText(aPresentGradeLevel+"");
-        jlblPassedText.setText(isPassed+"");
-        jlblRecommendedForGradeLevelText.setText(aRecommendedGradeLevel+"");
-        jlblAdmissionGradeLevelText.setText(aAdmissionGradeLevel);
-        jlblRegistrationDateText.setText(aDateOfRegistration);
     }
     
-    
+    private void initializeDaoImpl(){
+        
+    }
+
     private void jbtnCancelEnrollmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelEnrollmentActionPerformed
         // TODO add your handling code here:
         int choice = JOptionPane.showConfirmDialog(null, "Exit?","Confirmation",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
@@ -1187,10 +916,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -1198,10 +924,8 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -1214,7 +938,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -1224,16 +947,8 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbtnCancelEnrollment;
     private javax.swing.JButton jbtnPrintRegistrationForm;
-    private javax.swing.JLabel jlblAccountingCleared;
-    private javax.swing.JLabel jlblAccuntingClearedText;
     private javax.swing.JLabel jlblAddress;
     private javax.swing.JLabel jlblAddressText;
-    private javax.swing.JLabel jlblAdmissionCompletion;
-    private javax.swing.JLabel jlblAdmissionCompletionDateText;
-    private javax.swing.JLabel jlblAdmissionGradeLevel;
-    private javax.swing.JLabel jlblAdmissionGradeLevelText;
-    private javax.swing.JLabel jlblAdmissionIdText;
-    private javax.swing.JLabel jlblAdmissionStatusText;
     private javax.swing.JLabel jlblContact;
     private javax.swing.JLabel jlblContactText;
     private javax.swing.JLabel jlblDate;
@@ -1247,9 +962,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     private javax.swing.JLabel jlblMiddleNameText;
     private javax.swing.JLabel jlblName;
     private javax.swing.JLabel jlblNameText;
-    private javax.swing.JLabel jlblPassedText;
-    private javax.swing.JLabel jlblPresentGradeLevelText;
-    private javax.swing.JLabel jlblRecommendedForGradeLevelText;
     private javax.swing.JLabel jlblRegistrationDateText;
     private javax.swing.JLabel jlblRegistrationIdText;
     private javax.swing.JLabel jlblRegistrationNo;
@@ -1267,14 +979,12 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     private javax.swing.JLabel jlblStudentTypeRegForm;
     private javax.swing.JLabel jlblStudentTypeText;
     private javax.swing.JLabel jlblTuitionHeader;
-    private javax.swing.JPanel jpnlAccounting;
-    private javax.swing.JPanel jpnlAdmission;
     private javax.swing.JPanel jpnlCertificateOfRegistration;
-    private javax.swing.JPanel jpnlGradeLevel;
     private javax.swing.JPanel jpnlHeader;
     private javax.swing.JPanel jpnlLogo;
     private javax.swing.JPanel jpnlMiscellaneous;
     private javax.swing.JPanel jpnlOthers;
+    private javax.swing.JPanel jpnlRegistration;
     private javax.swing.JPanel jpnlRegistrationNo;
     private javax.swing.JPanel jpnlStudentFees;
     private javax.swing.JPanel jpnlStudentPhoto;

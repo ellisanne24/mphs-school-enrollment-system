@@ -461,7 +461,7 @@
                                                         <Component class="javax.swing.JLabel" name="jlblPayment">
                                                           <Properties>
                                                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                                              <Font name="Dialog" size="36" style="1"/>
+                                                              <Font name="Dialog" size="30" style="1"/>
                                                             </Property>
                                                             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -918,7 +918,7 @@
                                         </Constraint>
                                       </Constraints>
                                     </Component>
-                                    <Component class="javax.swing.JLabel" name="jlblLastNameText">
+                                    <Component class="javax.swing.JLabel" name="lbl_LastNameText">
                                       <Properties>
                                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                           <Color blue="0" green="0" red="0" type="rgb"/>
@@ -944,7 +944,7 @@
                                         </Constraint>
                                       </Constraints>
                                     </Component>
-                                    <Component class="javax.swing.JLabel" name="jlblFirstNameText">
+                                    <Component class="javax.swing.JLabel" name="lbl_FirstNameText">
                                       <Properties>
                                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                           <Color blue="0" green="0" red="0" type="rgb"/>
@@ -970,7 +970,7 @@
                                         </Constraint>
                                       </Constraints>
                                     </Component>
-                                    <Component class="javax.swing.JLabel" name="jlblMiddleNameText">
+                                    <Component class="javax.swing.JLabel" name="lbl_MiddleNameText">
                                       <Properties>
                                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                           <Color blue="0" green="0" red="0" type="rgb"/>
@@ -983,7 +983,7 @@
                                         </Constraint>
                                       </Constraints>
                                     </Component>
-                                    <Component class="javax.swing.JLabel" name="jlblRoleLabel">
+                                    <Component class="javax.swing.JLabel" name="lbl_RoleLabel">
                                       <Properties>
                                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                           <Color blue="ff" green="ff" red="ff" type="rgb"/>

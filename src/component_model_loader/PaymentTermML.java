@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package component_model_loader;
 
 import daoimpl.PaymentTermDaoImpl;
@@ -10,7 +5,6 @@ import daoimpl.SchoolYearDaoImpl;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
 import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
 

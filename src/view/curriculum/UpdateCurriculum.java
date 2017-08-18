@@ -8,26 +8,22 @@ package view.curriculum;
 import component_model_loader.CurriculumML;
 import component_model_loader.GradeLevelML;
 import component_model_loader.SchoolYearML;
+import component_renderers.GradeLevelJComboBoxRenderer;
 import daoimpl.CurriculumDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SubjectDaoImpl;
-import static view.curriculum.CurriculumManagementContainer.getTblCreatedCurriculum;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 import model.curriculum.Curriculum;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.subject.Subject;
+import utility.component.JTableUtil;
 import utility.layout.CurriculumUtility;
-import validation.CurriculumValidation;
 
 /**
  *
@@ -50,34 +46,27 @@ public class UpdateCurriculum extends javax.swing.JFrame {
     CurriculumDaoImpl cdi = new CurriculumDaoImpl();
     
     CurriculumUtility curriculumUtility = new CurriculumUtility();
-    public UpdateCurriculum() {
+    
+    JTableUtil jtu = new JTableUtil();
+    
+    int id;
+    public UpdateCurriculum(int id) {
+        this.id = id;
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
         pack();
         
-        cbFilterControlGradeLevel.setModel(glu.getAllGradeLevels());
-        cbFilterControlGradeLevel.setSelectedIndex(-1);
-        
-        cbFilterControlCurriculumName.setSelectedIndex(-1);
-        
-        cbCreatedGradeLevel.setModel(glu.getAllGradeLevels());
-        
-        cbCreatedSchoolYearStart.setModel(syu.getAllSchoolYearStart());
-        
-        cbCreatedSchoolYearEnd.setModel(syu.getAllSchoolYearEnd());
-        
-        tblCurriculumList.setModel(cu.getAllCreatedCurriculumInfo());
+        cbGradeLevel.setModel(glu.getAllGradeLevels());
+        cbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
+        cbGradeLevel.setSelectedIndex(0);
         
         tblCurriculumList.getColumnModel().getColumn(0).setMinWidth(0);
         tblCurriculumList.getColumnModel().getColumn(0).setMaxWidth(0);
         
-        
-        
-//        cbCreatedSchoolYearStart.setModel(cu.getCurriculumSchoolYearStart(gradeLevel));
-        
-//        cbCreatedSchoolYearEnd.setModel(cu.getCurriculumSchoolYearEnd(gradeLevel));
+        tblCreatedCurriculumList.getColumnModel().getColumn(0).setMinWidth(0);
+        tblCreatedCurriculumList.getColumnModel().getColumn(0).setMaxWidth(0);
     }
     
     /**
@@ -96,16 +85,8 @@ public class UpdateCurriculum extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        cbFilterControlGradeLevel = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
-        cbFilterControlCurriculumName = new javax.swing.JComboBox<>();
+        cbGradeLevel = new javax.swing.JComboBox<>();
         jPanel10 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        cbCreatedGradeLevel = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
-        cbCreatedSchoolYearStart = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
-        cbCreatedSchoolYearEnd = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         tfCurriculumName = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -132,97 +113,37 @@ public class UpdateCurriculum extends javax.swing.JFrame {
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         jPanel4.setPreferredSize(new java.awt.Dimension(692, 100));
-        jPanel4.setLayout(new java.awt.GridBagLayout());
+        jPanel4.setLayout(new java.awt.BorderLayout());
 
         jPanel11.setPreferredSize(new java.awt.Dimension(400, 50));
         jPanel11.setLayout(new java.awt.GridBagLayout());
 
         jLabel5.setText("Grade Level:");
-        jPanel11.add(jLabel5, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+        jPanel11.add(jLabel5, gridBagConstraints);
 
-        cbFilterControlGradeLevel.addItemListener(new java.awt.event.ItemListener() {
+        cbGradeLevel.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbFilterControlGradeLevelItemStateChanged(evt);
+                cbGradeLevelItemStateChanged(evt);
             }
         });
-        jPanel11.add(cbFilterControlGradeLevel, new java.awt.GridBagConstraints());
-
-        jLabel4.setText("Curriculum Name:");
-        jPanel11.add(jLabel4, new java.awt.GridBagConstraints());
-
-        cbFilterControlCurriculumName.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        cbFilterControlCurriculumName.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbFilterControlCurriculumNameItemStateChanged(evt);
-            }
-        });
-        jPanel11.add(cbFilterControlCurriculumName, new java.awt.GridBagConstraints());
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.5;
-        jPanel4.add(jPanel11, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+        jPanel11.add(cbGradeLevel, gridBagConstraints);
+
+        jPanel4.add(jPanel11, java.awt.BorderLayout.WEST);
 
         jPanel10.setPreferredSize(new java.awt.Dimension(400, 100));
         jPanel10.setLayout(new java.awt.GridBagLayout());
-
-        jLabel2.setText("SY:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel10.add(jLabel2, gridBagConstraints);
-
-        cbCreatedGradeLevel.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbCreatedGradeLevelItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel10.add(cbCreatedGradeLevel, gridBagConstraints);
-
-        jLabel1.setText("Grade Level:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel10.add(jLabel1, gridBagConstraints);
-
-        cbCreatedSchoolYearStart.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbCreatedSchoolYearStartItemStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel10.add(cbCreatedSchoolYearStart, gridBagConstraints);
-
-        jLabel3.setText("to");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel10.add(jLabel3, gridBagConstraints);
-
-        cbCreatedSchoolYearEnd.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel10.add(cbCreatedSchoolYearEnd, gridBagConstraints);
 
         jLabel6.setText("Name:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 40, 0, 0);
         jPanel10.add(jLabel6, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
@@ -235,6 +156,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 40, 0, 0);
         jPanel10.add(jLabel7, gridBagConstraints);
 
         taCurriculumDescription.setColumns(20);
@@ -243,13 +165,12 @@ public class UpdateCurriculum extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.ipadx = 130;
+        gridBagConstraints.ipadx = 170;
         gridBagConstraints.ipady = 30;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel10.add(jScrollPane3, gridBagConstraints);
 
-        jPanel4.add(jPanel10, new java.awt.GridBagConstraints());
+        jPanel4.add(jPanel10, java.awt.BorderLayout.EAST);
 
         jPanel2.add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
@@ -261,13 +182,10 @@ public class UpdateCurriculum extends javax.swing.JFrame {
 
         tblCurriculumList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Id", "Code", "Subject Name", "School Year"
+                "Id", "Code", "Subject Name", "Grade Level"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -317,7 +235,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
         jPanel6.setPreferredSize(new java.awt.Dimension(80, 300));
         jPanel6.setLayout(new java.awt.GridBagLayout());
 
-        jButton1.setText("+");
+        jButton1.setText("Transfer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -328,7 +246,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jPanel6.add(jButton1, gridBagConstraints);
 
-        jButton2.setText("-");
+        jButton2.setText("Remove");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -346,17 +264,14 @@ public class UpdateCurriculum extends javax.swing.JFrame {
 
         tblCreatedCurriculumList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Id", "Code", "Subject Name", "School Year"
+                "Id", "Code", "Subject Name", "Subject Hours", "Grade Level"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -369,6 +284,7 @@ public class UpdateCurriculum extends javax.swing.JFrame {
             tblCreatedCurriculumList.getColumnModel().getColumn(1).setResizable(false);
             tblCreatedCurriculumList.getColumnModel().getColumn(2).setResizable(false);
             tblCreatedCurriculumList.getColumnModel().getColumn(3).setResizable(false);
+            tblCreatedCurriculumList.getColumnModel().getColumn(4).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -422,145 +338,117 @@ public class UpdateCurriculum extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cbFilterControlGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFilterControlGradeLevelItemStateChanged
-        if(cbFilterControlGradeLevel.getSelectedIndex() > -1)
-        {
-            //Setter call on Curriculum
-            gradeLevel.setLevel((Integer) cbFilterControlGradeLevel.getSelectedItem());
-            
-            //Set model on cbFilterControlCurriculumName
-            cbFilterControlCurriculumName.setModel(cu.getAllCurriculumNameByGradeLevel(gradeLevel));
-        }
-    }//GEN-LAST:event_cbFilterControlGradeLevelItemStateChanged
+    private void cbGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradeLevelItemStateChanged
+        
+        //Setter call on Curriculum
+        gradeLevel.setLevel((Integer) cbGradeLevel.getSelectedItem());
+        gradeLevel.setId(gldi.getId(gradeLevel));
+        sdi.getEachSubjectByGradeLevelId(gradeLevel);
 
-    private void cbFilterControlCurriculumNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFilterControlCurriculumNameItemStateChanged
-        if(cbFilterControlCurriculumName.getSelectedIndex() != -1)
-        {
-            //Setter call from Curriculum
-            curriculum.setCurriculumTitle((String) cbFilterControlCurriculumName.getSelectedItem());
-            
-            //Setter call from Curriclum & Method call from CurriculumDaoImpl
-            cdi.getCurriculumId(curriculum);
-            curriculum.setCurriculumId(cdi.getCurriculumId(curriculum));
-            
-            //Set model on cbCurriculumList & Method call from CurriculumML
-            tblCurriculumList.setModel(cu.getCreatedCurriculumInfoById(curriculum));
-        }
-    }//GEN-LAST:event_cbFilterControlCurriculumNameItemStateChanged
+        tblCurriculumList.setModel(cu.getEachSubjectsByGradeLevelId(gradeLevel));
+        
+        tblCurriculumList.getColumnModel().getColumn(0).setMinWidth(0);
+        tblCurriculumList.getColumnModel().getColumn(0).setMaxWidth(0);
+        
+    }//GEN-LAST:event_cbGradeLevelItemStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int selectedRow = tblCurriculumList.getSelectedRow(); //selected row whic has the data to be added
-        Object selectedSubjCode = tblCurriculumList.getValueAt(selectedRow, 1);
-        //        JOptionPane.showMessageDialog(null, selectedSubjCode);
-
-        int rows = tblCreatedCurriculumList.getRowCount();
-        Object[] curriculumSubjects = new Object[rows];
-
-        for (int j = 0; j < rows; j++) {
-            curriculumSubjects[j] = tblCreatedCurriculumList.getValueAt(j, 1);
-        }
-
-        if (Arrays.asList(curriculumSubjects).contains(selectedSubjCode)) {
-            JOptionPane.showMessageDialog(null, selectedSubjCode + " is already on the list.");
-        } else {
-            DefaultTableModel curriculumSubjectsModel = (DefaultTableModel) tblCreatedCurriculumList.getModel();
-
-            Object[] rowData = new Object[tblCurriculumList.getColumnCount()];
-            int selectedRowIndex = tblCurriculumList.getSelectedRow();
-            for (int i = 0; i < tblCurriculumList.getColumnCount(); i++) {
-                rowData[i] = tblCurriculumList.getValueAt(selectedRowIndex, i);
-            }
-            curriculumSubjectsModel.addRow(rowData);
-            tblCreatedCurriculumList.setModel(curriculumSubjectsModel);
-        }
+        jtu.copyTableCurriculumData(tblCurriculumList, tblCreatedCurriculumList);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (tblCreatedCurriculumList.getSelectedRow() > -1) {
-            int selectedRowIndex = tblCreatedCurriculumList.getSelectedRow();
-            DefaultTableModel curriculumSubjectsModel = (DefaultTableModel) tblCreatedCurriculumList.getModel();
-            curriculumSubjectsModel.removeRow(selectedRowIndex);
-            tblCreatedCurriculumList.clearSelection();
-            jButton2.setEnabled(false);
-        }
+        jtu.returnCopyData(tblCreatedCurriculumList, tblCurriculumList);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void cbCreatedSchoolYearStartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCreatedSchoolYearStartItemStateChanged
-        int selectedYearFrom = cbCreatedSchoolYearStart.getSelectedIndex();
-        cbCreatedSchoolYearEnd.setSelectedIndex(selectedYearFrom);
-            
-        //Setter call from SchoolYear
-        schoolYear.setSchoolYearId(sydi.getId((int) cbCreatedSchoolYearStart.getSelectedItem()));
-    }//GEN-LAST:event_cbCreatedSchoolYearStartItemStateChanged
-
-    private void cbCreatedGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCreatedGradeLevelItemStateChanged
-
-        gradeLevel.setLevel((Integer) cbCreatedGradeLevel.getSelectedItem());
-
-    }//GEN-LAST:event_cbCreatedGradeLevelItemStateChanged
-
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        //Setter call from CurriculumDaoImpl
-//        curriculum.setCurriculumId((int) tblCreatedCurriculumList.getValueAt(tblCreatedCurriculumList.getSelectedRow(), 0));
         
-        List list = new ArrayList();
-        list.add(cbCreatedGradeLevel.getSelectedItem());
-        list.add(cbCreatedSchoolYearStart.getSelectedItem() + "-" + cbCreatedSchoolYearEnd.getSelectedItem());
-        list.add(tfCurriculumName.getText());
-        list.add(taCurriculumDescription.getText());
-        
-        for(int i = 0; i < tblCreatedCurriculumList.getModel().getRowCount(); i++)
-        {
-            list.add(tblCreatedCurriculumList.getValueAt(i, 1));
-            list.add(tblCreatedCurriculumList.getValueAt(i, 2));
-        }
-        
-        
-        list.retainAll(new CurriculumValidation().checkCurriculumChanges(curriculum));
-        
-        //If nothing changes
-        if(list.size() == 6)
-        {
-            JOptionPane.showMessageDialog(null, "No changes detected");
-        }
+//        List list = new ArrayList();
+//        list.add(tfCurriculumName.getText());
+//        list.add(taCurriculumDescription.getText());
+//        
+//        for(int i = 0; i < tblCreatedCurriculumList.getModel().getRowCount(); i++)
+//        {
+//            list.add(tblCreatedCurriculumList.getValueAt(i, 1));
+//            list.add(tblCreatedCurriculumList.getValueAt(i, 2));
+//        }
+//        
+//        
+//        list.retainAll(new CurriculumValidation().checkCurriculumChanges(curriculum));
+//        
+//        //If nothing changes
+//        if(list.size() == 6)
+//        {
+//            JOptionPane.showMessageDialog(null, "No changes detected");
+//        }
         //If anything changes
-        else
-        {
-            //Setter call from Curriculum
-            //Get id from getTblCreatedCurriculum()
-            curriculum.setCurriculumId((int) getTblCreatedCurriculum().getValueAt(getTblCreatedCurriculum().getSelectedRow(), 0));
-            
-            //Method call from CurriculumDaoImpl
-            cdi.deleteCreatedCurriculumById(curriculum);
-
-            //while looping to row count of table
-            for(int i = 0; i < tblCreatedCurriculumList.getRowCount(); i++)
-            {
-
-                //Setter call from Subject
-                subject.setSubjectTitle((String) tblCreatedCurriculumList.getValueAt(i, 2));
-                //Setter call from Subject & Method call from SubjectDaoImpl
-                subject.setSubjectId(sdi.getSubjectId(subject));
-
-                //Setter call from GradeLevel & Getting cbGradeLevel id
-                gradeLevel.setId(gldi.getId(gradeLevel));
-
-                //Setter call from SchoolYear
-                schoolYear.setSchoolYearId(schoolYear.getSchoolYearId());
-
-                //Setter call from Curriculum while getting the text of jtextfield and jtextarea
-                curriculum.setCurriculumTitle(tfCurriculumName.getText());
-                curriculum.setCurriculumDescription(taCurriculumDescription.getText());
-
-                System.out.println("CUR ID "+curriculum.getCurriculumId());
-                System.out.println("SUBJECT ID "+subject.getSubjectId());
-                //Method call from CurriculumDaoImpl
-//                cdi.updateCreatedCurriculumById(curriculum, gradeLevel, schoolYear, subject);
-            }
-
-            JOptionPane.showMessageDialog(null, "Successfully updating curriculum "+tfCurriculumName.getText());
-        }
         
+            if(tblCreatedCurriculumList.getRowCount() == 0)
+            {
+                JOptionPane.showMessageDialog(null, "Cannot update empty curriculum!");
+            }
+            else
+            {
+                int x = JOptionPane.showConfirmDialog(null, "Apply changes?", "", JOptionPane.YES_NO_OPTION);
+            
+                if(x == JOptionPane.YES_OPTION)
+                {
+                    
+                    //Setter call from Curriculum while getting the text of jtextfield and jtextarea
+                    curriculum.setCurriculumTitle(tfCurriculumName.getText());
+                    curriculum.setCurriculumDescription(taCurriculumDescription.getText());
+                    curriculum.setCurriculumId(id);
+                    
+                    //Setter call from SchoolYear
+                    schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+                    
+                    //Method call from CurriculumDaoImpl
+                    cdi.updateCurriculumById(curriculum, schoolYear);
+                    cdi.deleteCurriculumById(curriculum);
+
+                    //while looping to row count of table
+                    for(int i = 0; i < tblCreatedCurriculumList.getRowCount(); i++)
+                    {
+                        //Setter call from Subject
+                        subject.setSubjectId((int) tblCreatedCurriculumList.getValueAt(i, 0));
+                        subject.setSubjectCode((String) tblCreatedCurriculumList.getValueAt(i, 1));
+                        subject.setSubjectTitle((String) tblCreatedCurriculumList.getValueAt(i, 2));
+                        
+                        subject.setSubjectHours((double) tblCreatedCurriculumList.getValueAt(i, 3));
+                        
+                        if(tblCreatedCurriculumList.getValueAt(i, 4) == "Kindergarten")
+                        {
+                            gradeLevel.setId(301);
+                        }
+                        else
+                        {
+                            gradeLevel.setLevel((Integer) tblCreatedCurriculumList.getValueAt(i, 4));
+                            //Setter call from GradeLevel & Getting cbGradeLevel id
+                            gradeLevel.setId(gldi.getId(gradeLevel));
+                        }
+                                                
+
+                        //Method call from CurriculumDaoImpl
+                        cdi.createCurriculumSubjects(curriculum, subject, gradeLevel);
+                    }
+
+                    JOptionPane.showMessageDialog(null, "Successfully updated curriculum "+tfCurriculumName.getText());
+                }  
+            }
+            
+            if(tblCurriculumList.getRowCount() != 0)
+            {
+                for(int i = 0; i < tblCurriculumList.getRowCount(); i++)
+                {
+                    //Setter call from Subject
+                    subject.setSubjectId((int) tblCurriculumList.getValueAt(i, 0));
+                    
+                    //Method call from CurriculumDaoImpl
+                    cdi.updateSubjectIsAddedById(subject);
+                }
+                
+                
+                
+            }
         
 
 
@@ -573,18 +461,10 @@ public class UpdateCurriculum extends javax.swing.JFrame {
     
     public JComboBox getCbCreatedGradeLevel()
     {
-        return cbCreatedGradeLevel;
+        return cbGradeLevel;
     }
     
-    public JComboBox getCbCreatedSchoolYearStart()
-    {
-        return cbCreatedSchoolYearStart;
-    }
-    
-    public JComboBox getCbCreatedSchoolYearEnd()
-    {
-        return cbCreatedSchoolYearEnd;
-    }
+   
     
     public JTextField getTfCurriculumName()
     {
@@ -602,17 +482,9 @@ public class UpdateCurriculum extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cbCreatedGradeLevel;
-    private javax.swing.JComboBox<String> cbCreatedSchoolYearEnd;
-    private javax.swing.JComboBox<String> cbCreatedSchoolYearStart;
-    private javax.swing.JComboBox<String> cbFilterControlCurriculumName;
-    private javax.swing.JComboBox<String> cbFilterControlGradeLevel;
+    private javax.swing.JComboBox<String> cbGradeLevel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;

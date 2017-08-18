@@ -21,7 +21,7 @@ public class CurriculumUtility
     public List <Object> getCreatedCurriculumInfoById(Curriculum aCurriculum)
     {
         List <Object> list = new ArrayList();
-        Object[] obj = cdi.getCreatedCurriculumInfoById(aCurriculum).toArray();
+        Object[] obj = cdi.getCreatedCurriculumById(aCurriculum).toArray();
         
         for(Object o : obj)
         {

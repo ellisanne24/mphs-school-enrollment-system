@@ -20,19 +20,19 @@ public class CurriculumML {
     SubjectDaoImpl sdi = new SubjectDaoImpl();
 
     private Object[] columnNames() {
-        return new Object[]{"Code", "Subject Name", "Subject Hours", "Description", "Year Level"};
+        return new Object[]{"Code", "Subject Name", "Subject Hours", "Description", "Grade Level"};
     }
 
     private Object[] column() {
-        return new Object[]{"Code", "Subject Name", "Description", "Year Level"};
+        return new Object[]{"Id", "Code", "Subject Name", "Grade Level"};
     }
 
     private Object[] headerForUpdate() {
-        return new Object[]{"Id", "Code", "Subject Name", "School Year"};
+        return new Object[]{"Id", "Code", "Subject Name", "Subject Hours", "Grade Level"};
     }
 
     private Object[] curriculumColumnNames() {
-        return new Object[]{"Id", "School Year", "Grade Level", "Description", "Date Created", "Status"};
+        return new Object[]{"Id", "Curriculum Name", "School Year", "Description", "Date Created", "Status"};
     }
 
     public DefaultTableModel getAllSubjectsWithGradeLevel() {
@@ -91,18 +91,20 @@ public class CurriculumML {
         return dtm;
     }
 
-    public DefaultTableModel getAllSubjectsByGradeLevel(GradeLevel aGradeLevel) {
-        List<Subject> list = sdi.getEachSubjectByGradeLevelForCurriculum(aGradeLevel);
+    public DefaultTableModel getEachSubjectsByGradeLevelId(GradeLevel aGradeLevel) {
+        List<Subject> list = sdi.getEachSubjectByGradeLevelId(aGradeLevel);
         Object[] columnObject = list.toArray();
+        Object[] columnId = new Object[list.size()];
         Object[] columnCode = new Object[list.size()];
         Object[] columnTitle = new Object[list.size()];
-        Object[] columnDescription = new Object[list.size()];
         Object[] columnYearLevel = new Object[list.size()];
         Object[][] obj = new Object[list.size()][4];
+        
+        int counterId = 0;
         int counterCode = 0;
         int counterTitle = 0;
-        int counterDescription = 0;
         int counterYearLevel = 0;
+        
         int counterOne = 0;
         int counterTwo = 0;
         int counterThree = 0;
@@ -110,20 +112,23 @@ public class CurriculumML {
 
         for (Object a : columnObject) {
             Subject aSubject = (Subject) a;
+            
+            columnId[counterId++] = aSubject.getSubjectId();
             columnCode[counterCode++] = aSubject.getSubjectCode();
             columnTitle[counterTitle++] = aSubject.getSubjectTitle();
-            columnDescription[counterDescription++] = aSubject.getSubjectDescription();
             columnYearLevel[counterYearLevel++] = aSubject.gradeLevel.getLevel()==0? "Kindergarten":aSubject.gradeLevel.getLevel();
         }
 
         for (int row = 0; row < obj.length; row++) {                               //Sub-array
             for (int column = 0; column < obj[row].length; column++) {
-                if (column == 0) {
-                    obj[row][column] = columnCode[counterOne++];
-                } else if (column == 1) {
-                    obj[row][column] = columnTitle[counterTwo++];
+                if(column == 0)
+                {
+                    obj[row][column] = columnId[counterOne++];
+                }
+                else if (column == 1) {
+                    obj[row][column] = columnCode[counterTwo++];
                 } else if (column == 2) {
-                    obj[row][column] = columnDescription[counterThree++];
+                    obj[row][column] = columnTitle[counterThree++];
                 } else {
                     obj[row][column] = columnYearLevel[counterFour++];
                 }
@@ -152,8 +157,8 @@ public class CurriculumML {
         Object[] columnObject = list.toArray();
 
         Integer[] columnId = new Integer[list.size()];
+        Object[] columnTitle = new Object[list.size()];
         Object[] columnSchoolYear = new Object[list.size()];
-        Object[] columnGradeLevel = new Object[list.size()];
         Object[] columnDescription = new Object[list.size()];
         Object[] columnDateCreated = new Object[list.size()];
         Boolean[] columnStatus = new Boolean[list.size()];
@@ -161,11 +166,12 @@ public class CurriculumML {
         Object[][] obj = new Object[list.size()][6];
 
         int counterId = 0;
+        int counterColumnTitle = 0;
         int counterSchoolYear = 0;
-        int counterGradeLevel = 0;
         int counterDescription = 0;
         int counterDateCreated = 0;
         int counterStatus = 0;
+        
         int counterOne = 0;
         int counterTwo = 0;
         int counterThree = 0;
@@ -177,8 +183,8 @@ public class CurriculumML {
             Curriculum curriculum = (Curriculum) a;
 
             columnId[counterId++] = curriculum.getCurriculumId();
+            columnTitle[counterColumnTitle++] = curriculum.getCurriculumTitle();
             columnSchoolYear[counterSchoolYear++] = curriculum.schoolYear.getYearFrom() + " - " + curriculum.schoolYear.getYearTo();
-            columnGradeLevel[counterGradeLevel++] = "Grade " + curriculum.gradeLevel.getLevel();
             columnDescription[counterDescription++] = curriculum.getCurriculumDescription();
             columnDateCreated[counterDateCreated++] = curriculum.getDateCreated();
 
@@ -196,10 +202,10 @@ public class CurriculumML {
                         obj[row][column] = columnId[counterOne++];
                         break;
                     case 1:
-                        obj[row][column] = columnSchoolYear[counterTwo++];
+                        obj[row][column] = columnTitle[counterTwo++];
                         break;
                     case 2:
-                        obj[row][column] = columnGradeLevel[counterThree++];
+                        obj[row][column] = columnSchoolYear[counterThree++];
                         break;
                     case 3:
                         obj[row][column] = columnDescription[counterFour++];
@@ -217,14 +223,16 @@ public class CurriculumML {
         DefaultTableModel dtm = new DefaultTableModel(obj, curriculumColumnNames()) {
             @Override
             public Class getColumnClass(int c) {
-                return getValueAt(0, c).getClass();
+                //If column has null
+                Object value = this.getValueAt(0,c);
+                return (value==null?Object.class:value.getClass());
             }
 
             @Override
             public boolean isCellEditable(int row, int col) {
                 //Note that the data/cell address is constant,
                 //no matter where the cell appears onscreen.
-                if (col < 5) {
+                if (col < 6) {
                     return false;
                 } else {
                     return true;
@@ -338,7 +346,7 @@ public class CurriculumML {
         Object[] columnHours = new Object[cdi.getAllSubjectsOfCurriculumByName(aCurriculum).size()];
         Object[] columnDescription = new Object[cdi.getAllSubjectsOfCurriculumByName(aCurriculum).size()];
         Object[] columnYearLevel = new Object[cdi.getAllSubjectsOfCurriculumByName(aCurriculum).size()];
-        Object[][] data = new Object[cdi.getAllSubjectsOfCurriculumByName(aCurriculum).size()][5];
+        Object[][] data = new Object[cdi.getAllSubjectsOfCurriculumByName(aCurriculum).size()][3];
 
         int counterCode = 0;
         int counterTitle = 0;
@@ -400,32 +408,38 @@ public class CurriculumML {
         return model;
     }
 
-    public DefaultTableModel getCreatedCurriculumInfoById(Curriculum aCurriculum) {
-        Object[] object = cdi.getCreatedCurriculumInfoById(aCurriculum).toArray();
+    public DefaultTableModel getCreatedCurriculumById(Curriculum aCurriculum) {
+        Object[] object = cdi.getCreatedCurriculumById(aCurriculum).toArray();
 
-        Object[] columnId = new Object[cdi.getCreatedCurriculumInfoById(aCurriculum).size()];
-        Object[] columnCode = new Object[cdi.getCreatedCurriculumInfoById(aCurriculum).size()];
-        Object[] columnTitle = new Object[cdi.getCreatedCurriculumInfoById(aCurriculum).size()];
-        Object[] columnSchoolYear = new Object[cdi.getCreatedCurriculumInfoById(aCurriculum).size()];
-
-        Object[][] data = new Object[cdi.getCreatedCurriculumInfoById(aCurriculum).size()][4];
-
+        Object[] columnId = new Object[cdi.getCreatedCurriculumById(aCurriculum).size()];
+        Object[] columnCode = new Object[cdi.getCreatedCurriculumById(aCurriculum).size()];
+        Object[] columnSubject = new Object[cdi.getCreatedCurriculumById(aCurriculum).size()];
+        Object[] columnHours = new Object[cdi.getCreatedCurriculumById(aCurriculum).size()];
+        Object[] columnGradeLevel = new Object[cdi.getCreatedCurriculumById(aCurriculum).size()];
+        
+        Object[][] data = new Object[cdi.getCreatedCurriculumById(aCurriculum).size()][5];
+        
         int counterId = 0;
         int counterCode = 0;
-        int counterTitle = 0;
-        int counterSchoolYear = 0;
-
-        int counterColumnOne = 0;
-        int counterColumnTwo = 0;
-        int counterColumnThree = 0;
-        int counterColumnFour = 0;
+        int counterSubject = 0;
+        int counterHours = 0;
+        int counterGradeLevel = 0;
+        
+        int counterOne = 0;
+        int counterTwo = 0;
+        int counterThree = 0;
+        int counterFour = 0;
+        int counterFive = 0;
+        
         for (Object o : object) {
             Curriculum curriculum = (Curriculum) o;
-
-            columnId[counterColumnOne++] = curriculum.getCurriculumId();
-            columnCode[counterColumnTwo++] = curriculum.s.getSubjectCode();
-            columnTitle[counterColumnThree++] = curriculum.s.getSubjectTitle();
-            columnSchoolYear[counterColumnFour++] = curriculum.schoolYear.getYearFrom() + "-" + curriculum.schoolYear.getYearTo();
+            
+            columnId[counterOne++] = curriculum.s.getSubjectId();
+            columnCode[counterTwo++] = curriculum.s.getSubjectCode();
+            columnSubject[counterThree++] = curriculum.s.getSubjectTitle();
+            columnHours[counterFour++] = curriculum.s.getSubjectHours();
+            
+            columnGradeLevel[counterFive++] = curriculum.gradeLevel.getLevel() == 0 ? "Kindergarten": curriculum.gradeLevel.getLevel();
         }
 
         for (int row = 0; row < data.length; row++) {
@@ -438,11 +452,15 @@ public class CurriculumML {
                         data[row][column] = columnCode[counterCode++];
                         break;
                     case 2:
-                        data[row][column] = columnTitle[counterTitle++];
+                        data[row][column] = columnSubject[counterSubject++];
                         break;
                     case 3:
-                        data[row][column] = columnSchoolYear[counterSchoolYear++];
+                        data[row][column] = columnHours[counterHours++];
                         break;
+                    case 4:
+                        data[row][column] = columnGradeLevel[counterGradeLevel++];
+                        break;
+                        
                 }
             }
         }

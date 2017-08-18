@@ -527,7 +527,10 @@ public class UpdateSection extends javax.swing.JFrame {
     }//GEN-LAST:event_tblStudentListMouseClicked
 
     private void tblStudentSectionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblStudentSectionListMouseClicked
-        jtu.returnCopyData(tblStudentSectionList, tblStudentList);
+        if (evt.getClickCount() == 2) 
+        {
+            jtu.returnCopyData(tblStudentSectionList, tblStudentList);
+        }
     }//GEN-LAST:event_tblStudentSectionListMouseClicked
     
     public JTextField getTfSectionName()

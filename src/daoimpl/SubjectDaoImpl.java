@@ -42,7 +42,7 @@ public class SubjectDaoImpl implements ISubject {
                 }
             }
         } catch (SQLException ex) {
-            System.err.println("Error at getAllStudentSubjectByStudentId " + ex);
+            System.err.println("Error at getAllStudentSubjectBySectionId " + ex);
         }
 
         return list;
@@ -315,18 +315,18 @@ public class SubjectDaoImpl implements ISubject {
     }
 
     @Override
-    public List<Subject> getEachSubjectByGradeLevelForCurriculum(GradeLevel aGradeLevel) {
-        String sql = "{call getEachSubjectByGradeLevelForCurriculum(?)}";
+    public List<Subject> getEachSubjectByGradeLevelId(GradeLevel aGradeLevel) {
+        String sql = "{call getEachSubjectByGradeLevelId(?)}";
         List<Subject> listSubject = new ArrayList();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(sql);) {
-            cs.setInt(1, aGradeLevel.getLevel());
+            cs.setInt(1, aGradeLevel.getId());
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
                     Subject aSubject = new Subject();
+                    aSubject.setSubjectId(rs.getInt("subject_id"));
                     aSubject.setSubjectCode(rs.getString("code"));
                     aSubject.setSubjectTitle(rs.getString("title"));
-                    aSubject.setSubjectDescription(rs.getString("description"));
                     aSubject.gradeLevel.setLevel(rs.getInt("grade_level"));
                     listSubject.add(aSubject);
                 }

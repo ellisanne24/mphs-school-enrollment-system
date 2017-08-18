@@ -6,7 +6,6 @@
 package view.schedule;
 
 import component_model_loader.FacultyML;
-import component_model_loader.SbjML;
 import component_model_loader.ScheduleML;
 import component_model_loader.SchoolYearML;
 import utility.component.JInternalFrameUtil;
@@ -17,6 +16,7 @@ import controller.schedule.ScheduleTableRecordController;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.Color;
 import javax.swing.UIManager;
+import utility.component.TableUtility;
 
 public class ScheduleRecord extends javax.swing.JPanel {
 
@@ -28,6 +28,7 @@ public class ScheduleRecord extends javax.swing.JPanel {
         UIManager.put("ComboBox.disabledForeground", Color.BLACK);
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
         initializeModels();
+        TableUtility.setTableColumnWidth(jtblSchedule);
         initializeControllers();
     }
 
@@ -141,7 +142,7 @@ public class ScheduleRecord extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Schedule Id", "Day", "Start Time", "End Time", "Section", "Subject", "Room", "Faculty"
+                "ID", "Day", "Start Time", "End Time", "Section", "Subject", "Room", "Faculty"
             }
         ) {
             boolean[] canEdit = new boolean [] {

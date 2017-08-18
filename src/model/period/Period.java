@@ -36,14 +36,14 @@ public class Period {
     private int periodId;
     private String code;
     private String description;
-    private Date paymentDeadline;
+    private Date deadlineOfPayment;
 
-    public Date getPaymentDeadline() {
-        return paymentDeadline;
+    public Date getDeadlineOfPayment() {
+        return deadlineOfPayment;
     }
 
-    public void setPaymentDeadline(Date paymentDeadline) {
-        this.paymentDeadline = paymentDeadline;
+    public void setDeadlineOfPayment(Date deadlineOfPayment) {
+        this.deadlineOfPayment = deadlineOfPayment;
     }
 
     public int getPeriodId() {

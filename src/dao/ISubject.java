@@ -22,7 +22,7 @@ public interface ISubject {
     List<Subject> getAllSubjectsByGradeLevelId(GradeLevel aGradeLevel);
     List<Subject> getSubjectsByCurriculum(Curriculum aCurriculum);
     List<Subject> getSubjectsBySchoolYear(SchoolYear aSchoolYear);
-    List<Subject> getEachSubjectByGradeLevelForCurriculum(GradeLevel aGradeLevel);
+    List<Subject> getEachSubjectByGradeLevelId(GradeLevel aGradeLevel);
     boolean updateSubjectAndGradeLevel(Subject aSubject, GradeLevel aGradeLevel);
     boolean createSubject(Subject aSubject);
     boolean editSubject(Subject aSubject, GradeLevel aGradeLevel);

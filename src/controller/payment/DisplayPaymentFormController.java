@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.payment;
 
 import daoimpl.DiscountDaoImpl;
@@ -51,7 +46,8 @@ public class DisplayPaymentFormController implements ActionListener {
     private final JComboBox jcmbPaymentTerm;
     private final JTable jtblBalanceBreakDown;
 
-    public DisplayPaymentFormController(JTextField jtfStudentId, JComboBox jcmbSchoolYearFrom, JTable jtblBalanceBreakDown,
+    public DisplayPaymentFormController(
+            JTextField jtfStudentId, JComboBox jcmbSchoolYearFrom, JTable jtblBalanceBreakDown,
             JComboBox jcmbDiscount, JComboBox jcmbPaymentTerm) {
         this.jtfStudentId = jtfStudentId;
         this.jcmbSchoolYearFrom = jcmbSchoolYearFrom;
@@ -70,6 +66,11 @@ public class DisplayPaymentFormController implements ActionListener {
         } else if (particulars.getBalanceSum() <= 0) {
             JOptionPane.showMessageDialog(null, "All fees are paid.");
         } else {
+            for(BalanceBreakDownFee b :particulars.getBalanceBreakDownFees()){
+                System.out.println("Description :"+b.getDescription());
+                System.out.println("Amount : "+b.getAmount());
+            }
+            
             PaySelectedForm psf = new PaySelectedForm(particulars, tuitionFee);
             psf.setPreferredSize(new Dimension(540, 450));
             psf.pack();
@@ -147,16 +148,13 @@ public class DisplayPaymentFormController implements ActionListener {
             paymentTerm.setName(jcmbPaymentTerm.getSelectedItem().toString().trim());
             paymentTerm.setId(ptdi.getId(jcmbPaymentTerm.getSelectedItem().toString().trim()));
 
-            System.out.println("Payment Term :"+jcmbPaymentTerm.getSelectedItem().toString().trim());
-            
             tuitionFee.setExists(false);
             tuitionFee.setDiscount(discount);
             tuitionFee.setPaymentTerm(paymentTerm);
             tuitionFee.setTotalPaid(0.00);
-            tuitionFee.setSum(schoolFees.getSum());
+            tuitionFee.setTotalFees(schoolFees.getSum());
             tuitionFee.setBalance(schoolFees.getSum());
-            TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(tuitionFee, schoolFees);
-            System.out.println("At Pay Selected Action Performed: ");
+            TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(tuitionFee, schoolFees,schoolYear);
             tuitionFee.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
             tuitionFee.setSchoolYear(schoolYear);
             tuitionFee.setStudent(student);

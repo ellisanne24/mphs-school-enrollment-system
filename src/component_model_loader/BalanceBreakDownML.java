@@ -32,6 +32,9 @@ public class BalanceBreakDownML {
             DefaultTableModel model = (DefaultTableModel) jtblBalanceBreakdown.getModel();
             model.setRowCount(0);
             for (BalanceBreakDownFee b : balanceBreakDownFee) {
+                System.out.println("Descriptin :"+b.getDescription());
+                System.out.println("Amount :"+b.getAmount());
+                System.out.println("Balance :"+b.getBalance());
                 Object[] rowData = {
                     b.getDescription(),
                     decimalFormatter.format(b.getAmount()),

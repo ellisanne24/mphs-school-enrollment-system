@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.faculty.Faculty;
 import model.specialization.Specialization;
+import view.user.AllUsersRecord;
 
 public class NewFaculty extends javax.swing.JPanel {
 
@@ -711,6 +712,7 @@ public class NewFaculty extends javax.swing.JPanel {
                 jtf_email.setText("");
                 JOptionPane.showMessageDialog(null, "Successfully added");
                 setjtblFaculty();
+                AllUsersRecord.refreshRecord();
             } else {
                 JOptionPane.showMessageDialog(null, "Error occured during Adding ");
             }

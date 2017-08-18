@@ -72,20 +72,19 @@ public class CurriculumDaoImpl implements ICurriculum {
     public boolean createCurriculum(Curriculum aCurriculum, SchoolYear aSchoolYear, GradeLevel aGradeLevel) 
     {
         boolean isSuccesful;
-        String sql = "{call createCurriculum(?,?,?,?,?)}";
+        String sql = "{call createCurriculum(?,?,?,?)}";
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql);)
         {
-            cs.setInt(1, aGradeLevel.getId());
-            cs.setInt(2, aSchoolYear.getSchoolYearId());
-            cs.setString(3, aCurriculum.getCurriculumTitle());
-            cs.setString(4, aCurriculum.getCurriculumDescription());
-            cs.registerOutParameter(5, java.sql.Types.INTEGER);
+            cs.setInt(1, aSchoolYear.getSchoolYearId());
+            cs.setString(2, aCurriculum.getCurriculumTitle());
+            cs.setString(3, aCurriculum.getCurriculumDescription());
+            cs.registerOutParameter(4, java.sql.Types.INTEGER);
             
             cs.executeUpdate();
             
             //Setter call from Curriculum
-            aCurriculum.setCurriculumId(cs.getInt(5));
+            aCurriculum.setCurriculumId(cs.getInt(4));
             
             isSuccesful = true;
         }
@@ -171,14 +170,12 @@ public class CurriculumDaoImpl implements ICurriculum {
                 {
                     Curriculum aCurriculum = new Curriculum();
                     aCurriculum.setCurriculumId(rs.getInt("curriculum_id"));
+                    aCurriculum.setCurriculumTitle(rs.getString("curriculum_title"));
                     aCurriculum.schoolYear.setYearFrom(rs.getInt("yearFrom"));
                     aCurriculum.schoolYear.setYearTo(rs.getInt("yearTo"));
-                    aCurriculum.gradeLevel.setLevel(rs.getInt("grade_level"));
                     aCurriculum.setCurriculumDescription(rs.getString("description"));
                     aCurriculum.setDateCreated(rs.getString("date_created"));
                     aCurriculum.setIsActive(rs.getInt("isActive"));
-//                    aCurriculum.s.setSubjectTitle(rs.getString("title"));
-//                    aCurriculum.s.setSubjectCode(rs.getString("code"));
                     
                     list.add(aCurriculum);
                 }
@@ -225,10 +222,10 @@ public class CurriculumDaoImpl implements ICurriculum {
     }
 
     @Override
-    public boolean createCurriculumSubjects(Curriculum aCurriculum, Subject aSubject) 
+    public boolean createCurriculumSubjects(Curriculum aCurriculum, Subject aSubject, GradeLevel aGradeLevel) 
     {
         boolean isSuccesful;
-        String sql = "{call createCurriculumSubjects(?,?)}";
+        String sql = "{call createCurriculumSubjects(?,?,?,?)}";
         
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql);)
@@ -236,7 +233,8 @@ public class CurriculumDaoImpl implements ICurriculum {
 
             cs.setInt(1, aCurriculum.getCurriculumId());
             cs.setInt(2, aSubject.getSubjectId());
-//            cs.setDouble(3, aSubject.getSubjectHours());
+            cs.setDouble(3, aSubject.getSubjectHours());
+            cs.setInt(4, aGradeLevel.getId());
             cs.executeUpdate();
             
             isSuccesful = true;
@@ -334,9 +332,9 @@ public class CurriculumDaoImpl implements ICurriculum {
     }
 
     @Override
-    public List<Curriculum> getCreatedCurriculumInfoById(Curriculum aCurriculum) 
+    public List<Curriculum> getCreatedCurriculumById(Curriculum aCurriculum) 
     {
-        String sql = "{call getCreatedCurriculumInfoById(?)}";
+        String sql = "{call getCreatedCurriculumById(?)}";
         
         List <Curriculum> list = new ArrayList();
         
@@ -351,14 +349,12 @@ public class CurriculumDaoImpl implements ICurriculum {
                 {
                     Curriculum curriculum = new Curriculum();
                     
-                    curriculum.setCurriculumId(rs.getInt("curriculum_id"));
-                    curriculum.setCurriculumTitle(rs.getString("curriculum_title"));
-                    curriculum.setCurriculumDescription(rs.getString("description"));
+                 
+                    curriculum.s.setSubjectId(rs.getInt("subject_id"));
                     curriculum.s.setSubjectCode(rs.getString("code"));
                     curriculum.s.setSubjectTitle(rs.getString("title"));
+                    curriculum.s.setSubjectHours(rs.getDouble("subject_hours"));
                     curriculum.gradeLevel.setLevel(rs.getInt("grade_level"));
-                    curriculum.schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    curriculum.schoolYear.setYearTo(rs.getInt("yearTo"));
                     
                     list.add(curriculum);
                 }
@@ -434,36 +430,7 @@ public class CurriculumDaoImpl implements ICurriculum {
         return list;
     }
 
-    @Override
-    public boolean updateCreatedCurriculumById(Curriculum aCurriculum, GradeLevel aGradeLevel, SchoolYear aSchoolYear, Subject aSubject) 
-    {
-        String sql = "{call updateCreatedCurriculumById(?,?,?,?,?,?)}";
-        boolean isSuccessful;
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setInt(1, aCurriculum.getCurriculumId());
-            /*************************************/
-            // Id to be inserted
-            cs.setInt(2, aSubject.getSubjectId());
-            cs.setInt(3, aGradeLevel.getId());
-            cs.setInt(4, aSchoolYear.getSchoolYearId());
-            cs.setString(5, aCurriculum.getCurriculumTitle());
-            cs.setString(6, aCurriculum.getCurriculumDescription());
-            
-            cs.executeUpdate();
-            
-            isSuccessful = true;
-        }
-        catch(SQLException ex)
-        {
-            isSuccessful = false;
-            System.err.println("Error at updateCreatedCurriculumById "+ex);
-        }
-        
-        return isSuccessful;
-    }
+    
 
     @Override
     public boolean checkCurriculumSubjectExists(Curriculum aCurriculum) 
@@ -495,36 +462,18 @@ public class CurriculumDaoImpl implements ICurriculum {
         return isSuccessful;
     }
 
+    
     @Override
-    public void deleteCreatedCurriculumById(Curriculum aCurriculum) 
+    public boolean checkCurriculumExists(Curriculum aCurriculum, SchoolYear aSchoolYear) 
     {
-        String sql = "{call deleteCreatedCurriculumById(?)}";
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setInt(1, aCurriculum.getCurriculumId());
-            
-            cs.executeUpdate();
-        }
-        catch(SQLException ex)
-        {
-            System.out.println("Error at deleteCreatedCurriculumById "+ex);
-        }
-    }
-
-    @Override
-    public boolean checkCurriculumExists(Curriculum aCurriculum, GradeLevel aGradeLevel, SchoolYear aSchoolYear) 
-    {
-        String sql = "{call checkCurriculumExists(?,?,?)}";
+        String sql = "{call checkCurriculumExists(?,?)}";
         boolean isSuccessful = false;
         
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql);)
         {
-            cs.setInt(1, aGradeLevel.getId());
-            cs.setInt(2, aSchoolYear.getSchoolYearId());
-            cs.setString(3, aCurriculum.getCurriculumTitle());
+            cs.setInt(1, aSchoolYear.getSchoolYearId());
+            cs.setString(2, aCurriculum.getCurriculumTitle());
             
             try(ResultSet rs = cs.executeQuery())
             {
@@ -578,6 +527,72 @@ public class CurriculumDaoImpl implements ICurriculum {
         }
         
         return list;
+    }
+
+    @Override
+    public void deleteCurriculumById(Curriculum aCurriculum) 
+    {
+       String sql = "call deleteCurriculumById(?)";
+       try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+           CallableStatement cs = con.prepareCall(sql))
+       {
+           cs.setInt(1, aCurriculum.getCurriculumId());
+           
+           cs.executeUpdate();
+       }
+       catch(SQLException ex)
+       {
+           System.err.println("Error at deleteCurriculumById "+ex);
+       }
+    }
+
+    @Override
+    public boolean updateCurriculumById(Curriculum aCurriculum, SchoolYear aSchoolYear) 
+    {
+        boolean isSuccessful;
+        String sql = "call updateCurriculumById(?,?,?,?)";
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aCurriculum.getCurriculumId());
+            cs.setInt(2, aSchoolYear.getSchoolYearId());
+            cs.setString(3, aCurriculum.getCurriculumTitle());
+            cs.setString(4, aCurriculum.getCurriculumDescription());
+
+            cs.executeUpdate();
+        
+            isSuccessful = true;
+        }
+        catch(SQLException ex)
+        {
+            isSuccessful = false;
+            System.err.println("Error at updateCurriculumById "+ex);
+        }
+        
+        return isSuccessful;
+    }
+
+    @Override
+    public boolean updateSubjectIsAddedById(Subject aSubject) 
+    {
+        boolean isSuccessful;
+        String sql = "call updateSubjectIsAddedById(?)";
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aSubject.getSubjectId());
+
+            cs.executeUpdate();
+        
+            isSuccessful = true;
+        }
+        catch(SQLException ex)
+        {
+            isSuccessful = false;
+            System.err.println("Error at updateCurriculumById "+ex);
+        }
+        
+        return isSuccessful;
     }
 
     

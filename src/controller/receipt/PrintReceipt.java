@@ -32,6 +32,7 @@ public class PrintReceipt implements ActionListener {
         printComponent();
     }
 
+    
     public void printComponent() {
         PrinterJob pj = PrinterJob.getPrinterJob();
         pj.setJobName(" Print Component ");

@@ -15,5 +15,6 @@ public enum DashboardMenuItem {
     SETTINGS,
     GRADINGSYSTEM,
     PAYMENTS,
-    ACCOUNTS
+    ACCOUNTS,
+    REPORTS
 }

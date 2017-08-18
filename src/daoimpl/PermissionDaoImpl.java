@@ -32,6 +32,7 @@ public class PermissionDaoImpl implements IPermission{
                     dbp.setCanAccessEnrollment(rs.getBoolean("can_access_enrollment"));
                     dbp.setCanAccessSettings(rs.getBoolean("can_access_settings"));
                     dbp.setCanAccessAccounts(rs.getBoolean("can_access_accounts"));
+                    dbp.setCanAccessReports(rs.getBoolean("can_access_reports"));
                 }
             }
         } catch (SQLException e) {

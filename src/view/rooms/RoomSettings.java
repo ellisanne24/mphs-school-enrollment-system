@@ -60,7 +60,6 @@ public class RoomSettings extends javax.swing.JPanel {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel4.setPreferredSize(new java.awt.Dimension(400, 240));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
@@ -125,7 +124,6 @@ public class RoomSettings extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel4.add(jPanel6, gridBagConstraints);
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel7.setPreferredSize(new java.awt.Dimension(392, 70));
         jPanel7.setLayout(new java.awt.GridBagLayout());
 
@@ -160,14 +158,13 @@ public class RoomSettings extends javax.swing.JPanel {
 
         jPanel8.setLayout(new java.awt.GridBagLayout());
 
-        jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel9.setPreferredSize(new java.awt.Dimension(985, 80));
+        jPanel9.setPreferredSize(new java.awt.Dimension(985, 40));
         jPanel9.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         jLabel1.setText("Search:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel9.add(jLabel1, gridBagConstraints);
 
         search.setPreferredSize(new java.awt.Dimension(140, 30));
@@ -177,7 +174,7 @@ public class RoomSettings extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel9.add(search, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -191,6 +188,8 @@ public class RoomSettings extends javax.swing.JPanel {
         jPanel10.setLayout(new java.awt.BorderLayout());
 
         jPanel11.setLayout(new java.awt.BorderLayout());
+
+        jScrollPane2.setBorder(null);
 
         jtbl_getRoomInfo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

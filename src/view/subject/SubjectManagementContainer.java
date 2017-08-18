@@ -1,4 +1,3 @@
- 
 package view.subject;
 
 import component_model_loader.GradeLevelML;
@@ -7,41 +6,42 @@ import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SubjectDaoImpl;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import model.gradelevel.CurrentGradeLevel;
 import utility.layout.SubjectUtility;
 import model.gradelevel.GradeLevel;
 import model.subject.Subject;
+import utility.component.TableUtility;
 
 public class SubjectManagementContainer extends javax.swing.JPanel {
-    
+
     GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
     SubjectDaoImpl sdi = new SubjectDaoImpl();
-    
+
     GradeLevelML gl = new GradeLevelML();
     SubjectML sml = new SubjectML();
-    
+
     GradeLevel gradeLevel = new GradeLevel();
     Subject subject = new Subject();
-    
+
     SubjectUtility subjectUtility = new SubjectUtility();
-    
+
     public SubjectManagementContainer() {
         initComponents();
         jcmbGradeLevel.setRenderer(new component_renderers.GradeLevelJComboBoxRenderer());
         cbGradeLevelList.setRenderer(new component_renderers.GradeLevelJComboBoxRenderer());
         tblSubjectList.setAutoCreateRowSorter(true);
-        
-        
+
         cbGradeLevelList.setModel(gl.getAllGradeLevels());
-        
+
         jcmbGradeLevel.setModel(gl.getAllGradeLevels());
         jcmbGradeLevel.setSelectedIndex(-1);
-        
+
         tblSubjectList.setModel(sml.getAllSubjects());
-        
+
         //Hide first column
         tblSubjectList.getColumnModel().getColumn(0).setMinWidth(0);
         tblSubjectList.getColumnModel().getColumn(0).setMaxWidth(0);
+        
+        TableUtility.setTableColumnWidth(tblSubjectList);
     }
 
     @SuppressWarnings("unchecked")
@@ -78,7 +78,6 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
 
         jpnlExisting.setLayout(new java.awt.BorderLayout());
 
-        jpnlNorth.setBorder(javax.swing.BorderFactory.createTitledBorder("FIlter Control"));
         jpnlNorth.setLayout(new java.awt.GridBagLayout());
 
         jLabel2.setText("Grade Level:");
@@ -105,7 +104,6 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
 
         jpnlExisting.add(jpnlNorth, java.awt.BorderLayout.NORTH);
 
-        jpnlCenter.setBorder(javax.swing.BorderFactory.createTitledBorder("Subject List"));
         jpnlCenter.setLayout(new java.awt.BorderLayout());
 
         tblSubjectList.setModel(new javax.swing.table.DefaultTableModel(
@@ -116,7 +114,7 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Id", "Subject Title", "Subject Code", "Description", "Status"
+                "ID", "Title", "Code", "Description", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -141,7 +139,6 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
 
         jpnlExisting.add(jpnlCenter, java.awt.BorderLayout.CENTER);
 
-        jpnlSouth.setBorder(javax.swing.BorderFactory.createTitledBorder("Control"));
         jpnlSouth.setLayout(new java.awt.GridBagLayout());
 
         jButton1.setText("Open");
@@ -161,7 +158,6 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("Existing", jpnlExisting);
 
-        jpnlNew.setBorder(javax.swing.BorderFactory.createTitledBorder("Create Subject"));
         jpnlNew.setLayout(new java.awt.BorderLayout());
 
         jpnlSubjectDetails.setBorder(javax.swing.BorderFactory.createTitledBorder("Subject Details"));
@@ -278,8 +274,7 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jcmbGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbGradeLevelItemStateChanged
-        if(jcmbGradeLevel.getSelectedIndex() > -1)
-        {
+        if (jcmbGradeLevel.getSelectedIndex() > -1) {
             gradeLevel.setLevel((int) jcmbGradeLevel.getSelectedItem());
         }
     }//GEN-LAST:event_jcmbGradeLevelItemStateChanged
@@ -298,7 +293,7 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
         subject.setSubjectTitle(jtfSubjectName.getText());
         subject.setSubjectDescription(jtfDescription.getText());
         subject.setGradeLevel(gradeLevel);
-        
+
         if (sdi.createSubject(subject) == true) {
             JOptionPane.showMessageDialog(null, "Successfully creating " + jtfSubjectName.getText() + " subject");
         } else {
@@ -321,28 +316,27 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         UpdateSubject updateSubject = new UpdateSubject();
-        
+
         //Setter call from Subject & Getting the id at selected row at column 0
         subject.setSubjectId((int) tblSubjectList.getValueAt(tblSubjectList.getSelectedRow(), 0));
-        
+
         //Set text on jtextfield and jtextarea
         updateSubject.getTfSubjectName().setText((String) subjectUtility.getCreatedSubjectInfoById(subject, gradeLevel).get(0));
         updateSubject.getTfSubjectCode().setText((String) subjectUtility.getCreatedSubjectInfoById(subject, gradeLevel).get(1));
         updateSubject.getTaSubjectDescription().setText((String) subjectUtility.getCreatedSubjectInfoById(subject, gradeLevel).get(2));
-        
+
         //Set selected item on jcombobox
         updateSubject.getCbGradeLevel().setSelectedItem(subjectUtility.getCreatedSubjectInfoById(subject, gradeLevel).get(3));
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public static void flipToSubjectsList(){
+    public static void flipToSubjectsList() {
 //        CardLayoutUtil.fjpnlNorthTo(subjectsCardContainer, new SubjectsListGUI());
     }
-    
-    public static JTable getTblSubjectList()
-    {
+
+    public static JTable getTblSubjectList() {
         return tblSubjectList;
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbGradeLevelList;
     private javax.swing.JButton jButton1;

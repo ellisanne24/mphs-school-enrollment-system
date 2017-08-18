@@ -29,7 +29,6 @@ public interface IStudent {
     Student getStudentById(int aStudentId);
     
     boolean isEnrolledInSchoolYear(Integer aStudentId, Integer aSchoolYearId);
-    boolean exists(int aStudentId, int aSchoolYearId);
     
     Integer getRegistrationIdByStudentId(Integer aStudentId);
     List<Student> getAllRegisteredStudentsByGradeId(GradeLevel aGradeLevel);

@@ -56,7 +56,7 @@ public class GradeDaoImpl implements IGrade{
         {
             isSuccessful = false;
             
-            System.err.println("Error at createGrade "+ex);
+            System.err.println("Error at createStudentGrade "+ex);
         }
         
         return isSuccessful;
@@ -382,6 +382,90 @@ public class GradeDaoImpl implements IGrade{
             System.err.println("Error at getStudentGradeByFacultyStudentId "+ex);
         }
         return list;
+    }
+
+    @Override
+    public List<Grade> getStudentFailedSubjectById(Student aStudent) 
+    {
+        String sql = "call getStudentFailedSubjectById(?)";
+        List<Grade> list = new ArrayList();
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aStudent.getStudentId());
+            
+            try(ResultSet rs = cs.executeQuery())
+            {
+                while(rs.next())
+                {
+                    Grade grade = new Grade();
+                    
+                    grade.subject.setSubjectId(rs.getInt(1));
+                    grade.subject.setSubjectTitle(rs.getString(2));
+                    
+                    list.add(grade);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.err.println("Error at getStudentFailedSubjectById "+ex);
+        }
+        return list;
+        
+    }
+
+    @Override
+    public boolean createStudentSummer(SchoolYear aSchoolYear, Student aStudent, GradeLevel gradeLevel, Subject aSubject, Grade aGrade) 
+    {
+        String sql = "call createStudentSummer(?,?,?,?,?)";
+        boolean isSuccessful;
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aSchoolYear.getSchoolYearId());
+            cs.setInt(2, aStudent.getStudentId());
+            cs.setInt(3, gradeLevel.getId());
+            cs.setInt(4, aSubject.getSubjectId());
+            cs.setDouble(5, aGrade.getGwa());
+            
+            cs.executeUpdate();
+            
+            isSuccessful = true;
+        }
+        catch(SQLException ex)
+        {
+            isSuccessful = false;
+            System.err.println("Error at createStudentSummer "+ex);
+        }
+        
+        return isSuccessful;
+        
+    }
+
+    @Override
+    public boolean promoteSummerStudentById(GradeLevel gradeLevel, Student aStudent, SchoolYear aSchoolYear) 
+    {
+        String sql = "call promoteSummerStudentById(?,?,?)";
+        boolean isSuccessful;
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(sql))
+        {
+            cs.setInt(1, aSchoolYear.getSchoolYearId());
+            cs.setInt(2, aStudent.getStudentId());
+            cs.setInt(3, gradeLevel.getId());
+            
+            cs.executeUpdate();
+            
+            isSuccessful = true;
+        }
+        catch(SQLException ex)
+        {
+            isSuccessful = false;
+            System.err.println("Error at createStudentSummer "+ex);
+        }
+        
+        return isSuccessful;
     }
 
    

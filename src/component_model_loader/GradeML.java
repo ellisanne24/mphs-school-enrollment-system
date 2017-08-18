@@ -257,7 +257,7 @@ public class GradeML
             
             columnStudentId[counterStudentId++] = grade.student.getStudentId();
             columnStudentName[counterStudentName++] = grade.student.getFirstName() + " " + grade.student.getMiddleName() + ". " + grade.student.getLastName();
-            columnLevel[counterLevel++] = grade.gradeLevel.getLevel();
+            columnLevel[counterLevel++] = grade.gradeLevel.getLevel() == 0? "Kindergarten" : grade.gradeLevel.getLevel();
         }
         
         for(int row = 0; row < data.length; row++)
@@ -320,7 +320,7 @@ public class GradeML
             
             columnStudentId[counterStudentId++] = grade.student.getStudentId();
             columnStudentName[counterStudentName++] = grade.student.getFirstName() + " " + grade.student.getMiddleName() + ". " + grade.student.getLastName();
-            columnLevel[counterLevel++] = grade.gradeLevel.getLevel();
+            columnLevel[counterLevel++] = grade.gradeLevel.getLevel() == 0 ? "Kindergarten":grade.gradeLevel.getLevel();
         }
         
         for(int row = 0; row < data.length; row++)
@@ -361,7 +361,7 @@ public class GradeML
         return model;
     }
     
-    public Object[][] getAllStudentGradeByStudentId(Student aStudent)
+    public DefaultTableModel getAllStudentGradeByStudentId(Student aStudent)
     {
         Object[] obj = gdi.getAllStudentGradeByStudentId(aStudent).toArray();
         Object[] columnSubjectId = new Object [gdi.getAllStudentGradeByStudentId(aStudent).size()];
@@ -433,7 +433,30 @@ public class GradeML
             }
         }
         
-        return data;
+        DefaultTableModel model = new DefaultTableModel(data, new String[]{"Id", "Grading Period", "1st Grading", "2nd Grading",
+        "3rd Grading", "4th Grading", "Final Rating"})
+        {
+            @Override
+            public Class getColumnClass(int column) 
+            {
+                //If column has null
+                Object value = this.getValueAt(0,column);
+                return (value==null?Object.class:value.getClass());
+            }
+            
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                //Note that the data/cell address is constant,
+                //no matter where the cell appears onscreen.
+                if (col == 1 || col == 6) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        };
+        
+        return model;
     }
     
     public DefaultListModel getAllStudentByAdviserSectionId(Faculty aFaculty, SchoolYear aSchoolYear)
@@ -541,5 +564,60 @@ public class GradeML
         return model;
     }
     
-    
+    public DefaultTableModel getStudentFailedSubjectById(Student aStudent)
+    {
+        Object[] obj = gdi.getStudentFailedSubjectById(aStudent).toArray();
+        Object[] columnSubjectId = new Object [gdi.getStudentFailedSubjectById(aStudent).size()];
+        Object[] columnSubjectTitle = new Object [gdi.getStudentFailedSubjectById(aStudent).size()];
+        Object[][] data = new Object[gdi.getStudentFailedSubjectById(aStudent).size()][3];
+        
+        int counterSubjectId = 0;
+        int counterSubjectTitle = 0;
+        
+        int counterOne = 0;
+        int counterTwo = 0;
+        
+        for(Object o : obj)
+        {
+            Grade grade = (Grade)o;
+            
+            columnSubjectId[counterSubjectId++] = grade.subject.getSubjectId();
+            columnSubjectTitle[counterSubjectTitle++] = grade.subject.getSubjectTitle();
+        }
+        
+        for(int row = 0; row < data.length; row++)
+        {
+            for(int column = 0; column < data[row].length; column++)
+            {
+                switch(column)
+                {
+                    case 0:
+                        data[row][column] = columnSubjectId[counterOne++];
+                        break;
+                    case 1:
+                        data[row][column] = columnSubjectTitle[counterTwo++];
+                        break;
+                    
+                }
+            }
+        }
+        
+        DefaultTableModel model = new DefaultTableModel(data, 
+                new Object[]{"Id", "Subjects", "Grade"})
+        {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                //Note that the data/cell address is constant,
+                //no matter where the cell appears onscreen.
+                if (col == 2) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+        };
+        
+        return model;
+    }
 }

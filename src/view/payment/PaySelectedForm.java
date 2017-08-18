@@ -275,10 +275,12 @@ public class PaySelectedForm extends javax.swing.JDialog {
                         if (tuitionFee.exists()) {
                             tuitionFee.setPayment(payment);
                             payTuitionFee(tuitionFee);
+                            
                         } else {
                             tuitionFee.setPayment(payment);
                             addTuitionFees(tuitionFee);
                             payTuitionFee(tuitionFee);
+                            enrollStudent(student);
                         }
                         displayReceipt(student, payment);
                     }
@@ -293,13 +295,14 @@ public class PaySelectedForm extends javax.swing.JDialog {
     
     private boolean payTuitionFee(TuitionFee t) {
         boolean isPaid;
-        isPaid = tuitionFeeDaoImpl.pay(t);
-        if (isPaid) {
-            JOptionPane.showMessageDialog(null, "Transaction complete.");
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(null, "Payment of Tuition Failed.\nPlease contact administrator.");
-        }
+//        isPaid = tuitionFeeDaoImpl.pay(t);
+//        if (isPaid) {
+//            JOptionPane.showMessageDialog(null, "Transaction complete.");
+//            this.dispose();
+//        } else {
+//            System.out.println("Payment of Tuition Failed.\nPlease contact administrator.");
+//        }
+        isPaid = true;
         return isPaid;
     }
     
@@ -324,6 +327,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
     private boolean enrollStudent(Student s) {
         boolean isEnrolled;
         isEnrolled = enrollmentDaoImpl.enrollStudent(s);
+        JOptionPane.showMessageDialog(null, "Student is now active.");
         if (isEnrolled) {
             JOptionPane.showMessageDialog(null, "Student is now active.");
             int enrollmentInstance = Dashboard.getENROLLMENT_INSTANCE();
@@ -341,13 +345,15 @@ public class PaySelectedForm extends javax.swing.JDialog {
     private boolean addTuitionFees(TuitionFee t) {
         boolean isAdded;
         Student student = t.getStudent();
-        isAdded = tuitionFeeDaoImpl.add(t);
-        if (isAdded) {
-            JOptionPane.showMessageDialog(null, "Tuition Fees added.");
-            enrollStudent(student);
-        } else {
-            JOptionPane.showMessageDialog(null, "Adding of Tuition Fees failed.");
-        }
+//        isAdded = tuitionFeeDaoImpl.add(t);
+//        enrollStudent(student);
+//        if (isAdded) {
+//            JOptionPane.showMessageDialog(null, "Tuition Fees added.");
+//            enrollStudent(student);
+//        } else {
+//            System.out.println("Adding of Tuition Fees failed.");
+//        }
+isAdded = true;
         return isAdded;
     }
     

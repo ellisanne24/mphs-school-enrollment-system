@@ -202,7 +202,11 @@ public class CreateScheduleController implements ActionListener{
         int yyyy = Integer.parseInt(year.getSelectedItem().toString().trim());
         int mm = Integer.parseInt(month.getSelectedItem().toString().trim());
         int dd = Integer.parseInt(day.getSelectedItem().toString().trim());
+        System.out.println("Day :"+day.getSelectedItem().toString().trim());
+        System.out.println("Month :"+month.getSelectedItem().toString().trim());
+        System.out.println("Year :"+year.getSelectedItem().toString().trim());
         String strDate = yyyy + "-" + (mm+1) + "-" + dd;
+        System.out.println("STRDATE :"+strDate);
         Date date = java.sql.Date.valueOf(strDate);
         return date;
     }
@@ -214,11 +218,11 @@ public class CreateScheduleController implements ActionListener{
         Date sem2Deadline = convertToDate(sem2Year, sem2Month, sem2Day);
         
         Period firstSemester = new Period();
-        firstSemester.setPaymentDeadline(sem1Deadline);
+        firstSemester.setDeadlineOfPayment(sem1Deadline);
         firstSemester.setDescription("First Semester");
         
         Period secondSemester = new Period();
-        secondSemester.setPaymentDeadline(sem2Deadline);
+        secondSemester.setDeadlineOfPayment(sem2Deadline);
         secondSemester.setDescription("Second Semester");
         
         List<Period> semestralPeriods = new ArrayList<>();
@@ -246,19 +250,19 @@ public class CreateScheduleController implements ActionListener{
         Date q4Deadline = convertToDate(q4Year, q4Month, q4Day);
         
         Period q1Period = new Period();
-        q1Period.setPaymentDeadline(q1Deadline);
+        q1Period.setDeadlineOfPayment(q1Deadline);
         q1Period.setDescription(FIRST_QUARTER);
         
         Period q2Period = new Period();
-        q2Period.setPaymentDeadline(q2Deadline);
+        q2Period.setDeadlineOfPayment(q2Deadline);
         q2Period.setDescription(SECOND_QUARTER);
         
         Period q3Period = new Period();
-        q3Period.setPaymentDeadline(q3Deadline);
+        q3Period.setDeadlineOfPayment(q3Deadline);
         q3Period.setDescription(THIRD_QUARTER);
         
         Period q4Period = new Period();
-        q4Period.setPaymentDeadline(q4Deadline);
+        q4Period.setDeadlineOfPayment(q4Deadline);
         q4Period.setDescription(FOURTH_QUARTER);
         
         List<Period> periods = new ArrayList<>();
@@ -290,43 +294,43 @@ public class CreateScheduleController implements ActionListener{
         Date tenthMonthDeadline = convertToDate(mo10Year, mo10Month, mo10Day);
         
         Period firstMonth = new Period();
-        firstMonth.setPaymentDeadline(firstMonthDeadline);
+        firstMonth.setDeadlineOfPayment(firstMonthDeadline);
         firstMonth.setDescription("First Month");
         
         Period secondMonth = new Period();
-        secondMonth.setPaymentDeadline(secondMonthDeadline);
+        secondMonth.setDeadlineOfPayment(secondMonthDeadline);
         secondMonth.setDescription("Second Month");
         
         Period thirdMonth = new Period();
-        thirdMonth.setPaymentDeadline(thirdMonthDeadline);
+        thirdMonth.setDeadlineOfPayment(thirdMonthDeadline);
         thirdMonth.setDescription("Third Month");
         
         Period fourthMonth = new Period();
-        fourthMonth.setPaymentDeadline(fourthMonthDeadline);
+        fourthMonth.setDeadlineOfPayment(fourthMonthDeadline);
         fourthMonth.setDescription("Fourth Month");
         
         Period fifthMonth = new Period();
-        fifthMonth.setPaymentDeadline(fifthMonthDeadline);
+        fifthMonth.setDeadlineOfPayment(fifthMonthDeadline);
         fifthMonth.setDescription("Fifth Month");
         
         Period sixthMonth = new Period();
-        sixthMonth.setPaymentDeadline(sixthMonthDeadline);
+        sixthMonth.setDeadlineOfPayment(sixthMonthDeadline);
         sixthMonth.setDescription("Sixth Month");
         
         Period seventhMonth = new Period();
-        seventhMonth.setPaymentDeadline(seventhMonthDeadline);
+        seventhMonth.setDeadlineOfPayment(seventhMonthDeadline);
         seventhMonth.setDescription("Seventh Month");
         
         Period eighthMonth = new Period();
-        eighthMonth.setPaymentDeadline(eighthMonthDeadline);
+        eighthMonth.setDeadlineOfPayment(eighthMonthDeadline);
         eighthMonth.setDescription("Eighth Month");
         
         Period ninthMonth = new Period();
-        ninthMonth.setPaymentDeadline(ninthMonthDeadline);
+        ninthMonth.setDeadlineOfPayment(ninthMonthDeadline);
         ninthMonth.setDescription("Ninth Month");
         
         Period tenthMonth = new Period();
-        tenthMonth.setPaymentDeadline(tenthMonthDeadline);
+        tenthMonth.setDeadlineOfPayment(tenthMonthDeadline);
         tenthMonth.setDescription("Tenth Month");
         
         List<Period> periods = new ArrayList<>();

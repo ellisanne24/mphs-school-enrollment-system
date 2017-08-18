@@ -20,11 +20,14 @@ public class ScheduleML {
         DefaultTableModel model = (DefaultTableModel) jtable.getModel();
         model.setRowCount(0);
         Object[] scheduleList = scheduleDaoImpl.getAll(aSchoolYearId).toArray();
-        for(Object o : scheduleList){
-            Schedule s = (Schedule)o;
+        for (Object o : scheduleList) {
+            Schedule s = (Schedule) o;
             model.addRow(new Object[]{
-                s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+                s.getScheduleId(), s.getDay(), s.getStartTime(), s.getEndTime(), s.getSectionName(),
+                s.getSubjectCode(), s.getRoomName(),
+                s.getFaculty().getLastName() == null ? "None assigned" : s.getFaculty().getLastName()
+                + ", "
+                + s.getFaculty().getFirstName() == null ? "" :  s.getFaculty().getFirstName()
             });
         }
         return model;

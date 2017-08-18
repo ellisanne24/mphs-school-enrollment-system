@@ -131,7 +131,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         jpnlContent.setLayout(new java.awt.GridBagLayout());
 
-        jtpManagementTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jtpManagementTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jtpManagementTabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtpManagementTabbedPaneMouseClicked(evt);

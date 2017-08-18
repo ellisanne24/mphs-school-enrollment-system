@@ -34,7 +34,6 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     public EnrollmentPanel() {
         initComponents();
         initializeComponents();
-        JInternalFrameUtil.removeTitleBar(jInternalFrame1);
         initializeModels();
         initializeDaoImpl();
         initializeControllers();
@@ -46,10 +45,12 @@ public class EnrollmentPanel extends javax.swing.JPanel {
     }
     
     private void initializeComponents(){
-        jtblRegistrationList.setRowHeight(30);
-        jtblStudentsList.setRowHeight(30);
+        JInternalFrameUtil.removeTitleBar(jInternalFrame1);
+        jtblRegistrationList.setRowHeight(40);
+        jtblStudentsList.setRowHeight(40);
         jtpContainer.addTab("Promoted", new Promoted());
         jtpContainer.addTab("Promotion", new Promotion());
+        jtpContainer.addTab("Summer",new SummerClass());
     }
 
     private void initializeDaoImpl(){
@@ -212,7 +213,6 @@ public class EnrollmentPanel extends javax.swing.JPanel {
 
         jpnlStudents.setLayout(new java.awt.GridBagLayout());
 
-        jpnlStudentsFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
         jpnlStudentsFilter.setLayout(new java.awt.GridBagLayout());
 
         jlblSearch1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -262,7 +262,7 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudents.add(jpnlStudentsFilter, gridBagConstraints);
 
-        jspStudents.setBorder(javax.swing.BorderFactory.createTitledBorder("Student List"));
+        jspStudents.setBorder(null);
         jspStudents.setPreferredSize(new java.awt.Dimension(550, 402));
 
         jtblStudentsList.setAutoCreateRowSorter(true);
@@ -317,7 +317,6 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jInternalFrame1.getContentPane().add(jpnlContent, gridBagConstraints);
 
         jmiExitEnrollment.setText("File");
@@ -405,7 +404,7 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         if(!jtfSearchStudents.getText().isEmpty() && evt.getKeyCode() == KeyEvent.VK_ENTER){
             DefaultTableModel dtm = studentML.getAllStudentByKeyword(jtblStudentsList, jtfSearchStudents.getText());
             jtblStudentsList.setModel(dtm);
-        }else if(jtfSearchStudents.getText().isEmpty()){
+        }else if(jtfSearchStudents.getText().isEmpty() && evt.getKeyCode() == KeyEvent.VK_ENTER){
             loadAllStudentsToJTable();
         }
     }//GEN-LAST:event_jtfSearchStudentsKeyPressed

@@ -13,10 +13,13 @@ public class AllUsersRecord extends javax.swing.JPanel {
         initComponents();
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
         initializeControllers();
-        jtblRecord.setAutoCreateRowSorter(true);
         jtblRecord.setModel(new UserML().getAllUsers(jtblRecord));
     }
-
+    
+    public static void refreshRecord(){
+        jtblRecord.setModel(new UserML().getAllUsers(jtblRecord));
+    }
+    
     private void initializeControllers(){
         jmiNewUser.addActionListener(new DisplayCreateUser());
         jmiEditUser.addActionListener(new DisplayEditUser());
@@ -59,12 +62,13 @@ public class AllUsersRecord extends javax.swing.JPanel {
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
+        jtblRecord.setAutoCreateRowSorter(true);
         jtblRecord.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "User Id", "Username", "Role", "Name"
+                "ID", "Username", "Role", "Name"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -75,6 +79,7 @@ public class AllUsersRecord extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtblRecord.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jtblRecord.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblRecord);
 

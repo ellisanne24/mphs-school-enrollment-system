@@ -8,9 +8,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import jdk.internal.org.objectweb.asm.Type;
 import model.faculty.Faculty;
 import model.schedule.Schedule;
 import model.subject.Subject;
@@ -80,7 +80,7 @@ public class ScheduleDaoImpl implements ISchedule{
 
                     csa.setInt(6, sectionDaoImpl.getSectionIdByName(s.getSectionName().trim()));
                     csa.setInt(7, roomDaoImpl.getId(s.getRoomName().trim()));
-                    csa.registerOutParameter(8, Type.INT);
+                    csa.registerOutParameter(8, Types.INTEGER);
                     csa.executeUpdate();
                     int scheduleId = csa.getInt(8);
 

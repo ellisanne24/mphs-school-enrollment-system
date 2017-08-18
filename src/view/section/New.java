@@ -291,10 +291,13 @@ public class New extends javax.swing.JPanel {
                 section.setRequiredAverage(String.valueOf(cbAverage.getSelectedItem()));
             }
             
+            if(cbSession.getSelectedIndex() == -1)
+            {
+                session.setSessionId(3);
+            }
             
             //Setter call from Section
             section.setSectionName(tfSubjectName.getText());
-            //Setter call from Section
             section.setSectionId(section.getSectionId());
             
             //Setter call from SchoolYear
@@ -302,7 +305,8 @@ public class New extends javax.swing.JPanel {
             //Setter call from GradeLevel
             gradeLevel.setId(gldi.getId(gradeLevel));
             
-            sdi.createSection(section);
+            //Method call from SectionDaoImpl
+//            sdi.createSection(section);
             
             
             
@@ -314,7 +318,7 @@ public class New extends javax.swing.JPanel {
                     session.setSessionId(1);
                     
                     //Method call from SectionDaoImpl
-                    sdi.createSectionSettings(section, schoolYear, gradeLevel, session, faculty);
+//                    sdi.createSectionSettings(section, schoolYear, gradeLevel, session, faculty);
                 }
                 else 
                 {
@@ -323,7 +327,7 @@ public class New extends javax.swing.JPanel {
                     session.setSessionId(2);
 
                     //Method call from SectionDaoImpl
-                    sdi.createSectionSettings(section, schoolYear, gradeLevel, session, faculty);
+//                    sdi.createSectionSettings(section, schoolYear, gradeLevel, session, faculty);
                     JOptionPane.showMessageDialog(null, "Successfully created " + tfSubjectName.getText() + " section!");
                 }
                 
@@ -331,6 +335,12 @@ public class New extends javax.swing.JPanel {
         }
         else 
         {
+            if(cbSession.getSelectedIndex() == -1)
+            {
+                session.setSessionId(3);
+            }
+            
+            
             //Setter call from Section
             section.setSectionName(tfSubjectName.getText());
             section.setSectionId(section.getSectionId());
@@ -340,7 +350,8 @@ public class New extends javax.swing.JPanel {
             gradeLevel.setId(gldi.getId(gradeLevel));
             //Setter call from Session
             session.setSessionId(session.getSessionId());
-
+            
+            System.out.println(session.getSessionId());
             
             //Method call from SectionDaoImpl
             sdi.createSection(section);

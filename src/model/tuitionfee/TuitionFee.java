@@ -22,7 +22,7 @@ public class TuitionFee {
 
     private Payment payment;
     private boolean hasDiscount;
-    private double sum;
+    private double totalFees;
     private boolean exists;
     private double totalPaid;
     private double balance;
@@ -73,12 +73,12 @@ public class TuitionFee {
         this.schoolYear = schoolYear;
     }
 
-    public double getSum() {
-        return sum;
+    public double getTotalFees() {
+        return totalFees;
     }
 
-    public void setSum(double sum) {
-        this.sum = sum;
+    public void setTotalFees(double totalFees) {
+        this.totalFees = totalFees;
     }
 
     public boolean exists() {

@@ -186,11 +186,12 @@ public class FeesSetting extends javax.swing.JPanel {
 
         jpnlCreateNewFeeFields.setLayout(new java.awt.GridBagLayout());
 
+        jtpFees.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+
         jpnlFeeCreationTab.setLayout(new java.awt.GridBagLayout());
 
         jPanel8.setLayout(new java.awt.GridBagLayout());
 
-        jpnlCreateFee.setBorder(javax.swing.BorderFactory.createTitledBorder("Fee Creation"));
         jpnlCreateFee.setLayout(new java.awt.GridBagLayout());
 
         jpnlCreateNewFeeDescription.setBorder(javax.swing.BorderFactory.createTitledBorder("Fee Description"));
@@ -208,11 +209,9 @@ public class FeesSetting extends javax.swing.JPanel {
         jpnlCreateNewFeeDescription.add(jspFeeDescription, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlCreateFee.add(jpnlCreateNewFeeDescription, gridBagConstraints);
 
@@ -227,12 +226,15 @@ public class FeesSetting extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlCreateFeeControls.add(jbtnCreateFee, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlCreateFee.add(jpnlCreateFeeControls, gridBagConstraints);
@@ -478,7 +480,8 @@ public class FeesSetting extends javax.swing.JPanel {
         jpnlGradeLevels.add(jcbKindergarten, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlFeeAmount.add(jpnlGradeLevels, gridBagConstraints);
 

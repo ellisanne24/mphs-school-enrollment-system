@@ -20,9 +20,20 @@ public class DashboardPermission extends Permission{
     private boolean canAccessEnrollment;
     private boolean canAccessSettings;
     private boolean canAccessAccounts;
+    private boolean canAccessReports;
     private Date dateLastModified;
     private User modifiedBy;
 
+    public boolean hasReportsAccess() {
+        return canAccessReports;
+    }
+
+    public void setCanAccessReports(boolean canAccessReports) {
+        this.canAccessReports = canAccessReports;
+    }
+
+    
+    
     public boolean hasRegistrationAccess() {
         return canAccessRegistration;
     }

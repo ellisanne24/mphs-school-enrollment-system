@@ -533,7 +533,7 @@ public class CreateCurriculumForm extends javax.swing.JPanel {
         if (jcmbGradeLevel.getSelectedIndex() != -1) {
             gradeLevel.setLevel((int) jcmbGradeLevel.getSelectedItem());
 //            cdi.getEachSubjectByGradeLevelForCurriculum(gradeLevel);
-            subjectsListJtbl.setModel(cu.getAllSubjectsByGradeLevel(gradeLevel));
+//            subjectsListJtbl.setModel(cu.getAllSubjectsByGradeLevel(gradeLevel));
         }
 //        else
 //        {

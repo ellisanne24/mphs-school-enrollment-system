@@ -22,12 +22,12 @@ public class FacultyDaoImpl implements IFaculty {
         Integer facultyId = null;
         String SQL = "{CALL `getFacultyIdByName`(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
+                CallableStatement cs = con.prepareCall(SQL);) {
             cs.setString(1, lastName.trim());
-            cs.setString(2,firstName.trim());
+            cs.setString(2, firstName.trim());
             cs.setString(3, middleName.trim());
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     facultyId = rs.getInt("faculty_id");
                 }
             }
@@ -36,7 +36,25 @@ public class FacultyDaoImpl implements IFaculty {
         }
         return facultyId;
     }
-    
+
+    @Override
+    public int getFacultyIdByUserId(int pUserId) {
+        Integer userId = null;
+        String SQL = "{CALL getFacultyIdByUserId(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, pUserId);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    userId = rs.getInt("faculty_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userId;
+    }
+
     @Override
     public List<Faculty> getById(int aFacultyID) {
         List<Faculty> list = new ArrayList();
@@ -90,8 +108,6 @@ public class FacultyDaoImpl implements IFaculty {
         return list;
     }
 
-    
-
     @Override
     public boolean add(Faculty faculty) {
         boolean isAdded = false;
@@ -99,12 +115,14 @@ public class FacultyDaoImpl implements IFaculty {
         String SQL_addFacultyAndSpecialization = "{CALL addFacultyandSpecialization(?,?)}";
         String SQL_addUser = "{CALL addUser(?,?,?,?,?,?)}";
         String SQL_addUserRole = "{CALL addUserRole(?,?)}";
+        String SQL_addAsUserFaculty = "{CALL addUserFaculty(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
             try (CallableStatement cs1 = con.prepareCall(SQl_addFaculty);
                     CallableStatement cs2 = con.prepareCall(SQL_addFacultyAndSpecialization);
                     CallableStatement cs3 = con.prepareCall(SQL_addUser);
-                    CallableStatement cs4 = con.prepareCall(SQL_addUserRole);) {
+                    CallableStatement cs4 = con.prepareCall(SQL_addUserRole);
+                    CallableStatement cs5 = con.prepareCall(SQL_addAsUserFaculty);) {
                 cs1.setString(1, faculty.getFirstName());
                 cs1.setString(2, faculty.getLastName());
                 cs1.setString(3, faculty.getMiddleName());
@@ -121,22 +139,26 @@ public class FacultyDaoImpl implements IFaculty {
                     cs2.setInt(2, s.getId());
                     cs2.executeUpdate();
                 }
-                
-                cs3.setString(1,faculty.getFirstName().toLowerCase());
-                cs3.setString(2,"facultymember");
-                cs3.setString(3,faculty.getLastName().toLowerCase());
-                cs3.setString(4,faculty.getFirstName().toLowerCase());
-                cs3.setString(5,faculty.getMiddleName().toLowerCase());
+
+                cs3.setString(1, faculty.getFirstName().toLowerCase().replaceAll("\\s", ""));
+                cs3.setString(2, "facultymember");
+                cs3.setString(3, faculty.getLastName());
+                cs3.setString(4, faculty.getFirstName());
+                cs3.setString(5, faculty.getMiddleName());
                 cs3.registerOutParameter(6, Types.INTEGER);
                 cs3.executeUpdate();
                 int userId = cs3.getInt(6);
-                
+
                 RoleDaoImpl rdi = new RoleDaoImpl();
                 int roleId = rdi.getId("Faculty");
                 cs4.setInt(1, userId);
                 cs4.setInt(2, roleId);
                 cs4.executeUpdate();
-                
+
+                cs5.setInt(1, userId);
+                cs5.setInt(2, facultyId);
+                cs5.executeUpdate();
+
                 con.commit();
                 isAdded = true;
             } catch (SQLException e) {
@@ -176,130 +198,94 @@ public class FacultyDaoImpl implements IFaculty {
         }
         return isUpdated;
     }
-    
+
     @Override
-    public List<Section> getAllFacultySectionByFacultyId(Faculty aFaculty) 
-    {
-        String sql = "call getAllFacultySectionByFacultyId(?)";
-        
-        List <Section> list = new ArrayList();
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
-            
+    public List<Section> getAllFacultySectionByFacultyId(Faculty aFaculty) {
+        String sql = "{CALL getAllFacultySectionByFacultyId(?)}";
+        List<Section> list = new ArrayList();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(sql)) {
             cs.setInt(1, aFaculty.getFacultyID());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
                     Section section = new Section();
-                    
                     section.setSectionName(rs.getString("sectionName"));
-                    
                     list.add(section);
                 }
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.err.println("Error at getAllFacultySectionByFacultyId" + ex);
         }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getAllFacultySectionByFacultyId"+ex);
-        }
-        
         return list;
     }
 
     @Override
-    public List<Faculty> getAllFaculty() 
-    {
-        List <Faculty> list = new ArrayList();
-        String sql = "call getAllFaculty()";
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
+    public List<Faculty> getAllFaculty() {
+        List<Faculty> list = new ArrayList();
+        String sql = "{CALL getAllFaculty()}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(sql)) {
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
                     Faculty faculty = new Faculty();
-                    
+
                     faculty.setFirstName(rs.getString(1));
                     faculty.setMiddleName(rs.getString(2));
                     faculty.setLastName(rs.getString(3));
-                    
+
                     list.add(faculty);
                 }
             }
-        }
-        catch(SQLException ex)
-        {
-            System.out.println("Error at getAllFaculty "+ex);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error at getAllFaculty " + ex);
         }
         return list;
     }
 
     @Override
-    public int getFacultyId(Faculty aFaculty) 
-    {
-        String sql = "call getFacultyId(?)";
-        int id = 0;
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
+    public int getFacultyId(Faculty aFaculty) {
+        String sql = "{CALL getFacultyId(?)}";
+        Integer id = null;
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(sql)) {
             cs.setString(1, aFaculty.getFullName());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
                     id = rs.getInt(1);
                 }
             }
-        }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getAllFaculty "+ex);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.err.println("Error at getAllFaculty " + ex);
         }
         return id;
     }
 
     @Override
-    public List<Faculty> getAllFacultyByAdviserId(Faculty aFaculty) 
-    {
-        List <Faculty> list = new ArrayList();
-        String sql = "call getAllFacultyByAdviserId(?)";
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
+    public List<Faculty> getAllFacultyByAdviserId(Faculty aFaculty) {
+        List<Faculty> list = new ArrayList();
+        String sql = "{CALL getAllFacultyByAdviserId(?)}";
+
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(sql)) {
             cs.setInt(1, aFaculty.getFacultyID());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
                     Faculty faculty = new Faculty();
-                    
+
                     faculty.setFacultyID(rs.getInt(1));
-                    faculty.setFullName(rs.getString(2) + " " +rs.getString(3) + ". " + rs.getString(4));
-                    
+                    faculty.setFullName(rs.getString(2) + " " + rs.getString(3) + ". " + rs.getString(4));
+
                     list.add(faculty);
                 }
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.err.println("Error at getAllFacultyByAdviserId " + ex);
         }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getAllFacultyByAdviserId "+ex);
-        }
-        
         return list;
     }
-
-    
-
-    
-    
 
 }

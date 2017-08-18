@@ -186,7 +186,7 @@ public class SchoolFeesDaoImpl implements ISchoolFees{
                 otherFees.setFees(feeList);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
+            e.printStackTrace();
         }
         return otherFees;
     }
@@ -228,7 +228,7 @@ public class SchoolFeesDaoImpl implements ISchoolFees{
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
+            e.printStackTrace();
         }
         return basicFee;
     }
