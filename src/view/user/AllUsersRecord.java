@@ -80,6 +80,9 @@ public class AllUsersRecord extends javax.swing.JPanel {
             }
         });
         jtblRecord.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jtblRecord.setMinimumSize(new java.awt.Dimension(450, 800));
+        jtblRecord.setPreferredSize(new java.awt.Dimension(450, 800));
+        jtblRecord.setRowHeight(30);
         jtblRecord.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblRecord);
 

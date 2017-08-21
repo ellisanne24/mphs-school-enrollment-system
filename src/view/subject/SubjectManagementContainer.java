@@ -125,7 +125,9 @@ public class SubjectManagementContainer extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        tblSubjectList.setRowHeight(25);
+        tblSubjectList.setMinimumSize(new java.awt.Dimension(900, 10000));
+        tblSubjectList.setPreferredSize(new java.awt.Dimension(900, 10000));
+        tblSubjectList.setRowHeight(30);
         jScrollPane1.setViewportView(tblSubjectList);
         if (tblSubjectList.getColumnModel().getColumnCount() > 0) {
             tblSubjectList.getColumnModel().getColumn(0).setResizable(false);

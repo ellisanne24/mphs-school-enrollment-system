@@ -6,6 +6,7 @@
 package dao;
 
 import model.registration.Registration;
+import model.testdata.SubjectTestDataModel;
 
 /**
  *
@@ -16,4 +17,6 @@ public interface IAdminTools {
     boolean deactivateAllStudents();
     boolean deleteAllPaymentAndTuitionRecord();
     boolean deleteAllStudentRecord();
+    boolean addSubjects(SubjectTestDataModel s);
+    boolean addFacultyWithSpecialization();
 }

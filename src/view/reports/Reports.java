@@ -347,6 +347,7 @@ public class Reports extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtblClassList.setPreferredSize(new java.awt.Dimension(800, 800));
         jScrollPane2.setViewportView(jtblClassList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

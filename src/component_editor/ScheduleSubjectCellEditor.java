@@ -4,6 +4,8 @@ import daoimpl.SubjectDaoImpl;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
@@ -33,9 +35,8 @@ public class ScheduleSubjectCellEditor extends DefaultCellEditor {
         this.gradelevelId = gradeLevelId;
         subjectDaoImpl = new SubjectDaoImpl();
         subjectModel = getAllSubjectNames();
-        subjectModel.setSelectedItem(null);
         jcmbSubject = new JComboBox(subjectModel);
-        jcmbSubject.setEditable(true);
+        jcmbSubject.setEditable(false);
 
         jcmbSubject.addItemListener(new ItemListener() {
             @Override
@@ -61,28 +62,46 @@ public class ScheduleSubjectCellEditor extends DefaultCellEditor {
     }
 
     private DefaultComboBoxModel getAllSubjectNames() {
-        DefaultComboBoxModel subjectModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
         GradeLevel gradeLevel = new GradeLevel();
         gradeLevel.setId(gradelevelId);
 
         List<Subject> list = subjectDaoImpl.getAllSubjectsByGradeLevelId(gradeLevel);
         int subjectsCount = 0;
-
+        
+        
+        DefaultTableModel scheduleTableModel = (DefaultTableModel) jtblSchedule.getModel();
+        int tableRow = 0;
         for (Subject s : list) {
             subjectsCount++;
-            subjectModel.addElement(s.getSubjectCode());
-            subjectModel.setSelectedItem(null);
+            scheduleTableModel.setRowCount(subjectsCount);
+            model.addElement(s.getSubjectCode());
+            model.setSelectedItem(s.getSubjectCode());
+            scheduleTableModel.setValueAt(s.getSubjectCode(), tableRow, 3);
+            tableRow++;
         }
+        scheduleTableModel.setRowCount(subjectsCount);
 
-        DefaultTableModel tableModel = (DefaultTableModel) jtblSchedule.getModel();
-        tableModel.setRowCount(subjectsCount * 2);
-
-        return subjectModel;
+        model.setSelectedItem(null);
+        return model;
     }
 
     private void loadFaculty() {
         TableColumnModel columnModel = jtblSchedule.getColumnModel();
         TableColumn facultyColumn = columnModel.getColumn(4);
         facultyColumn.setCellEditor(new ScheduleFacultyCellEditor());
+    }
+    
+    
+    @Override
+    public boolean isCellEditable(EventObject anEvent) {
+        boolean cellEditable = super.isCellEditable(anEvent);
+        if (cellEditable && anEvent instanceof MouseEvent) {
+            cellEditable = ((MouseEvent) anEvent).getClickCount() == 2;
+        }
+        if(cellEditable && anEvent instanceof ItemEvent){
+            cellEditable = ((ItemEvent)anEvent).getStateChange() == 1;
+        }
+        return cellEditable;
     }
 }

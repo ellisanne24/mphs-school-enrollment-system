@@ -8,6 +8,7 @@ import model.registration.Registration;
 import utility.database.DBType;
 import utility.database.DBUtil;
 import dao.IAdminTools;
+import model.testdata.SubjectTestDataModel;
 
 /**
  *
@@ -156,6 +157,45 @@ public class AdminToolsDaoImpl implements IAdminTools {
             e.printStackTrace();
         }
         return isDeleted;
+    }
+
+    @Override
+    public boolean addSubjects(SubjectTestDataModel s) {
+        boolean added = false;
+        GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
+        String SQL = "{CALL spUtil_add_subjects(?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            Integer prefixNoStart = 0;
+            String codePrefix;
+            for (int level = 0; level <= 10; level++) {
+                for (int i = 0; i < s.getSubject().size(); i++) {
+                    if (level == 0) {
+                        codePrefix = "K";
+                        cs.setString(1, codePrefix + s.getCode().get(i));
+                    } else {
+                        codePrefix = "G";
+                        cs.setString(1, codePrefix +prefixNoStart + s.getCode().get(i));
+                    }
+                    
+                    cs.setString(2, s.getSubject().get(i));
+                    cs.setString(3, s.getDescription().get(i));
+                    cs.setInt(4, gldi.getId(level));
+                    cs.executeUpdate();
+                }
+                prefixNoStart++;
+            }
+            
+            added = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return added;
+    }
+
+    @Override
+    public boolean addFacultyWithSpecialization() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

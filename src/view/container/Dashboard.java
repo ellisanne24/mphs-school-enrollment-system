@@ -25,6 +25,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import model.permission.dashboardpermission.DashboardPermission;
 import model.role.Role;
+import model.testdata.SubjectTestDataModel;
 import model.user.User;
 import threads.SchoolYearLoaderThread;
 import view.grades.GradesRecord;
@@ -91,6 +92,10 @@ public class Dashboard extends javax.swing.JFrame {
         initThreads();
         setUserInfo();
         initControllers();
+        
+        //
+        SubjectTestDataModel stdm = new SubjectTestDataModel();
+        stdm.getDescription();
     }
     
     private void loadFacultyId(){
@@ -273,6 +278,7 @@ public class Dashboard extends javax.swing.JFrame {
     }
     };
     jlblPayment = new javax.swing.JLabel();
+    jlblAssessmentText = new javax.swing.JLabel();
     jpnlRegistrationButton = new javax.swing.JPanel() {
         public void paintComponent(Graphics g){
             Graphics2D g2d = (Graphics2D) g;
@@ -452,7 +458,7 @@ public class Dashboard extends javax.swing.JFrame {
     jpnlSchoolYear.setOpaque(false);
     jpnlSchoolYear.setLayout(new java.awt.GridBagLayout());
 
-    jlblCurrentSchoolYear.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+    jlblCurrentSchoolYear.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 48)); // NOI18N
     jlblCurrentSchoolYear.setForeground(new java.awt.Color(255, 255, 255));
     jlblCurrentSchoolYear.setText("School Year: ");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -503,7 +509,7 @@ public class Dashboard extends javax.swing.JFrame {
     calendarPanel.setOpaque(false);
     calendarPanel.setLayout(new java.awt.GridBagLayout());
 
-    jlblDayToday.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblDayToday.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 36)); // NOI18N
     jlblDayToday.setForeground(new java.awt.Color(255, 255, 255));
     jlblDayToday.setText("dayTodayText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -512,7 +518,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(20, 220, 0, 0);
     calendarPanel.add(jlblDayToday, gridBagConstraints);
 
-    jlblDateToday.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblDateToday.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 36)); // NOI18N
     jlblDateToday.setForeground(new java.awt.Color(255, 255, 255));
     jlblDateToday.setText("dateTodayText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -569,14 +575,24 @@ public class Dashboard extends javax.swing.JFrame {
     });
     jpnlPaymentButton.setLayout(new java.awt.GridBagLayout());
 
-    jlblPayment.setFont(new java.awt.Font("Dialog", 1, 30)); // NOI18N
+    jlblPayment.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 30)); // NOI18N
     jlblPayment.setForeground(new java.awt.Color(255, 255, 255));
-    jlblPayment.setText("Payment & Assessment");
+    jlblPayment.setText("Payment & ");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(0, 150, 0, 0);
     jpnlPaymentButton.add(jlblPayment, gridBagConstraints);
+
+    jlblAssessmentText.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 30)); // NOI18N
+    jlblAssessmentText.setForeground(new java.awt.Color(255, 255, 255));
+    jlblAssessmentText.setText("Assessment");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(0, 150, 0, 0);
+    jpnlPaymentButton.add(jlblAssessmentText, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -602,7 +618,7 @@ public class Dashboard extends javax.swing.JFrame {
     });
     jpnlRegistrationButton.setLayout(new java.awt.GridBagLayout());
 
-    jlblRegistration.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblRegistration.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 30)); // NOI18N
     jlblRegistration.setForeground(new java.awt.Color(255, 255, 255));
     jlblRegistration.setText("Registration");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -635,7 +651,7 @@ public class Dashboard extends javax.swing.JFrame {
     });
     jpnlEnrollmentButton.setLayout(new java.awt.GridBagLayout());
 
-    jlblEnrollment.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblEnrollment.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 30)); // NOI18N
     jlblEnrollment.setForeground(new java.awt.Color(255, 255, 255));
     jlblEnrollment.setText("Enrollment");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -668,7 +684,7 @@ public class Dashboard extends javax.swing.JFrame {
     });
     jpnlGradesButton.setLayout(new java.awt.GridBagLayout());
 
-    jlblGrades.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblGrades.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 30)); // NOI18N
     jlblGrades.setForeground(new java.awt.Color(255, 255, 255));
     jlblGrades.setText("Grading System");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -701,7 +717,7 @@ public class Dashboard extends javax.swing.JFrame {
     });
     jpnlManagementButton.setLayout(new java.awt.GridBagLayout());
 
-    jlblSettings.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblSettings.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 30)); // NOI18N
     jlblSettings.setForeground(new java.awt.Color(255, 255, 255));
     jlblSettings.setText("Settings");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -734,7 +750,7 @@ public class Dashboard extends javax.swing.JFrame {
     });
     jpnlAccountsButton.setLayout(new java.awt.GridBagLayout());
 
-    jlblAccounts.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblAccounts.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 30)); // NOI18N
     jlblAccounts.setForeground(new java.awt.Color(255, 255, 255));
     jlblAccounts.setText("User Accounts");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -767,7 +783,7 @@ public class Dashboard extends javax.swing.JFrame {
     });
     jpnlReportsButton.setLayout(new java.awt.GridBagLayout());
 
-    jlblReports.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jlblReports.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 36)); // NOI18N
     jlblReports.setForeground(new java.awt.Color(255, 255, 255));
     jlblReports.setText("Reports");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -832,7 +848,7 @@ public class Dashboard extends javax.swing.JFrame {
     jpnlAccountInformation.setPreferredSize(new java.awt.Dimension(150, 149));
     jpnlAccountInformation.setLayout(new java.awt.GridBagLayout());
 
-    jlblChangePassword.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
+    jlblChangePassword.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblChangePassword.setForeground(new java.awt.Color(255, 255, 255));
     jlblChangePassword.setText("Edit Account");
     jlblChangePassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -848,6 +864,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblChangePassword, gridBagConstraints);
 
+    jlblStatus.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblStatus.setForeground(new java.awt.Color(255, 255, 255));
     jlblStatus.setText("Last login date :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -855,6 +872,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblStatus, gridBagConstraints);
 
+    jlblLastLoginText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblLastLoginText.setForeground(new java.awt.Color(0, 0, 0));
     jlblLastLoginText.setText("date text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -864,6 +882,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblLastLoginText, gridBagConstraints);
 
+    jlblUserIdLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblUserIdLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblUserIdLabel.setText("Account ID :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -872,6 +891,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblUserIdLabel, gridBagConstraints);
 
+    jlblUserIdText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblUserIdText.setForeground(new java.awt.Color(0, 0, 0));
     jlblUserIdText.setText("Account ID Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -880,6 +900,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblUserIdText, gridBagConstraints);
 
+    jlblLastNameLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblLastNameLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblLastNameLabel.setText("Last Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -888,6 +909,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblLastNameLabel, gridBagConstraints);
 
+    lbl_LastNameText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     lbl_LastNameText.setForeground(new java.awt.Color(0, 0, 0));
     lbl_LastNameText.setText("Last Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -896,6 +918,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_LastNameText, gridBagConstraints);
 
+    jlblFirstNameLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblFirstNameLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblFirstNameLabel.setText("First Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -904,6 +927,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblFirstNameLabel, gridBagConstraints);
 
+    lbl_FirstNameText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     lbl_FirstNameText.setForeground(new java.awt.Color(0, 0, 0));
     lbl_FirstNameText.setText("First Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -913,6 +937,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_FirstNameText, gridBagConstraints);
 
+    jlblMiddleNameLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblMiddleNameLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblMiddleNameLabel.setText("Middle Name : ");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -922,6 +947,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblMiddleNameLabel, gridBagConstraints);
 
+    lbl_MiddleNameText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     lbl_MiddleNameText.setForeground(new java.awt.Color(0, 0, 0));
     lbl_MiddleNameText.setText("Middle Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -931,6 +957,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_MiddleNameText, gridBagConstraints);
 
+    lbl_RoleLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     lbl_RoleLabel.setForeground(new java.awt.Color(255, 255, 255));
     lbl_RoleLabel.setText("Role :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -940,6 +967,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_RoleLabel, gridBagConstraints);
 
+    jlblRoleText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblRoleText.setForeground(new java.awt.Color(0, 0, 0));
     jlblRoleText.setText("Role Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -949,6 +977,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblRoleText, gridBagConstraints);
 
+    jlblTimeText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblTimeText.setForeground(new java.awt.Color(0, 0, 0));
     jlblTimeText.setText("time text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -958,6 +987,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblTimeText, gridBagConstraints);
 
+    jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jLabel4.setForeground(new java.awt.Color(255, 255, 255));
     jLabel4.setText("Last login time :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -977,6 +1007,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jSeparator1, gridBagConstraints);
 
+    jlblLogout.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
     jlblLogout.setForeground(new java.awt.Color(255, 255, 255));
     jlblLogout.setText("Log out");
     jlblLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1009,7 +1040,7 @@ public class Dashboard extends javax.swing.JFrame {
     jPanel3.setOpaque(false);
     jPanel3.setLayout(new java.awt.GridBagLayout());
 
-    jlblHelloUserNameText.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblHelloUserNameText.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
     jlblHelloUserNameText.setForeground(new java.awt.Color(255, 255, 255));
     jlblHelloUserNameText.setText("username");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1018,7 +1049,7 @@ public class Dashboard extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel3.add(jlblHelloUserNameText, gridBagConstraints);
 
-    jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jLabel2.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 18)); // NOI18N
     jLabel2.setForeground(new java.awt.Color(255, 255, 255));
     jLabel2.setText("Hello");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1077,17 +1108,17 @@ public class Dashboard extends javax.swing.JFrame {
         }
         private void prepareImageBackgrounds() {
             String registrationImgPath = hasRegistrationAccess == true
-                    ? ("assets/registrationNoText.jpg") : ("assets/registrationNoTextLocked.jpg");
+                    ? ("assets/registrationNoText.jpg") : ("assets/registrationlocked1.png");
             String enrollmentImgPath = hasEnrollmentAccess == true
-                    ? ("assets/enrollmentNoText.jpg") : ("assets/enrollmentNoTextLocked.jpg");
+                    ? ("assets/enrollmentNoText.jpg") : ("assets/enrollmentlocked1.png");
             String gradesImgPath = hasGradesAccess == true
-                    ? ("assets/gradesNoText.jpg") : ("assets/gradesNoTextLocked.jpg");
+                    ? ("assets/gradesNoText.jpg") : ("assets/gradeslocked1.png");
             String settingsImgPath = hasSettingsAccess == true
-                    ? ("assets/managementNoText.jpg") : ("assets/managementNoTextLocked.jpg");
+                    ? ("assets/managementNoText.jpg") : ("assets/settingslocked1.png");
             String accountsImgPath = hasAccountsAccess == true
-                    ? ("assets/accountsNoText.jpg") : ("assets/accountsNoTextLocked.jpg");
+                    ? ("assets/accountsNoText.jpg") : ("assets/accountslocked1.png");
             String paymentsImgPath = hasPaymentAccess == true
-                    ? ("assets/paymentsNotext.jpg") : ("assets/paymentsNotextLocked.jpg");
+                    ? ("assets/paymentsNotext.jpg") : ("assets/paymentslocked1.png");
 
             ImageUtil imgUtil = new ImageUtil();
 
@@ -1374,6 +1405,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel jlblAccounts;
+    private javax.swing.JLabel jlblAssessmentText;
     private javax.swing.JLabel jlblChangePassword;
     private javax.swing.JLabel jlblCurrentSchoolYear;
     private javax.swing.JLabel jlblDateToday;

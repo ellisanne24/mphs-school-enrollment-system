@@ -5,6 +5,8 @@ import daoimpl.RoomDaoImpl;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
@@ -29,7 +31,7 @@ public class ScheduleRoomCellEditor extends DefaultCellEditor {
         jcmbRoomBoxModel = getRoomsModel();
         jcmbRoom.setModel(jcmbRoomBoxModel);
         jcmbRoomBoxModel.setSelectedItem(null);
-        jcmbRoom.setEditable(true);
+        jcmbRoom.setEditable(false);
         
         jcmbRoom.addItemListener(new ItemListener() {
             @Override
@@ -58,4 +60,14 @@ public class ScheduleRoomCellEditor extends DefaultCellEditor {
         return model;
     }
 
+    @Override
+    public boolean isCellEditable(EventObject anEvent) {
+        boolean cellEditable = super.isCellEditable(anEvent);
+        if (cellEditable && anEvent instanceof MouseEvent) {
+            cellEditable = ((MouseEvent) anEvent).getClickCount() == 2;
+        }
+        
+        return cellEditable;
+    }
+    
 }

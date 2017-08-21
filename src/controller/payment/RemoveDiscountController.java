@@ -1,6 +1,7 @@
 
 package controller.payment;
 
+import daoimpl.PaymentTermDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -105,7 +106,8 @@ public class RemoveDiscountController implements ActionListener{
                 Object[] rowData = {
                     b.getDescription(),
                     df.format(b.getAmount()),
-                    df.format(b.getBalance())
+                    df.format(b.getBalance()),
+                    b.getDeadline()
                 };
                 tableModel.addRow(rowData);
             }
@@ -124,12 +126,14 @@ public class RemoveDiscountController implements ActionListener{
         double totalPaid = 0.00;
         double totalFees = schoolFees.getSum();
         double remainingBalance = schoolFees.getSum();
-        PaymentTerm paymentTerm = new PaymentTerm();
-        paymentTerm.setName(student.getRegistration().getPaymentTerm());
+        PaymentTermDaoImpl ptdi = new PaymentTermDaoImpl();
+        int paymentTermId = ptdi.getId(jcmbPaymentTerm.getSelectedItem().toString().trim());
+        PaymentTerm paymentTerm = ptdi.getById(paymentTermId);
+        
         Discount discount = new Discount();
         discount.setDiscountName(null);
         discount.setPercentOfDiscount(0);
-        discount.setAmount(0.00);
+        discount.setAmount(0);
 
         t.setExists(false);
         t.setTotalFees(totalFees);
@@ -137,7 +141,7 @@ public class RemoveDiscountController implements ActionListener{
         t.setBalance(remainingBalance);
         t.setPaymentTerm(paymentTerm);
         t.setDiscount(discount);
-        TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(t, schoolFees,schoolYear);
+        TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(t, schoolFees, schoolYear);
         t.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
 
         return t;

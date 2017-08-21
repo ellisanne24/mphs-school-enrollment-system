@@ -325,10 +325,11 @@ public class EnrollmentPanel extends javax.swing.JPanel {
         jMenuItem1.setText("New");
         jmiExitEnrollment.add(jMenuItem1);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setText("Edit");
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+        jMenuItem2.setText("Delete Selected");
         jmiExitEnrollment.add(jMenuItem2);
 
+        jmiExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
         jmiExit.setText("Exit");
         jmiExitEnrollment.add(jmiExit);
 

@@ -20,6 +20,29 @@ import utility.database.DBUtil;
 public class SectionDaoImpl implements ISection {
 
     @Override
+    public boolean hasSchedule(Integer sectionId, Integer schoolYearId) {
+        boolean hasSchedule = false;
+        int recordCount = 0;
+        String SQL = "{CALL sectionhasSchedule(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,sectionId);
+            cs.setInt(2,schoolYearId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    recordCount = rs.getInt("recordCount");
+                }
+            }
+            if(recordCount >0){
+                hasSchedule = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return hasSchedule;
+    }
+    
+    @Override
     public List<Section> getAllSections() {
         List<Section> list = new ArrayList<>();
         String SQL = "{call getAllSections()}";

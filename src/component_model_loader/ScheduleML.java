@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package component_model_loader;
 
 import daoimpl.ScheduleDaoImpl;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.schedule.Schedule;
+import utility.component.TableUtility;
 
 /**
  *
@@ -54,10 +51,25 @@ public class ScheduleML {
         for(Object o : scheduleList){
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
-                s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+                s.getScheduleId(),
+                s.getDay(),
+                intToTimeFormat(s.getStartTime()),
+                intToTimeFormat(s.getEndTime()),
+                s.getSectionName(),
+                s.getSubjectCode(), 
+                s.getRoomName(),
+                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;
     }
+    
+    private String intToTimeFormat(int time) {
+        int hours = time/100;
+        int minutes = time%100 * 100;
+        String str = String.format("%02d%s%02d", hours,":",minutes);
+        return str;
+    }
+    
+    
 }

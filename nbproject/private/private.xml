@@ -3,11 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/container/Dashboard.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/dao/IFaculty.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/daoimpl/FacultyDaoImpl.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/user/AllUsersRecord.java</file>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/utility/component/TableUtility.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/controller/registration/DeleteRegistrationController.java</file>
         </group>
     </open-files>
 </project-private>

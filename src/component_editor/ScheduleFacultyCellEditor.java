@@ -1,18 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package component_editor;
 
 import daoimpl.FacultyDaoImpl;
 import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import model.faculty.Faculty;
+import static view.schedule.CreateSchedule.jtblSchedule;
 
 /**
  *
@@ -30,7 +30,8 @@ public class ScheduleFacultyCellEditor extends DefaultCellEditor {
         jcmbFaculty = new JComboBox();
         facultyModel = getFacultyModel();
         jcmbFaculty.setModel(facultyModel);
-        jcmbFaculty.setEditable(true);
+        jcmbFaculty.setEditable(false);
+        
     }
 
     @Override
@@ -50,5 +51,14 @@ public class ScheduleFacultyCellEditor extends DefaultCellEditor {
             model.addElement(f.getFacultyID() + " - " + f.getLastName() + ", " + f.getFirstName() + ", " + f.getMiddleName());
         }
         return model;
+    }
+    
+    @Override
+    public boolean isCellEditable(EventObject anEvent) {
+        boolean cellEditable = super.isCellEditable(anEvent);
+        if (cellEditable && anEvent instanceof MouseEvent) {
+            cellEditable = ((MouseEvent) anEvent).getClickCount() == 2;
+        }
+        return cellEditable;
     }
 }

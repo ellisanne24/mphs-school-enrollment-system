@@ -176,8 +176,8 @@ public class DiscountChangeController implements ItemListener {
             for (BalanceBreakDownFee b : list) {
                 Object[] rowData = {
                     b.getDescription(),
-                    df.format(b.getAmount()),
-                    df.format(b.getBalance()),
+                    b.getAmount(),
+                    b.getBalance(),
                     b.getDeadline()
                 };
                 balanceBreakDownModel.addRow(rowData);

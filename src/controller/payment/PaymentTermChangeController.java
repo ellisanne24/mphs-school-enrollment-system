@@ -59,10 +59,10 @@ public class PaymentTermChangeController implements ItemListener {
 
     private void setForm() {
         if (tuitionFee.exists()) {
-            
+
         } else {
             TuitionFee t = createFreshTuitionFee();
-            
+
         }
     }
 
@@ -88,23 +88,23 @@ public class PaymentTermChangeController implements ItemListener {
             tuition.setBalance(remainingBalance);
             tuition.setPaymentTerm(paymentTerm);
             tuition.setDiscount(discount);
-            TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(tuition, schoolFees,schoolYear);
+            TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(tuition, schoolFees, schoolYear);
             tuition.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
-            
-            DefaultTableModel tableModel = (DefaultTableModel)jtblBalanceBreakDown.getModel();
+
+            DefaultTableModel tableModel = (DefaultTableModel) jtblBalanceBreakDown.getModel();
             List<BalanceBreakDownFee> balanceBreakDownFee = tuition.getBalanceBreakDownFees();
             tableModel.setRowCount(0);
             for (BalanceBreakDownFee b : balanceBreakDownFee) {
                 Object[] rowData = {
                     b.getDescription(),
-                    df.format(b.getAmount()),
-                    df.format(b.getBalance()),
+                    b.getAmount(),
+                    b.getBalance(),
                     b.getDeadline()
                 };
                 tableModel.addRow(rowData);
             }
             jtblBalanceBreakDown.setModel(tableModel);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getMessage());

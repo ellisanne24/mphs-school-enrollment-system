@@ -24,6 +24,24 @@ public class EnrollmentDaoImpl implements IEnrollment{
 
     private GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
     private StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
+
+    @Override
+    public boolean hasEnrollmentRecord(int studentId) {
+        boolean hasRecord = true;
+        String SQL = "{CALL studentHasEnrollmentRecord(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, studentId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    hasRecord = rs.getBoolean("hasEnrollmentRecord");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return hasRecord;
+    }
     
     @Override
     public boolean isEnrollmentClosedForSchoolYear(SchoolYear aSchoolYear) {

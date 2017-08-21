@@ -36,18 +36,26 @@ public class PaySelectedForm extends javax.swing.JDialog {
     private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
     private final StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
 
-    TuitionFee tuitionFee;
-    List<BalanceBreakDownFee> balanceBreakDownFeeList = new ArrayList<>();
-    Particulars particulars = new Particulars();
+    private final TuitionFee tuitionFee;
+    private final Particulars particulars;
+    private final SchoolYear schoolYear;
+    private final Student student;
 
     public PaySelectedForm(Particulars particulars, TuitionFee tuitionFee) {
         super(null, ModalityType.APPLICATION_MODAL);
         initComponents();
         this.particulars = particulars;
         this.tuitionFee = tuitionFee;
+        this.schoolYear = tuitionFee.getSchoolYear();
+        this.student = tuitionFee.getStudent();
         setFormDetails();
     }
 
+    private boolean hasTuitionFeeRecord(){
+        boolean hasRecord = tuitionFee.exists();
+        return hasRecord;
+    }
+    
     private void setFormDetails() {
         jlblTotalOfFeesToPayText.setText("");
         jlblChangeText.setText("");
@@ -251,36 +259,33 @@ public class PaySelectedForm extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private Payment getPayment(double amountTendered) {
+        Payment payment = new Payment();
+        payment.setSchoolYear(schoolYear);
+        payment.setParticulars(particulars);
+        payment.setAmountTendered(amountTendered);
+        payment.setDateOfPayment(LocalDate.now().toDate());
+        PaymentProcessor paymentProcessor = new PaymentProcessor(payment);
+        payment.setChange(paymentProcessor.getChange());
+        
+        return payment;
+    }
+    
     private void processPayment() {
-        SchoolYear schoolYear = tuitionFee.getSchoolYear();
-        Student student = tuitionFee.getStudent();
-
         if (!jtfAmountEntered.getText().isEmpty()) {
             if (amountIsValid()) {
                 double amountTendered = Double.parseDouble(jtfAmountEntered.getText());
                 if (amountTendered > 0) {
-                    Payment payment = new Payment();
-                    payment.setSchoolYear(schoolYear);
-                    payment.setParticulars(particulars);
-                    payment.setAmountTendered(amountTendered);
-                    payment.setDateOfPayment(LocalDate.now().toDate());
-                    PaymentProcessor paymentProcessor = new PaymentProcessor(payment);
-                    payment.setChange(paymentProcessor.getChange());
-
-                    double change = paymentProcessor.getChange();
-                    jlblChangeText.setText("\u20B1 " + decimalFormatter.format(change));
-
+                    Payment payment = getPayment(amountTendered);
                     int choice = JOptionPane.showConfirmDialog(null, "Proceed with payment?", "Payment Confirmation", JOptionPane.YES_NO_OPTION);
                     if (choice == JOptionPane.YES_OPTION) {
-                        if (tuitionFee.exists()) {
+                        if (hasTuitionFeeRecord()) {
                             tuitionFee.setPayment(payment);
                             payTuitionFee(tuitionFee);
-                            
                         } else {
                             tuitionFee.setPayment(payment);
                             addTuitionFees(tuitionFee);
-                            payTuitionFee(tuitionFee);
-                            enrollStudent(student);
+//                            payTuitionFee(tuitionFee);
                         }
                         displayReceipt(student, payment);
                     }
@@ -293,15 +298,34 @@ public class PaySelectedForm extends javax.swing.JDialog {
         }
     }
     
+    private boolean addTuitionFees(TuitionFee t) {
+        List<BalanceBreakDownFee> list = t.getBalanceBreakDownFees();
+        for(BalanceBreakDownFee b : list){
+            System.out.println("@addTuitionFees -> b.getAmount :"+b.getAmount());
+        }
+        
+        boolean isAdded;
+        Student s = t.getStudent();
+        isAdded = tuitionFeeDaoImpl.add(t);
+        if (isAdded) {
+            JOptionPane.showMessageDialog(null, "Tuition Fees added.");
+            enrollStudent(s);
+        } else {
+            System.out.println("Adding of Tuition Fees failed.");
+        }
+        isAdded = true;
+        return isAdded;
+    }
+    
     private boolean payTuitionFee(TuitionFee t) {
         boolean isPaid;
-//        isPaid = tuitionFeeDaoImpl.pay(t);
-//        if (isPaid) {
-//            JOptionPane.showMessageDialog(null, "Transaction complete.");
-//            this.dispose();
-//        } else {
-//            System.out.println("Payment of Tuition Failed.\nPlease contact administrator.");
-//        }
+        isPaid = tuitionFeeDaoImpl.pay(t);
+        if (isPaid) {
+            JOptionPane.showMessageDialog(null, "Transaction complete.");
+            this.dispose();
+        } else {
+            System.out.println("Payment of Tuition Failed.\nPlease contact administrator.");
+        }
         isPaid = true;
         return isPaid;
     }
@@ -318,7 +342,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
         officialReceipt.setStudent(s);
         
         Receipt receiptForm = new Receipt(officialReceipt);
-        receiptForm.setPreferredSize(new Dimension(640,640));
+        receiptForm.setPreferredSize(new Dimension(640,700));
         receiptForm.pack();
         receiptForm.setLocationRelativeTo(null);
         receiptForm.setVisible(true);
@@ -327,34 +351,25 @@ public class PaySelectedForm extends javax.swing.JDialog {
     private boolean enrollStudent(Student s) {
         boolean isEnrolled;
         isEnrolled = enrollmentDaoImpl.enrollStudent(s);
-        JOptionPane.showMessageDialog(null, "Student is now active.");
+        
         if (isEnrolled) {
             JOptionPane.showMessageDialog(null, "Student is now active.");
-            int enrollmentInstance = Dashboard.getENROLLMENT_INSTANCE();
-            if (enrollmentInstance <= 0) {
-                EnrollmentPanel enrollmentPanel = new EnrollmentPanel();
-                jtpTopTabbedPane.add("Enrollment", enrollmentPanel);
-                jtpTopTabbedPane.setSelectedComponent(enrollmentPanel);
-                setENROLLMENT_INSTANCE(1);
-            }
             this.dispose();
+            returnToDashBoard();
+        }else{
+            JOptionPane.showMessageDialog(null,"Failed to complete enrollment process.");
         }
         return isEnrolled;
     }
-
-    private boolean addTuitionFees(TuitionFee t) {
-        boolean isAdded;
-        Student student = t.getStudent();
-//        isAdded = tuitionFeeDaoImpl.add(t);
-//        enrollStudent(student);
-//        if (isAdded) {
-//            JOptionPane.showMessageDialog(null, "Tuition Fees added.");
-//            enrollStudent(student);
-//        } else {
-//            System.out.println("Adding of Tuition Fees failed.");
-//        }
-isAdded = true;
-        return isAdded;
+    
+    private void returnToDashBoard() {
+        int enrollmentInstance = Dashboard.getENROLLMENT_INSTANCE();
+        if (enrollmentInstance <= 0) {
+            EnrollmentPanel enrollmentPanel = new EnrollmentPanel();
+            jtpTopTabbedPane.add("Enrollment", enrollmentPanel);
+            jtpTopTabbedPane.setSelectedComponent(enrollmentPanel);
+            setENROLLMENT_INSTANCE(1);
+        }
     }
     
     private void jtfAmountEnteredKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfAmountEnteredKeyPressed

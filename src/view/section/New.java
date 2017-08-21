@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view.section;
 
 import component_model_loader.FacultyML;
@@ -66,7 +62,7 @@ public class New extends javax.swing.JPanel {
         
         
         cbAdviser.setModel(fml.getAllFacultyName());
-        cbAdviser.setSelectedIndex(-1);
+//        cbAdviser.setSelectedIndex(-1);
         cbAdviser.setPrototypeDisplayValue("XXXXXXXXXXXXX");
         
         cbSession.setModel(sessionModel);

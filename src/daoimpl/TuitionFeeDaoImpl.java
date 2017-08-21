@@ -168,6 +168,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                         paymentTerm.setId(rsD.getInt("paymentterm_id"));
                         paymentTerm.setName(rsD.getString("paymentterm"));
                         paymentTerm.setIsActive(rsD.getBoolean("isActive"));
+                        paymentTerm.setDivisor(rsD.getInt("divisor"));
                     }
                 }
                 

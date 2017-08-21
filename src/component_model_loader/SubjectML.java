@@ -7,10 +7,10 @@ package component_model_loader;
 
 import daoimpl.SubjectDaoImpl;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 import model.gradelevel.GradeLevel;
 import model.section.Section;
-import model.student.Student;
 import model.subject.Subject;
 
 /**
@@ -27,6 +27,15 @@ public class SubjectML {
         return new Object[]{"Id", "Subject Title", "Subject Code", "Description", "Status"};
     }
 
+    public DefaultListModel getAllSubject(){
+        DefaultListModel model = new DefaultListModel();
+        List<Subject> subjectList = subjectDaoImpl.getAllSubjects();
+        for(Subject s : subjectList){
+            model.addElement(s.getSubjectCode());
+        }
+        return model;
+    }
+    
     public DefaultTableModel getAllSubjects() {
 
         Object[] obj = subjectDaoImpl.getAllSubjects().toArray();

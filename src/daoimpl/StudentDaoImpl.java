@@ -357,7 +357,8 @@ public class StudentDaoImpl implements IStudent {
                     registration.setAddressBrgyOrSubd(rs.getString("brgy_or_subd"));
                     registration.setAddressCity(rs.getString("city"));
                     registration.setProvince(rs.getString("province"));
-
+                    registration.setGradeLevelId(rs.getInt("gradelevel_id"));
+                    
                     GradeLevel gradeLevel = gradeLevelDaoImpl.getById(rs.getInt("gradelevel_id"));
                     registration.setGradeLevel(gradeLevel.getLevel());
 

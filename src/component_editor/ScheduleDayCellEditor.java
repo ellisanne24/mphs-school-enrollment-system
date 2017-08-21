@@ -1,11 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package component_editor;
 
 import java.awt.Component;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -19,12 +17,22 @@ public class ScheduleDayCellEditor extends DefaultCellEditor{
     private JComboBox jcmbDays;
     private DefaultComboBoxModel model;
     
-    
     public ScheduleDayCellEditor(){
         super(new JComboBox());
         model = new DefaultComboBoxModel(new String[]{"Mon","Tue","Wed","Thu","Fri"});
         jcmbDays = new JComboBox(model);
-        jcmbDays.setEditable(true);
+        jcmbDays.setEditable(false);
+        jcmbDays.setSelectedItem(null);
+        
+    }
+
+    @Override
+    public boolean isCellEditable(EventObject anEvent) {
+        boolean cellEditable = super.isCellEditable(anEvent);
+        if (cellEditable && anEvent instanceof MouseEvent) {
+            cellEditable = ((MouseEvent) anEvent).getClickCount() == 2;
+        }
+        return cellEditable;
     }
     
     @Override

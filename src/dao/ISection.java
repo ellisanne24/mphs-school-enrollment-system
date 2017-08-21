@@ -14,6 +14,7 @@ import model.student.Student;
 
 
 public interface ISection{
+    boolean hasSchedule(Integer sectionId, Integer schoolYearId);
     List<Section> getAllSections();
     Integer getSectionIdByName(String aSectionName);
     boolean createSectionSettings(Section aSection, SchoolYear aSchoolYear, GradeLevel aGradeLevel, Session aSession, Faculty aFaculty);

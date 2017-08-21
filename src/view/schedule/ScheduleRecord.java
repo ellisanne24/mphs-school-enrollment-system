@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package view.schedule;
 
 import component_model_loader.FacultyML;
@@ -75,7 +71,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jmenuFile = new javax.swing.JMenu();
         jmiNewSchedule = new javax.swing.JMenuItem();
         jmiEdit = new javax.swing.JMenuItem();
-        jmiSaveChanges = new javax.swing.JMenuItem();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -91,7 +86,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jInternalFrame1.setVisible(true);
         jInternalFrame1.getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jpnlYourContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jpnlYourContent.setLayout(new java.awt.GridBagLayout());
 
         jPanel4.setLayout(new java.awt.GridBagLayout());
@@ -120,6 +114,8 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jPanel4.add(jlblFaculty, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel4.add(jcmbFaculty, gridBagConstraints);
 
@@ -130,7 +126,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlYourContent.add(jPanel4, gridBagConstraints);
 
-        jpnlScheduleTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jpnlScheduleTable.setPreferredSize(new java.awt.Dimension(600, 410));
         jpnlScheduleTable.setLayout(new java.awt.GridBagLayout());
 
@@ -153,6 +148,8 @@ public class ScheduleRecord extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtblSchedule.setMinimumSize(new java.awt.Dimension(1000, 10000));
+        jtblSchedule.setPreferredSize(new java.awt.Dimension(1000, 10000));
         jtblSchedule.setRowHeight(30);
         jtblSchedule.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblSchedule);
@@ -193,10 +190,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
         jmiEdit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jmiEdit.setText("Edit");
         jmenuFile.add(jmiEdit);
-
-        jmiSaveChanges.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jmiSaveChanges.setText("Save");
-        jmenuFile.add(jmiSaveChanges);
 
         jMenuBar1.add(jmenuFile);
 
@@ -245,7 +238,6 @@ public class ScheduleRecord extends javax.swing.JPanel {
     private javax.swing.JMenu jmenuFile;
     private javax.swing.JMenuItem jmiEdit;
     private javax.swing.JMenuItem jmiNewSchedule;
-    private javax.swing.JMenuItem jmiSaveChanges;
     public static javax.swing.JPanel jpnlCardContainer;
     private javax.swing.JPanel jpnlScheduleTable;
     private javax.swing.JPanel jpnlYourContent;

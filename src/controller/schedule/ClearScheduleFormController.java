@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controller.schedule;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -18,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 public class ClearScheduleFormController implements ActionListener{
 
     private final JTable jtblSchedule;
+    private JComboBox jcmbGradeLevel;
     
     public ClearScheduleFormController(JTable jtblSchedule){
         this.jtblSchedule = jtblSchedule;

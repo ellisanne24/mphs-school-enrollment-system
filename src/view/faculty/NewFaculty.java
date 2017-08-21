@@ -1,5 +1,6 @@
 package view.faculty;
 
+import component_model_loader.SubjectML;
 import controller.faculty.AssignSpecializationController;
 import javax.swing.JOptionPane;
 
@@ -14,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.faculty.Faculty;
 import model.specialization.Specialization;
-import view.user.AllUsersRecord;
+import utility.component.TableUtility;
 
 public class NewFaculty extends javax.swing.JPanel {
 
@@ -24,7 +25,8 @@ public class NewFaculty extends javax.swing.JPanel {
         setjtblFaculty();
         updateSpecializationJcb();
         loadSpecializtionToJtable();
-
+        jlstSubjects.setModel(new SubjectML().getAllSubject());
+        TableUtility.setTableColumnWidth(jtblSpecialization);
         jbtnAssignSpecilization.addActionListener(new AssignSpecializationController(jcbSpecializations, jlstFacultySpecialization));
     }
 
@@ -32,7 +34,7 @@ public class NewFaculty extends javax.swing.JPanel {
     private void loadSpecializtionToJtable() {
         SpecializationDaoImpl sdi = new SpecializationDaoImpl();
         Object[] specializations = sdi.getAll().toArray();
-        DefaultTableModel tableModel = (DefaultTableModel) SpecializationTable.getModel();
+        DefaultTableModel tableModel = (DefaultTableModel) jtblSpecialization.getModel();
         tableModel.setRowCount(0);
         for (Object o : specializations) {
             Specialization s = (Specialization) o;
@@ -72,15 +74,14 @@ public class NewFaculty extends javax.swing.JPanel {
         for (Object faculty : facultyData) {
             Faculty f = (Faculty) faculty;
             Object[] object = {
-                        f.getFacultyID(),
-                        f.getFirstName(),
-                        f.getLastName(),
-                        f.getMiddleName(),
-                        f.getEmailAddress(),
-                        f.getContact(),
-                        f.getDegree(),
-                        f.getStatus() == true ? "Active" : "Inactive"
-                    };
+                f.getFacultyID(),
+                f.getFirstName(),
+                f.getLastName(),
+                f.getMiddleName(),
+                f.getEmailAddress(),
+                f.getContact(),
+                f.getStatus() == true ? "Active" : "Inactive"
+            };
             tableModel.addRow(object);
         }
 
@@ -101,13 +102,13 @@ public class NewFaculty extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jbc_degree = new javax.swing.JComboBox<>();
         jtf_fname = new javax.swing.JTextField();
         jtf_lname = new javax.swing.JTextField();
         jtf_mname = new javax.swing.JTextField();
         jtf_email = new javax.swing.JTextField();
         jtf_contact = new javax.swing.JTextField();
+        jlblEmployeeId = new javax.swing.JLabel();
+        jtfEmployeeId = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
@@ -128,6 +129,7 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel9 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jtf_searchFaculty = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel15 = new javax.swing.JPanel();
@@ -140,148 +142,154 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel20 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jtfSpecializationName = new javax.swing.JTextField();
-        jPanel21 = new javax.swing.JPanel();
+        jpnlDescription = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jta_description = new javax.swing.JTextArea();
-        jPanel22 = new javax.swing.JPanel();
-        addSpecialization = new javax.swing.JButton();
+        jpnlControl = new javax.swing.JPanel();
         updateSpecialization = new javax.swing.JButton();
-        clear = new javax.swing.JButton();
+        addSpecialization = new javax.swing.JButton();
+        jpnlSubjectAssignment = new javax.swing.JPanel();
+        jPanel24 = new javax.swing.JPanel();
+        jbtnAddSubjectToAssigned = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jlstSubjects = new javax.swing.JList<>();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jlstSubjectsAssigned = new javax.swing.JList<>();
         jPanel19 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        SpecializationTable = new javax.swing.JTable();
+        jtblSpecialization = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
         newFacultyContainer.setLayout(new java.awt.BorderLayout());
+
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         facultyDetails.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         facultyDetails.setLayout(new java.awt.GridBagLayout());
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Faculty Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Trebuchet MS", 0, 14))); // NOI18N
-        jPanel5.setPreferredSize(new java.awt.Dimension(300, 464));
+        jPanel5.setPreferredSize(new java.awt.Dimension(250, 464));
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("First Name:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(24, 8, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jLabel1, gridBagConstraints);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("Last Name:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jLabel2, gridBagConstraints);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Middle Name:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jLabel3, gridBagConstraints);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("Email Address:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jLabel4, gridBagConstraints);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel5.setText("Contact Number:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jLabel5, gridBagConstraints);
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel7.setText("Degree:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel5.add(jLabel7, gridBagConstraints);
-
-        jbc_degree.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Board Passer", "Masters", "Doctors", " " }));
-        jbc_degree.setPreferredSize(new java.awt.Dimension(130, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel5.add(jbc_degree, gridBagConstraints);
-
-        jtf_fname.setPreferredSize(new java.awt.Dimension(130, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(24, 8, 4, 4);
-        jPanel5.add(jtf_fname, gridBagConstraints);
-
-        jtf_lname.setPreferredSize(new java.awt.Dimension(130, 25));
+        jtf_fname.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel5.add(jtf_lname, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jtf_fname, gridBagConstraints);
 
-        jtf_mname.setPreferredSize(new java.awt.Dimension(130, 25));
+        jtf_lname.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel5.add(jtf_mname, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jtf_lname, gridBagConstraints);
 
-        jtf_email.setPreferredSize(new java.awt.Dimension(130, 25));
+        jtf_mname.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
-        jPanel5.add(jtf_email, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jtf_mname, gridBagConstraints);
 
-        jtf_contact.setPreferredSize(new java.awt.Dimension(130, 25));
+        jtf_email.setColumns(8);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 8, 6, 4);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jtf_email, gridBagConstraints);
+
+        jtf_contact.setColumns(8);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jtf_contact, gridBagConstraints);
 
-        facultyDetails.add(jPanel5, new java.awt.GridBagConstraints());
+        jlblEmployeeId.setText("Employee ID :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jlblEmployeeId, gridBagConstraints);
+
+        jtfEmployeeId.setColumns(8);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jtfEmployeeId, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        facultyDetails.add(jPanel5, gridBagConstraints);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0))), "Specialization", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Trebuchet MS", 0, 14))); // NOI18N
         jPanel6.setPreferredSize(new java.awt.Dimension(370, 464));
         jPanel6.setLayout(new java.awt.GridBagLayout());
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel7.setPreferredSize(new java.awt.Dimension(360, 350));
         jPanel7.setLayout(new java.awt.GridBagLayout());
 
-        jPanel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel12.setPreferredSize(new java.awt.Dimension(150, 344));
         jPanel12.setLayout(new java.awt.GridBagLayout());
 
@@ -294,7 +302,8 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(50, 5, 5, 5);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel12.add(jcbSpecializations, gridBagConstraints);
 
         jbtnAssignSpecilization.setText("Add");
@@ -307,7 +316,8 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel12.add(jbtnAssignSpecilization, gridBagConstraints);
 
         jButton4.setText("Remove");
@@ -320,22 +330,26 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel12.add(jButton4, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel7.add(jPanel12, gridBagConstraints);
 
         jPanel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel13.setPreferredSize(new java.awt.Dimension(200, 344));
-        jPanel13.setLayout(new java.awt.BorderLayout());
+        jPanel13.setLayout(new java.awt.GridBagLayout());
 
-        jPanel14.setLayout(new java.awt.BorderLayout());
+        jPanel14.setLayout(new java.awt.GridBagLayout());
 
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(259, 300));
+
+        jlstFacultySpecialization.setModel(new DefaultListModel());
         jlstFacultySpecialization.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jlstFacultySpecializationMouseClicked(evt);
@@ -343,12 +357,24 @@ public class NewFaculty extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(jlstFacultySpecialization);
 
-        jPanel14.add(jScrollPane2, java.awt.BorderLayout.CENTER);
-        jPanel14.add(jSeparator1, java.awt.BorderLayout.PAGE_END);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        jPanel14.add(jScrollPane2, gridBagConstraints);
+        jPanel14.add(jSeparator1, new java.awt.GridBagConstraints());
 
         jScrollPane3.setViewportView(jPanel14);
 
-        jPanel13.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel13.add(jScrollPane3, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -366,7 +392,6 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel6.add(jPanel7, gridBagConstraints);
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel8.setPreferredSize(new java.awt.Dimension(360, 40));
         jPanel8.setLayout(new java.awt.GridBagLayout());
 
@@ -395,7 +420,7 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel6.add(jPanel8, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -411,7 +436,7 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel9.setPreferredSize(new java.awt.Dimension(985, 65));
+        jPanel9.setPreferredSize(new java.awt.Dimension(985, 40));
         jPanel9.setLayout(new java.awt.GridBagLayout());
 
         jLabel9.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
@@ -438,6 +463,9 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel9.add(jtf_searchFaculty, gridBagConstraints);
 
+        jButton1.setText("Refresh");
+        jPanel9.add(jButton1, new java.awt.GridBagConstraints());
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(jPanel9, gridBagConstraints);
@@ -456,11 +484,11 @@ public class NewFaculty extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Faculty ID", "First Name", "Last Name", "Middle Name", "Email Address", "Contact", "Degree", "Status"
+                "Faculty ID", "First Name", "Last Name", "Middle Name", "Email Address", "Contact", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -485,7 +513,6 @@ public class NewFaculty extends javax.swing.JPanel {
             jtbl_faculty.getColumnModel().getColumn(4).setResizable(false);
             jtbl_faculty.getColumnModel().getColumn(5).setResizable(false);
             jtbl_faculty.getColumnModel().getColumn(6).setResizable(false);
-            jtbl_faculty.getColumnModel().getColumn(7).setResizable(false);
         }
 
         jPanel15.add(jScrollPane5, java.awt.BorderLayout.CENTER);
@@ -519,24 +546,25 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel18.setPreferredSize(new java.awt.Dimension(350, 370));
         jPanel18.setLayout(new java.awt.GridBagLayout());
 
-        jPanel20.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel20.setAlignmentX(0.0F);
         jPanel20.setAlignmentY(0.0F);
         jPanel20.setPreferredSize(new java.awt.Dimension(130, 50));
         jPanel20.setLayout(new java.awt.GridBagLayout());
 
-        jLabel10.setText("Specialization Name:");
+        jLabel10.setText("Specialization");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel20.add(jLabel10, gridBagConstraints);
 
-        jtfSpecializationName.setPreferredSize(new java.awt.Dimension(135, 25));
+        jtfSpecializationName.setColumns(8);
         jtfSpecializationName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtfSpecializationNameActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel20.add(jtfSpecializationName, gridBagConstraints);
 
@@ -544,44 +572,38 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel18.add(jPanel20, gridBagConstraints);
 
-        jPanel21.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Description", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Trebuchet MS", 0, 14))); // NOI18N
-        jPanel21.setPreferredSize(new java.awt.Dimension(340, 170));
-        jPanel21.setLayout(new java.awt.BorderLayout());
+        jpnlDescription.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Description", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Trebuchet MS", 0, 14))); // NOI18N
+        jpnlDescription.setMinimumSize(new java.awt.Dimension(100, 100));
+        jpnlDescription.setPreferredSize(new java.awt.Dimension(310, 310));
+        jpnlDescription.setLayout(new java.awt.GridBagLayout());
+
+        jScrollPane4.setPreferredSize(new java.awt.Dimension(310, 310));
 
         jta_description.setColumns(20);
         jta_description.setRows(5);
+        jta_description.setPreferredSize(new java.awt.Dimension(310, 310));
         jScrollPane4.setViewportView(jta_description);
 
-        jPanel21.add(jScrollPane4, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        jpnlDescription.add(jScrollPane4, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel18.add(jPanel21, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel18.add(jpnlDescription, gridBagConstraints);
 
-        jPanel22.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel22.setPreferredSize(new java.awt.Dimension(340, 50));
-        jPanel22.setLayout(new java.awt.GridBagLayout());
-
-        addSpecialization.setText("Add");
-        addSpecialization.setPreferredSize(new java.awt.Dimension(100, 30));
-        addSpecialization.setRequestFocusEnabled(false);
-        addSpecialization.setVerifyInputWhenFocusTarget(false);
-        addSpecialization.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSpecializationActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel22.add(addSpecialization, gridBagConstraints);
-        addSpecialization.getAccessibleContext().setAccessibleDescription("");
+        jpnlControl.setPreferredSize(new java.awt.Dimension(340, 50));
+        jpnlControl.setLayout(new java.awt.GridBagLayout());
 
         updateSpecialization.setText("Update");
         updateSpecialization.setPreferredSize(new java.awt.Dimension(100, 30));
@@ -591,22 +613,90 @@ public class NewFaculty extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel22.add(updateSpecialization, gridBagConstraints);
+        jpnlControl.add(updateSpecialization, gridBagConstraints);
 
-        clear.setText("Cancel");
-        clear.setPreferredSize(new java.awt.Dimension(100, 30));
+        addSpecialization.setText("Create");
+        addSpecialization.setPreferredSize(new java.awt.Dimension(100, 30));
+        addSpecialization.setRequestFocusEnabled(false);
+        addSpecialization.setVerifyInputWhenFocusTarget(false);
+        addSpecialization.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSpecializationActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel22.add(clear, gridBagConstraints);
+        jpnlControl.add(addSpecialization, gridBagConstraints);
+        addSpecialization.getAccessibleContext().setAccessibleDescription("");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel18.add(jpnlControl, gridBagConstraints);
+
+        jpnlSubjectAssignment.setLayout(new java.awt.GridBagLayout());
+
+        jPanel24.setLayout(new java.awt.GridBagLayout());
+
+        jbtnAddSubjectToAssigned.setText(">");
+        jbtnAddSubjectToAssigned.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnAddSubjectToAssignedActionPerformed(evt);
+            }
+        });
+        jPanel24.add(jbtnAddSubjectToAssigned, new java.awt.GridBagConstraints());
+
+        jButton2.setText("<");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel24.add(jButton2, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jpnlSubjectAssignment.add(jPanel24, gridBagConstraints);
+
+        jScrollPane9.setBorder(javax.swing.BorderFactory.createTitledBorder("Subject List"));
+
+        jlstSubjects.setModel(new DefaultListModel());
+        jScrollPane9.setViewportView(jlstSubjects);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        jpnlSubjectAssignment.add(jScrollPane9, gridBagConstraints);
+
+        jScrollPane8.setBorder(javax.swing.BorderFactory.createTitledBorder("Subjects Assigned"));
+
+        jlstSubjectsAssigned.setModel(new DefaultListModel());
+        jScrollPane8.setViewportView(jlstSubjectsAssigned);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        jpnlSubjectAssignment.add(jScrollPane8, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel18.add(jPanel22, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel18.add(jpnlSubjectAssignment, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -622,12 +712,12 @@ public class NewFaculty extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        SpecializationTable.setModel(new javax.swing.table.DefaultTableModel(
+        jtblSpecialization.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Specialization ID", "Specializatio Name", "Description", "Date Created"
+                "ID", "Specialization Name", "Description", "Date Created"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -638,18 +728,15 @@ public class NewFaculty extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        SpecializationTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        jtblSpecialization.setMinimumSize(new java.awt.Dimension(500, 5000));
+        jtblSpecialization.setPreferredSize(new java.awt.Dimension(500, 5000));
+        jtblSpecialization.setRowHeight(30);
+        jtblSpecialization.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                SpecializationTableMouseClicked(evt);
+                jtblSpecializationMouseClicked(evt);
             }
         });
-        jScrollPane7.setViewportView(SpecializationTable);
-        if (SpecializationTable.getColumnModel().getColumnCount() > 0) {
-            SpecializationTable.getColumnModel().getColumn(0).setResizable(false);
-            SpecializationTable.getColumnModel().getColumn(1).setResizable(false);
-            SpecializationTable.getColumnModel().getColumn(2).setResizable(false);
-            SpecializationTable.getColumnModel().getColumn(3).setResizable(false);
-        }
+        jScrollPane7.setViewportView(jtblSpecialization);
 
         jPanel1.add(jScrollPane7, java.awt.BorderLayout.CENTER);
 
@@ -661,7 +748,7 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel17.add(jPanel19, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -680,44 +767,61 @@ public class NewFaculty extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AddFacultyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddFacultyActionPerformed
+        int choice = JOptionPane.showConfirmDialog(null, "Add?", "Add Confirmation?", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            if (formIsValid()) {
+                addFacultyMember();
+            }else{
+                JOptionPane.showMessageDialog(null,"Please fill out all fields.");
+            }
+        }
+    }//GEN-LAST:event_AddFacultyActionPerformed
+
+    private void addFacultyMember() {
         SpecializationDaoImpl sdi = new SpecializationDaoImpl();
         Faculty faculty = new Faculty();
+        faculty.setEmployeeId(jtfEmployeeId.getText().trim());
         faculty.setFirstName(jtf_fname.getText().trim());
         faculty.setLastName(jtf_lname.getText().trim());
         faculty.setMiddleName(jtf_mname.getText().trim());
         faculty.setEmailAddress(jtf_email.getText().trim());
         faculty.setContact(jtf_contact.getText().trim());
-        faculty.setDegree(jbc_degree.getSelectedItem().toString());
         int listSize = jlstFacultySpecialization.getModel().getSize();
         List<Specialization> specializationList = new ArrayList<>();
-        for(int i = 0; i <listSize; i++){
+        for (int i = 0; i < listSize; i++) {
             int specId = sdi.getId(jlstFacultySpecialization.getModel().getElementAt(i).trim());
-            System.out.println("Id : "+specId);
+            System.out.println("Id : " + specId);
             Specialization specialization = new Specialization();
             specialization.setId(specId);
             specializationList.add(specialization);
         }
         faculty.setSpecializations(specializationList);
-        
-        int choice = JOptionPane.showConfirmDialog(null, "Submit new faculty?", "SUBMIT", JOptionPane.YES_NO_OPTION);
 
-        if (choice == JOptionPane.YES_OPTION) {
-            FacultyDaoImpl fdi = new daoimpl.FacultyDaoImpl();
-            boolean isAdded = fdi.add(faculty);
-            if (isAdded) {
-                jtf_fname.setText("");
-                jtf_lname.setText("");
-                jtf_mname.setText("");
-                jtf_contact.setText("");
-                jtf_email.setText("");
-                JOptionPane.showMessageDialog(null, "Successfully added");
-                setjtblFaculty();
-                AllUsersRecord.refreshRecord();
-            } else {
-                JOptionPane.showMessageDialog(null, "Error occured during Adding ");
-            }
+        FacultyDaoImpl fdi = new daoimpl.FacultyDaoImpl();
+        boolean isAdded = fdi.add(faculty);
+        if (isAdded) {
+            jtf_fname.setText("");
+            jtf_lname.setText("");
+            jtf_mname.setText("");
+            jtf_contact.setText("");
+            jtf_email.setText("");
+            ((DefaultListModel) jlstFacultySpecialization.getModel()).clear();
+            JOptionPane.showMessageDialog(null, "Successfully added");
+            setjtblFaculty();
+        } else {
+            JOptionPane.showMessageDialog(null, "Error occured during Adding ");
         }
-    }//GEN-LAST:event_AddFacultyActionPerformed
+    }
+
+    private boolean formIsValid() {
+        boolean isValid = true;
+        if (jtf_fname.getText().isEmpty() || jtf_lname.getText().isEmpty() || jtf_mname.getText().isEmpty()
+                || jtf_contact.getText().isEmpty() || jtf_email.getText().isEmpty()
+                || ((DefaultListModel) jlstFacultySpecialization.getModel()).isEmpty()) {
+            isValid = false;
+        }
+        return isValid;
+    }
 
 
     private void addSpecializationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSpecializationActionPerformed
@@ -805,14 +909,14 @@ public class NewFaculty extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jlstFacultySpecializationMouseClicked
 
-    private void SpecializationTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SpecializationTableMouseClicked
+    private void jtblSpecializationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblSpecializationMouseClicked
 
-        String title = SpecializationTable.getValueAt(SpecializationTable.getSelectedRow(), 1).toString();
-        String description = SpecializationTable.getValueAt(SpecializationTable.getSelectedRow(), 2).toString();
+        String title = jtblSpecialization.getValueAt(jtblSpecialization.getSelectedRow(), 1).toString();
+        String description = jtblSpecialization.getValueAt(jtblSpecialization.getSelectedRow(), 2).toString();
 
         jtfSpecializationName.setText(title);
         jta_description.setText(description);
-    }//GEN-LAST:event_SpecializationTableMouseClicked
+    }//GEN-LAST:event_jtblSpecializationMouseClicked
 
     private void updateSpecializationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSpecializationActionPerformed
 
@@ -820,7 +924,7 @@ public class NewFaculty extends javax.swing.JPanel {
 
         String title = jtfSpecializationName.getText().trim();
         String description = jta_description.getText().trim();
-        int specializationId = Integer.parseInt(SpecializationTable.getValueAt(SpecializationTable.getSelectedRow(), 0).toString());
+        int specializationId = Integer.parseInt(jtblSpecialization.getValueAt(jtblSpecialization.getSelectedRow(), 0).toString());
 
         Faculty faculty = new Faculty();
 //        faculty.setSpecializationID(specializationId);
@@ -845,14 +949,26 @@ public class NewFaculty extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_updateSpecializationActionPerformed
 
+    private void jbtnAddSubjectToAssignedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAddSubjectToAssignedActionPerformed
+        if (jlstSubjects.getSelectedIndex() > -1) {
+            String s = jlstSubjects.getSelectedValue();
+            DefaultListModel model = (DefaultListModel) jlstSubjectsAssigned.getModel();
+            if (!model.contains(s)) {
+                model.addElement(s);
+            } else {
+                JOptionPane.showMessageDialog(null, s + " is already on the list.");
+            }
+        }
+    }//GEN-LAST:event_jbtnAddSubjectToAssignedActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddFaculty;
     private javax.swing.JButton Clear;
-    private javax.swing.JTable SpecializationTable;
     private javax.swing.JButton addSpecialization;
-    private javax.swing.JButton clear;
     private javax.swing.JPanel facultyDetails;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -860,7 +976,6 @@ public class NewFaculty extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -875,8 +990,7 @@ public class NewFaculty extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel21;
-    private javax.swing.JPanel jPanel22;
+    private javax.swing.JPanel jPanel24;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -891,14 +1005,24 @@ public class NewFaculty extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JComboBox<String> jbc_degree;
+    private javax.swing.JButton jbtnAddSubjectToAssigned;
     private javax.swing.JButton jbtnAssignSpecilization;
     private javax.swing.JComboBox<String> jcbSpecializations;
+    private javax.swing.JLabel jlblEmployeeId;
     private javax.swing.JList<String> jlstFacultySpecialization;
+    private javax.swing.JList<String> jlstSubjects;
+    private javax.swing.JList<String> jlstSubjectsAssigned;
+    private javax.swing.JPanel jpnlControl;
+    private javax.swing.JPanel jpnlDescription;
+    private javax.swing.JPanel jpnlSubjectAssignment;
     private javax.swing.JTextArea jta_description;
+    private javax.swing.JTable jtblSpecialization;
     public static javax.swing.JTable jtbl_faculty;
+    private javax.swing.JTextField jtfEmployeeId;
     private javax.swing.JTextField jtfSpecializationName;
     private javax.swing.JTextField jtf_contact;
     private javax.swing.JTextField jtf_email;

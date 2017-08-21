@@ -1,45 +1,26 @@
 package view.payment;
 
 import java.awt.Color;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import daoimpl.SchoolYearDaoImpl;
-import daoimpl.StudentDaoImpl;
 import component_model_loader.DiscountML;
 import component_model_loader.PaymentTermML;
 import utility.component.ImageUtil;
-import component_model_loader.SchoolFeesML;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
-import model.gradelevel.CurrentGradeLevel;
-import model.student.Student;
 import constants.DashboardMenuItem;
 import controller.navigation.UINavigationExit;
 import controller.payment.DisplayPaymentFormController;
 import controller.payment.EnablePaySelectedButton;
 import controller.payment.SearchStudentController;
-import controller.payment.DiscountChangeController;
-import daoimpl.DiscountDaoImpl;
-import daoimpl.GradeLevelDaoImpl;
-import daoimpl.SchoolFeesDaoImpl;
-import daoimpl.TuitionFeeDaoImpl;
-import java.text.DecimalFormat;
-import model.balancebreakdownfee.BalanceBreakDownFee;
-import model.discount.Discount;
-import model.paymentterm.PaymentTerm;
-import model.schoolfees.SchoolFees;
-import model.tuitionfee.TuitionFee;
-import service.TuitionFeeProcessor;
 import threads.SchoolYearLoaderThread;
 import utility.component.JInternalFrameUtil;
 
@@ -50,16 +31,9 @@ import utility.component.JInternalFrameUtil;
 public class PaymentAndAssessmentForm extends javax.swing.JPanel {
 
     GUIManager guiManager = new GUIManager();
-    private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
     private final DiscountML discountML = new DiscountML();
-    private final SchoolFeesML schoolFeesML = new SchoolFeesML();
-    private static final SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-    private static final StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
-    private final SchoolFeesDaoImpl schoolFeesDaoImpl = new SchoolFeesDaoImpl();
-    private final TuitionFeeDaoImpl tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
     private DisplayPaymentFormController displayPaymentFormController;
     
-    private int studentId;
     private final Image studentPhoto;
     
     public PaymentAndAssessmentForm() {
@@ -77,7 +51,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         
 //        guiManager.initializeRenderers();
         guiManager.initializeModels();
-        guiManager.resetForm();
         studentPhoto = new ImageUtil().getResourceAsImage("assets/usernameIcon.jpg", 200,200);
         SchoolYearLoaderThread schoolYearLoaderThread = new SchoolYearLoaderThread(jlblCurrentSchoolYear);
         schoolYearLoaderThread.start();
@@ -92,7 +65,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         jScrollPane4.getVerticalScrollBar().setUnitIncrement(40);
         jspFeeCollectionItems.getVerticalScrollBar().setUnitIncrement(40);
         jScrollPane5.getVerticalScrollBar().setUnitIncrement(40);
-        //jtblBalanceBreakdown.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setCurrentDateJLabelText();
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
         jtblDownPaymentFee.setRowHeight(30);
@@ -111,7 +83,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
                 jlblStudentStatusText, jtfBasicFee, jtfMiscellaneousFee,
                 jtfOtherFee, jtfTotalFees, jtfTotalPaid, jtfRemainingBalance,
                 jcmbDiscount, jtfDiscountPercentage, jtfDiscounts, jtblBalanceBreakdown,
-                jtblDownPaymentFee, jtblBasicFee, jtblMiscFees, jtblOtherFees));
+                jtblDownPaymentFee, jtblBasicFee, jtblMiscFees, jtblOtherFees, jpnlFeeSummary));
 
         displayPaymentFormController = new DisplayPaymentFormController(
                 jtfStudentID, jcmbSchoolYearFrom, jtblBalanceBreakdown, jcmbDiscount, jcmbPaymentTerm);
@@ -702,7 +674,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel11.add(jScrollPane3, gridBagConstraints);
 
-    jLabel4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+    jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 12)); // NOI18N
     jLabel4.setText("Other");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -710,7 +682,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel11.add(jLabel4, gridBagConstraints);
 
-    jLabel3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+    jLabel3.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 12)); // NOI18N
     jLabel3.setText("Miscellaneous");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -718,7 +690,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel11.add(jLabel3, gridBagConstraints);
 
-    jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+    jLabel2.setFont(new java.awt.Font("Microsoft JhengHei UI", 1, 12)); // NOI18N
     jLabel2.setText("Tuition");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -883,6 +855,11 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     jPanel9.setLayout(new java.awt.GridBagLayout());
 
     jbtnPaySelected.setText("Pay Selected");
+    jbtnPaySelected.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jbtnPaySelectedActionPerformed(evt);
+        }
+    });
     jPanel9.add(jbtnPaySelected, new java.awt.GridBagConstraints());
 
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1180,49 +1157,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     class GUIManager {
-        private void resetForm(){
-//            jlblStudentStatusText.setText("");
-//            jtfStudentID.setText("");
-//            jlblStudentTypeText.setText("");
-//            jlblLastNameText.setText("");
-//            jlblFirstNameText.setText("");
-//            jlblMiddleNameText.setText("");
-//            jlblAdmissionGradeLevelText.setText("");
-//            jlblPresentGradeLevelText.setText("");
-//            jtfBasicFee.setText("");
-//            jtfMiscellaneousFee.setText("");
-//            jtfOtherFee.setText("");
-//            jtfTotalFees.setText("");
-//            jtfDiscounts.setText("");
-//            jtfTotalFeesWithDiscount.setText("");
-//            jtfTotalPaid.setText("");
-//            jtfRemainingBalance.setText("");
-//            DefaultTableModel jtblDownPaymentFeeModel = (DefaultTableModel) jtblDownPaymentFee.getModel();
-//            jtblDownPaymentFeeModel.setRowCount(0);
-//            DefaultTableModel jtblTuitionFeeModel = (DefaultTableModel)jtblBasicFee.getModel();
-//            jtblTuitionFeeModel.setRowCount(0);
-//            DefaultTableModel jtblMiscFeesModel = (DefaultTableModel) jtblMiscFees.getModel();
-//            jtblMiscFeesModel.setRowCount(0);
-//            DefaultTableModel jtblOtherFeesModel = (DefaultTableModel) jtblOtherFees.getModel();
-//            jtblOtherFeesModel.setRowCount(0);
-//            jcmbPaymentTerm.setSelectedIndex(-1);
-////            jcmbPaymentTerm.setEnabled(false);
-//            jcmbDiscount.setSelectedIndex(-1);
-////            jcmbDiscount.setEnabled(false);
-//            jtfDiscountPercentage.setText("");
-//            jbtnResetDiscount.setEnabled(false);
-//            DefaultTableModel jtblBalanceBreakdownModel = (DefaultTableModel) jtblBalanceBreakdown.getModel();
-//            jtblBalanceBreakdownModel.setRowCount(0);
-////            jbtnPaySelected.setEnabled(false);
-//            DefaultTableModel jtblTransactionHistoryModel = (DefaultTableModel)jtblTransactionHistory.getModel();
-//            jtblTransactionHistoryModel.setRowCount(0);
-//            int schoolYearFrom = Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString());
-//            int schoolYearTo = Integer.parseInt(jcmbSchoolYearTo.getSelectedItem().toString());
-//            TitledBorder titledBorder;
-//            titledBorder = BorderFactory.createTitledBorder("Tuition Summary School Year: "+schoolYearFrom+"-"+schoolYearTo);
-//            jpnlFeeSummary.setBorder(titledBorder);
-        }
-        
         private void initializeModels(){
             PaymentTermML paymentTermML = new PaymentTermML();
             jcmbPaymentTerm.setModel(paymentTermML.getNames());
@@ -1246,127 +1180,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         jpnlFeeSummary.setBorder(titledBorder);
     }
     
-    private class FeeCollectionLoader{
-        private final Student student;
-        private final SchoolFees schoolFees;
-        private final TuitionFee tuitionFee;
-//        private final DecimalFormat decimalFormatter = new DecimalFormat("#0.00");
-        private final DecimalFormat decimalFormatter = new DecimalFormat("#,#00.00");
-        
-        public FeeCollectionLoader(Student student,SchoolFees schoolFees,TuitionFee tuitionFee){
-            this.student = student;
-            this.schoolFees = schoolFees;
-            this.tuitionFee = tuitionFee;
-        }
-        
-        private void setForm() {
-            String studentType = student.getStudentType() == 0 ? "Old" : "New";
-            String lastName = student.getRegistration().getLastName();
-            String firstName = student.getRegistration().getFirstName();
-            String middleName = student.getRegistration().getMiddleName();
-            String admissionStatus = student.getAdmission().isCompleted() == true ? "Complete" : "Pending";
-            String presentGradeLevel = student.getCurrentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getCurrentGradeLevel().getLevel();
-            String studentStatus = student.isActive() == true ? "Active" : "Inactive";
-            String basicFee = decimalFormatter.format(schoolFees.getBasicFee().getAmount());
-            String miscellaneousFee = decimalFormatter.format(schoolFees.getMiscellaneousFees().getSum());
-            String otherFee = decimalFormatter.format(schoolFees.getOtherFees().getSum());
-            String totalFees = decimalFormatter.format(tuitionFee.getTotalFees());
-            String totalPaid = decimalFormatter.format(tuitionFee.getTotalPaid());
-            String remainingBalance = decimalFormatter.format(tuitionFee.getBalance());
-            String paymentTerm = tuitionFee.getPaymentTerm().getName();
-            String discount = tuitionFee.getDiscount().getDiscountName();
-            String discountPercentage = tuitionFee.hasDiscount()? 
-                    tuitionFee.getDiscount().getPercentOfDiscount()+"" : "";
-            String discountAmount = tuitionFee.hasDiscount()?
-                    tuitionFee.getDiscount().getAmount()+"" : "";
-            
-            jlblStudentTypeText.setText(studentType);
-            jlblLastNameText.setText(lastName);
-            jlblFirstNameText.setText(firstName);
-            jlblMiddleNameText.setText(middleName);
-            jlblAdmissionGradeLevelText.setText(admissionStatus);
-            jlblPresentGradeLevelText.setText(presentGradeLevel);
-            jlblStudentStatusText.setText(studentStatus);
-            
-            jtfBasicFee.setText(basicFee);
-            jtfMiscellaneousFee.setText(miscellaneousFee);
-            jtfOtherFee.setText(otherFee);
-            
-            jtfTotalFees.setText(totalFees);
-            jtfTotalPaid.setText(totalPaid);
-            jtfRemainingBalance.setText(remainingBalance);
-            
-            jcmbPaymentTerm.setSelectedItem(paymentTerm);
-            jcmbDiscount.setSelectedItem(discount);
-            jtfDiscountPercentage.setText(discountPercentage);
-            jtfDiscounts.setText(discountAmount);
-            
-            List<BalanceBreakDownFee> balanceBreakDownFee = tuitionFee.getBalanceBreakDownFees();
-            DefaultTableModel dtm = (DefaultTableModel) jtblBalanceBreakdown.getModel();
-            dtm.setRowCount(0);
-            for (BalanceBreakDownFee b : balanceBreakDownFee) {
-                Object[] rowData = {
-                    b.getDescription(),
-                    decimalFormatter.format(b.getAmount()),
-                    decimalFormatter.format(b.getBalance())
-                };
-                dtm.addRow(rowData);
-            }
-            jtblBalanceBreakdown.setModel(dtm);
-        }
-        
-        
-        private void changePaymentTerm(){
-            String studentType = student.getStudentType() == 0 ? "Old" : "New";
-            String lastName = student.getRegistration().getLastName();
-            String firstName = student.getRegistration().getFirstName();
-            String middleName = student.getRegistration().getMiddleName();
-            String admissionStatus = student.getAdmission().isCompleted() == true ? "Complete" : "Not Completed";
-            String presentGradeLevel = student.getCurrentGradeLevel().getLevel()==0? "Kindergarten":"Grade "+student.getCurrentGradeLevel().getLevel();
-            String studentStatus = student.isActive() == true ? "Active" : "Inactive";
-            String basicFee = decimalFormatter.format(schoolFees.getBasicFee().getAmount());
-            String miscellaneousFee = decimalFormatter.format(schoolFees.getMiscellaneousFees().getSum());
-            String otherFee = decimalFormatter.format(schoolFees.getOtherFees().getSum());
-            String totalFees = decimalFormatter.format(tuitionFee.getTotalFees());
-            String totalPaid = decimalFormatter.format(tuitionFee.getTotalPaid());
-            String remainingBalance = decimalFormatter.format(tuitionFee.getBalance());
-            String discount = tuitionFee.getDiscount().getDiscountName();
-            String discountPercentage = tuitionFee.getDiscount().getPercentOfDiscount()+"";
-            
-            jlblStudentTypeText.setText(studentType);
-            jlblLastNameText.setText(lastName);
-            jlblFirstNameText.setText(firstName);
-            jlblMiddleNameText.setText(middleName);
-            jlblAdmissionGradeLevelText.setText(admissionStatus);
-            jlblPresentGradeLevelText.setText(presentGradeLevel);
-            jlblStudentStatusText.setText(studentStatus);
-            
-            jtfBasicFee.setText(basicFee);
-            jtfMiscellaneousFee.setText(miscellaneousFee);
-            jtfOtherFee.setText(otherFee);
-            
-            jtfTotalFees.setText(totalFees);
-            jtfTotalPaid.setText(totalPaid);
-            jtfRemainingBalance.setText(remainingBalance);
-            
-            jcmbDiscount.setSelectedItem(discount);
-            jtfDiscountPercentage.setText(discountPercentage);
-            
-            List<BalanceBreakDownFee> balanceBreakDownFee = tuitionFee.getBalanceBreakDownFees();
-            DefaultTableModel dtm = (DefaultTableModel) jtblBalanceBreakdown.getModel();
-            dtm.setRowCount(0);
-            for (BalanceBreakDownFee b : balanceBreakDownFee) {
-                Object[] rowData = {
-                    b.getDescription(),
-                    decimalFormatter.format(b.getAmount()),
-                    decimalFormatter.format(b.getBalance())
-                };
-                dtm.addRow(rowData);
-            }
-            jtblBalanceBreakdown.setModel(dtm);
-        }
-    }
-    
     private void jcmbSchoolYearFromItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbSchoolYearFromItemStateChanged
         jcmbSchoolYearTo.setSelectedIndex(jcmbSchoolYearFrom.getSelectedIndex());
     }//GEN-LAST:event_jcmbSchoolYearFromItemStateChanged
@@ -1375,6 +1188,10 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         jcmbSchoolYearFrom.setSelectedItem(SchoolYearDaoImpl.getCurrentSchoolYearFrom());
         jcmbTransactionSyYearFrom.setSelectedItem(SchoolYearDaoImpl.getCurrentSchoolYearFrom());
     }//GEN-LAST:event_jlblCurrentSchoolYearPropertyChange
+
+    private void jbtnPaySelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnPaySelectedActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbtnPaySelectedActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -22,4 +22,5 @@ public interface IRegistration {
     boolean addRegistration(Registration aRegistration); //Register student
     boolean updateRegistration(Registration aRegistration); // modify student registration info if necessary
     boolean deleteRegistration(Registration aRegistration); 
+    boolean isDuplicateRegistration(Registration registration);
 }

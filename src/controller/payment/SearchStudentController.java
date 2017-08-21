@@ -2,7 +2,9 @@ package controller.payment;
 
 import component_model_loader.BalanceBreakDownML;
 import component_model_loader.SchoolFeesML;
+import daoimpl.EnrollmentDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
+import daoimpl.PaymentTermDaoImpl;
 import daoimpl.SchoolFeesDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
@@ -15,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +29,7 @@ import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.TuitionFee;
 import service.TuitionFeeProcessor;
+import utility.component.JPanelUtil;
 import utility.input.InputUtil;
 
 /**
@@ -73,6 +77,7 @@ public class SearchStudentController implements KeyListener {
     private final JTable jtblBasicFee;
     private final JTable jtblMiscFees;
     private final JTable jtblOtherFees;
+    private final JPanel jpnlFeeSummary;
 
     public SearchStudentController(
             JTextField jtfTotalFeesWithDiscount, JButton jbtnRemoveDiscount,
@@ -83,7 +88,7 @@ public class SearchStudentController implements KeyListener {
             JTextField jtfTotalFees, JTextField jtfTotalPaid, JTextField jtfRemainingBalance,
             JComboBox jcmbDiscount, JTextField jtfDiscountPercentage, JTextField jtfDiscounts,
             JTable jtblBalanceBreakDown, JTable jtblDownPaymentFee, JTable jtblBasicFee, JTable jtblMiscFees,
-            JTable jtblOtherFees) {
+            JTable jtblOtherFees, JPanel jpnlFeeSummary) {
         this.jtfTotalFeesWithDiscount = jtfTotalFeesWithDiscount;
         this.jbtnRemoveDiscount = jbtnRemoveDiscount;
         this.jcmbPaymentTerm = jcmbPaymentTerm;
@@ -110,6 +115,7 @@ public class SearchStudentController implements KeyListener {
         this.jtblDownPaymentFee = jtblDownPaymentFee;
         this.jtblMiscFees = jtblMiscFees;
         this.jtblOtherFees = jtblOtherFees;
+        this.jpnlFeeSummary = jpnlFeeSummary;
 
         initializeComponents();
         initializeDaoImpl();
@@ -177,22 +183,22 @@ public class SearchStudentController implements KeyListener {
 
     private void initializeModels() {
         schoolYear = getSchoolYear();
-        student = getStudent();
         schoolFees = getSchoolFees();
         tuitionFee = getTuitionFee();
+    }
+    
+    private void initializeStudent(){
+        student = getStudent();
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-            initializeModels();
-            initializeControllers();
             if (inputIsValid()) {
+                initializeStudent();
                 if (studentExists()) {
+                    initializeModels();
+                    initializeControllers();
                     if (hasTuitionFeeRecord()) {
                         loadStudentRecord(true);
                     } else {
@@ -200,9 +206,26 @@ public class SearchStudentController implements KeyListener {
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Student Id does not exist");
+                    clearForm();
                 }
             }
         }
+    }
+
+    private void clearForm(){
+        ((DefaultTableModel)jtblBalanceBreakDown.getModel()).setRowCount(0);
+        ((DefaultTableModel)jtblBasicFee.getModel()).setRowCount(0);
+        ((DefaultTableModel)jtblDownPaymentFee.getModel()).setRowCount(0);
+        ((DefaultTableModel)jtblMiscFees.getModel()).setRowCount(0);
+        ((DefaultTableModel)jtblOtherFees.getModel()).setRowCount(0);
+        jcmbDiscount.setSelectedIndex(-1);
+        jcmbPaymentTerm.setSelectedIndex(-1);
+        JPanelUtil.clearJTextFields(jpnlFeeSummary);
+    }
+    
+    @Override
+    public void keyPressed(KeyEvent e) {
+        
     }
 
     private boolean studentExists() {
@@ -245,12 +268,14 @@ public class SearchStudentController implements KeyListener {
             paymentTerm = t.getPaymentTerm().getName().trim();
             
             List<BalanceBreakDownFee> list = t.getBalanceBreakDownFees();
+            
             balanceBreakDownModel.setRowCount(0);
             for(BalanceBreakDownFee b : list){
                 Object[] rowData = {
                     b.getDescription(),
-                    decimalFormatter.format(b.getAmount()),
-                    decimalFormatter.format(b.getBalance())
+                    b.getAmount(),
+                    b.getBalance(),
+                    b.getDeadline()
                 };
                 balanceBreakDownModel.addRow(rowData);
             }
@@ -283,16 +308,18 @@ public class SearchStudentController implements KeyListener {
     }
     
     private TuitionFee createFreshTuitionFee() {
-        double totalPaid = 0.00;
+        double totalPaid = 0;
         double totalFees = schoolFees.getSum();
         double remainingBalance = schoolFees.getSum();
+        
+        PaymentTermDaoImpl ptdi = new PaymentTermDaoImpl();
+        int paymentTermId = ptdi.getId(student.getRegistration().getPaymentTerm().trim());
+        PaymentTerm pt = ptdi.getById(paymentTermId);
+//        System.out.println("PaymentTerm Divisor : "+pt.getDivisor());
         
         Discount discount = new Discount();
         discount.setDiscountName(null);
         discount.setPercentOfDiscount(0);
-        
-        PaymentTerm pt = new PaymentTerm();
-        pt.setName(student.getRegistration().getPaymentTerm().trim());
         
         TuitionFee t = new TuitionFee();
         t.setExists(false);
@@ -349,7 +376,17 @@ public class SearchStudentController implements KeyListener {
     }
 
     private SchoolFees getSchoolFees() {
-        int gradelevelId = studentDaoImpl.getCurrentGradeLevelId(student.getStudentId());
+        int gradelevelId;
+        
+        EnrollmentDaoImpl edi = new EnrollmentDaoImpl();
+        boolean hasEnrollmentRecord = edi.hasEnrollmentRecord(student.getStudentId());
+
+        if (hasEnrollmentRecord) {
+            gradelevelId = studentDaoImpl.getCurrentGradeLevelId(student.getStudentId());
+        } else {
+            gradelevelId = student.getRegistration().getGradeLevelId();
+        }
+
         schoolFees = schoolFeesDaoImpl.get(gradelevelId);
         return schoolFees;
     }

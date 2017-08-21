@@ -60,7 +60,7 @@ public class ScheduleDaoImpl implements ISchedule{
     @Override
     public boolean add(List<Schedule> scheduleList) {
         boolean isAdded = false;
-        String SQLa = "{CALL addSchedule(?,?,?,?,?,?,?,?)}";
+        String SQLa = "{CALL addSchedule(?,?,?,?,?,?,?,?,?)}";
         String SQLb = "{CALL addScheduleToFaculty(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
@@ -80,9 +80,10 @@ public class ScheduleDaoImpl implements ISchedule{
 
                     csa.setInt(6, sectionDaoImpl.getSectionIdByName(s.getSectionName().trim()));
                     csa.setInt(7, roomDaoImpl.getId(s.getRoomName().trim()));
-                    csa.registerOutParameter(8, Types.INTEGER);
+                    csa.setInt(8, s.getGradeLevelId());
+                    csa.registerOutParameter(9, Types.INTEGER);
                     csa.executeUpdate();
-                    int scheduleId = csa.getInt(8);
+                    int scheduleId = csa.getInt(9);
 
                     csb.setInt(1, s.getFaculty().getFacultyID());
                     csb.setInt(2, scheduleId);

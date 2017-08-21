@@ -18,6 +18,7 @@ public interface IEnrollment {
     List<Enrollment> getAllEnrollmentSchedulesOfAllSchoolYears();
     Enrollment getEnrollmentScheduleBySchoolYear(SchoolYear aSchoolYear);
     boolean enrollStudent(Student student);
+    boolean hasEnrollmentRecord(int studentId);
     boolean isEnrollmentClosedForSchoolYear(SchoolYear aSchoolYear);
     boolean isEnrollmentClosedForCurrentSchoolYear();
 }

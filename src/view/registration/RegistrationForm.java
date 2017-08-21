@@ -1,6 +1,7 @@
 
 package view.registration;
 
+import component_model_loader.CalendarML;
 import daoimpl.CredentialDaoImpl;
 import org.joda.time.*;
 import daoimpl.GradeLevelDaoImpl;
@@ -26,6 +27,9 @@ import model.registration.Registration;
 import model.schoolyear.SchoolYear;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import component_renderers.JComboBoxRenderer_Master;
+import component_renderers.MonthJComboBoxRenderer;
+import controller.global.DateScheduleController;
+import java.util.Calendar;
 import view.enrollment.EnrollmentPanel;
 import view.container.Dashboard;
 
@@ -48,23 +52,18 @@ public class RegistrationForm extends javax.swing.JPanel {
         UIManager.put("TextField.disabledBackground", new Color(255, 255, 255));
         UIManager.put("TextField.inactiveForeground", Color.BLACK);
         initComponents();
-        jlblStudentType.setVisible(false);
-        jpnlSchoolLastAttended.setVisible(false);
+        
+        jspTopContainer.getVerticalScrollBar().setUnitIncrement(40);
         jcbNewStudent.setSelected(true);
-        jcbNewStudent.setVisible(false);
-        jcbTransfereeeStudent.setVisible(false);
-//        jpnlPaymentTerm.setVisible(false);
         
         jcmbGradeLevel.setModel(gradeLevelGUIUtil.getAllGradeLevels());
         jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
         jcmbGradeLevel.setSelectedIndex(-1);
         
         jcmbSchoolYearStart.setModel(schoolYearGUIUtil.getCurrentSchoolYearFrom());
-//        jcmbSchoolYearStart.setRenderer(new JComboBoxRenderer_SchoolYear());
         jcmbSchoolYearStart.setSelectedIndex(-1);
         
         jcmbSchoolYearEnd.setModel(schoolYearGUIUtil.getCurrentSchoolYearTo());
-//        jcmbSchoolYearEnd.setRenderer(new JComboBoxRenderer_SchoolYear());
         jcmbSchoolYearEnd.setSelectedIndex(-1);
         
         PaymentTermDaoImpl ptdi = new PaymentTermDaoImpl();
@@ -73,10 +72,19 @@ public class RegistrationForm extends javax.swing.JPanel {
         jcmbPaymentTerm.setRenderer(new JComboBoxRenderer_Master());
         jcmbPaymentTerm.setSelectedIndex(-1);
         
+        jcmbDobMonth.setModel(CalendarML.getMonthsOfYear());
+        jcmbDobYear.setModel(CalendarML.getNYearToNYears(1950, Calendar.getInstance().get(Calendar.YEAR)) );
+//        jcmbDobMonth.setSelectedIndex(-1);
+        jcmbDobYear.setSelectedIndex(-1);
         
-        setDayModel();
-        setMonthModel();
-        setYearModel();
+        jcmbDobMonth.setRenderer(new MonthJComboBoxRenderer("--"));
+        DateScheduleController dsc = new DateScheduleController(jcmbDobMonth, jcmbDobDay, jcmbDobYear);
+        dsc.control();
+        
+        
+//        setDayModel();
+//        setMonthModel();
+//        setYearModel();
     }
 
     
@@ -86,6 +94,8 @@ public class RegistrationForm extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         studentTypeJcbGroup = new javax.swing.ButtonGroup();
+        jspTopContainer = new javax.swing.JScrollPane();
+        jpnlTopContainer = new javax.swing.JPanel();
         ChildPanel1 = new javax.swing.JPanel();
         ChildPanel2 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -117,8 +127,8 @@ public class RegistrationForm extends javax.swing.JPanel {
         jtfAge = new javax.swing.JTextField();
         jtfPob = new javax.swing.JTextField();
         jcmbGender = new javax.swing.JComboBox<>();
-        jcmbDobDay = new javax.swing.JComboBox<>();
         jcmbDobMonth = new javax.swing.JComboBox<>();
+        jcmbDobDay = new javax.swing.JComboBox<>();
         jcmbDobYear = new javax.swing.JComboBox<>();
         jLabel34 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
@@ -141,6 +151,7 @@ public class RegistrationForm extends javax.swing.JPanel {
         jlblStudentType = new javax.swing.JLabel();
         jcbTransfereeeStudent = new javax.swing.JCheckBox();
         jcbNewStudent = new javax.swing.JCheckBox();
+        jcbSummer = new javax.swing.JCheckBox();
         jpnlHomeAddress = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
@@ -218,8 +229,10 @@ public class RegistrationForm extends javax.swing.JPanel {
         });
         setLayout(new java.awt.GridBagLayout());
 
+        jpnlTopContainer.setLayout(new java.awt.GridBagLayout());
+
         ChildPanel1.setLayout(new java.awt.BorderLayout());
-        add(ChildPanel1, new java.awt.GridBagConstraints());
+        jpnlTopContainer.add(ChildPanel1, new java.awt.GridBagConstraints());
 
         ChildPanel2.setPreferredSize(new java.awt.Dimension(210, 429));
         ChildPanel2.setLayout(new java.awt.GridBagLayout());
@@ -287,6 +300,7 @@ public class RegistrationForm extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         credentialsJPanel.add(jLabel1, gridBagConstraints);
 
+        jlstCredentialRequirements.setModel(new DefaultListModel());
         jScrollPane1.setViewportView(jlstCredentialRequirements);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -313,7 +327,7 @@ public class RegistrationForm extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(ChildPanel2, gridBagConstraints);
+        jpnlTopContainer.add(ChildPanel2, gridBagConstraints);
 
         ChilPanel3.setLayout(new java.awt.GridBagLayout());
 
@@ -465,33 +479,31 @@ public class RegistrationForm extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jpnlStudentInformation.add(jcmbGender, gridBagConstraints);
 
-        jcmbDobDay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcmbDobDayActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jpnlStudentInformation.add(jcmbDobDay, gridBagConstraints);
-
-        jcmbDobMonth.setEnabled(false);
         jcmbDobMonth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcmbDobMonthActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jpnlStudentInformation.add(jcmbDobMonth, gridBagConstraints);
 
-        jcmbDobYear.setEnabled(false);
+        jcmbDobDay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcmbDobDayActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        jpnlStudentInformation.add(jcmbDobDay, gridBagConstraints);
+
         jcmbDobYear.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jcmbDobYearItemStateChanged(evt);
@@ -699,9 +711,15 @@ public class RegistrationForm extends javax.swing.JPanel {
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentType.add(jcbNewStudent, gridBagConstraints);
+
+        studentTypeJcbGroup.add(jcbSummer);
+        jcbSummer.setText("Summer");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
+        jpnlStudentType.add(jcbSummer, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1237,7 +1255,7 @@ public class RegistrationForm extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(ChilPanel3, gridBagConstraints);
+        jpnlTopContainer.add(ChilPanel3, gridBagConstraints);
 
         jPanel14.setLayout(new java.awt.GridBagLayout());
 
@@ -1278,7 +1296,16 @@ public class RegistrationForm extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(jPanel14, gridBagConstraints);
+        jpnlTopContainer.add(jPanel14, gridBagConstraints);
+
+        jspTopContainer.setViewportView(jpnlTopContainer);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        add(jspTopContainer, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jcmbSchoolYearStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmbSchoolYearStartActionPerformed
@@ -1310,7 +1337,7 @@ public class RegistrationForm extends javax.swing.JPanel {
             int day = Integer.parseInt(jcmbDobDay.getSelectedItem().toString());
             int month = Integer.parseInt(jcmbDobMonth.getSelectedItem().toString());
 
-            LocalDate birthdate = new LocalDate(year, month, day);
+            LocalDate birthdate = new LocalDate(year, month+1, day);
             LocalDate now = new LocalDate();
             Years age = Years.yearsBetween(birthdate, now);
             System.out.println("Age: " + age);
@@ -1326,6 +1353,7 @@ public class RegistrationForm extends javax.swing.JPanel {
         JPanelUtil.clearFields(jpnlParentInfo);
         JPanelUtil.clearFields(jpnlGuardianInfo);
         JPanelUtil.clearFields(jpnlSchoolLastAttended);
+        ((DefaultListModel)jlstCredentialRequirements.getModel()).clear();
     }
     
     private void jtbnClearRegistrationFieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtbnClearRegistrationFieldsActionPerformed
@@ -1390,7 +1418,6 @@ public class RegistrationForm extends javax.swing.JPanel {
         registration.setSchoolLastAttended(jtfSchoolLastAttended.getText().trim());
         registration.setSchoolLastAttendedAddress(jtfSchoolLastAttendedAddress.getText().trim());
         registration.setPaymentTerm( ((PaymentTerm)jcmbPaymentTerm.getSelectedItem()).getName() );
-//        JOptionPane.showMessageDialog(null,"Test 1: "+((PaymentTerm)jcmbPaymentTerm.getSelectedItem()).getPaymentTerm());
         
         int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString());
         registration.setGradeLevel(gradeLevelNo);
@@ -1406,18 +1433,23 @@ public class RegistrationForm extends javax.swing.JPanel {
 
         if (register == JOptionPane.YES_OPTION) {
             RegistrationDaoImpl rdi = new RegistrationDaoImpl();
-            boolean isAdded = rdi.addRegistration(registration);
-            if(isAdded){
-                JOptionPane.showMessageDialog(null,"Successfully added");
-                resetRegistrationForm();
-                EnrollmentPanel.loadRegisteredApplicantsToJTable();
+            if (!rdi.isDuplicateRegistration(registration)) {
+                boolean isAdded = rdi.addRegistration(registration);
+                if (isAdded) {
+                    JOptionPane.showMessageDialog(null, "Successfully added");
+                    resetRegistrationForm();
+                    EnrollmentPanel.loadRegisteredApplicantsToJTable();
+                } else {
+                    System.out.println("Error occured during registration");
+                }
             }else{
-                JOptionPane.showMessageDialog(null,"Error occured during registration");
+                JOptionPane.showMessageDialog(null,"Registration record for "+registration.getLastName()+", "+registration.getFirstName()+" "+registration.getMiddleName());
             }
+            
+            
         }
     }//GEN-LAST:event_jbtnAddRegistrationActionPerformed
 
-    
     private void jcmbGradeLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbGradeLevelItemStateChanged
             
         if (jcmbGradeLevel.getSelectedIndex() > -1) {
@@ -1541,6 +1573,7 @@ public class RegistrationForm extends javax.swing.JPanel {
     private javax.swing.JCheckBox jcbGuardianContactInCaseOfEmergency;
     private javax.swing.JCheckBox jcbMotherContactInCaseOfEmergency;
     private javax.swing.JCheckBox jcbNewStudent;
+    private javax.swing.JCheckBox jcbSummer;
     private javax.swing.JCheckBox jcbTransfereeeStudent;
     private javax.swing.JComboBox<String> jcmbDobDay;
     private javax.swing.JComboBox<String> jcmbDobMonth;
@@ -1561,6 +1594,8 @@ public class RegistrationForm extends javax.swing.JPanel {
     private javax.swing.JPanel jpnlSchoolLastAttended;
     private javax.swing.JPanel jpnlStudentInformation;
     private javax.swing.JPanel jpnlStudentType;
+    private javax.swing.JPanel jpnlTopContainer;
+    private javax.swing.JScrollPane jspTopContainer;
     private javax.swing.JButton jtbnClearRegistrationFields;
     private javax.swing.JTextField jtfAge;
     private javax.swing.JTextField jtfBrgySubd;

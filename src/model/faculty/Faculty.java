@@ -8,6 +8,7 @@ public class Faculty {
     private int facultyID;
     private List<Specialization> specializations;
     private String fullName;
+    private String employeeId;
     private String firstName;
     private String lastName;
     private String middleName;
@@ -15,6 +16,14 @@ public class Faculty {
     private String emailAddress;
     private String degree;
     private boolean status;
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
 
     public String getFullName() {
         return fullName;

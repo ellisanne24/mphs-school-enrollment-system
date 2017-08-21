@@ -61,11 +61,10 @@ public class FacultyML {
     {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         Object[] obj = fdi.getAllFaculty().toArray();
-
+        System.out.println("Object Size: "+obj.length);
         for(Object o : obj)
         {
             Faculty faculty = (Faculty) o;
-            
             model.addElement(faculty.getFirstName() + " " + faculty.getMiddleName() + ". " + faculty.getLastName());
         }
         return model;

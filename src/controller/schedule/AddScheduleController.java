@@ -23,11 +23,9 @@ import model.schedule.Schedule;
  */
 public class AddScheduleController implements ActionListener {
     private final JTable jtblSchedule;
-    private final JButton jbtnAddSchedule;
     
-    public AddScheduleController(JTable jtblSchedule,JButton jbtnAddSchedule){
+    public AddScheduleController(JTable jtblSchedule){
         this.jtblSchedule = jtblSchedule;
-        this.jbtnAddSchedule = jbtnAddSchedule;
     }
     
     private Schedule getSchedule(){
@@ -81,7 +79,7 @@ public class AddScheduleController implements ActionListener {
         }
         
         private boolean hasTimeConflict(int startTime, int endTime, int startTimeNew, int endTimeNew) {
-            boolean hasTimeConflict = false;
+            boolean hasTimeConflict = true;
             boolean timeConflictA = ((startTimeNew >= startTime) && (endTimeNew <= endTime));
             boolean timeConflictB = ((startTimeNew < startTime) && (endTimeNew > startTime && endTimeNew <= endTime));
             boolean timeConflictC = (startTimeNew == endTimeNew);

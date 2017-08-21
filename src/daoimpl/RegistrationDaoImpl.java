@@ -22,6 +22,26 @@ import dao.IRegistration;
 public class RegistrationDaoImpl implements IRegistration{
 
     PaymentTermDaoImpl paymentTermDaoImpl = new PaymentTermDaoImpl();
+
+    @Override
+    public boolean isDuplicateRegistration(Registration registration) {
+        boolean isDuplicate = false;
+        String SQL = "{CALL isDuplicateRegistration(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, registration.getFirstName().toLowerCase().trim());
+            cs.setString(2, registration.getMiddleName().toLowerCase().trim());
+            cs.setString(3, registration.getLastName().toLowerCase().trim());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    isDuplicate = rs.getBoolean("isDuplicate");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isDuplicate;
+    }
     
     @Override
     public List<Registration> getAllRegistrationInfoBySchoolYearId(Integer aSchoolYearId) {

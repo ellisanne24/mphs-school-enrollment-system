@@ -33,11 +33,12 @@ public class SchoolFeesDaoImpl implements ISchoolFees{
 
     @Override
     public SchoolFees get(int gradeLevelId) {
-        double sumOfFees = 0;
+        Double sumOfFees = null;
         String SQL = "{CALL getSchoolFeesSum(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             cs.setInt(1, gradeLevelId);
+            System.out.println("Grade Level Id :"+gradeLevelId);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     sumOfFees = rs.getDouble("sumOfFees");
@@ -52,6 +53,7 @@ public class SchoolFeesDaoImpl implements ISchoolFees{
         schoolFees.setMiscellaneousFees(getMiscellaneous(gradeLevelId));
         schoolFees.setOtherFees(getOther(gradeLevelId));
         schoolFees.setSum(sumOfFees);
+        
         return schoolFees;
     }
 

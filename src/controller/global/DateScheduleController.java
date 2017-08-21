@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.global;
 
 import component_model_loader.CalendarML;
@@ -36,10 +31,12 @@ public class DateScheduleController{
         monthItemListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                int y = Integer.parseInt(year.getSelectedItem().toString());
-                int m = Integer.parseInt(month.getSelectedItem().toString());
-                DefaultComboBoxModel dcm = CalendarML.getDaysOfMonth(m, y);
-                day.setModel(dcm);
+                if (year.getSelectedIndex() > -1 && month.getSelectedIndex() > -1) {
+                    int y = Integer.parseInt(year.getSelectedItem().toString());
+                    int m = Integer.parseInt(month.getSelectedItem().toString());
+                    DefaultComboBoxModel dcm = CalendarML.getDaysOfMonth(m, y);
+                    day.setModel(dcm);
+                }
             }
         };
         month.addItemListener(monthItemListener);

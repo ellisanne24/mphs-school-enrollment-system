@@ -71,7 +71,6 @@ public class FacultyDaoImpl implements IFaculty {
                     aFaculty.setMiddleName(rs.getString("middleName"));
                     aFaculty.setEmailAddress(rs.getString("email"));
                     aFaculty.setContact(rs.getString("contact"));
-                    aFaculty.setDegree(rs.getString("degree"));
                     list.add(aFaculty);
                 }
             }
@@ -97,7 +96,6 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setMiddleName(rs.getString("middleName"));
                     faculty.setContact(rs.getString("contact"));
                     faculty.setEmailAddress(rs.getString("email"));
-                    faculty.setDegree(rs.getString("degree"));
                     faculty.setStatus(rs.getBoolean("Status"));
                     list.add(faculty);
                 }
@@ -128,7 +126,7 @@ public class FacultyDaoImpl implements IFaculty {
                 cs1.setString(3, faculty.getMiddleName());
                 cs1.setString(4, faculty.getEmailAddress());
                 cs1.setString(5, faculty.getContact());
-                cs1.setString(6, faculty.getDegree());
+                cs1.setString(6, faculty.getEmployeeId());
                 cs1.registerOutParameter(7, Types.INTEGER);
                 cs1.executeUpdate();
                 int facultyId = cs1.getInt(7);
@@ -187,7 +185,6 @@ public class FacultyDaoImpl implements IFaculty {
             cs.setString(4, aFaculty.getMiddleName());
             cs.setString(5, aFaculty.getEmailAddress());
             cs.setString(6, aFaculty.getContact());
-            cs.setString(8, aFaculty.getDegree());
             cs.setBoolean(9, aFaculty.getStatus());
             cs.executeUpdate();
             isUpdated = true;
@@ -229,11 +226,9 @@ public class FacultyDaoImpl implements IFaculty {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Faculty faculty = new Faculty();
-
                     faculty.setFirstName(rs.getString(1));
                     faculty.setMiddleName(rs.getString(2));
                     faculty.setLastName(rs.getString(3));
-
                     list.add(faculty);
                 }
             }
@@ -253,7 +248,7 @@ public class FacultyDaoImpl implements IFaculty {
             cs.setString(1, aFaculty.getFullName());
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
-                    id = rs.getInt(1);
+                    id = rs.getInt("faculty_id");
                 }
             }
         } catch (SQLException ex) {
@@ -274,10 +269,8 @@ public class FacultyDaoImpl implements IFaculty {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Faculty faculty = new Faculty();
-
                     faculty.setFacultyID(rs.getInt(1));
                     faculty.setFullName(rs.getString(2) + " " + rs.getString(3) + ". " + rs.getString(4));
-
                     list.add(faculty);
                 }
             }

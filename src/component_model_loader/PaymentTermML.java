@@ -23,9 +23,10 @@ public class PaymentTermML {
         for (Object o : pt) {
             PaymentTerm p = (PaymentTerm) o;
             String name = p.getName();
-            if (!name.equals("Cash")) {
-                dcm.addElement(name);
-            }
+//            if (!name.equals("Cash")) {
+//                dcm.addElement(name);
+//            }
+            dcm.addElement(name);
         }
         dcm.setSelectedItem(null);
         return dcm;

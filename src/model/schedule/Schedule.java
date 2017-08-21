@@ -15,6 +15,15 @@ public class Schedule {
     private String sectionName;
     private int schoolYearId;
     private String subjectCode;
+    private int gradeLevelId;
+
+    public int getGradeLevelId() {
+        return gradeLevelId;
+    }
+
+    public void setGradeLevelId(int gradeLevelId) {
+        this.gradeLevelId = gradeLevelId;
+    }
 
     public String getDay() {
         return day;

@@ -8,6 +8,7 @@ import component_renderers.GradeLevelJComboBoxRenderer;
 import controller.admintools.DeactivateAllStudents;
 import controller.admintools.DeleteAlPaymentAndTransactionRecord;
 import controller.admintools.DeleteAllStudentRecord;
+import controller.admintools.GenerateSubjects;
 import controller.admintools.RecordGeneratorController;
 import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
@@ -53,6 +54,8 @@ public class AdminTools extends javax.swing.JFrame {
         jbtnDeleteAllStudentRecord = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jbtnDeletePaymentAndTuitionRecord = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jbtnGenerateSubjects = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -165,6 +168,13 @@ public class AdminTools extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Payment & Fees", jPanel2);
 
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jbtnGenerateSubjects.setText("Generate K12 Subjects");
+        jPanel3.add(jbtnGenerateSubjects, new java.awt.GridBagConstraints());
+
+        jTabbedPane1.addTab("Subject", jPanel3);
+
         getContentPane().add(jTabbedPane1, new java.awt.GridBagConstraints());
 
         pack();
@@ -198,6 +208,7 @@ public class AdminTools extends javax.swing.JFrame {
         jbtnDeletePaymentAndTuitionRecord.addActionListener(new DeleteAlPaymentAndTransactionRecord());
         jbtnDeleteAllStudentRecord.addActionListener(new DeleteAllStudentRecord());
         jbtnDeactivateStudents.addActionListener(new DeactivateAllStudents());
+        jbtnGenerateSubjects.addActionListener(new GenerateSubjects());
     }
     
     private void initializeModels(){
@@ -222,11 +233,13 @@ public class AdminTools extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbtnDeactivateStudents;
     private javax.swing.JButton jbtnDeleteAllStudentRecord;
     private javax.swing.JButton jbtnDeletePaymentAndTuitionRecord;
     private javax.swing.JButton jbtnGenerateRegistration;
+    private javax.swing.JButton jbtnGenerateSubjects;
     private javax.swing.JComboBox<String> jcmbGradeLevel;
     private javax.swing.JComboBox<String> jcmbGradeLevelForDob;
     private javax.swing.JComboBox<String> jcmbPaymentTerm;

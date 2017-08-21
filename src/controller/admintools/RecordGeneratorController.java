@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import model.recordgenerator.RecordModel;
+import model.testdata.StudentTestDataModel;
 import model.registration.Registration;
 
 
@@ -27,7 +27,7 @@ public class RecordGeneratorController implements ActionListener{
     GradeLevelDaoImpl gradeLevelDaoImpl;
     PaymentTermDaoImpl paymentTermDaoImpl;
     SchoolYearDaoImpl schoolYearDaoImpl;
-    RecordModel recordModel;
+    StudentTestDataModel recordModel;
     private final JFrame frame;
     private final JComboBox jcmbGradeLevelForDob;
     private final JComboBox jcmbGradeLevel;
@@ -64,7 +64,7 @@ public class RecordGeneratorController implements ActionListener{
         int schoolYear = Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString().trim());
         String paymentTerm = jcmbPaymentTerm.getSelectedItem().toString().trim();
         int recordCount = Integer.parseInt(jcmbRecordCount.getSelectedItem().toString().trim());
-        recordModel = new RecordModel();
+        recordModel = new StudentTestDataModel();
         
         int gradeLevelId = gradeLevelDaoImpl.getId(level);
         int schoolYearId = schoolYearDaoImpl.getId(schoolYear);
