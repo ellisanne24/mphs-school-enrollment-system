@@ -1,17 +1,23 @@
 package component_editor;
 
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerDateModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import static view.schedule.CreateSchedule.jtblSchedule;
 
 /**
  *
@@ -58,6 +64,8 @@ public class ScheduleTimeCellEditor extends DefaultCellEditor {
 //            @Override
 //            public void keyTyped(KeyEvent e) {
 //                if (e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB) {
+//                    int columnSelected = jtblSchedule.getSelectedColumn();
+//                    jtblSchedule.changeSelection(jtblSchedule.getSelectedRow(), columnSelected+1, false, false);
 //                    JOptionPane.showMessageDialog(null,"User keytyped ENTER!");
 //                }
 //            }

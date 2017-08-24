@@ -3,6 +3,7 @@ package view.container;
 import controller.admintools.DisplayRecordGeneratorController;
 import daoimpl.FacultyDaoImpl;
 import daoimpl.PermissionDaoImpl;
+import daoimpl.UserDaoImpl;
 import view.enrollment.EnrollmentPanel;
 import view.user.AllUsersRecord;
 import view.registration.RegistrationForm;
@@ -77,12 +78,18 @@ public class Dashboard extends javax.swing.JFrame {
     private final User user;
     public static int userId;
     public static int facultyId;
+    public static int adviserId;
 
     public Dashboard(User user) {
         initComponents();
         this.user = user;
         userId = user.getId();
         loadFacultyId();
+        loadUserAdviserId();
+        
+        System.out.println("User Id :"+userId);
+        System.out.println("Faculty Id :"+facultyId);
+        System.out.println("Adviser Id :"+adviserId);
         
         setUILookAndFeel();
         initDashboardPermissions();
@@ -96,6 +103,17 @@ public class Dashboard extends javax.swing.JFrame {
         //
         SubjectTestDataModel stdm = new SubjectTestDataModel();
         stdm.getDescription();
+    }
+    
+    private void loadUserAdviserId() {
+        Role role = user.getRole();
+        String roleName = role.getRoleName();
+        if (roleName.toLowerCase().equals("faculty")) {
+            UserDaoImpl udi = new UserDaoImpl();
+//            adviserId = udi.getAdviserIdByUserId(userId);
+            adviserId = facultyId;
+System.out.println("Adviser Id: " + adviserId);
+        }
     }
     
     private void loadFacultyId(){

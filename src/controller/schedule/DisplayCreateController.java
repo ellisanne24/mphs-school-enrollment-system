@@ -19,7 +19,7 @@ public class DisplayCreateController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         CreateSchedule c = new CreateSchedule(null,true);
-        c.setPreferredSize(new Dimension(1250,540));
+        c.setPreferredSize(new Dimension(1250,700));
         c.pack();
         c.setLocationRelativeTo(null);
         c.setVisible(true);

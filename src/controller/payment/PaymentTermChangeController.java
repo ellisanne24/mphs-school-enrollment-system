@@ -48,8 +48,8 @@ public class PaymentTermChangeController implements ItemListener {
     }
 
     private void initializeFormatters() {
-//        decimalFormatter = new DecimalFormat("#0.00");
-        df = new DecimalFormat("#,#00.00");
+        df = new DecimalFormat("#0.00");
+//        df = new DecimalFormat("#,#00.00");
     }
 
     @Override
@@ -97,8 +97,8 @@ public class PaymentTermChangeController implements ItemListener {
             for (BalanceBreakDownFee b : balanceBreakDownFee) {
                 Object[] rowData = {
                     b.getDescription(),
-                    b.getAmount(),
-                    b.getBalance(),
+                    df.format(b.getAmount()),
+                    df.format(b.getBalance()),
                     b.getDeadline()
                 };
                 tableModel.addRow(rowData);

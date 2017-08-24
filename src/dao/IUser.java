@@ -13,4 +13,5 @@ public interface IUser {
     boolean add(User user);
     boolean update(User user);
     List<User> getAll();
+    Integer getAdviserIdByUserId(int userId);
 }

@@ -8,9 +8,8 @@ import daoimpl.TuitionFeeDaoImpl;
 import java.awt.Dimension;
 import utility.input.InputUtil;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import model.schoolyear.SchoolYear;
@@ -30,7 +29,7 @@ import view.receipt.Receipt;
 
 public class PaySelectedForm extends javax.swing.JDialog {
 
-    private final DecimalFormat decimalFormatter = new DecimalFormat("#0.00");
+    private final DecimalFormat df = new DecimalFormat("#0.00");
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
     private final EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl();
     private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
@@ -64,12 +63,12 @@ public class PaySelectedForm extends javax.swing.JDialog {
 
         for (Object o : particulars.getBalanceBreakDownFees()) {
             BalanceBreakDownFee b = (BalanceBreakDownFee) o;
-            double balance = b.getBalance();
+            BigDecimal balance = b.getBalance();
             String description = b.getDescription();
-            listModel.addElement(" " + description + " (" + "\u20B1" + decimalFormatter.format(balance) + " )");
+            listModel.addElement(" " + description + " (" + "\u20B1" + df.format(balance) + " )");
         }
         jlstParticulars.setModel(listModel);
-        jlblTotalOfFeesToPayText.setText("\u20B1 " + decimalFormatter.format(balanceSum));
+        jlblTotalOfFeesToPayText.setText("\u20B1 " + df.format(balanceSum));
     }
 
     @SuppressWarnings("unchecked")
@@ -285,7 +284,7 @@ public class PaySelectedForm extends javax.swing.JDialog {
                         } else {
                             tuitionFee.setPayment(payment);
                             addTuitionFees(tuitionFee);
-//                            payTuitionFee(tuitionFee);
+                            payTuitionFee(tuitionFee);
                         }
                         displayReceipt(student, payment);
                     }
@@ -299,16 +298,11 @@ public class PaySelectedForm extends javax.swing.JDialog {
     }
     
     private boolean addTuitionFees(TuitionFee t) {
-        List<BalanceBreakDownFee> list = t.getBalanceBreakDownFees();
-        for(BalanceBreakDownFee b : list){
-            System.out.println("@addTuitionFees -> b.getAmount :"+b.getAmount());
-        }
-        
         boolean isAdded;
         Student s = t.getStudent();
         isAdded = tuitionFeeDaoImpl.add(t);
         if (isAdded) {
-            JOptionPane.showMessageDialog(null, "Tuition Fees added.");
+            JOptionPane.showMessageDialog(null, "Payment successful.");
             enrollStudent(s);
         } else {
             System.out.println("Adding of Tuition Fees failed.");

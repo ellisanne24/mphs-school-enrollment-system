@@ -1,14 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.student;
 
+import controller.printer.PrintController;
+import daoimpl.EnrollmentDaoImpl;
+import daoimpl.ScheduleDaoImpl;
+import daoimpl.SchoolFeesDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
+import daoimpl.SectionDaoImpl;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import daoimpl.StudentDaoImpl;
+import daoimpl.TuitionFeeDaoImpl;
 import utility.component.ImageUtil;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
@@ -16,7 +18,17 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.print.PrinterJob;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import model.fee.Fee;
+import model.miscellaneousfees.MiscellaneousFees;
+import model.schedule.Schedule;
+import model.schoolfees.SchoolFees;
+import model.schoolyear.SchoolYear;
+import model.student.Student;
+import utility.component.TableUtility;
+import view.schedule.CreateSchedule;
 
 public class JdlgStudentInfo extends javax.swing.JDialog {
 
@@ -79,8 +91,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jlblStudentType = new javax.swing.JLabel();
     jlblGradeLevel = new javax.swing.JLabel();
     jlblGradeLevelText = new javax.swing.JLabel();
-    jlblContact = new javax.swing.JLabel();
-    jlblContactText = new javax.swing.JLabel();
     jlblSection = new javax.swing.JLabel();
     jlblSectionText = new javax.swing.JLabel();
     jlblDate = new javax.swing.JLabel();
@@ -99,13 +109,16 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jpnlMiscellaneous = new javax.swing.JPanel();
     jLabel15 = new javax.swing.JLabel();
     jPanel17 = new javax.swing.JPanel();
-    jLabel16 = new javax.swing.JLabel();
+    jScrollPane1 = new javax.swing.JScrollPane();
+    jtblMiscellaneous = new javax.swing.JTable();
     jpnlOthers = new javax.swing.JPanel();
     jLabel17 = new javax.swing.JLabel();
     jPanel19 = new javax.swing.JPanel();
-    jLabel18 = new javax.swing.JLabel();
+    jScrollPane3 = new javax.swing.JScrollPane();
+    jtblOthers = new javax.swing.JTable();
     jpnlTotal = new javax.swing.JPanel();
     jLabel19 = new javax.swing.JLabel();
+    jLabel1 = new javax.swing.JLabel();
     jPanel3 = new javax.swing.JPanel();
     jpnlStudentPhoto = new javax.swing.JPanel(){
 
@@ -167,28 +180,30 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
 
     jpnlLogo.setBackground(new java.awt.Color(255, 255, 255));
     jpnlLogo.setMinimumSize(new java.awt.Dimension(100, 100));
-    jpnlLogo.setPreferredSize(new java.awt.Dimension(120, 120));
+    jpnlLogo.setPreferredSize(new java.awt.Dimension(80, 80));
     jpnlLogo.setLayout(new java.awt.GridBagLayout());
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
     jpnlHeader.add(jpnlLogo, gridBagConstraints);
 
     jPanel10.setBackground(new java.awt.Color(255, 255, 255));
+    jPanel10.setMinimumSize(new java.awt.Dimension(418, 18));
     jPanel10.setPreferredSize(new java.awt.Dimension(420, 18));
     jPanel10.setLayout(new java.awt.GridBagLayout());
 
-    jLabel5.setFont(new java.awt.Font("Arial", 0, 26)); // NOI18N
+    jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(0, 114, 188));
     jLabel5.setText("Mother of Perpetual Help School");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(10, 20, 1, 1);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel10.add(jLabel5, gridBagConstraints);
 
-    jLabel7.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+    jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
     jLabel7.setForeground(new java.awt.Color(51, 51, 51));
     jLabel7.setText("Iris Street Dahlia, West Fairview Quezon City");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -196,10 +211,10 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.gridy = 1;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(1, 20, 1, 1);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel10.add(jLabel7, gridBagConstraints);
 
-    jLabel8.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+    jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
     jLabel8.setForeground(new java.awt.Color(51, 51, 51));
     jLabel8.setText("1118 Metro Manila, Philippines");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -208,7 +223,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(1, 20, 1, 1);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel10.add(jLabel8, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -216,6 +231,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
     jpnlHeader.add(jPanel10, gridBagConstraints);
 
     jpnlRegistrationNo.setBackground(new java.awt.Color(255, 255, 255));
@@ -227,14 +243,16 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 2);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlRegistrationNo.add(jlblRegistrationNo, gridBagConstraints);
 
     jlblRegistrationIdText.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
     jlblRegistrationIdText.setForeground(new java.awt.Color(51, 51, 51));
     jlblRegistrationIdText.setText("RegistrationNoText");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.insets = new java.awt.Insets(10, 2, 2, 2);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlRegistrationNo.add(jlblRegistrationIdText, gridBagConstraints);
 
     jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -244,14 +262,13 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.weighty = 0.5;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlRegistrationNo.add(jLabel10, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
     jpnlHeader.add(jpnlRegistrationNo, gridBagConstraints);
 
@@ -263,7 +280,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jpnlCertificateOfRegistration.setBackground(new java.awt.Color(255, 255, 255));
     jpnlCertificateOfRegistration.setLayout(new java.awt.GridBagLayout());
 
-    jLabel4.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
+    jLabel4.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
     jLabel4.setForeground(new java.awt.Color(0, 114, 188));
     jLabel4.setText("Certificate Of Registration");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -274,193 +291,173 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 10);
+    gridBagConstraints.weightx = 0.5;
     jpnlRegistration.add(jpnlCertificateOfRegistration, gridBagConstraints);
 
     jPanel9.setBackground(new java.awt.Color(255, 255, 255));
     jPanel9.setLayout(new java.awt.GridBagLayout());
 
     jPanel12.setBackground(new java.awt.Color(255, 255, 255));
-    jPanel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 114, 188)));
+    jPanel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jPanel12.setLayout(new java.awt.GridBagLayout());
 
-    jlblSchoolYear.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblSchoolYear.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblSchoolYear.setForeground(new java.awt.Color(51, 51, 51));
-    jlblSchoolYear.setText("SY");
+    jlblSchoolYear.setText("School Year");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblSchoolYear, gridBagConstraints);
 
-    jlblSchoolYearText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblSchoolYearText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblSchoolYearText.setForeground(new java.awt.Color(51, 51, 51));
     jlblSchoolYearText.setText("SchoolYearText");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblSchoolYearText, gridBagConstraints);
 
-    jlblName.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblName.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblName.setForeground(new java.awt.Color(51, 51, 51));
     jlblName.setText("Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblName, gridBagConstraints);
 
-    jlblNameText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblNameText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblNameText.setForeground(new java.awt.Color(51, 51, 51));
     jlblNameText.setText("NameText");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblNameText, gridBagConstraints);
 
-    jlblAddress.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblAddress.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblAddress.setForeground(new java.awt.Color(51, 51, 51));
     jlblAddress.setText("Address :");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.gridx = 8;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblAddress, gridBagConstraints);
 
-    jlblAddressText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblAddressText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblAddressText.setForeground(new java.awt.Color(51, 51, 51));
     jlblAddressText.setText("AddressText");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridx = 9;
+    gridBagConstraints.gridy = 0;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblAddressText, gridBagConstraints);
 
-    jlblStudentIdRegistrationform.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblStudentIdRegistrationform.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblStudentIdRegistrationform.setForeground(new java.awt.Color(51, 51, 51));
     jlblStudentIdRegistrationform.setText("Student ID :");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblStudentIdRegistrationform, gridBagConstraints);
 
-    jlblStudentIdRegistrationText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblStudentIdRegistrationText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblStudentIdRegistrationText.setForeground(new java.awt.Color(51, 51, 51));
     jlblStudentIdRegistrationText.setText("StudentIdText");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblStudentIdRegistrationText, gridBagConstraints);
 
-    jlblStudentType.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblStudentType.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblStudentType.setForeground(new java.awt.Color(51, 51, 51));
     jlblStudentType.setText("Type :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblStudentType, gridBagConstraints);
 
-    jlblGradeLevel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblGradeLevel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblGradeLevel.setForeground(new java.awt.Color(51, 51, 51));
     jlblGradeLevel.setText("Grade :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblGradeLevel, gridBagConstraints);
 
-    jlblGradeLevelText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblGradeLevelText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblGradeLevelText.setForeground(new java.awt.Color(51, 51, 51));
     jlblGradeLevelText.setText("GradeText");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 5;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblGradeLevelText, gridBagConstraints);
 
-    jlblContact.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-    jlblContact.setForeground(new java.awt.Color(51, 51, 51));
-    jlblContact.setText("Contact :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-    jPanel12.add(jlblContact, gridBagConstraints);
-
-    jlblContactText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-    jlblContactText.setForeground(new java.awt.Color(51, 51, 51));
-    jlblContactText.setText("ContactText");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 3;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-    jPanel12.add(jlblContactText, gridBagConstraints);
-
-    jlblSection.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblSection.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblSection.setForeground(new java.awt.Color(51, 51, 51));
     jlblSection.setText("Section :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 6;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblSection, gridBagConstraints);
 
-    jlblSectionText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblSectionText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblSectionText.setForeground(new java.awt.Color(51, 51, 51));
     jlblSectionText.setText("SectionText");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblSectionText, gridBagConstraints);
 
-    jlblDate.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblDate.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblDate.setForeground(new java.awt.Color(51, 51, 51));
     jlblDate.setText("Date :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 6;
     gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblDate, gridBagConstraints);
 
-    jlblRegistrationDateText.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblRegistrationDateText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblRegistrationDateText.setForeground(new java.awt.Color(51, 51, 51));
     jlblRegistrationDateText.setText("DateText");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 7;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblRegistrationDateText, gridBagConstraints);
 
-    jlblStudentTypeRegForm.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    jlblStudentTypeRegForm.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
     jlblStudentTypeRegForm.setForeground(new java.awt.Color(51, 51, 51));
     jlblStudentTypeRegForm.setText("TypeText");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 5;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel12.add(jlblStudentTypeRegForm, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridwidth = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
     jPanel9.add(jPanel12, gridBagConstraints);
 
     jPanel13.setBackground(new java.awt.Color(255, 255, 255));
@@ -483,7 +480,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
             {null, null, null, null}
         },
         new String [] {
-            "Subject ", "Time", "Room", "Adviser"
+            "Day", "Subject ", "Time", "Room"
         }
     ) {
         boolean[] canEdit = new boolean [] {
@@ -513,7 +510,7 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(0, 10, 10, 0);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel13.add(jPanel20, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -527,15 +524,15 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jpnlStudentFees.setBackground(new java.awt.Color(255, 255, 255));
     jpnlStudentFees.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 114, 188)));
     jpnlStudentFees.setMinimumSize(new java.awt.Dimension(215, 215));
-    jpnlStudentFees.setPreferredSize(new java.awt.Dimension(215, 215));
+    jpnlStudentFees.setPreferredSize(new java.awt.Dimension(215, 400));
     jpnlStudentFees.setLayout(new java.awt.GridBagLayout());
 
     jpnlTuition.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlTuition.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 114, 188)));
+    jpnlTuition.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlTuition.setForeground(new java.awt.Color(51, 51, 51));
     jpnlTuition.setLayout(new java.awt.GridBagLayout());
 
-    jlblTuitionHeader.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jlblTuitionHeader.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
     jlblTuitionHeader.setForeground(new java.awt.Color(51, 51, 51));
     jlblTuitionHeader.setText("Tuition");
     jpnlTuition.add(jlblTuitionHeader, new java.awt.GridBagConstraints());
@@ -551,11 +548,9 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel15.setForeground(new java.awt.Color(51, 51, 51));
     jPanel15.setLayout(new java.awt.GridBagLayout());
 
-    jLabel14.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
     jLabel14.setForeground(new java.awt.Color(51, 51, 51));
     jLabel14.setText("jLabel14");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel15.add(jLabel14, gridBagConstraints);
@@ -567,11 +562,11 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jpnlStudentFees.add(jPanel15, gridBagConstraints);
 
     jpnlMiscellaneous.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlMiscellaneous.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 114, 188)));
+    jpnlMiscellaneous.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlMiscellaneous.setForeground(new java.awt.Color(51, 51, 51));
     jpnlMiscellaneous.setLayout(new java.awt.GridBagLayout());
 
-    jLabel15.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jLabel15.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
     jLabel15.setForeground(new java.awt.Color(51, 51, 51));
     jLabel15.setText(" Miscellaneous");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -586,14 +581,42 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
 
     jPanel17.setBackground(new java.awt.Color(255, 255, 255));
     jPanel17.setForeground(new java.awt.Color(51, 51, 51));
+    jPanel17.setPreferredSize(new java.awt.Dimension(453, 0));
     jPanel17.setLayout(new java.awt.GridBagLayout());
 
-    jLabel16.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-    jLabel16.setForeground(new java.awt.Color(51, 51, 51));
-    jLabel16.setText("jLabel16");
+    jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+    jtblMiscellaneous.setAutoCreateRowSorter(true);
+    jtblMiscellaneous.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
+    jtblMiscellaneous.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+            {null, null},
+            {null, null},
+            {null, null},
+            {null, null}
+        },
+        new String [] {
+            "Description", "Amount"
+        }
+    ) {
+        boolean[] canEdit = new boolean [] {
+            false, false
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit [columnIndex];
+        }
+    });
+    jtblMiscellaneous.setMinimumSize(new java.awt.Dimension(150, 64));
+    jtblMiscellaneous.setPreferredSize(new java.awt.Dimension(150, 200));
+    jScrollPane1.setViewportView(jtblMiscellaneous);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
-    jPanel17.add(jLabel16, gridBagConstraints);
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
+    jPanel17.add(jScrollPane1, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -604,11 +627,11 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jpnlStudentFees.add(jPanel17, gridBagConstraints);
 
     jpnlOthers.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlOthers.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 114, 188)));
+    jpnlOthers.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlOthers.setForeground(new java.awt.Color(51, 51, 51));
     jpnlOthers.setLayout(new java.awt.GridBagLayout());
 
-    jLabel17.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jLabel17.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
     jLabel17.setForeground(new java.awt.Color(51, 51, 51));
     jLabel17.setText("Others");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -624,36 +647,64 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
 
     jPanel19.setBackground(new java.awt.Color(255, 255, 255));
     jPanel19.setForeground(new java.awt.Color(51, 51, 51));
+    jPanel19.setMinimumSize(new java.awt.Dimension(20, 100));
     jPanel19.setLayout(new java.awt.GridBagLayout());
 
-    jLabel18.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-    jLabel18.setForeground(new java.awt.Color(51, 51, 51));
-    jLabel18.setText("jLabel18");
+    jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+    jScrollPane3.setPreferredSize(new java.awt.Dimension(453, 300));
+
+    jtblOthers.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
+    jtblOthers.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+            {null, null},
+            {null, null},
+            {null, null},
+            {null, null}
+        },
+        new String [] {
+            "Description", "Amount"
+        }
+    ) {
+        boolean[] canEdit = new boolean [] {
+            false, false
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit [columnIndex];
+        }
+    });
+    jScrollPane3.setViewportView(jtblOthers);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
-    jPanel19.add(jLabel18, gridBagConstraints);
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
+    jPanel19.add(jScrollPane3, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 5;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.weighty = 0.5;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     jpnlStudentFees.add(jPanel19, gridBagConstraints);
 
     jpnlTotal.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlTotal.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 114, 188)));
+    jpnlTotal.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlTotal.setForeground(new java.awt.Color(51, 51, 51));
     jpnlTotal.setLayout(new java.awt.GridBagLayout());
 
-    jLabel19.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+    jLabel19.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
     jLabel19.setForeground(new java.awt.Color(51, 51, 51));
     jLabel19.setText("Total");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlTotal.add(jLabel19, gridBagConstraints);
+
+    jLabel1.setText("jLabel1");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlTotal.add(jLabel1, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -665,13 +716,13 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
     jPanel9.add(jpnlStudentFees, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
     jpnlRegistration.add(jPanel9, gridBagConstraints);
@@ -708,7 +759,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.setLayout(new java.awt.GridBagLayout());
 
     jlblStudentId.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblStudentId.setText("Student ID :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 2;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -716,7 +766,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblStudentId, gridBagConstraints);
 
     jlblStudentIdText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblStudentIdText.setText("Student Id Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 2;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -724,21 +773,18 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblStudentIdText, gridBagConstraints);
 
     jlblStatus.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblStatus.setText("Status : ");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblStatus, gridBagConstraints);
 
     jlblStatusText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblStatusText.setText("Status Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblStatusText, gridBagConstraints);
 
     jlblLastName.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblLastName.setText("Last Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 3;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -746,7 +792,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblLastName, gridBagConstraints);
 
     jlblLastNameText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblLastNameText.setText("Last Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 3;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -754,7 +799,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblLastNameText, gridBagConstraints);
 
     jlblFirstName.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblFirstName.setText("First Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 4;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -762,7 +806,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblFirstName, gridBagConstraints);
 
     jlblFirstNameText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblFirstNameText.setText("First Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 4;
@@ -771,7 +814,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblFirstNameText, gridBagConstraints);
 
     jlblMiddleName.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblMiddleName.setText("Middle Name : ");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 5;
@@ -780,7 +822,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblMiddleName, gridBagConstraints);
 
     jlblMiddleNameText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblMiddleNameText.setText("Middle Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 5;
@@ -790,7 +831,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jlblMiddleNameText, gridBagConstraints);
 
     jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jLabel2.setText("Student Type : ");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
@@ -799,7 +839,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     jPanel8.add(jLabel2, gridBagConstraints);
 
     jlblStudentTypeText.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    jlblStudentTypeText.setText("Student Type Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
@@ -830,7 +869,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     getContentPane().add(jPanel1, gridBagConstraints);
 
     jPanel7.setLayout(new java.awt.GridBagLayout());
@@ -858,7 +896,6 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     getContentPane().add(jPanel7, gridBagConstraints);
 
     pack();
@@ -878,10 +915,101 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
         jtblRegformSchedule.setShowGrid(false);
         jtblRegformSchedule.setShowHorizontalLines(false);
         jtblRegformSchedule.setShowVerticalLines(false);
+        jtblMiscellaneous.setShowGrid(false);
+        jtblMiscellaneous.setShowHorizontalLines(false);
+        jtblMiscellaneous.setShowVerticalLines(false);
+        
+        setStudentInfo();
+        setSchoolFeesModel();
+    }
+    
+    private void setSchoolFeesModel(){
+        SchoolFeesDaoImpl sfdi = new SchoolFeesDaoImpl();
+        MiscellaneousFees m = sfdi.getMiscellaneous(studentId);
+        SchoolFees sf = getSchoolFees();
+        DefaultTableModel model = (DefaultTableModel)jtblMiscellaneous.getModel();
+        List<Fee> feeList = sf.getMiscellaneousFees().getFees();
+        model.setRowCount(0);
+        for(Fee f : feeList){
+            model.addRow(new Object[]{f.getName(),f.getAmount()});
+        }
+        jtblMiscellaneous.setModel(model);
+        System.out.println("SchoolFees Size :"+sf.getMiscellaneousFees().getFees().size());
+        
+        jLabel14.setText(sf.getBasicFee().getAmount()+"");
+        
+        DefaultTableModel otherModel = (DefaultTableModel) jtblOthers.getModel();
+        otherModel.setRowCount(0);
+        for(Fee f : feeList){
+            otherModel.addRow(new Object[]{f.getName(),f.getAmount()});
+        }
+        jtblOthers.setModel(otherModel);
+        jLabel1.setText(sf.getSum()+"");
+        
+        SectionDaoImpl secDaoImpl = new SectionDaoImpl();
+        int sectionId = secDaoImpl.getSectionIdByName(secDaoImpl.getSectionByStudentId(studentId).getSectionName());
+        ScheduleDaoImpl schedDaoImpl = new ScheduleDaoImpl();
+        List<Schedule> schedList = schedDaoImpl.getBySectionId(sectionId);
+        DefaultTableModel schedModel = (DefaultTableModel)jtblRegformSchedule.getModel();
+        schedModel.setRowCount(0);
+        for(Schedule s : schedList){
+            schedModel.addRow(new Object[]{s.getDay(),s.getSubjectCode(),s.getStartTime()+"-"+s.getEndTime(),s.getRoomName()});
+        }
+        jtblRegformSchedule.setModel(schedModel);
+    }
+    
+    private void setStudentInfo() {
+        StudentDaoImpl sdi = new StudentDaoImpl();
+        SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
+        SectionDaoImpl sedi = new SectionDaoImpl();
+        TuitionFeeDaoImpl tfdi = new TuitionFeeDaoImpl();
+        
+        
+        
+        Student s = sdi.getStudentById(studentId);
+        jlblStudentIdRegistrationText.setText(s.getStudentId() != null ? s.getStudentId() + "" : "");
+        jlblStudentTypeRegForm.setText(s.getStudentType() == 0 ? "Old" : "New");
+        jlblNameText.setText(
+                s.getRegistration().getLastName() + ", "
+                + s.getRegistration().getFirstName() + " "
+                + s.getRegistration().getMiddleName());
+        jlblAddressText.setText(
+                s.getRegistration().getAddressRoomOrHouseNo()==null?"":s.getRegistration().getAddressRoomOrHouseNo()
+                + " " + s.getRegistration().getAddressStreet()==null? "":s.getRegistration().getAddressStreet() + " "
+                + s.getRegistration().getAddressBrgyOrSubd()== null? "":s.getRegistration().getAddressBrgyOrSubd()
+                        + " "
+                + s.getRegistration().getAddressCity());
+        SchoolYear schoolYear = sydi.getById(sydi.getCurrentSchoolYearId());
+        jlblSchoolYearText.setText(schoolYear.getYearFrom() + "");
+        jlblRegistrationDateText.setText(s.getAdmission().getCompletionDate()+"");
+        jlblRegistrationIdText.setText(s.getRegistration().getRegistrationId()+"");
+        jlblSectionText.setText(sedi.getSectionByStudentId(studentId).getSectionName());
+        
+        
+        
+    }
+    
+    private SchoolFees getSchoolFees() {
+        int gradelevelId;
+        SchoolFeesDaoImpl sfdi = new SchoolFeesDaoImpl();
+        StudentDaoImpl sdi = new StudentDaoImpl();
+        Student s = sdi.getStudentById(studentId);
+        SchoolFees schoolFees;
+        EnrollmentDaoImpl edi = new EnrollmentDaoImpl();
+        boolean hasEnrollmentRecord = edi.hasEnrollmentRecord(s.getStudentId());
+
+        if (hasEnrollmentRecord) {
+            gradelevelId = sdi.getCurrentGradeLevelId(s.getStudentId());
+        } else {
+            gradelevelId = s.getRegistration().getGradeLevelId();
+        }
+
+        schoolFees = sfdi.get(gradelevelId);
+        return schoolFees;
     }
     
     private void initializeControllers(){
-        
+        jbtnPrintRegistrationForm.addActionListener(new PrintController(jpnlRegistration));
     }
     
     private void initializeRenderers(){
@@ -916,12 +1044,11 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -943,14 +1070,14 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbtnCancelEnrollment;
     private javax.swing.JButton jbtnPrintRegistrationForm;
     private javax.swing.JLabel jlblAddress;
     private javax.swing.JLabel jlblAddressText;
-    private javax.swing.JLabel jlblContact;
-    private javax.swing.JLabel jlblContactText;
     private javax.swing.JLabel jlblDate;
     private javax.swing.JLabel jlblFirstName;
     private javax.swing.JLabel jlblFirstNameText;
@@ -990,6 +1117,8 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     private javax.swing.JPanel jpnlStudentPhoto;
     private javax.swing.JPanel jpnlTotal;
     private javax.swing.JPanel jpnlTuition;
+    private javax.swing.JTable jtblMiscellaneous;
+    private javax.swing.JTable jtblOthers;
     private javax.swing.JTable jtblRegformSchedule;
     // End of variables declaration//GEN-END:variables
 }

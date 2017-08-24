@@ -1,6 +1,9 @@
 package service;
 
 import daoimpl.PaymentTermDaoImpl;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import model.balancebreakdownfee.BalanceBreakDownFee;
@@ -126,13 +129,19 @@ public class TuitionFeeProcessor {
     private void addQuarterlyFees(){
         List<Period> periods = getPaymentTermPeriods();
         int discountPercentage = getDiscountPercentage();
-        Double perQuarterAmount = getPerPeriodAmount();
-        Double perQuarterBalance = perQuarterAmount;
+        BigDecimal perQuarterAmount = getPerPeriodAmount();
+        BigDecimal perQuarterBalance = perQuarterAmount;
+        
+       DecimalFormat df = new DecimalFormat("#0.00");
+       String formatted = df.format(perQuarterAmount.doubleValue());
+       System.out.println("Formatted : "+formatted);
+       BigDecimal bdperQtrAmt = new BigDecimal(formatted);
+       System.out.println("New BigDecimal :"+bdperQtrAmt);
         
         BalanceBreakDownFee dp = getDownPayment();
         if (discountPercentage >= 100) {
-            dp.setAmount(0);
-            dp.setBalance(0);
+            dp.setAmount(null);
+            dp.setBalance(null);
             breakDown.add(dp);
         } else {
             breakDown.add(dp);
@@ -141,10 +150,9 @@ public class TuitionFeeProcessor {
         for (Period p : periods) {
             BalanceBreakDownFee b = new BalanceBreakDownFee();
             b.setDescription(p.getDescription());
-            b.setAmount(perQuarterAmount);
+            b.setAmount(bdperQtrAmt);
             b.setBalance(perQuarterBalance);
             b.setDeadline(p.getDeadlineOfPayment());
-            
             breakDown.add(b);
         }
     }
@@ -152,18 +160,18 @@ public class TuitionFeeProcessor {
     private void addMonthlyFees() {
         List<Period> periods = getPaymentTermPeriods();
         int discountPercentage = getDiscountPercentage();
-        Double perMonthAmount = getPerPeriodAmount();
-        Double perMonthBalance = perMonthAmount;
+        BigDecimal perMonthAmount = getPerPeriodAmount();
+        BigDecimal perMonthBalance = perMonthAmount;
 
         BalanceBreakDownFee dp = getDownPayment();
         if (discountPercentage >= 100) {
-            dp.setAmount(0);
-            dp.setBalance(0);
+            dp.setAmount(null);
+            dp.setBalance(null);
             breakDown.add(dp);
         } else {
             breakDown.add(dp);
         }
-
+        
         for (Period p : periods) {
             BalanceBreakDownFee b = new BalanceBreakDownFee();
             b.setDescription(p.getDescription());
@@ -178,13 +186,13 @@ public class TuitionFeeProcessor {
     private void addSemestralFees(){
         List<Period> periods = getPaymentTermPeriods();
         int discountPercentage = getDiscountPercentage();
-        Double perSemesterAmount = getPerPeriodAmount();
-        Double perSemesterBalance = perSemesterAmount;
+        BigDecimal perSemesterAmount = getPerPeriodAmount();
+        BigDecimal perSemesterBalance = perSemesterAmount;
 
         BalanceBreakDownFee dp = getDownPayment();
         if (discountPercentage >= 100) {
-            dp.setAmount(0);
-            dp.setBalance(0);
+            dp.setAmount(null);
+            dp.setBalance(null);
             breakDown.add(dp);
         } else {
             breakDown.add(dp);
@@ -205,9 +213,9 @@ public class TuitionFeeProcessor {
         OtherFees otherFees = schoolFees.getOtherFees();
         for (Fee f : otherFees.getFees()) {
             BalanceBreakDownFee others = new BalanceBreakDownFee();
-            others.setAmount(f.getAmount());
+            others.setAmount(BigDecimal.valueOf(f.getAmount()));
             others.setDescription(f.getDescription());
-            others.setBalance(f.getAmount());
+            others.setBalance(BigDecimal.valueOf(f.getAmount()));
             breakDown.add(others);
         }
     }
@@ -220,25 +228,29 @@ public class TuitionFeeProcessor {
         OtherFees otherFees = schoolFees.getOtherFees();
 
         BalanceBreakDownFee cashFee = new BalanceBreakDownFee();
-        cashFee.setAmount(finalTuitionAmount - otherFees.getSum());
-        cashFee.setBalance(finalTuitionAmount - otherFees.getSum());
+        cashFee.setAmount(BigDecimal.valueOf(finalTuitionAmount - otherFees.getSum()) );
+        cashFee.setBalance(BigDecimal.valueOf(finalTuitionAmount - otherFees.getSum()));
         cashFee.setDescription("Cash");
         return cashFee;
     }
     
-    private double getPerPeriodAmount() {
+    private BigDecimal getPerPeriodAmount() {
         BalanceBreakDownFee dp = getDownPayment();
         OtherFees otherFees = schoolFees.getOtherFees();
 
-        Double downPayment = dp.getAmount();
-        Double otherFeesSum = otherFees.getSum();
-        Double finalTuitionAmount = getFinalTuition();
+        BigDecimal downPayment = dp.getAmount();
+        double otherFeesSum = otherFees.getSum();
+        double finalTuitionAmount = getFinalTuition();
         int quaterlyPeriodCount = tuitionFee.getPaymentTerm().getDivisor();
        
-        double perPeriodAmount = 0;
+        double calculated = ((finalTuitionAmount - downPayment.doubleValue() - otherFeesSum)/quaterlyPeriodCount);
+        calculated = Math.round(calculated * 100);
+        calculated = calculated / 100;
+        BigDecimal perPeriodAmount = BigDecimal.valueOf(calculated);
+        System.out.println("perPeriodAmount after constructor initialization :"+perPeriodAmount);
         try {
-            perPeriodAmount = (finalTuitionAmount - downPayment - otherFeesSum) / quaterlyPeriodCount;
-        } catch (ArithmeticException e) {
+            System.out.println("perPeriodAmount inside try :"+perPeriodAmount);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return perPeriodAmount;
@@ -247,8 +259,8 @@ public class TuitionFeeProcessor {
     private BalanceBreakDownFee getDownPayment() {
         DownPaymentFee downPaymentFee = schoolFees.getDownPaymentFee();
         BalanceBreakDownFee dp = new BalanceBreakDownFee();
-        dp.setAmount(downPaymentFee.getAmount());
-        dp.setBalance(downPaymentFee.getAmount());
+        dp.setAmount(BigDecimal.valueOf(downPaymentFee.getAmount()));
+        dp.setBalance(BigDecimal.valueOf(downPaymentFee.getAmount()));
         dp.setDescription("Downpayment");
         return dp;
     }
@@ -260,36 +272,4 @@ public class TuitionFeeProcessor {
         List<Period> periods = paymentTermDaoImpl.getPeriodsByPaymentTermId(paymentTermId, schoolYearId);
         return periods;
     }
-            
-    public List<BalanceBreakDownFee> getTBreakDown(){
-        List<BalanceBreakDownFee> balanceBreakDownFees = new ArrayList<>();
-        try{
-        
-        PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
-        
-        switch(paymentTerm.getName()){
-            case "Cash":
-                setCashFeesToBreakDown();
-                break;
-                
-            case "Quarterly":
-                setQuarterlyFeesToBreakDown();
-                break;
-                
-            case "Monthly":
-                setMonthlyFeesToBreakDown();
-                break;
-                
-            case "Semestral":
-                setSemestralFeesToBreakDown();
-                break;
-        }
-        }catch(NumberFormatException e){
-            e.printStackTrace();
-        }
-        
-        return balanceBreakDownFees;
-    } 
-    
-   
 }

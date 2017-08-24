@@ -1,5 +1,6 @@
 package controller.enrollment;
 
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JFrame;
@@ -49,6 +50,7 @@ public class DisplayTablePopupMenu implements MouseListener{
             JdlgStudentInfo jdlgStudentInfo = new JdlgStudentInfo(studentId);
             jdlgStudentInfo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             jdlgStudentInfo.setTitle("Student Information");
+            jdlgStudentInfo.setPreferredSize(new Dimension(1080,700));
             jdlgStudentInfo.setLocationRelativeTo(null);
             jdlgStudentInfo.pack();
             jdlgStudentInfo.setVisible(true);

@@ -115,8 +115,8 @@ public class DiscountChangeController implements ItemListener {
     }
 
     private void initializeFormatters() {
-//        decimalFormatter = new DecimalFormat("#0.00");
-        df = new DecimalFormat("#,#00.00");
+        df = new DecimalFormat("#0.00");
+//        df = new DecimalFormat("#,#00.00");
     }
 
     @Override
@@ -176,8 +176,8 @@ public class DiscountChangeController implements ItemListener {
             for (BalanceBreakDownFee b : list) {
                 Object[] rowData = {
                     b.getDescription(),
-                    b.getAmount(),
-                    b.getBalance(),
+                    df.format(b.getAmount()),
+                    df.format(b.getBalance()),
                     b.getDeadline()
                 };
                 balanceBreakDownModel.addRow(rowData);

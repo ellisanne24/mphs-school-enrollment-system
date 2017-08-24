@@ -19,11 +19,11 @@ import java.awt.print.PrinterJob;
  *
  * @author John Ferdinand Antonio
  */
-public class PrintReceipt implements ActionListener {
+public class PrintController implements ActionListener {
 
     private Component component;
 
-    public PrintReceipt(Component component) {
+    public PrintController(Component component) {
         this.component = component;
     }
 

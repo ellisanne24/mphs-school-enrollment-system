@@ -20,6 +20,28 @@ import utility.database.DBUtil;
 public class SectionDaoImpl implements ISection {
 
     @Override
+    public Section getSectionByStudentId(int aStudentId) {
+        String SQL = "{CALL getSectionByStudentId(?)}";
+        Section section = new Section();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,aStudentId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    System.out.println(rs.getString("sectionName"));
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getInt("isActive"));
+                    section.setDateCreated(rs.getDate("date_created").toString());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return section;
+    }
+    
+    @Override
     public boolean hasSchedule(Integer sectionId, Integer schoolYearId) {
         boolean hasSchedule = false;
         int recordCount = 0;
@@ -208,6 +230,7 @@ public class SectionDaoImpl implements ISection {
         Integer id = null;
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(sql);) {
+            System.out.println("Section Name :"+aSection.getSectionName());
             cs.setString(1, aSection.getSectionName());
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {

@@ -10,6 +10,8 @@ import daoimpl.TuitionFeeDaoImpl;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
 import model.particulars.Particulars;
@@ -39,7 +42,14 @@ import static view.payment.PaymentAndAssessmentForm.jtblBalanceBreakdown;
  */
 public class DisplayPaymentFormController implements ActionListener {
 
+    private DecimalFormat df = new DecimalFormat("#0.00");
     SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
+    TuitionFeeDaoImpl tfdi = new TuitionFeeDaoImpl();
+    DiscountDaoImpl ddi = new DiscountDaoImpl();
+    StudentDaoImpl sdi = new StudentDaoImpl();
+    SchoolFeesDaoImpl sfdi = new SchoolFeesDaoImpl();
+    GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
+    PaymentTermDaoImpl ptdi = new PaymentTermDaoImpl();
     private final JTextField jtfStudentId;
     private final JComboBox jcmbSchoolYearFrom;
     private final JComboBox jcmbDiscount;
@@ -61,16 +71,9 @@ public class DisplayPaymentFormController implements ActionListener {
         Particulars particulars = getParticulars();
         TuitionFee tuitionFee = getTuitionFee();
 
-        if (jtblBalanceBreakDown.getSelectedRows().length == 0) {
-            JOptionPane.showMessageDialog(null, "Please select an item to pay.");
-        } else if (particulars.getBalanceSum() <= 0) {
+        if (particulars.getBalanceSum() <= 0) {
             JOptionPane.showMessageDialog(null, "All fees are paid.");
         } else {
-            for(BalanceBreakDownFee b :particulars.getBalanceBreakDownFees()){
-                System.out.println("Description :"+b.getDescription());
-                System.out.println("Amount : "+b.getAmount());
-            }
-            
             PaySelectedForm psf = new PaySelectedForm(particulars, tuitionFee);
             psf.setPreferredSize(new Dimension(540, 450));
             psf.pack();
@@ -97,10 +100,13 @@ public class DisplayPaymentFormController implements ActionListener {
                     double amount = nf.parse(jtblBalanceBreakdown.getValueAt(selectedRows[i], 1).toString()).doubleValue();
                     double balance = nf.parse(jtblBalanceBreakdown.getValueAt(selectedRows[i], 2).toString()).doubleValue();
 
+                    System.out.println("Particular Amount :"+amount);
+                    System.out.println("Particular Balance :"+balance);
+                    
                     BalanceBreakDownFee balanceFeeToPay = new BalanceBreakDownFee();
                     balanceFeeToPay.setDescription(description);
-                    balanceFeeToPay.setAmount(amount);
-                    balanceFeeToPay.setBalance(balance);
+                    balanceFeeToPay.setAmount(BigDecimal.valueOf(amount));
+                    balanceFeeToPay.setBalance(BigDecimal.valueOf(balance));
                     balanceFeeToPay.setStudentId(studentId);
                     balanceFeeToPay.setSchoolYearId(schoolYearId);
 
@@ -118,52 +124,85 @@ public class DisplayPaymentFormController implements ActionListener {
     }
 
     private TuitionFee getTuitionFee() {
-        TuitionFee tuitionFee = new TuitionFee();
-
-        TuitionFeeDaoImpl tfdi = new TuitionFeeDaoImpl();
-        DiscountDaoImpl ddi = new DiscountDaoImpl();
-        StudentDaoImpl sdi = new StudentDaoImpl();
-        SchoolFeesDaoImpl sfdi = new SchoolFeesDaoImpl();
-        GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
-        PaymentTermDaoImpl ptdi = new PaymentTermDaoImpl();
+        TuitionFee tuitionFee = createFreshTuitionFee();
         
+//        if (hasTuitionRecord()) {
+//           
+//        } else {
+//            tuitionFee = createFreshTuitionFee();
+//        }
+        return tuitionFee;
+    }
+    
+    private boolean hasTuitionRecord(){
         Integer studentId = Integer.parseInt(jtfStudentId.getText().trim());
         Integer schoolYearId = sydi.getId(Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString()));
-
+        boolean hasRecord = tfdi.get(studentId, schoolYearId).exists();
+        return hasRecord;
+    }
+    
+    private TuitionFee createFreshTuitionFee() {
+        Integer studentId = Integer.parseInt(jtfStudentId.getText().trim());
+        int schoolYearId = sydi.getId(Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString().trim()));
         Student student = sdi.getStudentById(studentId);
         SchoolYear schoolYear = sydi.getById(schoolYearId);
         Integer gradeLevelId = gldi.getId(student.getCurrentGradeLevel());
         SchoolFees schoolFees = sfdi.get(gradeLevelId);
-        Discount discount = null;
-        PaymentTerm paymentTerm = new PaymentTerm();
+        PaymentTermDaoImpl paymentTermDaoImpl = new PaymentTermDaoImpl();
+        TuitionFee tuition = new TuitionFee();
+        try {
+            String paymentTermName = jcmbPaymentTerm.getSelectedItem().toString().trim();
+            int paymentTermId = paymentTermDaoImpl.getId(paymentTermName);
+            PaymentTerm paymentTerm = paymentTermDaoImpl.getById(paymentTermId);
 
-        boolean tuitionFeeExists = tfdi.get(studentId, schoolYearId).exists();
-
-        if (!tuitionFeeExists) {
-            if (jcmbDiscount.getSelectedIndex() > -1) {
+            Discount discount;
+            if(jcmbDiscount.getSelectedIndex()>-1){
                 String discountName = jcmbDiscount.getSelectedItem().toString().trim();
                 int discountId = ddi.getId(discountName);
                 discount = ddi.get(discountId);
+                double tuitionAmount = schoolFees.getSum();
+                int discountPercentage = discount.getPercentOfDiscount();
+                double discountAmount = (tuitionAmount * discountPercentage) / 100;
+                
+                discount.setAmount(discountAmount);
+            }else{
+                discount = null;
             }
-            paymentTerm.setName(jcmbPaymentTerm.getSelectedItem().toString().trim());
-            paymentTerm.setId(ptdi.getId(jcmbPaymentTerm.getSelectedItem().toString().trim()));
 
-            tuitionFee.setExists(false);
-            tuitionFee.setDiscount(discount);
-            tuitionFee.setPaymentTerm(paymentTerm);
-            tuitionFee.setTotalPaid(0.00);
-            tuitionFee.setTotalFees(schoolFees.getSum());
-            tuitionFee.setBalance(schoolFees.getSum());
-            TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(tuitionFee, schoolFees,schoolYear);
-            tuitionFee.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
-            tuitionFee.setSchoolYear(schoolYear);
-            tuitionFee.setStudent(student);
+            double totalPaid = 0.00;
+            double totalFees = schoolFees.getSum();
+            double remainingBalance = schoolFees.getSum();
 
-        } else {
-            TuitionFee t = tfdi.get(studentId, schoolYearId);
-            t.setExists(true);
+            tuition.setSchoolYear(schoolYear);
+            tuition.setStudent(student);
+            tuition.setExists(false);
+            tuition.setTotalFees(totalFees);
+            tuition.setTotalPaid(totalPaid);
+            tuition.setBalance(remainingBalance);
+            tuition.setPaymentTerm(paymentTerm);
+            tuition.setDiscount(discount);
+            TuitionFeeProcessor tuitionFeeProcessor = new TuitionFeeProcessor(tuition, schoolFees, schoolYear);
+            tuition.setBalanceBreakDownFees(tuitionFeeProcessor.getBreakDown());
+
+            DefaultTableModel tableModel = (DefaultTableModel) jtblBalanceBreakDown.getModel();
+            List<BalanceBreakDownFee> balanceBreakDownFee = tuition.getBalanceBreakDownFees();
+            tableModel.setRowCount(0);
+            for (BalanceBreakDownFee b : balanceBreakDownFee) {
+                Object[] rowData = {
+                    b.getDescription(),
+                    df.format(b.getAmount()),
+                    df.format(b.getBalance()),
+                    b.getDeadline()
+                };
+                tableModel.addRow(rowData);
+            }
+            jtblBalanceBreakDown.setModel(tableModel);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
-        return tuitionFee;
+        return tuition;
     }
-
+    
 }

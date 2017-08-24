@@ -2,12 +2,17 @@
 package daoimpl;
 
 import dao.ITuitionFee;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import utility.database.DBType;
 import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -28,12 +33,31 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     private final StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
     private final SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
 
+    public static double round(double value, int places) {
+        if (places < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    private static BigDecimal truncateDecimal(double x, int numberofDecimals) {
+        System.out.println("value@truncateDecimal() :"+x);
+        if (x > 0) {
+            return new BigDecimal(String.valueOf(x)).setScale(numberofDecimals, BigDecimal.ROUND_FLOOR);
+        } else {
+            return new BigDecimal(String.valueOf(x)).setScale(numberofDecimals, BigDecimal.ROUND_CEILING);
+        }
+    }
+    
     @Override
     public boolean add(TuitionFee tuitionFee) {
         boolean isAdded = true;
         PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
         if(tuitionFee.getPayment() == null){
-            JOptionPane.showMessageDialog(null,"Null PaymentTerm");
+            System.out.println("Null PaymentTerm");
         }
         int paymentTermId = paymentTerm.getId();
 
@@ -41,7 +65,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         int studentId = tuitionFee.getStudent().getStudentId();
         int schoolYearId = tuitionFee.getSchoolYear().getSchoolYearId();
 
-        String SQL_addBalanceBreakDownFee = "{CALL addBalanceBreakDownFee(?,?,?)}"; //add to balance_breakdown_fee master
+        String SQL_addBalanceBreakDownFee = "{CALL addBalanceBreakDownFee(?,?,?,?)}"; //add to balance_breakdown_fee master
         String SQL_addTuitionFee = "{CALL addTuitionFee(?,?,?)}"; 
         String SQL_addStudentDiscount = "{CALL addStudentDiscount(?,?,?,?)}";
         String SQL_addStudentPaymentTerm = "{CALL addStudentPaymentTerm(?,?,?)}";
@@ -54,18 +78,19 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
             try (CallableStatement CS_addBalBreakDownFee = con.prepareCall(SQL_addBalanceBreakDownFee);
                     CallableStatement CS_addTuitionFee = con.prepareCall(SQL_addTuitionFee);
                     CallableStatement CS_addStudentDiscount = con.prepareCall(SQL_addStudentDiscount);
-                    CallableStatement CS_addStudentPaymentTerm = con.prepareCall(SQL_addStudentPaymentTerm);) {
+                    CallableStatement CS_addStudentPaymentTerm = con.prepareCall(SQL_addStudentPaymentTerm);
+                    CallableStatement CS_addTransaction = con.prepareCall(SQL_addTransaction);
+                    CallableStatement CS_payTuitionFee = con.prepareCall(SQL_payTuitionFee);) {
                 
                 if (!tuitionFee.exists()) {
-                    System.out.println("Size: "+tuitionFee.getBalanceBreakDownFees().size());
-                    for (BalanceBreakDownFee breakDownFee : tuitionFee.getBalanceBreakDownFees()) {
-                        System.out.println("Balance Breakdown Fee Description : "+breakDownFee.getDescription());
-                        System.out.println("Balance Breakdown Fee Amount : "+breakDownFee.getAmount());
-                        CS_addBalBreakDownFee.setString(1, breakDownFee.getDescription());
-                        CS_addBalBreakDownFee.setDouble(2, breakDownFee.getAmount());
-                        CS_addBalBreakDownFee.registerOutParameter(3, Types.INTEGER);
-                        CS_addBalBreakDownFee.executeUpdate(); // executes addBalanceBreakDownFee() sp
-                        int balanceBreakDownFeeId = CS_addBalBreakDownFee.getInt(3);
+                    for (BalanceBreakDownFee b : tuitionFee.getBalanceBreakDownFees()) {
+                        
+                        CS_addBalBreakDownFee.setString(1, b.getDescription());
+                        CS_addBalBreakDownFee.setBigDecimal(2, b.getAmount());
+                        CS_addBalBreakDownFee.setDate(3, (Date) b.getDeadline());
+                        CS_addBalBreakDownFee.registerOutParameter(4, Types.INTEGER);
+                        CS_addBalBreakDownFee.executeUpdate();
+                        int balanceBreakDownFeeId = CS_addBalBreakDownFee.getInt(4);
 
                         CS_addTuitionFee.setInt(1, balanceBreakDownFeeId);
                         CS_addTuitionFee.setInt(2, studentId);
@@ -84,6 +109,13 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     CS_addStudentPaymentTerm.setInt(2, paymentTermId);
                     CS_addStudentPaymentTerm.setInt(3, schoolYearId);
                     CS_addStudentPaymentTerm.executeUpdate();
+                    
+//                    CS_addTransaction.setInt(1, studentId);
+//                    CS_addTransaction.registerOutParameter(2, Types.INTEGER);
+//                    int transactionId = CS_addTransaction.getInt(2);
+                    
+                    
+                    
                 }
                 con.commit();
             } catch (SQLException e) {
@@ -139,8 +171,8 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 try (ResultSet rsb = csB.executeQuery();) {
                     while (rsb.next()) {
                         BalanceBreakDownFee balanceBreakDownFee = new BalanceBreakDownFee();
-                        balanceBreakDownFee.setAmount(rsb.getDouble("amount"));
-                        balanceBreakDownFee.setBalance(rsb.getDouble("balance"));
+                        balanceBreakDownFee.setAmount(rsb.getBigDecimal("amount"));
+                        balanceBreakDownFee.setBalance(rsb.getBigDecimal("balance"));
                         balanceBreakDownFee.setId(rsb.getInt("balance_breakdown_fee_id"));
                         balanceBreakDownFee.setDateAssigned(rsb.getTimestamp("date_assigned"));
                         balanceBreakDownFee.setIsPaid(rsb.getBoolean("isPaid"));

@@ -1,6 +1,7 @@
 
 package model.balancebreakdownfee;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class BalanceBreakDownFee {
@@ -8,22 +9,53 @@ public class BalanceBreakDownFee {
     private int id;
     private String description; //name of breakdown e.g. Academic Fee for Quarter 1, Academic Fee for Quarter2
     private Date dateAssigned;
-    private double amount;
-    private double balance;
+    private BigDecimal amount;
+    private BigDecimal balance;
     private double totalPaid;
     private boolean isPaid;
     private int studentId;
     private int schoolYearId;
     private Date deadline;
-    
-    public Date getDeadline() {
-        return deadline;
+
+    public int getId() {
+        return id;
     }
 
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+    public void setId(int id) {
+        this.id = id;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getDateAssigned() {
+        return dateAssigned;
+    }
+
+    public void setDateAssigned(Date dateAssigned) {
+        this.dateAssigned = dateAssigned;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
     public double getTotalPaid() {
         return totalPaid;
     }
@@ -32,15 +64,7 @@ public class BalanceBreakDownFee {
         this.totalPaid = totalPaid;
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public boolean isPaid() {
+    public boolean isIsPaid() {
         return isPaid;
     }
 
@@ -64,36 +88,16 @@ public class BalanceBreakDownFee {
         this.schoolYearId = schoolYearId;
     }
 
-    public Date getDateAssigned() {
-        return dateAssigned;
+    public Date getDeadline() {
+        return deadline;
     }
 
-    public void setDateAssigned(Date dateAssigned) {
-        this.dateAssigned = dateAssigned;
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    
+    
+    
 
 }

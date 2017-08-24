@@ -16,6 +16,26 @@ import utility.database.DBUtil;
 public class UserDaoImpl implements IUser{
 
     @Override
+    public Integer getAdviserIdByUserId(int userId) {
+        Integer adviser_id = null;
+        String SQL = "{CALL getAdviserIdByUserId(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, userId);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    adviser_id = rs.getInt("user_id");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return adviser_id;
+    }
+
+    
+    
+    @Override
     public Integer getIdByUsername(String username) {
         Integer userId = null;
         String SQL = "{CALL getUserIdByUserName(?)}";

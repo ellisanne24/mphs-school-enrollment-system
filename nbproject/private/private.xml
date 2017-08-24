@@ -3,7 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/controller/registration/DeleteRegistrationController.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/controller/enrollment/DisplayTablePopupMenu.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/container/Dashboard.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/student/JdlgStudentInfo.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/grades/GradingGui.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/section/UpdateSection.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/enrollment/EnrollmentPanel.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/view/grades/Adviser.java</file>
+            <file>file:/C:/Users/Acer/Documents/NetBeansProjects/MphsEnrollmentSystem/src/daoimpl/SectionDaoImpl.java</file>
         </group>
     </open-files>
 </project-private>

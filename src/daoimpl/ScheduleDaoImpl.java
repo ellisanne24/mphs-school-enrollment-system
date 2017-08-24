@@ -23,6 +23,31 @@ public class ScheduleDaoImpl implements ISchedule{
     SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();
 
     @Override
+    public List<Schedule> getBySectionId(int sectionId) {
+        List<Schedule> schedList = new ArrayList<>();
+        String SQL = "{CALL getScheduleBySectionId(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, sectionId);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    Schedule s = new Schedule();
+                    s.setScheduleId(sectionId);
+                    s.setDay(rs.getString("schedule_day"));
+                    s.setStartTime(rs.getInt("startTime"));
+                    s.setEndTime(rs.getInt("endTime"));
+                    s.setSubjectCode(rs.getString("code"));
+                    s.setRoomName(rs.getString("room_name_or_num"));
+                    schedList.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return schedList;
+    }
+    
+    @Override
     public List<Schedule> getByFacultyId(int facultyId, int schoolYearId) {
         List<Schedule> scheduleList = new ArrayList<>();
         String SQL = "{CALL getScheduleByFacultyIdAndSchoolYearId(?,?)}";

@@ -10,6 +10,8 @@ import model.schedule.Schedule;
  */
 public interface ISchedule {
     
+    List<Schedule> getBySectionId(int sectionId);
+    
     boolean add(List<Schedule> schedule);
     
     boolean add(Schedule schedule);

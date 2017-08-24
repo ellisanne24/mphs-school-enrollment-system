@@ -29,24 +29,27 @@ public class ScheduleTableCellRenderer extends DefaultTableCellRenderer {
         Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
         
         DefaultTableModel model = (DefaultTableModel) table.getModel();
+        boolean hasDay = (model.getValueAt(row, 0)!=null);
         boolean hasStartTime = (model.getValueAt(row, 1) != null);
         boolean hasEndTime = (model.getValueAt(row, 2) != null);
+        boolean hasSubject = (model.getValueAt(row, 3)!=null);
+        boolean hasFaculty = (model.getValueAt(row, 4)!=null);
+        boolean hasRoom = (model.getValueAt(row, 5) != null);
         
         if (hasStartTime && hasEndTime) {
-            String startTime = model.getValueAt(row, 1).toString().trim();
-            String endTime = model.getValueAt(row, 2).toString().trim();
-            if (startTime.equals(endTime)) {
-                cellComponent.setBackground(Color.RED);
-                ((JLabel) cellComponent).setForeground(Color.WHITE);
-            }else{
-                colorWithOriginal(cellComponent, row);
-            } 
+            int startTime = Integer.parseInt(model.getValueAt(row, 1).toString().replace(":", ""));
+            int endTime = Integer.parseInt(model.getValueAt(row, 2).toString().replace(":", ""));
+            if (endTime < startTime) {
+                colorConflict(cellComponent, row);
+            } else if (startTime == endTime) {
+                colorConflict(cellComponent, row);
+            }
         }else{
             colorWithOriginal(cellComponent, row);
         }
         
         if(isSelected){
-            cellComponent.setBackground(Color.GREEN);
+            cellComponent.setBackground(Color.WHITE);
             ((JLabel)cellComponent).setForeground(Color.BLACK);
         }
         
@@ -59,7 +62,7 @@ public class ScheduleTableCellRenderer extends DefaultTableCellRenderer {
     
     private void colorWithOriginal(Component c, int row) {
         if (row % 2 == 0) {
-            c.setBackground(Color.LIGHT_GRAY);
+            c.setBackground(Color.WHITE);
             ((JLabel) c).setForeground(Color.BLACK);
         } else {
             c.setBackground(Color.WHITE);
@@ -71,7 +74,6 @@ public class ScheduleTableCellRenderer extends DefaultTableCellRenderer {
         c.setBackground(Color.RED);
         ((JLabel) c).setForeground(Color.WHITE);
     }
-    
     
     private void compare(JTable table, int rowIndex, Component c) {
         String day1 = table.getValueAt(rowIndex, 0).toString();

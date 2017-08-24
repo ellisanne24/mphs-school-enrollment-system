@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package service;
 
 import java.util.List;
@@ -25,7 +20,7 @@ public class PaymentProcessor {
         double balanceSum = 0;
         List<BalanceBreakDownFee> balanceBreakDownFees = payment.getParticulars().getBalanceBreakDownFees();
         for (BalanceBreakDownFee b : balanceBreakDownFees) {
-            balanceSum += b.getBalance();
+            balanceSum += b.getBalance().doubleValue();
         }
         return balanceSum;
     }

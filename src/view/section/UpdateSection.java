@@ -443,7 +443,7 @@ public class UpdateSection extends javax.swing.JFrame {
     }//GEN-LAST:event_cbGradeLevelItemStateChanged
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if(tblStudentList.getRowCount() == 0)
+        if(tblStudentSectionList.getRowCount() == 0)
         {
             JOptionPane.showMessageDialog(null, "Cannot update empty section");
         }

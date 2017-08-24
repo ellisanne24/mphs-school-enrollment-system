@@ -1,6 +1,6 @@
 package view.receipt;
 
-import controller.receipt.PrintReceipt;
+import controller.receipt.PrintController;
 import daoimpl.SchoolYearDaoImpl;
 import utility.component.ImageUtil;
 import java.awt.AlphaComposite;
@@ -58,7 +58,7 @@ public class Receipt extends javax.swing.JDialog {
     }
     
     private void initializeControllers(){
-        jmiPrintReceipt.addActionListener(new PrintReceipt(jpnlReceiptContainer));
+        jmiPrintReceipt.addActionListener(new PrintController(jpnlReceiptContainer));
     }
 
     private void setFormDetails() {
@@ -99,7 +99,7 @@ public class Receipt extends javax.swing.JDialog {
 
         for (Object o : particulars.getBalanceBreakDownFees()) {
             BalanceBreakDownFee b = (BalanceBreakDownFee) o;
-            double balance = b.getBalance();
+            double balance = b.getBalance().doubleValue();
             String description = b.getDescription();
             tableModel.addRow(new Object[]{description, " (" + "\u20B1" + decimalFormatter.format(balance) + " )"});
         }

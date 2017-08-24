@@ -122,7 +122,6 @@ public class NewFaculty extends javax.swing.JPanel {
         jlstFacultySpecialization = new javax.swing.JList<>();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel8 = new javax.swing.JPanel();
-        Clear = new javax.swing.JButton();
         AddFaculty = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -306,7 +305,7 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel12.add(jcbSpecializations, gridBagConstraints);
 
-        jbtnAssignSpecilization.setText("Add");
+        jbtnAssignSpecilization.setText("+");
         jbtnAssignSpecilization.setPreferredSize(new java.awt.Dimension(100, 30));
         jbtnAssignSpecilization.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,7 +319,7 @@ public class NewFaculty extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel12.add(jbtnAssignSpecilization, gridBagConstraints);
 
-        jButton4.setText("Remove");
+        jButton4.setText("-");
         jButton4.setPreferredSize(new java.awt.Dimension(100, 30));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -395,13 +394,7 @@ public class NewFaculty extends javax.swing.JPanel {
         jPanel8.setPreferredSize(new java.awt.Dimension(360, 40));
         jPanel8.setLayout(new java.awt.GridBagLayout());
 
-        Clear.setText("Cancel");
-        Clear.setPreferredSize(new java.awt.Dimension(100, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel8.add(Clear, gridBagConstraints);
-
-        AddFaculty.setText("Add");
+        AddFaculty.setText("Save");
         AddFaculty.setPreferredSize(new java.awt.Dimension(100, 30));
         AddFaculty.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -409,6 +402,8 @@ public class NewFaculty extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel8.add(AddFaculty, gridBagConstraints);
 
@@ -964,7 +959,6 @@ public class NewFaculty extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddFaculty;
-    private javax.swing.JButton Clear;
     private javax.swing.JButton addSpecialization;
     private javax.swing.JPanel facultyDetails;
     private javax.swing.JButton jButton1;

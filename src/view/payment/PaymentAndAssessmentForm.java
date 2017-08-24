@@ -46,7 +46,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         jlblFirstNameText.setText("");
         jlblMiddleNameText.setText("");
         jlblAdmissionGradeLevelText.setText("");
-        jlblPresentGradeLevelText.setText("");
         jlblStudentStatusText.setText("");
         
 //        guiManager.initializeRenderers();
@@ -79,7 +78,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
                 jtfTotalFeesWithDiscount, jbtnRemoveDiscount,
                 jcmbPaymentTerm, jtfStudentID, jcmbSchoolYearFrom, jlblStudentTypeText,
                 jlblLastNameText, jlblFirstNameText, jlblMiddleNameText,
-                jlblAdmissionGradeLevelText, jlblPresentGradeLevelText,
+                jlblAdmissionGradeLevelText, 
                 jlblStudentStatusText, jtfBasicFee, jtfMiscellaneousFee,
                 jtfOtherFee, jtfTotalFees, jtfTotalPaid, jtfRemainingBalance,
                 jcmbDiscount, jtfDiscountPercentage, jtfDiscounts, jtblBalanceBreakdown,
@@ -109,12 +108,10 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
         jlblLastName = new javax.swing.JLabel();
         jlblFirstName = new javax.swing.JLabel();
         jlblMiddleName = new javax.swing.JLabel();
-        jlblPreviousGradeLevel = new javax.swing.JLabel();
         jtfStudentID = new javax.swing.JTextField();
         jlblLastNameText = new javax.swing.JLabel();
         jlblFirstNameText = new javax.swing.JLabel();
         jlblMiddleNameText = new javax.swing.JLabel();
-        jlblPresentGradeLevelText = new javax.swing.JLabel();
         jlblStudentType = new javax.swing.JLabel();
         jlblStudentTypeText = new javax.swing.JLabel();
         jlblAdmissionGradeLevel = new javax.swing.JLabel();
@@ -268,15 +265,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInfo.add(jlblMiddleName, gridBagConstraints);
 
-    jlblPreviousGradeLevel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-    jlblPreviousGradeLevel.setText("Present :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 6;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlStudentInfo.add(jlblPreviousGradeLevel, gridBagConstraints);
-
     jtfStudentID.setColumns(10);
     jtfStudentID.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -313,15 +301,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInfo.add(jlblMiddleNameText, gridBagConstraints);
 
-    jlblPresentGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-    jlblPresentGradeLevelText.setText("PresentGradeLevelText");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 6;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlStudentInfo.add(jlblPresentGradeLevelText, gridBagConstraints);
-
     jlblStudentType.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
     jlblStudentType.setText("Student Type :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -340,7 +319,7 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     jpnlStudentInfo.add(jlblStudentTypeText, gridBagConstraints);
 
     jlblAdmissionGradeLevel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-    jlblAdmissionGradeLevel.setText("Admission :");
+    jlblAdmissionGradeLevel.setText("Grade Level :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 5;
@@ -1251,8 +1230,6 @@ public class PaymentAndAssessmentForm extends javax.swing.JPanel {
     private static javax.swing.JLabel jlblMiddleNameText;
     private javax.swing.JLabel jlblPaymentTerm;
     private javax.swing.JLabel jlblPercentOfDiscount;
-    private static javax.swing.JLabel jlblPresentGradeLevelText;
-    private javax.swing.JLabel jlblPreviousGradeLevel;
     private javax.swing.JLabel jlblRemainingBalance;
     private javax.swing.JLabel jlblStudentID;
     private javax.swing.JLabel jlblStudentStatus;

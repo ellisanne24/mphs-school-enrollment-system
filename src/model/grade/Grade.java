@@ -5,8 +5,9 @@
  */
 package model.grade;
 
-import java.util.Date;
+
 import model.gradelevel.GradeLevel;
+import model.gradingperiod.GradingPeriod;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.subject.Subject;
@@ -18,22 +19,24 @@ import model.subject.Subject;
 public class Grade {
     private int id;
     private int periodId;
-    private double first_qtr;
-    private double second_qtr;
-    private double third_qtr;
-    private double fourth_qtr;
+    private String first_qtr;
+    private String second_qtr;
+    private String third_qtr;
+    private String fourth_qtr;
     private double finalGrade;
     private double gwa;
-    private double grade;
+    private String grade;
     private boolean isPassed;
     private boolean isActive;
-    
+    private boolean isSubmitted;
+    private String coreValues;
+    private String behavior;
     public Subject subject = new Subject();
     public Student student = new Student();
     public SchoolYear schoolYear = new SchoolYear();
     public GradeLevel gradeLevel = new GradeLevel();
-    
-    
+    public GradingPeriod gradingPeriod = new GradingPeriod();
+//    public Attendance attendance = new Attendance();
 
     public int getId() {
         return id;
@@ -43,35 +46,35 @@ public class Grade {
         this.id = id;
     }
 
-    public double getFirstQtr() {
+    public String getFirstQtr() {
         return first_qtr;
     }
 
-    public void setFirsQtr(double first_qtr) {
+    public void setFirstQtr(String first_qtr) {
         this.first_qtr = first_qtr;
     }
 
-    public double getSecondQtr() {
+    public String getSecondQtr() {
         return second_qtr;
     }
 
-    public void setSecondQtr(double second_qtr) {
+    public void setSecondQtr(String second_qtr) {
         this.second_qtr = second_qtr;
     }
 
-    public double getThirdQtr() {
+    public String getThirdQtr() {
         return third_qtr;
     }
 
-    public void setThirdQtr(double third_qtr) {
+    public void setThirdQtr(String third_qtr) {
         this.third_qtr = third_qtr;
     }
 
-    public double getFourthQtr() {
+    public String getFourthQtr() {
         return fourth_qtr;
     }
 
-    public void setFourthQtr(double fourth_qtr) {
+    public void setFourthQtr(String fourth_qtr) {
         this.fourth_qtr = fourth_qtr;
     }
 
@@ -111,12 +114,12 @@ public class Grade {
         return isActive;
     }
     
-    public void setGrade(double grade)
+    public void setGrade(String grade)
     {
         this.grade = grade;
     }
     
-    public double getGrade()
+    public String getGrade()
     {
         return grade;
     }
@@ -129,5 +132,31 @@ public class Grade {
     public int getPeriodId()
     {
         return periodId;
+    }
+    
+    public void setIsSubmitted(boolean isSubmitted)
+    {
+        this.isSubmitted = isSubmitted;
+    }
+    
+    public boolean getIsSubmitted()
+    {
+        return isSubmitted;
+    }
+
+    public String getCoreValues() {
+        return coreValues;
+    }
+
+    public void setCoreValues(String coreValues) {
+        this.coreValues = coreValues;
+    }
+
+    public String getBehavior() {
+        return behavior;
+    }
+
+    public void setBehavior(String behavior) {
+        this.behavior = behavior;
     }
 }

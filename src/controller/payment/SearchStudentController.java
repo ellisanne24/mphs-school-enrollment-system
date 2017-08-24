@@ -61,7 +61,6 @@ public class SearchStudentController implements KeyListener {
     private final JLabel jlblFirstNameText;
     private final JLabel jlblMiddleNameText;
     private final JLabel jlblAdmissionGradeLevelText;
-    private final JLabel jlblPresentGradeLevelText;
     private final JLabel jlblStudentStatusText;
     private final JTextField jtfBasicFee;
     private final JTextField jtfMiscellaneousFee;
@@ -83,7 +82,7 @@ public class SearchStudentController implements KeyListener {
             JTextField jtfTotalFeesWithDiscount, JButton jbtnRemoveDiscount,
             JComboBox jcmbPaymentTerm, JTextField jtfStudentId, JComboBox jcmbSchoolYearFrom,
             JLabel jlblStudentTypeText, JLabel jlblLastNameText, JLabel jlblFirstNameText,
-            JLabel jlblMiddleNameText, JLabel jlblAdmissionGradeLevelText, JLabel jlblPresentGradeLevelText,
+            JLabel jlblMiddleNameText, JLabel jlblAdmissionGradeLevelText, 
             JLabel jlblStudentStatusText, JTextField jtfBasicFee, JTextField jtfMiscellaneousFee, JTextField jtfOtherFee,
             JTextField jtfTotalFees, JTextField jtfTotalPaid, JTextField jtfRemainingBalance,
             JComboBox jcmbDiscount, JTextField jtfDiscountPercentage, JTextField jtfDiscounts,
@@ -100,7 +99,6 @@ public class SearchStudentController implements KeyListener {
         this.jlblFirstNameText = jlblFirstNameText;
         this.jlblMiddleNameText = jlblMiddleNameText;
         this.jlblAdmissionGradeLevelText = jlblAdmissionGradeLevelText;
-        this.jlblPresentGradeLevelText = jlblPresentGradeLevelText;
         this.jtfBasicFee = jtfBasicFee;
         this.jtfMiscellaneousFee = jtfMiscellaneousFee;
         this.jtfOtherFee = jtfOtherFee;
@@ -292,7 +290,6 @@ public class SearchStudentController implements KeyListener {
         jlblFirstNameText.setText(firstName);
         jlblMiddleNameText.setText(middleName);
         jlblAdmissionGradeLevelText.setText(admissionGradeLevel== 0 ? "Kindergarten" : "Grade " + admissionGradeLevel);
-        jlblPresentGradeLevelText.setText(currentGradeLevel == 0 ? "Kindergarten" : "Grade " + currentGradeLevel);
         jlblStudentStatusText.setText(admissionStatus == true ? "Complete" : "Pending");
         jtfBasicFee.setText(decimalFormatter.format(basicFee));
         jtfMiscellaneousFee.setText(decimalFormatter.format(miscellaneousFees));

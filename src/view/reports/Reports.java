@@ -1,6 +1,7 @@
 package view.reports;
 
 import component_model_loader.GradeLevelML;
+import component_model_loader.GradeML;
 import component_model_loader.SchoolYearML;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import constants.DashboardMenuItem;
@@ -14,9 +15,9 @@ import java.awt.Component;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.classlistreport.ClassListReport;
-import printtest.PrintTest;
+import model.grade.Grade;
+import model.schoolyear.SchoolYear;
 import utility.component.JInternalFrameUtil;
-import utility.component.TableUtility;
 
 /**
  *
@@ -28,7 +29,10 @@ public class Reports extends javax.swing.JPanel {
     private GradeLevelDaoImpl gradeLevelDaoImpl;
     private SchoolYearML schoolYearML;
     private GradeLevelML gradeLevelML;
-    
+    private GradeML gml = new GradeML();
+    private Grade grade = new Grade();
+    SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
+    SchoolYear schoolYear = new SchoolYear();
     public Reports() {
         initComponents();
         initializeModels();
@@ -37,8 +41,8 @@ public class Reports extends javax.swing.JPanel {
         jtblEnrollees.setRowHeight(30);
         jlblEnrolleesGradeLevelText.setText("");
         jlblEnrolleesSchoolYearText.setText("");
-        TableUtility.setTableColumnWidth(jtblClassList);
-        TableUtility.setTableColumnWidth(jtblEnrollees);
+        schoolYear.setSchoolYearId(sydi.getCurrentSchoolYearId());
+        tblPromoted.setModel(gml.getAllPromotedStudent(schoolYear));
     }
     
     private void initializeModels(){
@@ -56,13 +60,8 @@ public class Reports extends javax.swing.JPanel {
     }
     
     private void initializeControllers(){
-//        jmiPrintEnrolleesReport.addActionListener(new PrintController(jpnlEnrolleesContainer));
-//        jmiPrintClassListReport.addActionListener(new PrintController(jpnlClassListContainer));
-        
-        jmiPrintClassListReport.addActionListener(new PrintTest(jtblClassList,"MPHS - Class List"));
-        jmiPrintEnrolleesReport.addActionListener(new PrintTest(jtblEnrollees,"MPHS - Enrollees"));
-        
-        
+        jmiPrintEnrolleesReport.addActionListener(new PrintController(jpnlEnrolleesContainer));
+        jmiPrintClassListReport.addActionListener(new PrintController(jpnlClassListContainer));
         jmiExit.addActionListener(new UINavigationExit(this, DashboardMenuItem.REPORTS));
 //        jcmbEnrolleesSchoolYearFrom.addItemListener(new SchoolYearController(jcmbEnrolleesSchoolYearFrom, jcmbEnrolleesSchoolYearTo));
         jcmbEnrolleesSchoolYearFrom.addItemListener(new EnrolleesReportFilterController(
@@ -123,6 +122,11 @@ public class Reports extends javax.swing.JPanel {
         jPanel10 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtblClassList = new javax.swing.JTable();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblPromoted = new javax.swing.JTable();
+        jpnlControl = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jmiPrintEnrolleesReport = new javax.swing.JMenuItem();
@@ -229,8 +233,6 @@ public class Reports extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.5;
         jpnlEnrolleesContainer.add(jPanel6, gridBagConstraints);
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(800, 800));
-
         jtblEnrollees.setAutoCreateRowSorter(true);
         jtblEnrollees.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -248,7 +250,6 @@ public class Reports extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jtblEnrollees.setPreferredSize(new java.awt.Dimension(800, 800));
         jScrollPane1.setViewportView(jtblEnrollees);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -347,7 +348,6 @@ public class Reports extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jtblClassList.setPreferredSize(new java.awt.Dimension(800, 800));
         jScrollPane2.setViewportView(jtblClassList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -375,6 +375,59 @@ public class Reports extends javax.swing.JPanel {
         jPanel3.add(jPanel7, gridBagConstraints);
 
         jTabbedPane1.addTab("Class List", jPanel3);
+
+        jPanel4.setLayout(new java.awt.GridBagLayout());
+
+        tblPromoted.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Student Number", "Student Name", "Grade Level"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblPromoted.setRowHeight(30);
+        jScrollPane3.setViewportView(tblPromoted);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel4.add(jScrollPane3, gridBagConstraints);
+
+        jpnlControl.setLayout(new java.awt.GridBagLayout());
+
+        jButton1.setText("Open");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 0.5;
+        jpnlControl.add(jButton1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel4.add(jpnlControl, gridBagConstraints);
+
+        jTabbedPane1.addTab("Report Card", jPanel4);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -535,8 +588,19 @@ public class Reports extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcmbClassListGradeLevelItemStateChanged
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ReportCard reportCard = new ReportCard(null, true);
+        reportCard.setVisible(true);
+        reportCard.setLocationRelativeTo(null);
+        
+        reportCard.lblName().setText((String) reportCard.getTblGrades().getValueAt(reportCard.getTblGrades().getSelectedRow(), 1));
+        grade.student.setStudentId((int) reportCard.getTblGrades().getValueAt(reportCard.getTblGrades().getSelectedRow(), 0));
+        reportCard.getTblGrades().setModel(gml.getReportCardByStudentId(grade));
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -551,11 +615,13 @@ public class Reports extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JCheckBox jcbShowAll;
     private javax.swing.JCheckBox jcbShowAllClassList;
@@ -571,9 +637,11 @@ public class Reports extends javax.swing.JPanel {
     private javax.swing.JMenuItem jmiPrintEnrolleesReport;
     private javax.swing.JPanel jpnlClassListContainer;
     private javax.swing.JPanel jpnlContent;
+    private javax.swing.JPanel jpnlControl;
     private javax.swing.JPanel jpnlEnrolleesContainer;
     private javax.swing.JPanel jpnlEnrolleesFilter;
     private javax.swing.JTable jtblClassList;
     private javax.swing.JTable jtblEnrollees;
+    private javax.swing.JTable tblPromoted;
     // End of variables declaration//GEN-END:variables
 }
