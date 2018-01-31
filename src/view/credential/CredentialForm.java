@@ -8,9 +8,9 @@ package view.credential;
 import utility.calendar.CalendarUtil;
 import daoimpl.CredentialDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
-import component_model_loader.CredentialML;
+import component_model_loader.CredentialJCompModelLoader;
 import utility.component.JPanelUtil;
-import component_model_loader.SchoolYearML;
+import component_model_loader.SchoolYearJCompModelLoader;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class CredentialForm extends javax.swing.JPanel {
     
     private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
     private final CredentialDaoImpl credentialDaoImpl = new CredentialDaoImpl();
-    private final CredentialML credentialGUIUtil = new CredentialML();
+    private final CredentialJCompModelLoader credentialGUIUtil = new CredentialJCompModelLoader();
     
     
     public CredentialForm() {
@@ -339,7 +339,7 @@ public class CredentialForm extends javax.swing.JPanel {
         jlblYearCreated.setText("Year Created");
         jpnlSortCredentialList.add(jlblYearCreated, new java.awt.GridBagConstraints());
 
-        jcmbYearCreated.setModel(new component_model_loader.SchoolYearML().getAllSchoolYearStart());
+        jcmbYearCreated.setModel(new component_model_loader.SchoolYearJCompModelLoader().getAllSchoolYearStart());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSortCredentialList.add(jcmbYearCreated, gridBagConstraints);

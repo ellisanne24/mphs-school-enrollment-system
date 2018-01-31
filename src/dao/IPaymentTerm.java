@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dao;
 
 import java.util.List;
@@ -13,20 +9,16 @@ import model.schoolyear.SchoolYear;
 
 /**
  *
- * @author Acer
+ * @author Jordan
  */
 public interface IPaymentTerm {
-    List<Period> getPeriodsByPaymentTermId(int paymentTermId, int schoolYearId);
-    List<PaymentTerm> getAll();
-    List<PaymentTerm> getAllActive();
-    List<PaymentTerm> getAllInactive();
-    PaymentTerm getById(int aPaymentTermId);
-    PaymentTerm getById(int aPaymentTermId, int schoolYearId);
-    int getId(String aPaymentTerm);
-    boolean add(PaymentTerm aPaymentTerm);
-    boolean addPaymentDeadline(List<PaymentTerm> paymentTerms);
-    boolean addPaymentTermPenalty(List<PaymentTerm> paymentTerms);
+    List<Period> getPeriodsByPaymentTermId(int paymentTermId, int schoolYearId);//
+    List<PaymentTerm> getAll(); //
+    PaymentTerm getPaymentTermByPaymentTermId(int aPaymentTermId); //
+    int getPaymentTermIDByName(String aPaymentTerm);//
+    boolean add(PaymentTerm aPaymentTerm);//
+    boolean addPaymentSchedule(List<PaymentTerm> paymentTerms);//
    
-    List<SchoolYear> getSchoolYearsWithPenalty();
-    List<PaymentTermPenalty> getPenaltyInformationBySchoolYearId(int schoolYearId);
+    List<SchoolYear> getSchoolYearsWithPenalty();//
+    List<PaymentTermPenalty> getPenaltyInformationBySchoolYearId(int schoolYearId);//
 }

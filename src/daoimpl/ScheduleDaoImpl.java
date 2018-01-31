@@ -103,8 +103,8 @@ public class ScheduleDaoImpl implements ISchedule{
                     subject.setSubjectCode(s.getSubjectCode());
                     csa.setInt(5, subjectDaoImpl.getSubjectId(subject));
 
-                    csa.setInt(6, sectionDaoImpl.getSectionIdByName(s.getSectionName().trim()));
-                    csa.setInt(7, roomDaoImpl.getId(s.getRoomName().trim()));
+//                    csa.setInt(6, sectionDaoImpl.getSectionIdByName(s.getSectionName().trim()));
+                    csa.setInt(7, roomDaoImpl.getRoomId(s.getRoomName().trim()));
                     csa.setInt(8, s.getGradeLevelId());
                     csa.registerOutParameter(9, Types.INTEGER);
                     csa.executeUpdate();

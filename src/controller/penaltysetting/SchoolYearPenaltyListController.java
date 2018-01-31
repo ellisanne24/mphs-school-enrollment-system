@@ -68,17 +68,17 @@ public class SchoolYearPenaltyListController{
                 
                 List<PaymentTermPenalty> list = ptdi.getPenaltyInformationBySchoolYearId(sydi.getId(syInt));
                 for(PaymentTermPenalty p : list){
-                    if(p.getPaymentTerm().getName().equals("Semestral")){
+                    if(p.getPaymentTerm().getPaymentTermName().equals("Semestral")){
                         semestralPenalty.setText(p.getPenaltyAmount()+"");
-                        ptSemestral.setSelectedItem(p.getPaymentTerm().getName());
+                        ptSemestral.setSelectedItem(p.getPaymentTerm().getPaymentTermName());
                     }
-                    if(p.getPaymentTerm().getName().equals("Quarterly")){
+                    if(p.getPaymentTerm().getPaymentTermName().equals("Quarterly")){
                         quarterlyPenalty.setText(p.getPenaltyAmount()+"");
-                        ptQuarterly.setSelectedItem(p.getPaymentTerm().getName());
+                        ptQuarterly.setSelectedItem(p.getPaymentTerm().getPaymentTermName());
                     }
-                    if(p.getPaymentTerm().getName().equals("Monthly")){
+                    if(p.getPaymentTerm().getPaymentTermName().equals("Monthly")){
                         monthlyPenalty.setText(p.getPenaltyAmount()+"");
-                        ptMonthly.setSelectedItem(p.getPaymentTerm().getName());
+                        ptMonthly.setSelectedItem(p.getPaymentTerm().getPaymentTermName());
                     }
                 }
             }

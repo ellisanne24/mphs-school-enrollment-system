@@ -5,8 +5,8 @@
  */
 package view.penalty;
 
-import component_model_loader.PaymentTermML;
-import component_model_loader.SchoolYearML;
+import component_model_loader.PaymentTermJCompModelLoader;
+import component_model_loader.SchoolYearJCompModelLoader;
 import controller.global.SchoolYearController;
 import controller.penaltysetting.DisplayCreateController;
 import controller.penaltysetting.SchoolYearPenaltyListController;
@@ -19,8 +19,8 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 public class PenaltySettings extends javax.swing.JPanel {
 
     private SchoolYearController schoolYearController;
-    private SchoolYearML schoolYearModelLoader;
-    private PaymentTermML paymentTermModelLoader;
+    private SchoolYearJCompModelLoader schoolYearModelLoader;
+    private PaymentTermJCompModelLoader paymentTermModelLoader;
     private DisplayCreateController displayCreatePenaltyController;
     private SchoolYearPenaltyListController schoolYearPenaltyListController;
     
@@ -28,18 +28,18 @@ public class PenaltySettings extends javax.swing.JPanel {
         initComponents();
         remove_title_bar();
         
-        schoolYearModelLoader = new SchoolYearML();
+        schoolYearModelLoader = new SchoolYearJCompModelLoader();
         jcmbSyFrom.setModel(schoolYearModelLoader.getAllSchoolYearStart());
         jcmbSyTo.setModel(schoolYearModelLoader.getAllSchoolYearEnd());
         schoolYearController = new SchoolYearController(jcmbSyFrom, jcmbSyTo);
         jcmbSyFrom.addItemListener(schoolYearController);
         
-        paymentTermModelLoader = new PaymentTermML();
-        jcmbSemestral.setModel(paymentTermModelLoader.getNames());
-        jcmbQuarterly.setModel(paymentTermModelLoader.getNames());
-        jcmbMonthly.setModel(paymentTermModelLoader.getNames());
-        
-        jlstSchoolYearFilter.setModel(paymentTermModelLoader.getSchoolYearsWithPenalty());
+        paymentTermModelLoader = new PaymentTermJCompModelLoader();
+//        jcmbSemestral.setModel(paymentTermModelLoader.getNames());
+//        jcmbQuarterly.setModel(paymentTermModelLoader.getNames());
+//        jcmbMonthly.setModel(paymentTermModelLoader.getNames());
+//        
+//        jlstSchoolYearFilter.setModel(paymentTermModelLoader.getSchoolYearsWithPenalty());
         
         schoolYearPenaltyListController = new SchoolYearPenaltyListController(
                 jcmbSyFrom, jcmbSyTo, jcmbSemestral, jcmbQuarterly, jcmbMonthly,

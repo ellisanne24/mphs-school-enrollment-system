@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package utility.layout;
 
 import daoimpl.CurriculumDaoImpl;
@@ -16,28 +12,8 @@ import model.curriculum.Curriculum;
  */
 public class CurriculumUtility 
 {
-    CurriculumDaoImpl cdi = new CurriculumDaoImpl();
     
-    public List <Object> getCreatedCurriculumInfoById(Curriculum aCurriculum)
-    {
-        List <Object> list = new ArrayList();
-        Object[] obj = cdi.getCreatedCurriculumById(aCurriculum).toArray();
-        
-        for(Object o : obj)
-        {
-            Curriculum curriculum = (Curriculum)o;
-            
-            list.add(curriculum.getCurriculumTitle());
-            list.add(curriculum.getCurriculumDescription());
-            list.add(curriculum.s.getSubjectCode());
-            list.add(curriculum.s.getSubjectTitle());
-            list.add(curriculum.gradeLevel.getLevel());
-            list.add(curriculum.schoolYear.getYearFrom());
-            list.add(curriculum.schoolYear.getYearTo());
-        }
-        
-        return list;
-    }
+    
     
     
 }

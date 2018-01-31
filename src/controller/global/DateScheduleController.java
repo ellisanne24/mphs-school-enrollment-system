@@ -1,6 +1,6 @@
 package controller.global;
 
-import component_model_loader.CalendarML;
+import component_model_loader.CalendarJCompModelLoader;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.DefaultComboBoxModel;
@@ -34,7 +34,7 @@ public class DateScheduleController{
                 if (year.getSelectedIndex() > -1 && month.getSelectedIndex() > -1) {
                     int y = Integer.parseInt(year.getSelectedItem().toString());
                     int m = Integer.parseInt(month.getSelectedItem().toString());
-                    DefaultComboBoxModel dcm = CalendarML.getDaysOfMonth(m, y);
+                    DefaultComboBoxModel dcm = CalendarJCompModelLoader.getDaysOfMonth(m, y);
                     day.setModel(dcm);
                 }
             }
@@ -53,7 +53,7 @@ public class DateScheduleController{
             public void itemStateChanged(ItemEvent e) {
                 int y = Integer.parseInt(year.getSelectedItem().toString());
                 int m = Integer.parseInt(month.getSelectedItem().toString());
-                DefaultComboBoxModel dcm = CalendarML.getDaysOfMonth(m, y);
+                DefaultComboBoxModel dcm = CalendarJCompModelLoader.getDaysOfMonth(m, y);
                 day.setModel(dcm);
             }
         };

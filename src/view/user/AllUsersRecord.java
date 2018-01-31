@@ -1,7 +1,7 @@
 
 package view.user;
 
-import component_model_loader.UserML;
+import component_model_loader.UserJCompModelLoader;
 import controller.user.DisplayCreateUser;
 import controller.user.DisplayEditUser;
 import utility.component.JInternalFrameUtil;
@@ -13,11 +13,11 @@ public class AllUsersRecord extends javax.swing.JPanel {
         initComponents();
         JInternalFrameUtil.removeTitleBar(jInternalFrame1);
         initializeControllers();
-        jtblRecord.setModel(new UserML().getAllUsers(jtblRecord));
+        jtblRecord.setModel(new UserJCompModelLoader().getAllUsers(jtblRecord));
     }
     
     public static void refreshRecord(){
-        jtblRecord.setModel(new UserML().getAllUsers(jtblRecord));
+        jtblRecord.setModel(new UserJCompModelLoader().getAllUsers(jtblRecord));
     }
     
     private void initializeControllers(){

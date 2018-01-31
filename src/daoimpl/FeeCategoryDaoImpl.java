@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package daoimpl;
 
 import utility.database.DBType;
@@ -32,7 +28,7 @@ public class FeeCategoryDaoImpl implements IFeeCategory{
             try(ResultSet rs = cs.executeQuery();){
                 while (rs.next()) {
                     FeeCategory feeCategory = new FeeCategory();
-                    feeCategory.setCategory(rs.getString("fee_category"));
+                    feeCategory.setName(rs.getString("fee_category"));
                     feeCategory.setId(rs.getInt("fee_category_id"));
                     list.add(feeCategory);
                 }
@@ -53,22 +49,44 @@ public class FeeCategoryDaoImpl implements IFeeCategory{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     feeCategory.setId(rs.getInt("fee_category_id"));
-                    feeCategory.setCategory(rs.getString("fee_category"));
+                    feeCategory.setName(rs.getString("fee_category"));
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+           e.printStackTrace();
         }
         return feeCategory;
     }
 
+    @Override
+    public FeeCategory getFeeCategoryByName(String feeCategoryName) {
+        FeeCategory feeCategory = new FeeCategory();
+        String SQL = "{CALL getFeeCategoryByName(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setString(1, feeCategoryName.trim());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    feeCategory.setId(rs.getInt("fee_category_id"));
+                    feeCategory.setName(rs.getString("fee_category"));
+                }
+            }
+        } catch (SQLException e) {
+           e.printStackTrace();
+        }
+        return feeCategory;
+        
+    }
+
+    
+    
     @Override
     public int getFeeCategoryId(FeeCategory aFeeCategory) {
         int aFeeCategoryId = 0;
         String SQL = "{CALL getFeeCategoryId(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1, aFeeCategory.getCategory());
+            cs.setString(1, aFeeCategory.getName());
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     aFeeCategoryId = rs.getInt("fee_category_id");

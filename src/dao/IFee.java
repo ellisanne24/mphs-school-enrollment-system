@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dao;
 
 import java.util.List;
@@ -19,8 +15,8 @@ public interface IFee {
     List<String> getNames();
 
     List<Fee> getAll();
-
-    List<Fee> getByGradeLevel(GradeLevel aGradeLevel);
+    
+    List<Fee> getAllGroupedById();
 
     List<Fee> getFeesByGradeLevelAndCategory(GradeLevel aGradeLevel, FeeCategory aFeeCategory);
 
@@ -28,6 +24,8 @@ public interface IFee {
 
     List<Fee> getByCategory(String feeCategory);
 
+    List<Fee> getByGradeLevel(GradeLevel aGradeLevel);
+    
     double getSumByGradeLevel(GradeLevel aGradeLevel);
 
     double getSumOfTuitionFeesByGradeLevelId(Integer aGradeLevelId);
@@ -40,9 +38,12 @@ public interface IFee {
 
     List<GradeLevel> getGradeLevelAssignment(int aFeeId);
     
-    Fee getById(int feeId);
-    int getId(String feeName);
-    boolean add(Fee fee);
+    Fee getFeeInfoById(int feeId);
+    List<Fee> getFeesByWildcard(String wildCardChar);
+    List<Fee> getFeesByGradeLevelId(int gradeLevelId);
+    Fee getFeeGradeLevelAssignmentAndAmountById(int feeId);
+    int getFeeId(String feeName);
+    boolean addFee(Fee fee);
     boolean update(Fee fee);
     boolean delete(int feeId);
     boolean exists(String feeName);

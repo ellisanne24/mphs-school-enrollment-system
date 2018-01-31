@@ -7,7 +7,7 @@ import java.util.Date;
 public class BalanceBreakDownFee {
 
     private int id;
-    private String description; //name of breakdown e.g. Academic Fee for Quarter 1, Academic Fee for Quarter2
+    private String name; //name of breakdown e.g. Academic Fee for Quarter 1, Academic Fee for Quarter2
     private Date dateAssigned;
     private BigDecimal amount;
     private BigDecimal balance;
@@ -25,12 +25,12 @@ public class BalanceBreakDownFee {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getDateAssigned() {

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package daoimpl;
 
 import dao.IRoom;
@@ -17,14 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import model.room.Room;
 
-/**
- *
- * @author Acer
- */
+
 public class RoomDaoImpl implements IRoom {
 
     @Override
-    public int getId(String roomName) {
+    public int getRoomId(String roomName) {
         int roomId = 0;
         String SQL = "{CALL getRoomIdByName(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
@@ -44,25 +37,28 @@ public class RoomDaoImpl implements IRoom {
     @Override
     public boolean addRoom(Room aRoom) {
         boolean isAdded;
-        String SQL = "{CALL addRoom(?,?,?)}";
+        String SQL = "{CALL addRoom(?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
+            
+            CallableStatement cs = con.prepareCall(SQL);) {
             cs.setString(1, aRoom.getRoomName());
             cs.setString(2, aRoom.getBuildingName());
             cs.setString(3, aRoom.getCapacity());
+            cs.setString(4, aRoom.getDescription());
             cs.executeUpdate();
             isAdded = true;
         } catch (SQLException e) {
             isAdded = false;
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
         return isAdded;
     }
 
     @Override
-    public List<Room> getRoomInfo() {
+    public List<Room> getAllRoomInfo() {
         List<Room> list = new ArrayList();
         String SQL = "{CALL getRooms}";
+        
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
             try (ResultSet rs = cs.executeQuery()) {
@@ -72,8 +68,9 @@ public class RoomDaoImpl implements IRoom {
                     room.setRoomName(rs.getString("room_name_or_num"));
                     room.setBuildingName(rs.getString("bldg_name_or_num"));
                     room.setCapacity(rs.getString("capacity"));
-                    room.setDateCreated(rs.getString("date_created"));
                     room.setStatus(rs.getBoolean("status"));
+                    room.setDateCreated(rs.getString("date_created"));
+                    room.setDescription(rs.getString("notes"));
                     list.add(room);
                 }
             }
@@ -85,9 +82,9 @@ public class RoomDaoImpl implements IRoom {
 
     @Override
     public boolean updateRoom(Room aRoom) {
-
         boolean isUpdated;
-        String SQL = "{CALL updateRooms(?,?,?,?,?)}";
+        String SQL = "{CALL updateRooms(?,?,?,?,?,?)}";
+
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
             cs.setInt(1, aRoom.getRoom_id());
@@ -95,6 +92,8 @@ public class RoomDaoImpl implements IRoom {
             cs.setString(3, aRoom.getBuildingName());
             cs.setString(4, aRoom.getCapacity());
             cs.setBoolean(5, aRoom.getStatus());
+            cs.setString(6, aRoom.getDescription());
+
             cs.executeUpdate();
             isUpdated = true;
         } catch (SQLException e) {
@@ -106,7 +105,7 @@ public class RoomDaoImpl implements IRoom {
     }
 
     @Override
-    public Room getRoomByID(int aRoomID) {
+    public Room getRoomById(int aRoomID) {
         Room room = new Room();
         String SQL = "{CALL getRoomsInfoByID(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
@@ -119,6 +118,7 @@ public class RoomDaoImpl implements IRoom {
                     room.setBuildingName(rs.getString("bldg_name_or_num"));
                     room.setCapacity(rs.getString("capacity"));
                     room.setStatus(rs.getBoolean("status"));
+                    room.setDescription(rs.getString("notes"));
                 }
             }
         } catch (SQLException e) {
@@ -148,6 +148,32 @@ public class RoomDaoImpl implements IRoom {
             e.printStackTrace();
         }
         return roomID;
+    }
+
+    @Override
+    public List<Room> getAllRoomsInfoByWildCard(String wildCardChar) {
+        List<Room> roomList = new ArrayList<>();
+        String SQL = "{CALL GetAllRoomsInfoByWildCard(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+            CallableStatement cs = con.prepareCall(SQL);){
+            cs.setString(1, wildCardChar);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Room room = new Room();
+                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setStatus(rs.getBoolean("status"));
+                    room.setDateCreated(rs.getString("date_created"));
+                    room.setDescription(rs.getString("notes"));
+                    roomList.add(room);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return roomList;
     }
 
 }

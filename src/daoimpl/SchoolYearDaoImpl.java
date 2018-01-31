@@ -14,11 +14,19 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Types;
+import utility.date.DateUtil;
 
 
 public class SchoolYearDaoImpl implements ISchoolYear{
 
+    private DateUtil dateUtil;
+    
+    public SchoolYearDaoImpl(){
+        dateUtil = new DateUtil();
+    }
+    
+    
     public static int getCurrentSchoolYearFrom() {
         int aYearFrom = 0;
         String SQL = "{CALL getCurrentSchoolYearFrom()}";
@@ -98,101 +106,172 @@ public class SchoolYearDaoImpl implements ISchoolYear{
     }
 
     @Override
-    public List<SchoolYear> get() {
+    public List<SchoolYear> getAllSchoolYearInfo() {
         List<SchoolYear> list = new ArrayList<>();
-        String SQL = "{CALL  getAllSchoolYearInfo()}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    SchoolYear schoolYear = new SchoolYear();
-                    schoolYear.setSchoolYearId(rs.getInt(SchoolYearTable.SCHOOLYEARID));
-                    schoolYear.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
-                    schoolYear.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
-                    schoolYear.setIsActive(rs.getBoolean(SchoolYearTable.ISACTIVE));
-                    schoolYear.setStart_date(rs.getDate(SchoolYearTable.STARTDATE));
-                    schoolYear.setEnd_date(rs.getDate(SchoolYearTable.ENDDATE));
-                    list.add(schoolYear);
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
-        }
-        return list;
-    }
-
-    @Override
-    public List<SchoolYear> getAllStart() {
-        List<SchoolYear> list = new ArrayList<>();
-        
         String SQL = "{CALL getAllSchoolYearInfo()}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     SchoolYear schoolYear = new SchoolYear();
-                    schoolYear.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
-                    //JOptionPane.showMessageDialog(null,rs.getInt("yearFrom"));
+                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    schoolYear.setIsActive(rs.getBoolean("isActive"));
+                    schoolYear.setSchoolYearStartDate(rs.getDate("start_date"));
+                    schoolYear.setSchoolYearEndDate(rs.getDate("end_date"));
+                    schoolYear.setRegularEnrollmentStartDate(rs.getDate("reg_enroll_start_date"));
+                    schoolYear.setRegularEnrollmentEndDate(rs.getDate("reg_enroll_end_date"));
+                    schoolYear.setSummerEnrollmentStartDate(rs.getDate("summer_enroll_start_date"));
+                    schoolYear.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
+                    schoolYear.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
+                    schoolYear.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
+                    
+                    List<Quarter> quarters = new ArrayList<>();
+                    Quarter first = new Quarter();
+                    first.setQuarterNo(1);
+                    first.setStartDate(rs.getDate("Q1Start"));
+                    first.setEndDate(rs.getDate("Q1End"));
+                    first.setGradingDueDate(rs.getDate("Q1GradingDueDate"));
+                    quarters.add(first);
+                    
+                    Quarter second = new Quarter();
+                    second.setQuarterNo(2);
+                    second.setStartDate(rs.getDate("Q2Start"));
+                    second.setEndDate(rs.getDate("Q2End"));
+                    second.setGradingDueDate(rs.getDate("Q2GradingDueDate"));
+                    quarters.add(second);
+                    
+                    Quarter third = new Quarter();
+                    third.setQuarterNo(3);
+                    third.setStartDate(rs.getDate("Q3Start"));
+                    third.setEndDate(rs.getDate("Q3End"));
+                    third.setGradingDueDate(rs.getDate("Q3GradingDueDate"));
+                    quarters.add(third);
+                    
+                    Quarter fourth = new Quarter();
+                    fourth.setQuarterNo(4);
+                    fourth.setStartDate(rs.getDate("Q4Start"));
+                    fourth.setEndDate(rs.getDate("Q4End"));
+                    fourth.setGradingDueDate(rs.getDate("Q4GradingDueDate"));
+                    quarters.add(fourth);
+                    
+                    schoolYear.setQuarters(quarters);
+                    
                     list.add(schoolYear);
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            e.printStackTrace();
         }
         return list;
     }
 
     @Override
-    public List<SchoolYear> getAllEnd() {
-        List<SchoolYear> list = new ArrayList<>();
-        
+    public List<SchoolYear> getAllYearFrom() {
+        List<SchoolYear> schoolYearList = new ArrayList<>();
         String SQL = "{CALL getAllSchoolYearInfo()}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     SchoolYear schoolYear = new SchoolYear();
-                    schoolYear.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
-                    //JOptionPane.showMessageDialog(null,"@StudentDaoImpl->getAllEnd()"+rs.getInt("yearTo"));
-                    list.add(schoolYear);
+                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYearList.add(schoolYear);
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            e.printStackTrace();
         }
-        return list;
+        return schoolYearList;
     }
 
     @Override
-    public SchoolYear getById(int aSchoolYearId) {
+    public List<SchoolYear> getAllYearTo() {
+        List<SchoolYear> schoolYearList = new ArrayList<>();
+        String SQL = "{CALL getAllSchoolYearInfo()}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    SchoolYear schoolYear = new SchoolYear();
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    schoolYearList.add(schoolYear);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return schoolYearList;
+    }
+
+    @Override
+    public SchoolYear getSchoolYearById(int schoolYearId) {
         String SQL = "{CALL getSchoolYearById(?)}";
         SchoolYear schoolYear = new SchoolYear();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, aSchoolYearId);
+            cs.setInt(1, schoolYearId);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
                     schoolYear.setYearFrom(rs.getInt("yearFrom"));
                     schoolYear.setYearTo(rs.getInt("yearTo"));
-                    schoolYear.setStart_date(rs.getDate("start_date"));
-                    schoolYear.setEnd_date(rs.getDate("end_date"));
-                    schoolYear.setIsActive((rs.getBoolean("isActive")));
+                    schoolYear.setIsActive(rs.getBoolean("isActive"));
+                    schoolYear.setSchoolYearStartDate(rs.getDate("start_date"));
+                    schoolYear.setSchoolYearEndDate(rs.getDate("end_date"));
+                    schoolYear.setRegularEnrollmentStartDate(rs.getDate("reg_enroll_start_date"));
+                    schoolYear.setRegularEnrollmentEndDate(rs.getDate("reg_enroll_end_date"));
+                    schoolYear.setSummerEnrollmentStartDate(rs.getDate("summer_enroll_start_date"));
+                    schoolYear.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
+                    schoolYear.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
+                    schoolYear.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
+                    
+                    List<Quarter> quarters = new ArrayList<>();
+                    Quarter first = new Quarter();
+                    first.setQuarterNo(1);
+                    first.setStartDate(rs.getDate("Q1Start"));
+                    first.setEndDate(rs.getDate("Q1End"));
+                    first.setGradingDueDate(rs.getDate("Q1GradingDueDate"));
+                    quarters.add(first);
+                    
+                    Quarter second = new Quarter();
+                    second.setQuarterNo(2);
+                    second.setStartDate(rs.getDate("Q2Start"));
+                    second.setEndDate(rs.getDate("Q2End"));
+                    second.setGradingDueDate(rs.getDate("Q2GradingDueDate"));
+                    quarters.add(second);
+                    
+                    Quarter third = new Quarter();
+                    third.setQuarterNo(3);
+                    third.setStartDate(rs.getDate("Q3Start"));
+                    third.setEndDate(rs.getDate("Q3End"));
+                    third.setGradingDueDate(rs.getDate("Q3GradingDueDate"));
+                    quarters.add(third);
+                    
+                    Quarter fourth = new Quarter();
+                    fourth.setQuarterNo(4);
+                    fourth.setStartDate(rs.getDate("Q4Start"));
+                    fourth.setEndDate(rs.getDate("Q4End"));
+                    fourth.setGradingDueDate(rs.getDate("Q4GradingDueDate"));
+                    quarters.add(fourth);
+                    
+                    schoolYear.setQuarters(quarters);
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            e.printStackTrace();
         }
         return schoolYear;
     }
 
     @Override
-    public int getId(int aSchoolYearStart) {
+    public int getId(int schoolYearFrom) {
         Integer schoolYearId = null;
         String SQL = "{CALL getSchoolYearIdByYearFrom(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, aSchoolYearStart);
+            cs.setInt(1, schoolYearFrom);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     schoolYearId = rs.getInt("schoolyear_id");
@@ -205,83 +284,45 @@ public class SchoolYearDaoImpl implements ISchoolYear{
     }
 
     @Override
-    public boolean add(SchoolYear aSchoolYear) {
-        List<Quarter> list = aSchoolYear.getQuarters();
-        int quarterCount = 4;
-        String SQLa = "{CALL addSchoolYear(?,?,?,?,?,?,?,?)}";
-        String SQLb = "{CALL addQuarter(?,?,?,?,?)}";
-        String SQLc = "{CALL addSchoolYearHoliday(?,?)}";
-        String SQLd = "{CALL addSchoolYearSummerSchedule(?,?,?)}";
-        int schoolYearId;
-        boolean isAdded;
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+    public boolean add(SchoolYear schoolYear) {
+        boolean isAdded = false;
+        String SQLa = "{CALL addSchoolYear(?,?,?,?,?,?,?,?,?,?,?)}";
+        String SQLb = "{CALL addSchoolYearQuarterSchedule(?,?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+            con.setAutoCommit(false);
             try (CallableStatement csa = con.prepareCall(SQLa);
-                    CallableStatement csb = con.prepareCall(SQLb);
-                    CallableStatement csc = con.prepareCall(SQLc);
-                    CallableStatement csd = con.prepareCall(SQLd);) {
-                con.setAutoCommit(false);
-
-                //Add School Year
-                String syStartDate = aSchoolYear.getStart_date().toString();
-                String syEndDate = aSchoolYear.getEnd_date().toString();
-                String enrollmentOpenDate = aSchoolYear.getEnrollment().getOpeningDate().toString();
-                String enrollmentClosingDate = aSchoolYear.getEnrollment().getClosingDate().toString();
-
-                System.out.println("@addSchoolYear StartDate :  " + syStartDate);
-                System.out.println("@addSchoolYear EndDate :  " + syEndDate);
-                System.out.println("@addSchoolYear enrollmentOpenDate :  " + enrollmentOpenDate);
-                System.out.println("@addSchoolYear enrollmentClosingDate :  " + enrollmentClosingDate);
-
-                csa.setInt(1, aSchoolYear.getYearFrom());
-                csa.setInt(2, aSchoolYear.getYearTo());
-                csa.setDate(3, java.sql.Date.valueOf(syStartDate));
-                csa.setDate(4, java.sql.Date.valueOf(syEndDate));
-                csa.setDate(5, java.sql.Date.valueOf(enrollmentOpenDate));
-                csa.setDate(6, (java.sql.Date.valueOf(enrollmentClosingDate)));
-                csa.setInt(7, aSchoolYear.getClassHours());
-                csa.registerOutParameter(8, java.sql.Types.INTEGER); //schoolyear id of added sy
+                    CallableStatement csb = con.prepareCall(SQLb);){
+                csa.setInt(1,schoolYear.getYearFrom());
+                csa.setInt(2, schoolYear.getYearTo());
+                csa.setDate(3,dateUtil.toSqlDate(schoolYear.getSchoolYearStartDate()));
+                csa.setDate(4,dateUtil.toSqlDate(schoolYear.getSchoolYearEndDate()));
+                csa.setDate(5, dateUtil.toSqlDate(schoolYear.getRegularEnrollmentStartDate()));
+                csa.setDate(6,dateUtil.toSqlDate(schoolYear.getRegularEnrollmentEndDate()));
+                csa.setDate(7,dateUtil.toSqlDate(schoolYear.getSummerEnrollmentStartDate()));
+                csa.setDate(8,dateUtil.toSqlDate(schoolYear.getSummerEnrollmentEndDate()));
+                csa.setDate(9, dateUtil.toSqlDate(schoolYear.getSummerClassStartDate()));
+                csa.setDate(10, dateUtil.toSqlDate(schoolYear.getSummerClassEndDate()));
+                csa.registerOutParameter(11, Types.INTEGER);
                 csa.executeUpdate();
-                schoolYearId = csa.getInt(8);
+                int schoolYearId = csa.getInt(11);
                 
-                //Add Semesters of SchoolYear
-                for (int i = 0; i < quarterCount; i++) {
-                    Quarter s = list.get(i);
-                    String quarterStartDate = s.getStartDate().toString().trim();
-                    String quarterEndDate = s.getEndDate().toString().trim();
-
-                    csb.setInt(1, s.getQuarterNo());
-                    csb.setString(2, s.getDescription());
-                    csb.setDate(3, java.sql.Date.valueOf(quarterStartDate));
-                    csb.setDate(4, java.sql.Date.valueOf(quarterEndDate));
-                    csb.setInt(5, schoolYearId);
+                csb.setInt(1,schoolYearId);
+                for(Object o : schoolYear.getQuarters().toArray()){
+                    Quarter q = (Quarter)o;
+                    csb.setInt(2, q.getQuarterNo());
+                    csb.setDate(3, dateUtil.toSqlDate(q.getStartDate()));
+                    csb.setDate(4, dateUtil.toSqlDate(q.getEndDate()));
+                    csb.setDate(5,dateUtil.toSqlDate(q.getGradingDueDate()));
                     csb.executeUpdate();
                 }
-                
-                for(int i = 0; i<aSchoolYear.getHolidays().size(); i++){
-                    csc.setInt(1, schoolYearId);
-                    csc.setInt(2, aSchoolYear.getHolidays().get(i).getId());
-                    System.out.println("ID: "+aSchoolYear.getHolidays().get(i).getId());
-                    csc.executeUpdate();
-                }
-                
-                String summerStartDate = aSchoolYear.getSummerClassSchedule().getStartDate().toString().trim();
-                String summerEndDate = aSchoolYear.getSummerClassSchedule().getEndDate().toString().trim();
-                
-                csd.setInt(1,schoolYearId);
-                csd.setDate(2,java.sql.Date.valueOf(summerStartDate));
-                csd.setDate(3,java.sql.Date.valueOf(summerEndDate));
-                csd.executeUpdate();
-                
                 con.commit();
                 isAdded = true;
             } catch (SQLException e) {
-                isAdded = false;
                 con.rollback();
-                JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
-            isAdded = false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return isAdded;
     }

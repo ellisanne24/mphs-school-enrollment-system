@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model.tuitionfee;
 
 import java.util.List;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
-import model.downpayment.DownPaymentFee;
+import model.fee.Fee;
 import model.payment.Payment;
 import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
@@ -25,20 +21,33 @@ public class TuitionFee {
     private double totalFees;
     private boolean exists;
     private double totalPaid;
-    private double balance;
+    private double remainingBalance;
     private PaymentTerm paymentTerm;
     private Discount discount;
-    private DownPaymentFee downPaymentFee;
-    private List<BalanceBreakDownFee> balanceBreakDownFees;
+    
+    private Fee downpayment;
+    private List<Fee> others;
+    private List<BalanceBreakDownFee> balanceBreakDownFees; //composed only of (basic + miscellaneous)/paymentterm
+    
     private SchoolYear schoolYear;
     private Student student;
 
-    public DownPaymentFee getDownPaymentFee() {
-        return downPaymentFee;
+    public Fee getDownpayment() {
+        return downpayment;
     }
 
-    public void setDownPaymentFee(DownPaymentFee downPaymentFee) {
-        this.downPaymentFee = downPaymentFee;
+    public void setDownpayment(Fee downpayment) {
+        this.downpayment = downpayment;
+    }
+
+    
+    
+    public List<Fee> getOthers() {
+        return others;
+    }
+
+    public void setOthers(List<Fee> others) {
+        this.others = others;
     }
 
     public Payment getPayment() {
@@ -97,12 +106,12 @@ public class TuitionFee {
         this.totalPaid = totalPaid;
     }
 
-    public double getBalance() {
-        return balance;
+    public double getRemainingBalance() {
+        return remainingBalance;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setRemainingBalance(double remainingBalance) {
+        this.remainingBalance = remainingBalance;
     }
 
     public PaymentTerm getPaymentTerm() {

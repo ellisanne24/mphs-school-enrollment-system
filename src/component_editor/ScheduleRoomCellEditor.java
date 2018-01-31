@@ -53,7 +53,7 @@ public class ScheduleRoomCellEditor extends DefaultCellEditor {
 
     private DefaultComboBoxModel getRoomsModel() {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        List<Room> list = roomDaoImpl.getRoomInfo();
+        List<Room> list = roomDaoImpl.getAllRoomInfo();
         list.stream().forEach((r) -> {
             model.addElement(r.getRoomName());
         });

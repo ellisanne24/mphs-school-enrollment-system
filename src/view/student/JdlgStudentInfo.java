@@ -1,9 +1,6 @@
 package view.student;
 
 import controller.printer.PrintController;
-import daoimpl.EnrollmentDaoImpl;
-import daoimpl.ScheduleDaoImpl;
-import daoimpl.SchoolFeesDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
 import java.awt.Color;
@@ -18,17 +15,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.print.PrinterJob;
-import java.util.List;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import model.fee.Fee;
-import model.miscellaneousfees.MiscellaneousFees;
-import model.schedule.Schedule;
-import model.schoolfees.SchoolFees;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
-import utility.component.TableUtility;
-import view.schedule.CreateSchedule;
 
 public class JdlgStudentInfo extends javax.swing.JDialog {
 
@@ -924,38 +913,37 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
     }
     
     private void setSchoolFeesModel(){
-        SchoolFeesDaoImpl sfdi = new SchoolFeesDaoImpl();
-        MiscellaneousFees m = sfdi.getMiscellaneous(studentId);
-        SchoolFees sf = getSchoolFees();
-        DefaultTableModel model = (DefaultTableModel)jtblMiscellaneous.getModel();
-        List<Fee> feeList = sf.getMiscellaneousFees().getFees();
-        model.setRowCount(0);
-        for(Fee f : feeList){
-            model.addRow(new Object[]{f.getName(),f.getAmount()});
-        }
-        jtblMiscellaneous.setModel(model);
-        System.out.println("SchoolFees Size :"+sf.getMiscellaneousFees().getFees().size());
-        
-        jLabel14.setText(sf.getBasicFee().getAmount()+"");
-        
-        DefaultTableModel otherModel = (DefaultTableModel) jtblOthers.getModel();
-        otherModel.setRowCount(0);
-        for(Fee f : feeList){
-            otherModel.addRow(new Object[]{f.getName(),f.getAmount()});
-        }
-        jtblOthers.setModel(otherModel);
-        jLabel1.setText(sf.getSum()+"");
-        
-        SectionDaoImpl secDaoImpl = new SectionDaoImpl();
-        int sectionId = secDaoImpl.getSectionIdByName(secDaoImpl.getSectionByStudentId(studentId).getSectionName());
-        ScheduleDaoImpl schedDaoImpl = new ScheduleDaoImpl();
-        List<Schedule> schedList = schedDaoImpl.getBySectionId(sectionId);
-        DefaultTableModel schedModel = (DefaultTableModel)jtblRegformSchedule.getModel();
-        schedModel.setRowCount(0);
-        for(Schedule s : schedList){
-            schedModel.addRow(new Object[]{s.getDay(),s.getSubjectCode(),s.getStartTime()+"-"+s.getEndTime(),s.getRoomName()});
-        }
-        jtblRegformSchedule.setModel(schedModel);
+//        MiscellaneousFees m = sfdi.getMiscellaneous(studentId);
+//        SchoolFees sf = getSchoolFees();
+//        DefaultTableModel model = (DefaultTableModel)jtblMiscellaneous.getModel();
+//        List<Fee> feeList = sf.getMiscellaneousFees().getFees();
+//        model.setRowCount(0);
+//        for(Fee f : feeList){
+//            model.addRow(new Object[]{f.getName(),f.getAmount()});
+//        }
+//        jtblMiscellaneous.setModel(model);
+//        System.out.println("SchoolFees Size :"+sf.getMiscellaneousFees().getFees().size());
+//        
+//        jLabel14.setText(sf.getBasicFee().getAmount()+"");
+//        
+//        DefaultTableModel otherModel = (DefaultTableModel) jtblOthers.getModel();
+//        otherModel.setRowCount(0);
+//        for(Fee f : feeList){
+//            otherModel.addRow(new Object[]{f.getName(),f.getAmount()});
+//        }
+//        jtblOthers.setModel(otherModel);
+//        jLabel1.setText(sf.getSum()+"");
+//        
+//        SectionDaoImpl secDaoImpl = new SectionDaoImpl();
+////        int sectionId = secDaoImpl.getSectionIdByName(secDaoImpl.getSectionByStudentId(studentId).getSectionName());
+////        ScheduleDaoImpl schedDaoImpl = new ScheduleDaoImpl();
+////        List<Schedule> schedList = schedDaoImpl.getBySectionId(sectionId);
+////        DefaultTableModel schedModel = (DefaultTableModel)jtblRegformSchedule.getModel();
+////        schedModel.setRowCount(0);
+////        for(Schedule s : schedList){
+////            schedModel.addRow(new Object[]{s.getDay(),s.getSubjectCode(),s.getStartTime()+"-"+s.getEndTime(),s.getRoomName()});
+////        }
+////        jtblRegformSchedule.setModel(schedModel);
     }
     
     private void setStudentInfo() {
@@ -966,8 +954,8 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
         
         
         
-        Student s = sdi.getStudentById(studentId);
-        jlblStudentIdRegistrationText.setText(s.getStudentId() != null ? s.getStudentId() + "" : "");
+        Student s = sdi.getStudentByStudentNo(studentId);
+//        jlblStudentIdRegistrationText.setText(s.getStudentId() != null ? s.getStudentId() + "" : "");
         jlblStudentTypeRegForm.setText(s.getStudentType() == 0 ? "Old" : "New");
         jlblNameText.setText(
                 s.getRegistration().getLastName() + ", "
@@ -979,34 +967,34 @@ public class JdlgStudentInfo extends javax.swing.JDialog {
                 + s.getRegistration().getAddressBrgyOrSubd()== null? "":s.getRegistration().getAddressBrgyOrSubd()
                         + " "
                 + s.getRegistration().getAddressCity());
-        SchoolYear schoolYear = sydi.getById(sydi.getCurrentSchoolYearId());
+        SchoolYear schoolYear = sydi.getSchoolYearById(sydi.getCurrentSchoolYearId());
         jlblSchoolYearText.setText(schoolYear.getYearFrom() + "");
         jlblRegistrationDateText.setText(s.getAdmission().getCompletionDate()+"");
         jlblRegistrationIdText.setText(s.getRegistration().getRegistrationId()+"");
-        jlblSectionText.setText(sedi.getSectionByStudentId(studentId).getSectionName());
+//        jlblSectionText.setText(sedi.getSectionByStudentId(studentId).getSectionName());
         
         
         
     }
     
-    private SchoolFees getSchoolFees() {
-        int gradelevelId;
-        SchoolFeesDaoImpl sfdi = new SchoolFeesDaoImpl();
-        StudentDaoImpl sdi = new StudentDaoImpl();
-        Student s = sdi.getStudentById(studentId);
-        SchoolFees schoolFees;
-        EnrollmentDaoImpl edi = new EnrollmentDaoImpl();
-        boolean hasEnrollmentRecord = edi.hasEnrollmentRecord(s.getStudentId());
-
-        if (hasEnrollmentRecord) {
-            gradelevelId = sdi.getCurrentGradeLevelId(s.getStudentId());
-        } else {
-            gradelevelId = s.getRegistration().getGradeLevelId();
-        }
-
-        schoolFees = sfdi.get(gradelevelId);
-        return schoolFees;
-    }
+//    private SchoolFees getSchoolFees() {
+//        int gradelevelId;
+//        SchoolFeesDaoImpl sfdi = new SchoolFeesDaoImpl();
+//        StudentDaoImpl sdi = new StudentDaoImpl();
+//        Student s = sdi.getStudentById(studentId);
+//        SchoolFees schoolFees;
+//        EnrollmentDaoImpl edi = new EnrollmentDaoImpl();
+//        boolean hasEnrollmentRecord = edi.hasEnrollmentRecord(s.getStudentId());
+//
+//        if (hasEnrollmentRecord) {
+//            gradelevelId = sdi.getCurrentGradeLevelId(s.getStudentId());
+//        } else {
+//            gradelevelId = s.getRegistration().getGradeLevelNo();
+//        }
+//
+//        schoolFees = sfdi.get(gradelevelId);
+//        return schoolFees;
+//    }
     
     private void initializeControllers(){
         jbtnPrintRegistrationForm.addActionListener(new PrintController(jpnlRegistration));

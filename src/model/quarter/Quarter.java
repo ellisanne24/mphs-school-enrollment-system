@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model.quarter;
 
 import model.schoolyear.SchoolYear;
@@ -13,15 +9,27 @@ import java.util.Date;
  * @author Acer
  */
 public class Quarter {
-    private int quarterId;
-    private int quarterNo;
+    
     private String description;
     private SchoolYear schoolYear;
+    
+    private int quarterId;
+    private int quarterNo;
     private Date startDate;
     private Date endDate;
+    private Date gradingDueDate;
     private boolean isActive;
+    
     private boolean isCurrentQuarter;
     private Date dateAdded;
+
+    public Date getGradingDueDate() {
+        return gradingDueDate;
+    }
+
+    public void setGradingDueDate(Date gradingDueDate) {
+        this.gradingDueDate = gradingDueDate;
+    }
 
     public boolean getIsCurrentQuarter() {
         return isCurrentQuarter;

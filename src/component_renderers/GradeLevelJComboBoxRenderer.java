@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package component_renderers;
 
 import java.awt.Color;
@@ -33,7 +29,7 @@ public class GradeLevelJComboBoxRenderer extends JLabel implements ListCellRende
         if (isSelected) {
             this.setBackground(Color.YELLOW);
 //            this.setBackground(list.getSelectionBackground());
-            this.setForeground(list.getSelectionForeground());
+            this.setForeground(Color.BLACK);
         } else {
             this.setBackground(list.getBackground());
             this.setForeground(list.getForeground());

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model.feecategory;
 
 /**
@@ -11,7 +6,7 @@ package model.feecategory;
  */
 public class FeeCategory {
     int id;
-    String category;
+    String name;
 
     public int getId() {
         return id;
@@ -21,12 +16,12 @@ public class FeeCategory {
         this.id = id;
     }
 
-    public String getCategory() {
-        return category;
+    public String getName() {
+        return name;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setName(String name) {
+        this.name = name;
     }
     
     

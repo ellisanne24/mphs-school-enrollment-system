@@ -1,24 +1,35 @@
 package model.curriculum;
 
 import java.util.List;
-import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.subject.Subject;
 
 
 public class Curriculum {
     private int curriculumId;
-    private int isActive;
+    private boolean isActive;
     private String title;
     private String dateCreated;
     private String description;
-    private List<Subject> subject;
+    private List<Subject> subjects;
+    private int schoolYearId;
+    private int subjectCount;
+
+    public int getSubjectCount() {
+        return subjectCount;
+    }
+
+    public void setSubjectCount(int subjectCount) {
+        this.subjectCount = subjectCount;
+    }
     
-    
-    
-    public GradeLevel gradeLevel = new GradeLevel();
-    public Subject s = new Subject();
-    public SchoolYear schoolYear = new SchoolYear(); //schoolyear when the curriculum was created
+    public int getSchoolYearId() {
+        return schoolYearId;
+    }
+
+    public void setSchoolYearId(int schoolYearId) {
+        this.schoolYearId = schoolYearId;
+    }
     
     public int getCurriculumId() {
         return curriculumId;
@@ -28,68 +39,44 @@ public class Curriculum {
         this.curriculumId = curriculumId;
     }
 
-    public GradeLevel getGradeLevel() {
-        return gradeLevel;
-    }
-    
-    public void setCurriculumTitle(String title)
-    {
-        this.title = title;
-    }
-    
-    public String getCurriculumTitle()
-    {
-        return title;
-    }
-    
-    public void setGradeLevel(GradeLevel gradeLevel) {
-        this.gradeLevel = gradeLevel;
-    }
-
-    public SchoolYear getSchoolYear() {
-        return schoolYear;
-    }
-
-    public void setSchoolYear(SchoolYear schoolYear) {
-        this.schoolYear = schoolYear;
-    }
-
-    public List<Subject> getSubject() {
-        return subject;
-    }
-
-    public void setSubject(List<Subject> subject) {
-        this.subject = subject;
-    }
-    
-    public void setCurriculumDescription(String description)
-    {
-        this.description = description;
-    }
-    
-    public String getCurriculumDescription()
-    {
-        return description;
-    }
-    
-    public void setIsActive(int isActive)
-    {
-        this.isActive = isActive;
-    }
-    
-    public int getIsActive()
-    {
+    public boolean getIsActive() {
         return isActive;
     }
-    
-    public void setDateCreated(String dateCreated)
-    {
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
-    
-    public String getDateCreated()
-    {
-        return dateCreated;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
     }
     
 }

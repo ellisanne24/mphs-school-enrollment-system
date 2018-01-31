@@ -1,25 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.penaltysetting;
 
-import component_model_loader.PaymentTermML;
 import daoimpl.PaymentTermDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import model.paymentterm.PaymentTerm;
-import static view.penalty.PenaltySettings.jlstSchoolYearFilter;
 
 /**
  *
@@ -65,14 +58,14 @@ public class SaveNewController{
                 boolean isSuccessful = false;
                 
                 List<PaymentTerm> list = getPaymentTerms();
-                isSuccessful = ptdi.addPaymentTermPenalty(list);
-                if(isSuccessful){
-                    JOptionPane.showMessageDialog(null,"Successfully added new record.");
-                    updatePenaltyList();
-                    mainWindow.dispose();
-                }else{
-                    JOptionPane.showMessageDialog(null,"Error encountered while adding record.");
-                }
+//                isSuccessful = ptdi.addPaymentTermPenalty(list);
+//                if(isSuccessful){
+//                    JOptionPane.showMessageDialog(null,"Successfully added new record.");
+//                    updatePenaltyList();
+//                    mainWindow.dispose();
+//                }else{
+//                    JOptionPane.showMessageDialog(null,"Error encountered while adding record.");
+//                }
             }
         };
         savePenalty.addActionListener(save);
@@ -81,27 +74,27 @@ public class SaveNewController{
     
     private List<PaymentTerm> getPaymentTerms(){
         int schoolYearId = sydi.getId(Integer.parseInt(syFrom.getSelectedItem().toString()));
-        int semestralId = ptdi.getId(ptSemestral.getSelectedItem().toString().trim());
-        int quarterlyId = ptdi.getId(ptQuarterly.getSelectedItem().toString().trim());
-        int monthlyId = ptdi.getId(ptMonthly.getSelectedItem().toString().trim());
+        int semestralId = ptdi.getPaymentTermIDByName(ptSemestral.getSelectedItem().toString().trim());
+        int quarterlyId = ptdi.getPaymentTermIDByName(ptQuarterly.getSelectedItem().toString().trim());
+        int monthlyId = ptdi.getPaymentTermIDByName(ptMonthly.getSelectedItem().toString().trim());
         double semestralAmount = Double.parseDouble(semestralPenalty.getText().trim());
         double quarterlyAmount = Double.parseDouble(quarterlyPenalty.getText().trim());
         double monthlyAmount = Double.parseDouble(monthlyPenalty.getText().trim());
         
         PaymentTerm s = new PaymentTerm();
         s.setSchoolYearId(schoolYearId);
-        s.setId(semestralId);
-        s.setPenaltyAmount(semestralAmount);
+        s.setPaymentTermId(semestralId);
+        s.setPenaltyAmount(BigDecimal.valueOf(semestralAmount));
         
         PaymentTerm q = new PaymentTerm();
         q.setSchoolYearId(schoolYearId);
-        q.setId(quarterlyId);
-        q.setPenaltyAmount(quarterlyAmount);
+        q.setPaymentTermId(quarterlyId);
+        q.setPenaltyAmount(BigDecimal.valueOf(quarterlyAmount));
         
         PaymentTerm m = new PaymentTerm();
         m.setSchoolYearId(schoolYearId);
-        m.setId(monthlyId);
-        m.setPenaltyAmount(monthlyAmount);
+        m.setPaymentTermId(monthlyId);
+        m.setPenaltyAmount(BigDecimal.valueOf(monthlyAmount));
         
         List<PaymentTerm> listOfPaymentTerms = new ArrayList<>();
         listOfPaymentTerms.add(s);
@@ -109,11 +102,5 @@ public class SaveNewController{
         listOfPaymentTerms.add(m);
         
         return listOfPaymentTerms;
-    }
-    
-    private void updatePenaltyList(){
-        PaymentTermML paymentTermML = new PaymentTermML();
-        DefaultListModel newModel = paymentTermML.getSchoolYearsWithPenalty();
-        jlstSchoolYearFilter.setModel(newModel);
     }
 }

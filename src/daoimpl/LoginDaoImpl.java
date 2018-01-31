@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import utility.puzzler.Puzzler;
 
 public class LoginDaoImpl {
 
@@ -19,53 +20,52 @@ public class LoginDaoImpl {
     public static String getUsername() {
         return username;
     }
-    
-    public static int getUserId(){
+
+    public static int getUserId() {
         int userId = 0;
         String SQL = "{CALL getUserId(?)}";
-        try(Connection con  = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-                cs.setString(1, username);
-            try(ResultSet rs = cs.executeQuery(); ){
-                while(rs.next()){
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, username);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     userId = rs.getInt("id");
                 }
             }
-            
+
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getErrorCode() + e.getMessage());
         }
         return userId;
     }
 
     public static Boolean isValid(String aUsername, String aPassword) {
+        boolean isValid = false;
         LoginDaoImpl.username = aUsername; // SETS THE username to STATIC username VARIABLE
-
-        String SQL = "SELECT * FROM user_mt WHERE USERNAME=? AND PASSWORD=?";
-        Boolean bool_valid = null;
+        String SQLa = "SELECT password FROM user_mt WHERE username=?";
+        String userStoredPassword = "";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                PreparedStatement ps = con.prepareStatement(SQL);) {
+                PreparedStatement ps = con.prepareStatement(SQLa);) {
             ps.setString(1, aUsername);
-            ps.setString(2, aPassword);
-
             try (ResultSet rs = ps.executeQuery();) {
-                int rowCounter = 0;
                 while (rs.next()) {
-                    rowCounter++;
+                    userStoredPassword = rs.getString("password");
                 }
-                if (rowCounter == 0) {
-                    bool_valid = false; // if no results or no rows matching the login
-                } else if (rowCounter == 1) {
-                    bool_valid = true; // if login is valid, this method will return true
-                }
-            }//--end of inner try
-
+            }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-            System.err.println(e.getErrorCode());
-            System.err.println(e.getSQLState());
+            e.printStackTrace();
         }
-        return bool_valid;
+        if(aPassword.equals(userStoredPassword)){
+            isValid = true;
+        }
+//        Puzzler puzzler = new Puzzler(userStoredPassword);
+//        System.out.println("User entered password : " + aPassword);
+//        System.out.println("User stored password : " + puzzler.getDecrypted());
+//        if (puzzler.getDecrypted().equals(aPassword)) {
+//            isValid = true;
+//        }
+
+        return isValid;
     }
 
     public static Boolean isLocked(String aUsername) {
@@ -133,17 +133,16 @@ public class LoginDaoImpl {
             JOptionPane.showMessageDialog(null, e.getClass() + " " + e.getMessage());
         }
     }
-    
-    
-    public static String getCompleteName(String aUsername){
+
+    public static String getCompleteName(String aUsername) {
         String SQL = "{CALL getUserCompleteName(?)}";
         String myName = null;
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1, aUsername.trim() );
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                   myName = rs.getString("completeName");
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, aUsername.trim());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    myName = rs.getString("completeName");
                 }
             }
         } catch (SQLException e) {

@@ -29,7 +29,7 @@ public class SubjectValidation {
 
             list.add(subject.getSubjectTitle());
             list.add(subject.getSubjectCode());
-            list.add(subject.gradeLevel.getLevel());
+            list.add(subject.getGradeLevel().getLevel());
             list.add(subject.getSubjectDescription());
 
         }

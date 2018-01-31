@@ -5,18 +5,22 @@ import java.util.Date;
 import model.gradelevel.GradeLevel;
 
 public class Subject {
-    int subjectId;
-    String subjectTitle;
-    String subjectCode;
-    String subjectDescription;
-    String addedBy;
-    double subjectHours;
-    double totalHours;
-    Date dateAdded;
-    Date dateCreated;
-    boolean isActive;
+    private int subjectId;
+    private String subjectTitle;
+    private String subjectCode;
+    private String subjectDescription;
+    private String addedBy;
+    private double subjectHours;
+    private double totalHours;
+    private Date dateAdded;
+    private Date dateCreated;
+    private boolean isActive;
     
-    public GradeLevel gradeLevel = new GradeLevel();
+    private GradeLevel gradeLevel;
+
+    public boolean isIsActive() {
+        return isActive;
+    }
 
     public String getAddedBy() {
         return addedBy;

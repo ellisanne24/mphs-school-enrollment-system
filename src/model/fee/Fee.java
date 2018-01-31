@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model.fee;
 
+import java.math.BigDecimal;
 import model.schoolyear.SchoolYear;
 import java.util.Map;
 import model.feecategory.FeeCategory;
@@ -12,25 +9,25 @@ import model.gradelevel.GradeLevel;
 
 /**
  *
- * @author Acer
+ * @author Jordan
  */
 public class Fee {
     private int id;
     private String name;
-    private double amount;
+    private BigDecimal amount;
     private FeeCategory feeCategory; // miscellaneous, other, tuition, etc
     private GradeLevel gradeLevel;
-    private Map<Integer,Double> gradeLevelAmountPair;
+    private Map<Integer,BigDecimal> gradeLevelAmountPair;
     private SchoolYear schoolYear;
     private String description;
     private boolean isActive;
     private boolean exists;
 
-    public Map<Integer, Double> getGradeLevelAmountPair() {
+    public Map<Integer, BigDecimal> getGradeLevelAmountPair() {
         return gradeLevelAmountPair;
     }
 
-    public void setGradeLevelAmountPair(Map<Integer, Double> gradeLevelAmountPair) {
+    public void setGradeLevelAmountPair(Map<Integer, BigDecimal> gradeLevelAmountPair) {
         this.gradeLevelAmountPair = gradeLevelAmountPair;
     }
     
@@ -77,11 +74,11 @@ public class Fee {
         this.name = name;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

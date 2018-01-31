@@ -5,7 +5,7 @@
  */
 package controller.user;
 
-import component_model_loader.RolesML;
+import component_model_loader.RolesJCompModelLoader;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +18,7 @@ import view.user.UserInfo;
  */
 public class DisplayEditUser implements ActionListener {
 
-    RolesML rolesML = new RolesML();
+    RolesJCompModelLoader rolesML = new RolesJCompModelLoader();
 
     @Override
     public void actionPerformed(ActionEvent e) {

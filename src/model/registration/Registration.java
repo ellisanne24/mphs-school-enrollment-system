@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model.registration;
 
 import model.schoolyear.SchoolYear;
@@ -17,7 +13,7 @@ public class Registration {
     private String firstName;
     private String middleName;
     private String lastName;
-    private String dateOfBirth;
+    private Date birthday;
     private String placeOfBirth;
     private String nationality;
     private String religion;
@@ -47,43 +43,32 @@ public class Registration {
     private String schoolLastAttended;
     private String schoolLastAttendedAddress;
     boolean isAdmissionComplete;
-    boolean isDownpaymentPaid;
     private String addressRoomOrHouseNo;
     private String addressStreet;
     private String addressBrgyOrSubd;
     private String addressCity;
-    private String province;
-    private int gradeLevel;
+    private String region;
     private SchoolYear schoolYear;
     private String paymentTerm;
     private Date registrationDate;
     private boolean exists; 
-    private Integer gradeLevelId;
-    private Integer schoolYearId;
-    private Integer paymentTermId;
+    private int gradeLevelNo;
+    private int schoolYearYearFrom;
 
-    public Integer getPaymentTermId() {
-        return paymentTermId;
+    public int getGradeLevelNo() {
+        return gradeLevelNo;
     }
 
-    public void setPaymentTermId(Integer paymentTermId) {
-        this.paymentTermId = paymentTermId;
-    }
-    
-    public Integer getGradeLevelId() {
-        return gradeLevelId;
+    public void setGradeLevelNo(int gradeLevelNo) {
+        this.gradeLevelNo = gradeLevelNo;
     }
 
-    public void setGradeLevelId(Integer gradeLevelId) {
-        this.gradeLevelId = gradeLevelId;
+    public int getSchoolYearYearFrom() {
+        return schoolYearYearFrom;
     }
 
-    public Integer getSchoolYearId() {
-        return schoolYearId;
-    }
-
-    public void setSchoolYearId(Integer schoolYearId) {
-        this.schoolYearId = schoolYearId;
+    public void setSchoolYearYearFrom(Integer schoolYearYearFrom) {
+        this.schoolYearYearFrom = schoolYearYearFrom;
     }
     
     public boolean exists() {
@@ -135,22 +120,6 @@ public class Registration {
         this.isAdmissionComplete = isAdmissionComplete;
     }
 
-    public boolean getIsDownpaymentPaid() {
-        return isDownpaymentPaid;
-    }
-
-    public void setIsDownpaymentPaid(boolean isDownpaymentPaid) {
-        this.isDownpaymentPaid = isDownpaymentPaid;
-    }
-
-    public int getGradeLevel() {
-        return gradeLevel;
-    }
-
-    public void setGradeLevel(int gradeLevel) {
-        this.gradeLevel = gradeLevel;
-    }
-
     public Integer getRegistrationId() {
         return registrationId;
     }
@@ -191,12 +160,12 @@ public class Registration {
         this.lastName = lastName;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public String getPlaceOfBirth() {
@@ -440,12 +409,12 @@ public class Registration {
         this.addressCity = addressCity;
     }
 
-    public String getProvince() {
-        return province;
+    public String getRegion() {
+        return region;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public String getPaymentTerm() {

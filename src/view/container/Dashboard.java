@@ -6,7 +6,6 @@ import daoimpl.PermissionDaoImpl;
 import daoimpl.UserDaoImpl;
 import view.enrollment.EnrollmentPanel;
 import view.user.AllUsersRecord;
-import view.registration.RegistrationForm;
 import utility.calendar.CalendarUtil;
 import utility.layout.CardLayoutUtil;
 import java.awt.Graphics;
@@ -22,6 +21,7 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import model.permission.dashboardpermission.DashboardPermission;
@@ -29,9 +29,9 @@ import model.role.Role;
 import model.testdata.SubjectTestDataModel;
 import model.user.User;
 import threads.SchoolYearLoaderThread;
-import view.grades.GradesRecord;
-import view.payment.PaymentAndAssessmentForm;
-import view.reports.Reports;
+import view.grades.JpnlGradingSystemTop;
+import view.payment.Panel_Payment;
+import view.registration.Panel_Registration;
 
 public class Dashboard extends javax.swing.JFrame {
 
@@ -49,7 +49,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     private ImageIcon imageIconHome;
 
-    private final GUIManager guiManager = new GUIManager();
+    private final GUIManager guiManager;
 
     private static int REGISTRATION_TAB_INDEX;
     private static int ENROLLMENT_TAB_INDEX;
@@ -82,54 +82,56 @@ public class Dashboard extends javax.swing.JFrame {
 
     public Dashboard(User user) {
         initComponents();
+        
         this.user = user;
-        userId = user.getId();
         loadFacultyId();
         loadUserAdviserId();
-        
-        System.out.println("User Id :"+userId);
-        System.out.println("Faculty Id :"+facultyId);
-        System.out.println("Adviser Id :"+adviserId);
-        
+
+        System.out.println("User Id :" + user.getId());
+        System.out.println("Faculty Id :" + facultyId);
+        System.out.println("Adviser Id :" + adviserId);
+
         setUILookAndFeel();
         initDashboardPermissions();
+        
+        guiManager = new GUIManager();
         guiManager.prepareImageBackgrounds();
         guiManager.setGUIComponentProperties();
 
         initThreads();
         setUserInfo();
         initControllers();
-        
+
         //
         SubjectTestDataModel stdm = new SubjectTestDataModel();
         stdm.getDescription();
     }
-    
+
     private void loadUserAdviserId() {
         Role role = user.getRole();
         String roleName = role.getRoleName();
         if (roleName.toLowerCase().equals("faculty")) {
             UserDaoImpl udi = new UserDaoImpl();
-//            adviserId = udi.getAdviserIdByUserId(userId);
+            //adviserId = udi.getAdviserIdByUserId(user.getId());
             adviserId = facultyId;
-System.out.println("Adviser Id: " + adviserId);
+            System.out.println("Adviser Id: " + adviserId);
         }
     }
-    
-    private void loadFacultyId(){
+
+    private void loadFacultyId() {
         Role role = user.getRole();
         String roleName = role.getRoleName();
-        if(roleName.toLowerCase().equals("faculty")){
+        if (roleName.toLowerCase().equals("faculty")) {
             FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
-            facultyId = facultyDaoImpl.getFacultyIdByUserId(userId);
-            System.out.println("Faculty Id Is :"+facultyId);
+            
         }
     }
 
     private void setUILookAndFeel() {
         try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
     }
@@ -1117,6 +1119,7 @@ System.out.println("Adviser Id: " + adviserId);
     }// </editor-fold>//GEN-END:initComponents
 
     public class GUIManager {
+
         private void setGUIComponentProperties() {
             jlblDateToday.setText(CalendarUtil.getDateToday());
             jlblDayToday.setText(CalendarUtil.getDayToday());
@@ -1124,6 +1127,7 @@ System.out.println("Adviser Id: " + adviserId);
             jspTopMost.getVerticalScrollBar().setUnitIncrement(26);
             jspCardContainer.getVerticalScrollBar().setUnitIncrement(26);
         }
+
         private void prepareImageBackgrounds() {
             String registrationImgPath = hasRegistrationAccess == true
                     ? ("assets/registrationNoText.jpg") : ("assets/registrationlocked1.png");
@@ -1164,9 +1168,9 @@ System.out.println("Adviser Id: " + adviserId);
             initDashboardPermissions();
             if (hasRegistrationAccess) {
                 if (REGISTRATION_INSTANCE <= 0) {
-                    RegistrationForm registrationForm = new RegistrationForm();
-                    jtpTopTabbedPane.addTab("Registration", registrationForm);
-                    jtpTopTabbedPane.setSelectedComponent(registrationForm);
+                    Panel_Registration panelRegistration = new Panel_Registration("register");
+                    jtpTopTabbedPane.addTab("Registration", panelRegistration);
+                    jtpTopTabbedPane.setSelectedComponent(panelRegistration);
                     setREGISTRATION_INSTANCE(1);
                     REGISTRATION_TAB_INDEX = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
@@ -1186,7 +1190,7 @@ System.out.println("Adviser Id: " + adviserId);
             initDashboardPermissions();
             if (hasEnrollmentAccess) {
                 if (ENROLLMENT_INSTANCE <= 0) {
-                    EnrollmentPanel enrollmentPanel = new EnrollmentPanel();
+                    EnrollmentPanel enrollmentPanel = new EnrollmentPanel(user);
                     jtpTopTabbedPane.addTab("Enrollment", enrollmentPanel);
                     jtpTopTabbedPane.setSelectedComponent(enrollmentPanel);
                     setENROLLMENT_INSTANCE(1);
@@ -1207,9 +1211,9 @@ System.out.println("Adviser Id: " + adviserId);
             initDashboardPermissions();
             if (hasGradesAccess) {
                 if (GRADES_INSTANCE <= 0) {
-                    GradesRecord gr = new GradesRecord();
-                    jtpTopTabbedPane.add("Grades", gr);
-                    jtpTopTabbedPane.setSelectedComponent(gr);
+                    JpnlGradingSystemTop jpnlGradingSystemTop = new JpnlGradingSystemTop();
+                    jtpTopTabbedPane.add("Grades", jpnlGradingSystemTop);
+                    jtpTopTabbedPane.setSelectedComponent(jpnlGradingSystemTop);
                     setGRADES_INSTANCE(1);
                     GRADES_TAB_INDEX = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
@@ -1220,7 +1224,6 @@ System.out.println("Adviser Id: " + adviserId);
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblGrades.getText() + " Module.");
             }
-
         }
     }//GEN-LAST:event_jpnlGradesButtonMouseClicked
 
@@ -1230,7 +1233,8 @@ System.out.println("Adviser Id: " + adviserId);
             initDashboardPermissions();
             if (hasPaymentAccess) {
                 if (PAYMENTS_INSTANCE <= 0) {
-                    PaymentAndAssessmentForm paymentPanel = new PaymentAndAssessmentForm();
+                    Panel_Payment paymentPanel;
+                    paymentPanel = new Panel_Payment();
                     jtpTopTabbedPane.add("Payment", paymentPanel);
                     jtpTopTabbedPane.setSelectedComponent(paymentPanel);
                     setPAYMENTS_INSTANCE(1);
@@ -1240,7 +1244,6 @@ System.out.println("Adviser Id: " + adviserId);
                 } else {
                     jtpTopTabbedPane.setSelectedIndex(PAYMENTS_TAB_INDEX - 1);
                 }
-
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblPayment.getText() + " Module.");
             }
@@ -1300,11 +1303,11 @@ System.out.println("Adviser Id: " + adviserId);
             initDashboardPermissions();
             if (hasReportsAccess) {
                 if (ACCOUNTS_INSTANCE <= 0) {
-                    Reports reports = new Reports();
-                    jtpTopTabbedPane.add("Reports", reports);
-                    jtpTopTabbedPane.setSelectedComponent(reports);
-                    setREPORTS_INSTANCE(1);
-                    REPORTS_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+//                    Reports reports = new Reports();
+//                    jtpTopTabbedPane.add("Reports", reports);
+//                    jtpTopTabbedPane.setSelectedComponent(reports);
+//                    setREPORTS_INSTANCE(1);
+//                    REPORTS_TAB_INDEX = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
                     jtpTopTabbedPane.setSelectedIndex(REPORTS_TAB_INDEX - 1);
                 } else {

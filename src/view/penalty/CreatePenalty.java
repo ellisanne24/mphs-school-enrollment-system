@@ -5,8 +5,8 @@
  */
 package view.penalty;
 
-import component_model_loader.PaymentTermML;
-import component_model_loader.SchoolYearML;
+import component_model_loader.PaymentTermJCompModelLoader;
+import component_model_loader.SchoolYearJCompModelLoader;
 import controller.global.SchoolYearController;
 import controller.penaltysetting.SaveNewController;
 import javax.swing.JDialog;
@@ -18,8 +18,8 @@ import javax.swing.JDialog;
 public class CreatePenalty extends javax.swing.JDialog {
 
     private SchoolYearController schoolYearController;
-    private SchoolYearML schoolYearModelLoader;
-    private PaymentTermML paymentTermModelLoader;
+    private SchoolYearJCompModelLoader schoolYearModelLoader;
+    private PaymentTermJCompModelLoader paymentTermModelLoader;
     private SaveNewController saveController;
     
     /**
@@ -31,16 +31,16 @@ public class CreatePenalty extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
-        schoolYearModelLoader = new SchoolYearML();
+        schoolYearModelLoader = new SchoolYearJCompModelLoader();
         jcmbSyFrom.setModel(schoolYearModelLoader.getAllSchoolYearStart());
         jcmbSyTo.setModel(schoolYearModelLoader.getAllSchoolYearEnd());
         schoolYearController = new SchoolYearController(jcmbSyFrom, jcmbSyTo);
         jcmbSyFrom.addItemListener(schoolYearController);
         
-        paymentTermModelLoader = new PaymentTermML();
-        jcmbSemestral.setModel(paymentTermModelLoader.getNames());
-        jcmbQuarterly.setModel(paymentTermModelLoader.getNames());
-        jcmbMonthly.setModel(paymentTermModelLoader.getNames());
+        paymentTermModelLoader = new PaymentTermJCompModelLoader();
+//        jcmbSemestral.setModel(paymentTermModelLoader.getNames());
+//        jcmbQuarterly.setModel(paymentTermModelLoader.getNames());
+//        jcmbMonthly.setModel(paymentTermModelLoader.getNames());
         
         saveController = new SaveNewController
             (jcmbSyFrom, jcmbSyTo, jcmbSemestral, jcmbQuarterly, jcmbMonthly, 

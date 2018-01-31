@@ -3,7 +3,6 @@ package daoimpl;
 
 import dao.ITuitionFee;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import utility.database.DBType;
 import utility.database.DBUtil;
@@ -12,11 +11,9 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
-import org.apache.derby.client.am.Types;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
 import model.paymentterm.PaymentTerm;
@@ -59,7 +56,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         if(tuitionFee.getPayment() == null){
             System.out.println("Null PaymentTerm");
         }
-        int paymentTermId = paymentTerm.getId();
+        int paymentTermId = paymentTerm.getPaymentTermId();
 
         Discount discount = tuitionFee.getDiscount();
         int studentId = tuitionFee.getStudent().getStudentId();
@@ -85,7 +82,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 if (!tuitionFee.exists()) {
                     for (BalanceBreakDownFee b : tuitionFee.getBalanceBreakDownFees()) {
                         
-                        CS_addBalBreakDownFee.setString(1, b.getDescription());
+                        CS_addBalBreakDownFee.setString(1, b.getName());
                         CS_addBalBreakDownFee.setBigDecimal(2, b.getAmount());
                         CS_addBalBreakDownFee.setDate(3, (Date) b.getDeadline());
                         CS_addBalBreakDownFee.registerOutParameter(4, Types.INTEGER);
@@ -137,8 +134,8 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         
         List<BalanceBreakDownFee> balanceBreakDownFeeList = new ArrayList<>();
         boolean exists = false;
-        SchoolYear schoolYear = schoolYearDaoImpl.getById(schoolyearId);
-        Student student = studentDaoImpl.getStudentById(studentId);
+        SchoolYear schoolYear = schoolYearDaoImpl.getSchoolYearById(schoolyearId);
+        Student student = studentDaoImpl.getStudentByStudentNo(studentId);
         PaymentTerm paymentTerm = new PaymentTerm();
         Discount discount = new Discount();
 
@@ -177,7 +174,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                         balanceBreakDownFee.setDateAssigned(rsb.getTimestamp("date_assigned"));
                         balanceBreakDownFee.setIsPaid(rsb.getBoolean("isPaid"));
                         balanceBreakDownFee.setSchoolYearId(rsb.getInt("schoolyear_id"));
-                        balanceBreakDownFee.setDescription(rsb.getString("description"));
+                        balanceBreakDownFee.setName(rsb.getString("description"));
                         balanceBreakDownFee.setStudentId(rsb.getInt("student_id"));
 
                         balanceBreakDownFeeList.add(balanceBreakDownFee);
@@ -197,9 +194,9 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 csD.setInt(2, schoolyearId);
                 try(ResultSet rsD = csD.executeQuery();){
                     while(rsD.next()){
-                        paymentTerm.setId(rsD.getInt("paymentterm_id"));
-                        paymentTerm.setName(rsD.getString("paymentterm"));
-                        paymentTerm.setIsActive(rsD.getBoolean("isActive"));
+//                        paymentTerm.setPaymentTermId(rsD.getInt("paymentterm_id"));
+                        paymentTerm.setPaymentTermName(rsD.getString("paymentterm"));
+//                        paymentTerm.setIsActive(rsD.getBoolean("isActive"));
                         paymentTerm.setDivisor(rsD.getInt("divisor"));
                     }
                 }

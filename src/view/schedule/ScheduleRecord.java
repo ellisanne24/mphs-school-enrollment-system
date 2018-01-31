@@ -1,9 +1,9 @@
 
 package view.schedule;
 
-import component_model_loader.FacultyML;
-import component_model_loader.ScheduleML;
-import component_model_loader.SchoolYearML;
+import component_model_loader.FacultyJCompModelLoader;
+import component_model_loader.ScheduleJCompModelLoader;
+import component_model_loader.SchoolYearJCompModelLoader;
 import utility.component.JInternalFrameUtil;
 import controller.global.SchoolYearController;
 import controller.schedule.FilterScheduleRecordController;
@@ -39,11 +39,11 @@ public class ScheduleRecord extends javax.swing.JPanel {
     }
 
     private void initializeModels() {
-        jcmbSchoolYearFrom.setModel(new SchoolYearML().getAllSchoolYearStart());
-        jcmbSchoolYearTo.setModel(new SchoolYearML().getAllSchoolYearEnd());
-        jtblSchedule.setModel(new ScheduleML().getAllBySchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId(), jtblSchedule));
+        jcmbSchoolYearFrom.setModel(new SchoolYearJCompModelLoader().getAllSchoolYearStart());
+        jcmbSchoolYearTo.setModel(new SchoolYearJCompModelLoader().getAllSchoolYearEnd());
+        jtblSchedule.setModel(new ScheduleJCompModelLoader().getAllBySchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId(), jtblSchedule));
         jtblSchedule.setAutoCreateRowSorter(true);
-        jcmbFaculty.setModel(new FacultyML().getAllFacultyNames());
+//        jcmbFaculty.setModel(new FacultyJCompModelLoader().getAllFacultyNames());
     }
     
     @SuppressWarnings("unchecked")

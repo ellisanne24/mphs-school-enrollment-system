@@ -14,6 +14,7 @@ import dao.IPaymentTerm;
 import model.paymentterm.PaymentTermPenalty;
 import model.period.Period;
 import model.schoolyear.SchoolYear;
+import utility.date.DateUtil;
 
 /**
  *
@@ -21,137 +22,96 @@ import model.schoolyear.SchoolYear;
  */
 public class PaymentTermDaoImpl implements IPaymentTerm{
     
-    private PeriodDaoImpl periodDaoImlp = new PeriodDaoImpl();
+    private PeriodDaoImpl periodDaoImlp;
+    private DateUtil dateUtil;
 
-    @Override
-    public List<PaymentTerm> getAll() {
-        List<PaymentTerm> list = new ArrayList<>();
-        String SQLa = "{CALL getAllPaymentTermsInfo()}";
-//        String SQLb = "{CALL getPeriodsByPaymentTermId(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement csa = con.prepareCall(SQLa);) {
-            try (ResultSet rsa = csa.executeQuery();) {
-                while (rsa.next()) {
-                    PaymentTerm paymentTerm = new PaymentTerm();
-                    paymentTerm.setId(rsa.getInt("paymentterm_id"));
-                    paymentTerm.setName(rsa.getString("paymentterm"));
-                    paymentTerm.setIsActive(rsa.getBoolean("isActive"));
-                    paymentTerm.setDivisor(rsa.getInt("divisor"));
-
-//                    List<Period> periods = new ArrayList<>();
-//                    csb.setInt(1, rsa.getInt("paymentterm_id"));
-//                    try (ResultSet rsb = csb.executeQuery();) {
-//                        while (rsb.next()) {
-//                            Period p = new Period();
-//                            p.setPeriodId(rsb.getInt("period_id"));
-//                            p.setCode(rsb.getString("period_code"));
-//                            p.setDescription(rsb.getString("description"));
-//
-//                            periods.add(p);
-//                        }
-//                    }
-//                    paymentTerm.setPeriods(periods);
-                    list.add(paymentTerm);
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
-        }
-        return list;
-    }
-
-    @Override
-    public List<PaymentTerm> getAllActive() {
-        List<PaymentTerm> list = new ArrayList<>();
-        String SQLa = "{CALL getAllActivePaymentTerms()}";
-//        String SQLb = "{CALL `getPeriodsByPaymentTermId`(?)}";
-        
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement csa = con.prepareCall(SQLa);){
-            try(ResultSet rsa = csa.executeQuery();){
-                while(rsa.next()){
-                    PaymentTerm paymentTerm = new PaymentTerm();
-                        paymentTerm.setId(rsa.getInt("paymentterm_id"));
-                        paymentTerm.setName(rsa.getString("paymentterm"));
-                        paymentTerm.setIsActive(rsa.getBoolean("isActive"));
-                        paymentTerm.setDivisor(rsa.getInt("divisor"));
-                        
-//                        List<Period> periods = new ArrayList<>();
-                        
-//                        csb.setInt(1,rsa.getInt("paymentterm_id"));
-//                        try(ResultSet rsb = csb.executeQuery();){
-//                            while(rsb.next()){
-//                                Period p = new Period();
-//                                p.setPeriodId(rsb.getInt("period_id"));
-//                                p.setCode(rsb.getString("period_code"));
-//                                p.setDescription(rsb.getString("description"));
-//                                
-//                                periods.add(p);
-//                            }
-//                        }
-//                        paymentTerm.setPeriods(periods);
-                        
-                    list.add(paymentTerm);
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
-        }
-        return list;
+    public PaymentTermDaoImpl(){
+        periodDaoImlp = new PeriodDaoImpl();
+        dateUtil = new DateUtil();
     }
     
+    /**
+     * Gets ALL of PaymentTerms including ALL Period information
+     * such as Period's payment deadline and name etc.
+     * @return 
+     */
     @Override
-    public List<PaymentTerm> getAllInactive() {
-        List<PaymentTerm> list = new ArrayList<>();
-        String SQLa = "{CALL getAllInActivePaymentTerms()}";
-//        String SQLb = "{CALL getPaymentTermPeriodsById(?)}";
-        
+    public List<PaymentTerm> getAll() {
+        List<PaymentTerm> paymentTermList = new ArrayList<>();
+        String SQLa = "{CALL getAllPaymentTermsInfo()}";
+        String SQLb = "{CALL getPaymentTermPeriodsByPaymentTermId(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement csa = con.prepareCall(SQLa);){
-            try(ResultSet rsa = csa.executeQuery();){
-                while(rsa.next()){
+                CallableStatement csa = con.prepareCall(SQLa);
+                CallableStatement csb = con.prepareCall(SQLb);) {
+            try (ResultSet rsa = csa.executeQuery();) {
+                while (rsa.next()) {
                     PaymentTerm paymentTerm = new PaymentTerm();
-                        paymentTerm.setId(rsa.getInt("paymentterm_id"));
-                        paymentTerm.setName(rsa.getString("paymentterm"));
-                        paymentTerm.setIsActive(rsa.getBoolean("isActive"));
-                        paymentTerm.setDivisor(rsa.getInt("divisor"));
-                        
-                        List<Period> periods = new ArrayList<>();
-                        
-//                        csb.setInt(1,rsa.getInt("paymentterm_id"));
-//                        try(ResultSet rsb = csb.executeQuery();){
-//                            while(rsb.next()){
-//                                Period p = new Period();
-//                                p.setPeriodId(rsb.getInt("period_id"));
-//                                p.setCode(rsb.getString("period_code"));
-//                                p.setDescription(rsb.getString("description"));
-//                                periods.add(p);
-//                            }
-//                        }
-//                        paymentTerm.setPeriods(periods);
-                    list.add(paymentTerm);
+                    paymentTerm.setPaymentTermId(rsa.getInt("paymentterm_id"));
+                    paymentTerm.setPaymentTermName(rsa.getString("paymentterm_name"));
+                    paymentTerm.setIsPaymentTermActive(rsa.getBoolean("isPaymentTermActive"));
+                    paymentTerm.setDivisor(rsa.getInt("divisor"));
+                    paymentTerm.setSchoolYearId(rsa.getInt("schoolyear_id"));
+                    paymentTerm.setPenaltyAmount(rsa.getBigDecimal("penalty_amount"));
+                    paymentTerm.setIsPenaltyActive(rsa.getBoolean("isPenaltyActive"));
+                    paymentTerm.setDateAdded(rsa.getDate("date_added"));
+
+                    List<Period> periods = new ArrayList<>();
+                    csb.setInt(1, rsa.getInt("paymentterm_id"));
+                    try (ResultSet rsb = csb.executeQuery();) {
+                        while (rsb.next()) {
+                            Period period = new Period();
+                            period.setPeriodId(rsb.getInt("period_id"));
+                            period.setPeriodCode(rsb.getString("period_code"));
+                            period.setPeriodName(rsb.getString("period_name"));
+                            period.setPaymentDeadline(rsb.getDate("paymentdeadline"));
+
+                            periods.add(period);
+                        }
+                    }
+                    paymentTerm.setPeriods(periods);
+                    paymentTermList.add(paymentTerm);
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
+            e.printStackTrace();
         }
-        return list;
+        return paymentTermList;
     }
 
     @Override
-    public PaymentTerm getById(int aPaymentTermId) {
+    public PaymentTerm getPaymentTermByPaymentTermId(int paymentTermId) {
         PaymentTerm paymentTerm = new PaymentTerm();
-        String SQLa = "{CALL getPaymentTermById(?)}";
+        String SQLa = "{CALL getPaymentTermByPaymentTermId(?)}";
+        String SQLb = "{CALL getPaymentTermPeriodsByPaymentTermId(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement csa = con.prepareCall(SQLa);) {
-            csa.setInt(1, aPaymentTermId);
+                CallableStatement csa = con.prepareCall(SQLa);
+                CallableStatement csb = con.prepareCall(SQLb);) {
+            csa.setInt(1, paymentTermId);
             try (ResultSet rsa = csa.executeQuery();) {
                 while (rsa.next()) {
-                    paymentTerm.setId(rsa.getInt("paymentterm_id"));
-                    paymentTerm.setName(rsa.getString("paymentterm"));
-                    paymentTerm.setIsActive(rsa.getBoolean("isActive"));
+                    paymentTerm.setPaymentTermId(rsa.getInt("paymentterm_id"));
+                    paymentTerm.setPaymentTermName(rsa.getString("paymentterm_name"));
+                    paymentTerm.setIsPaymentTermActive(rsa.getBoolean("isPaymentTermActive"));
                     paymentTerm.setDivisor(rsa.getInt("divisor"));
-                    paymentTerm.setPenaltyAmount(rsa.getDouble("penalty_amount"));
+                    paymentTerm.setSchoolYearId(rsa.getInt("schoolyear_id"));
+                    paymentTerm.setPenaltyAmount(rsa.getBigDecimal("penalty_amount"));
+                    paymentTerm.setIsPenaltyActive(rsa.getBoolean("isPenaltyActive"));
+                    paymentTerm.setDateAdded(rsa.getDate("date_added"));
+
+                    List<Period> periods = new ArrayList<>();
+                    csb.setInt(1, paymentTermId);
+                    try (ResultSet rsb = csb.executeQuery();) {
+                        while (rsb.next()) {
+                            Period period = new Period();
+                            period.setPeriodId(rsb.getInt("period_id"));
+                            period.setPeriodCode(rsb.getString("period_code"));
+                            period.setPeriodName(rsb.getString("period_name"));
+                            period.setPaymentDeadline(rsb.getDate("paymentdeadline"));
+
+                            periods.add(period);
+                        }
+                    }
+                    paymentTerm.setPeriods(periods);
                 }
             }
         } catch (SQLException e) {
@@ -171,9 +131,9 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     Period p = new Period();
-                    p.setCode(rs.getString("period_code"));
-                    p.setDeadlineOfPayment(rs.getDate("deadline"));
-                    p.setDescription(rs.getString("description"));
+                    p.setPeriodCode(rs.getString("period_code"));
+                    p.setPaymentDeadline(rs.getDate("deadline"));
+                    p.setPeriodName(rs.getString("description"));
                     p.setPeriodId(rs.getInt("period_id"));
                     list.add(p);
                 }
@@ -185,36 +145,13 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
     }
     
     
-
     @Override
-    public PaymentTerm getById(int aPaymentTermId, int schoolYearId) {
-        PaymentTerm paymentTerm = new PaymentTerm();
-        String SQLa = "{CALL getPaymentTermById(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement csa = con.prepareCall(SQLa);) {
-            csa.setInt(1, aPaymentTermId);
-            try (ResultSet rsa = csa.executeQuery();) {
-                while (rsa.next()) {
-                    paymentTerm.setId(rsa.getInt("paymentterm_id"));
-                    paymentTerm.setName(rsa.getString("paymentterm"));
-                    paymentTerm.setIsActive(rsa.getBoolean("isActive"));
-                    paymentTerm.setDivisor(rsa.getInt("divisor"));
-                    paymentTerm.setPenaltyAmount(rsa.getDouble(""));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return paymentTerm;
-    }
-    
-    @Override
-    public int getId(String aPaymentTerm) {
-        Integer paymentTermId = null;
-        String SQL = "{CALL getPaymentTermId(?)}";
+    public int getPaymentTermIDByName(String paymenttermName) {
+        int paymentTermId = 0;
+        String SQL = "{CALL getPaymentTermIdByName(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1, aPaymentTerm.toLowerCase());
+            cs.setString(1, paymenttermName.toLowerCase().trim());
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     paymentTermId = rs.getInt("paymentterm_id");
@@ -232,7 +169,7 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
         String SQL = "{addNewPaymentTerm(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1,aPaymentTerm.getName());
+            cs.setString(1,aPaymentTerm.getPaymentTermName());
             isAdded = cs.executeUpdate() == 1;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -240,55 +177,54 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
         return isAdded;
     }
 
+    /**
+     * 
+     * @param paymentTerms
+     * is a List of PaymentTerm objects.<br>
+     * This method inserts payment deadline record for every payment term period to <br> 
+     * "<b>paymentterm_deadline</b>" table. <br>
+     * This method also inserts late fee (penalty amount) record for the payment terms to <br> 
+     * "<b>paymentterm_penalty</b>" table. <br>
+     * @return 
+     */
     @Override
-    public boolean addPaymentDeadline(List<PaymentTerm> paymentTerms) {
+    public boolean addPaymentSchedule(List<PaymentTerm> paymentTerms) {
         boolean isAdded = false;
-        String SQL = "{CALL addPaymentTermDeadline(?,?,?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-
-            for (PaymentTerm pt : paymentTerms) {
-                List<Period> periods = pt.getPeriods();
-                for (Period p : periods) {
-                    int periodId = periodDaoImlp.getId(p.getDescription().trim());
-                    
-                    cs.setInt(1, pt.getSchoolYearId());
-                    cs.setInt(2, pt.getId());
-                    cs.setInt(3, periodId);
-                    cs.setDate(4, java.sql.Date.valueOf(p.getDeadlineOfPayment().toString()));
-                    cs.executeUpdate();
-                }
-            }
-            isAdded = true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println(e.getMessage());
-        }
-        return isAdded;
-    }
-
-    @Override
-    public boolean addPaymentTermPenalty(List<PaymentTerm> paymentTerms) {
-        boolean isAdded = true;
-        String SQL = "{CALL addPaymentTermPenalty(?,?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL)){
+        String SQLa = "{CALL addPaymentTermPeriodPaymentDeadline(?,?,?,?)}";
+        String SQLb = "{CALL addPaymentTermPenalty(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try(CallableStatement cs = con.prepareCall(SQL);){
-                for(PaymentTerm p : paymentTerms){
-                    cs.setInt(1,p.getSchoolYearId());
-                    cs.setInt(2, p.getId());
-                    cs.setDouble(3, p.getPenaltyAmount());
-                    cs.executeUpdate();
+            try (CallableStatement csA = con.prepareCall(SQLa);
+                    CallableStatement csB = con.prepareCall(SQLb);) {
+                for (PaymentTerm paymentTerm : paymentTerms) {
+                    List<Period> periods = paymentTerm.getPeriods();
+                    for (Period period : periods) {
+                        int periodId = periodDaoImlp.getId(period.getPeriodName().trim());
+                        System.out.println("PeriodName: "+period.getPeriodName().trim()+", ID: "+periodId);
+                        csA.setInt(1, paymentTerm.getSchoolYearId());
+                        csA.setInt(2, paymentTerm.getPaymentTermId());
+                        csA.setInt(3, periodId);
+                        csA.setDate(4, dateUtil.toSqlDate(period.getPaymentDeadline()));
+                        csA.executeUpdate();
+                    }
                 }
-            }catch(SQLException e){
-                isAdded = false;
+                for (PaymentTerm paymentTerm : paymentTerms) {
+                    csB.setInt(1, paymentTerm.getSchoolYearId());
+                    csB.setInt(2, paymentTerm.getPaymentTermId());
+                    csB.setBigDecimal(3, paymentTerm.getPenaltyAmount());
+                    csB.executeUpdate();
+                }
+                isAdded = true;
+                con.commit();
+            } catch (SQLException e) {
                 con.rollback();
                 con.setAutoCommit(true);
-                throw e;
+                System.err.print(e.getErrorCode() + "\n" + e.getMessage());
             }
-            con.commit();
-        }catch(Exception e){
+            
+        } catch (Exception e) {
             e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         return isAdded;
     }
@@ -301,16 +237,16 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
                 CallableStatement cs = con.prepareCall(SQL);){
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    SchoolYear s = new SchoolYear();
-                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    s.setYearFrom(rs.getInt("yearFrom"));
-                    s.setYearTo(rs.getInt("yearTo"));
-                    s.setIsActive(rs.getBoolean("isActive"));
-                    s.setStart_date(rs.getDate("start_date"));
-                    s.setEnd_date(rs.getDate("end_date"));
-                    s.setIsCurrentSchoolYear(rs.getBoolean("isCurrentSchoolYear"));
+                    SchoolYear sy = new SchoolYear();
+                    sy.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    sy.setYearFrom(rs.getInt("yearFrom"));
+                    sy.setYearTo(rs.getInt("yearTo"));
+                    sy.setIsActive(rs.getBoolean("isActive"));
+                    sy.setSchoolYearStartDate(rs.getDate("start_date"));
+                    sy.setSchoolYearEndDate(rs.getDate("end_date"));
+                    sy.setIsCurrentSchoolYear(rs.getBoolean("isCurrentSchoolYear"));
                     
-                    list.add(s);
+                    list.add(sy);
                 }
             }
         } catch (SQLException e) {
@@ -330,10 +266,10 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     PaymentTerm paymentTerm = new PaymentTerm();
-                    paymentTerm.setId(rs.getInt("paymentterm_id"));
-                    paymentTerm.setName(rs.getString("paymentterm"));
+                    paymentTerm.setPaymentTermId(rs.getInt("paymentterm_id"));
+                    paymentTerm.setPaymentTermName(rs.getString("paymentterm"));
                     paymentTerm.setDivisor(rs.getInt("divisor"));
-                    paymentTerm.setIsActive(rs.getBoolean("isActive"));
+                    paymentTerm.setIsPaymentTermActive(rs.getBoolean("isActive"));
                     
                     SchoolYear schoolYear = new SchoolYear();
                     schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));

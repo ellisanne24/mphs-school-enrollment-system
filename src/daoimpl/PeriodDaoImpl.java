@@ -50,8 +50,8 @@ public class PeriodDaoImpl implements IPeriod{
                 while(rs.next()){
                     Period period = new Period();
                     period.setPeriodId(rs.getInt("period_id"));
-                    period.setCode(rs.getString("period_code"));
-                    period.setDescription(rs.getString("description"));
+                    period.setPeriodCode(rs.getString("period_code"));
+                    period.setPeriodName(rs.getString("description"));
                     
                     list.add(period);
                 }

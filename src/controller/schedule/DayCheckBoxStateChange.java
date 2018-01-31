@@ -78,30 +78,29 @@ public class DayCheckBoxStateChange implements ActionListener{
     }
     
     private void loadDaysToTable(JCheckBox jcbDay){
-        String day = jcbDay.getText().trim();
-        DefaultTableModel tableModel = (DefaultTableModel) jtblSchedule.getModel();
-        
-        int subjectCount = sdi.getAllSubjectsByGradeLevelId(getGradeLevel()).size();
-        List<Subject> subjectList = sdi.getAllSubjectsByGradeLevelId(getGradeLevel());
-        
-        String roomName = jcmbRoom.getSelectedItem().toString().trim();
-        
-        if (!hasDayRecord()) {
-            System.out.println("Has No Days Record");
-            tableModel.setRowCount(0);
-            for (Subject s : subjectList) {
-                tableModel.addRow(new Object[]{day, null, null, s.getSubjectCode(), null, roomName});
-            }
-        }else if(hasDayRecord() && !exists(jcbDay)){
-            System.out.println("Has Days Record.");
-            System.out.println("jcbDay is "+jcbDay.getText());
-            int lastRowIndex = tableModel.getRowCount() - 1;
-            System.out.println("Last Row Index :"+lastRowIndex);
-            for(int i = 0; i < subjectCount; i++){
-                 tableModel.addRow(new Object[]{day, null, null, subjectList.get(i).getSubjectCode(), null, roomName});
-            }
-        }
-
+//        String day = jcbDay.getText().trim();
+//        DefaultTableModel tableModel = (DefaultTableModel) jtblSchedule.getModel();
+//        
+//        int subjectCount = sdi.getAllSubjectsByGradeLevelId(getGradeLevel()).size();
+//        List<Subject> subjectList = sdi.getAllSubjectsByGradeLevelId(getGradeLevel());
+//        
+//        String roomName = jcmbRoom.getSelectedItem().toString().trim();
+//        
+//        if (!hasDayRecord()) {
+//            System.out.println("Has No Days Record");
+//            tableModel.setRowCount(0);
+//            for (Subject s : subjectList) {
+//                tableModel.addRow(new Object[]{day, null, null, s.getSubjectCode(), null, roomName});
+//            }
+//        }else if(hasDayRecord() && !exists(jcbDay)){
+//            System.out.println("Has Days Record.");
+//            System.out.println("jcbDay is "+jcbDay.getText());
+//            int lastRowIndex = tableModel.getRowCount() - 1;
+//            System.out.println("Last Row Index :"+lastRowIndex);
+//            for(int i = 0; i < subjectCount; i++){
+//                 tableModel.addRow(new Object[]{day, null, null, subjectList.get(i).getSubjectCode(), null, roomName});
+//            }
+//        }
     }
     
     private boolean exists(JCheckBox jcbDay){
@@ -120,31 +119,31 @@ public class DayCheckBoxStateChange implements ActionListener{
     }
     
     private boolean hasDayRecord() {
-        int countOfNull = 0;
-        int level = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString());
-        GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
-        int gradeLevelId = gldi.getId(level);
-        GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setId(gradeLevelId);
-        
-        int subjectCount = sdi.getAllSubjectsByGradeLevelId(gradeLevel).size();
-        
-        for (int i = 0; i < jtblSchedule.getRowCount(); i++) {
-            Object day = jtblSchedule.getValueAt(i, 0);
-            if (day == null) {
-                countOfNull++;
-            }else{
-                
-            }
-        }
-
+//        int countOfNull = 0;
+//        int level = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString());
+//        GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
+//        int gradeLevelId = gldi.getId(level);
+//        GradeLevel gradeLevel = new GradeLevel();
+//        gradeLevel.setId(gradeLevelId);
+//        
+//        int subjectCount = sdi.getAllSubjectsByGradeLevelId(gradeLevel).size();
+//        
+//        for (int i = 0; i < jtblSchedule.getRowCount(); i++) {
+//            Object day = jtblSchedule.getValueAt(i, 0);
+//            if (day == null) {
+//                countOfNull++;
+//            }else{
+//                
+//            }
+//        }
+//
         boolean hasDaySet = true;
-        System.out.println("Subject Count :"+subjectCount);
-        System.out.println("Count of Null :" + countOfNull);
-        if (countOfNull == subjectCount) {
-            System.out.println("Count of Null == SubjectCount");
-            hasDaySet = false;
-        } 
+//        System.out.println("Subject Count :"+subjectCount);
+//        System.out.println("Count of Null :" + countOfNull);
+//        if (countOfNull == subjectCount) {
+//            System.out.println("Count of Null == SubjectCount");
+//            hasDaySet = false;
+//        } 
         return hasDaySet;
     }
 }

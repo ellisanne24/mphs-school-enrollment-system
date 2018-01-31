@@ -2,17 +2,15 @@ package component_editor;
 
 import daoimpl.FacultyDaoImpl;
 import java.awt.Component;
-import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import model.faculty.Faculty;
-import static view.schedule.CreateSchedule.jtblSchedule;
 
 /**
  *
@@ -46,7 +44,8 @@ public class ScheduleFacultyCellEditor extends DefaultCellEditor {
 
     private DefaultComboBoxModel getFacultyModel() {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        List<Faculty> list = facultyDaoImpl.getAll();
+//        List<Faculty> list = facultyDaoImpl.getAll();
+        List<Faculty> list = new ArrayList<>();
         for (Faculty f : list) {
             model.addElement(f.getFacultyID() + " - " + f.getLastName() + ", " + f.getFirstName() + ", " + f.getMiddleName());
         }

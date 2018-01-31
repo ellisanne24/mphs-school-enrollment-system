@@ -76,10 +76,10 @@ public class EnrollmentDaoImpl implements IEnrollment{
         Integer enrolledGradeLevelId;
         System.out.println("Student Id: "+student.getStudentId());
         if(student.getStudentType() == 1){
-            int level = student.getRegistration().getGradeLevel();
+            int level = student.getRegistration().getGradeLevelNo();
             enrolledGradeLevelId = gradeLevelDaoImpl.getId(level);
         }else{
-            enrolledGradeLevelId = studentDaoImpl.getCurrentGradeLevelId(student.getStudentId());
+//            enrolledGradeLevelId = studentDaoImpl.getCurrentGradeLevelId(student.getStudentId());
         }
         
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
@@ -87,7 +87,7 @@ public class EnrollmentDaoImpl implements IEnrollment{
             SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
             cs.setInt(1, sydi.getCurrentSchoolYearId());
             cs.setInt(2, student.getStudentId());
-            cs.setInt(3, enrolledGradeLevelId);
+//            cs.setInt(3, enrolledGradeLevelId);
             cs.executeUpdate();
             isSuccessfullyEnrolled = true;
         } catch (SQLException e) {
@@ -144,8 +144,8 @@ public class EnrollmentDaoImpl implements IEnrollment{
                     schoolYear.setSchoolYearId(rs.getInt(EnrollmentTable.SCHOOLYEARID));
                     schoolYear.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
                     schoolYear.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
-                    schoolYear.setStart_date(rs.getDate(SchoolYearTable.STARTDATE));
-                    schoolYear.setEnd_date(rs.getDate(SchoolYearTable.ENDDATE));
+                    schoolYear.setSchoolYearStartDate(rs.getDate(SchoolYearTable.STARTDATE));
+                    schoolYear.setSchoolYearEndDate(rs.getDate(SchoolYearTable.ENDDATE));
                     schoolYear.setIsActive(rs.getBoolean(SchoolYearTable.ISACTIVE));
                     schoolYear.setIsCurrentSchoolYear(rs.getBoolean(SchoolYearTable.ISCURRENTSCHOOLYEAR));
                     enrollment.setSchoolYear(schoolYear);

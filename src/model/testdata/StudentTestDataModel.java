@@ -61,7 +61,7 @@ public class StudentTestDataModel {
         int isMotherContactIncaseOfEmergency = (isContactIncaseOfEmergencyArr[isMotherContactInCaseEmergencyIndex]);
                 
         Registration registration = new Registration();
-        registration.setDateOfBirth(dateOfBirth);
+//        registration.setBirthday(dateOfBirth);
         registration.setPlaceOfBirth(placeOfBirth);
         registration.setNationality(nationality);
         registration.setReligion(religion);
@@ -84,9 +84,8 @@ public class StudentTestDataModel {
         registration.setLastName(lastName);
         registration.setMiddleName(middleName);
         registration.setGender(gender);
-        registration.setGradeLevelId(gradeLevelId);
-        registration.setSchoolYearId(schoolYearId);
-        registration.setPaymentTermId(paymentTermId);
+        registration.setGradeLevelNo(gradeLevelId);
+        registration.setSchoolYearYearFrom(schoolYearId);
         
         return registration;
     }

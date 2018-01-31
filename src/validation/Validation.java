@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package validation;
 
 import daoimpl.CurriculumDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SubjectDaoImpl;
-import static view.subject.UpdateSubject.getTfSubjectCode;
 import java.awt.Color;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
@@ -44,23 +39,23 @@ public class Validation extends InputVerifier {
             if (componentName.equals("tfCurriculumName")) {
                 gradeLevel.setId(gradeLevel.getId());
                 schoolYear.getSchoolYearId();
-                curriculum.setCurriculumTitle(tfCurriculumText);
+//                curriculum.setCurriculumTitle(tfCurriculumText);
 
-                if (cdi.checkCurriculumExists(curriculum,schoolYear) == false) {
-                    input.setBackground(Color.WHITE);
-//                    getCbSchoolYearStart().setBackground(Color.WHITE);
-//                    getCbSchoolYearEnd().setBackground(Color.WHITE);
-//                    getCbGradeLevel().setBackground(Color.WHITE);
-                } else {
-                    input.setBackground(Color.PINK);
-//                    getCbSchoolYearStart().setBackground(Color.PINK);
-//                    getCbSchoolYearEnd().setBackground(Color.PINK);
-//                    getCbGradeLevel().setBackground(Color.PINK);
-
-                    return false;
-                }
+//                if (cdi.checkCurriculumExists(curriculum,schoolYear) == false) {
+//                    input.setBackground(Color.WHITE);
+////                    getCbSchoolYearStart().setBackground(Color.WHITE);
+////                    getCbSchoolYearEnd().setBackground(Color.WHITE);
+////                    getCbGradeLevel().setBackground(Color.WHITE);
+//                } else {
+//                    input.setBackground(Color.PINK);
+////                    getCbSchoolYearStart().setBackground(Color.PINK);
+////                    getCbSchoolYearEnd().setBackground(Color.PINK);
+////                    getCbGradeLevel().setBackground(Color.PINK);
+//
+//                    return false;
+//                }
             } else if (componentName.equals("tfSubjectCode")) {
-                subject.setSubjectCode(getTfSubjectCode().getText());
+//                subject.setSubjectCode(getTfSubjectCode().getText());
 
                 if (sdi.checkSubjectExists(subject) == false) {
                     input.setBackground(Color.WHITE);

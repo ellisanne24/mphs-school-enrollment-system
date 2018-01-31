@@ -81,13 +81,13 @@ public class GradeLevelStateChangeController implements ItemListener {
         SectionDaoImpl sdi = new SectionDaoImpl();
         SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
         DefaultComboBoxModel sectionModel = new DefaultComboBoxModel();
-        List<Section> sections = sdi.getAllSectionsByGradeLevelId(g);
-        for (Section s : sections) {
-            if (!sdi.hasSchedule(s.getSectionId(), sydi.getCurrentSchoolYearId())) {
-                sectionModel.addElement(s.getSectionName().trim());
-            }
-
-        }
+//        List<Section> sections = sdi.getAllSectionsByGradeLevelId(g);
+//        for (Section s : sections) {
+//            if (!sdi.hasSchedule(s.getSectionId(), sydi.getCurrentSchoolYearId())) {
+//                sectionModel.addElement(s.getSectionName().trim());
+//            }
+//
+//        }
         sectionModel.setSelectedItem(null);
         return sectionModel;
     }

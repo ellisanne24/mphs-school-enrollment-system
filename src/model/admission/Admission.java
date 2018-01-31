@@ -2,8 +2,9 @@
 package model.admission;
 
 import java.util.Date;
+import java.util.List;
+import model.fee.Fee;
 import model.registration.Registration;
-import model.schoolfees.SchoolFees;
 
 
 public class Admission {
@@ -11,11 +12,19 @@ public class Admission {
     private int schoolYearId;
     private int gradeLevelId;
     private int gradeLevel;
-    private SchoolFees schoolFees;
+    private List<Fee> feeList;
     private int admissionId;
     private Registration registration;
     private boolean isCompleted;
     private Date completionDate;
+
+    public List<Fee> getFeeList() {
+        return feeList;
+    }
+
+    public void setFeeList(List<Fee> feeList) {
+        this.feeList = feeList;
+    }
 
     public int getGradeLevel() {
         return gradeLevel;
@@ -25,8 +34,6 @@ public class Admission {
         this.gradeLevel = gradeLevel;
     }
     
-    
-
     public int getGradeLevelId() {
         return gradeLevelId;
     }
@@ -51,14 +58,6 @@ public class Admission {
         this.studentId = studentId;
     }
 
-    public SchoolFees getSchoolFees() {
-        return schoolFees;
-    }
-
-    public void setSchoolFees(SchoolFees schoolFees) {
-        this.schoolFees = schoolFees;
-    }
-    
     public int getAdmissionId() {
         return admissionId;
     }

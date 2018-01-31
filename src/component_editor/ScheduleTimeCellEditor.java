@@ -76,9 +76,9 @@ public class ScheduleTimeCellEditor extends DefaultCellEditor {
     public Object getCellEditorValue() {
         Date date = (Date) spinner.getValue();
         int time = getDateAsIntTime(date);
-         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 //        return editor.getFormat().format(spinner.getValue());
-return sdf.format(spinner.getValue());
+        return sdf.format(spinner.getValue());
     }
     
     private int getDateAsIntTime(Date date){

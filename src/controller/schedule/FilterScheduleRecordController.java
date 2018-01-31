@@ -1,8 +1,7 @@
 
 package controller.schedule;
 
-import component_model_loader.ScheduleML;
-import daoimpl.SbjDaoImpl;
+import component_model_loader.ScheduleJCompModelLoader;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -38,7 +37,7 @@ public class FilterScheduleRecordController {
 
     public void control() {
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-        SbjDaoImpl sbjDaoImpl = new SbjDaoImpl();
+//        SbjDaoImpl sbjDaoImpl = new SbjDaoImpl();
 
         schoolYearFromChange = new ItemListener() {
             @Override
@@ -64,9 +63,9 @@ public class FilterScheduleRecordController {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 int schoolyearId = schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYearFrom.getSelectedItem().toString()));
-                String cleansedFacultyId = StringUtil.getNumbers(jcmbFaculty.getSelectedItem().toString().trim());
+                String cleansedFacultyId = StringUtil.removeAllNonNumeric(jcmbFaculty.getSelectedItem().toString().trim());
                 int facultyId = Integer.parseInt(cleansedFacultyId.trim());
-                DefaultTableModel model = new ScheduleML().getByFacultyId(facultyId, schoolyearId, jtblScheduleRecord);
+                DefaultTableModel model = new ScheduleJCompModelLoader().getByFacultyId(facultyId, schoolyearId, jtblScheduleRecord);
                 jtblScheduleRecord.setModel(model);
             }
         };

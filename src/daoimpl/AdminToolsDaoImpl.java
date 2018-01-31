@@ -40,7 +40,7 @@ public class AdminToolsDaoImpl implements IAdminTools {
                 csA.setString(2, registration.getLastName());
                 csA.setString(3, registration.getFirstName());
                 csA.setString(4, registration.getMiddleName());
-                csA.setObject(5, registration.getDateOfBirth());
+                csA.setObject(5, registration.getBirthday());
                 csA.setString(6, registration.getPlaceOfBirth());
                 csA.setString(7, registration.getNationality());
                 csA.setString(8, registration.getReligion());
@@ -73,10 +73,9 @@ public class AdminToolsDaoImpl implements IAdminTools {
                 csA.setString(35, registration.getAddressStreet());
                 csA.setString(36, registration.getAddressBrgyOrSubd());
                 csA.setString(37, registration.getAddressCity());
-                csA.setString(38, registration.getProvince());
-                csA.setInt(39, registration.getGradeLevelId());
-                csA.setInt(40, registration.getSchoolYearId());
-                csA.setInt(41, registration.getPaymentTermId());
+                csA.setString(38, registration.getRegion());
+                csA.setInt(39, registration.getGradeLevelNo());
+                csA.setInt(40, registration.getSchoolYearYearFrom());
                 csA.registerOutParameter(42, Types.INTEGER);
                 csA.executeUpdate();
                 int registrationId = csA.getInt(42);
@@ -84,7 +83,7 @@ public class AdminToolsDaoImpl implements IAdminTools {
                 csB.setInt(1, registrationId);
                 csB.executeUpdate();
 
-                csC.setInt(1,registration.getGradeLevelId());
+                csC.setInt(1,registration.getGradeLevelNo());
                 csC.setInt(2,registrationId);
                 csC.executeUpdate();
                 
@@ -100,7 +99,7 @@ public class AdminToolsDaoImpl implements IAdminTools {
 
                 csF.setInt(1, sydi.getCurrentSchoolYearId());
                 csF.setInt(2, studentId);
-                csF.setInt(3, registration.getGradeLevelId());
+                csF.setInt(3, registration.getGradeLevelNo());
                 csF.executeUpdate();
 
                 con.commit();

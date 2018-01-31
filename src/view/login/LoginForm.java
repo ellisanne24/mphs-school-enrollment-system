@@ -25,7 +25,6 @@ public class LoginForm extends javax.swing.JFrame {
     public LoginForm() {
         initComponents();
         loginBgIcon = new ImageUtil().getResourceImage("assets/LoginBgImage.jpg", jpnlBody);
-
         usernameIcon = new ImageUtil().getResourceImage("assets/usernameIcon.png", jpnlUserNameIconContainer);
         passwordIcon = new ImageUtil().getResourceImage("assets/password.png", jpnlPasswordIconContainer);
     }
@@ -357,29 +356,29 @@ public class LoginForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void validateLogin() {
-        String usernameStr = jtfUserName.getText().trim();
+        String username = jtfUserName.getText().trim();
         char[] charPassword = jpfPasswordField.getPassword();
-        String stringPassword = PasswordUtil.toString(charPassword);
+        String password = PasswordUtil.toString(charPassword);
 
-        if (usernameStr.isEmpty()) {
+        if (username.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter your username.");
-        } else if (stringPassword.isEmpty() && usernameStr.isEmpty()) {
+        } else if (password.isEmpty() && username.isEmpty()) {
             JOptionPane.showMessageDialog(null, "You didn't enter any information!\n Please try again!");
-        } else if (usernameStr.equals("enter username")) {
+        } else if (username.equals("enter username")) {
             JOptionPane.showMessageDialog(null, "Please enter your username");
-        } else if (stringPassword.isEmpty()) {
+        } else if (password.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter your password");
-        } else if (LoginDaoImpl.isValid(usernameStr, stringPassword)) {
-            if (LoginDaoImpl.isLocked(usernameStr)) {
+        } else if (LoginDaoImpl.isValid(username, password)) {
+            if (LoginDaoImpl.isLocked(username)) {
                 JOptionPane.showMessageDialog(null, "Your account is locked.\n Please contact your administrator to gain access.");
             } else {
                 this.dispose();
-                displayProgramUI(usernameStr);
+                displayProgramUI(username);
             }
-        } else if (!LoginDaoImpl.isValid(usernameStr, stringPassword)) {
-            if (!LoginDaoImpl.exists(usernameStr)) {
+        } else if (!LoginDaoImpl.isValid(username, password)) {
+            if (!LoginDaoImpl.exists(username)) {
                 JOptionPane.showMessageDialog(null, "Username entered doesn't exist.");
-            } else if (LoginDaoImpl.isLocked(usernameStr)) {
+            } else if (LoginDaoImpl.isLocked(username)) {
                 JOptionPane.showMessageDialog(null, "Your account is locked.\n Please contact your administrator to gain access.");
             } else {
                 loginAttemptCount++;
@@ -387,12 +386,13 @@ public class LoginForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Username or Password incorrect.");
                 if (loginAttemptCount >= 3) {
                     JOptionPane.showMessageDialog(null, "Maximum login attempt reached.");
-                    LoginDaoImpl.lockUser(usernameStr);
+                    LoginDaoImpl.lockUser(username);
                     JOptionPane.showMessageDialog(null, "Your account is locked.\n Please contact your administrator to gain access.");
                     loginAttemptCount = 0;
                 }
             }//end of nested ifelse
         }
+
     }
     
     private void displayProgramUI(String username) {

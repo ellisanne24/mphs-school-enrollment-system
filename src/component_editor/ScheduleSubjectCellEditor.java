@@ -66,7 +66,7 @@ public class ScheduleSubjectCellEditor extends DefaultCellEditor {
         GradeLevel gradeLevel = new GradeLevel();
         gradeLevel.setId(gradelevelId);
 
-        List<Subject> list = subjectDaoImpl.getAllSubjectsByGradeLevelId(gradeLevel);
+        List<Subject> list = subjectDaoImpl.getAllSubjectsByGradeLevelId(gradeLevel.getId());
         int subjectsCount = 0;
         
         

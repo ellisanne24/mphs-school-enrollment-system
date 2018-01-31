@@ -34,16 +34,16 @@ import java.util.Date;
  */
 public class Period {
     private int periodId;
-    private String code;
-    private String description;
-    private Date deadlineOfPayment;
+    private String periodCode;
+    private String periodName;
+    private Date paymentDeadline;
 
-    public Date getDeadlineOfPayment() {
-        return deadlineOfPayment;
+    public Date getPaymentDeadline() {
+        return paymentDeadline;
     }
 
-    public void setDeadlineOfPayment(Date deadlineOfPayment) {
-        this.deadlineOfPayment = deadlineOfPayment;
+    public void setPaymentDeadline(Date paymentDeadline) {
+        this.paymentDeadline = paymentDeadline;
     }
 
     public int getPeriodId() {
@@ -54,21 +54,20 @@ public class Period {
         this.periodId = periodId;
     }
 
-    public String getCode() {
-        return code;
+    public String getPeriodCode() {
+        return periodCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPeriodCode(String periodCode) {
+        this.periodCode = periodCode;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPeriodName() {
+        return periodName;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPeriodName(String periodName) {
+        this.periodName = periodName;
     }
-    
     
 }

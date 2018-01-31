@@ -1,21 +1,15 @@
-
 package model.room;
 
-
-
-
 public class Room {
-    
+
     private int room_id;
-    
+
     private String roomName;
     private String buildingName;
     private String capacity;
-    private String dateCreated;
     private boolean status;
- 
-    
-
+    private String dateCreated;
+    private String description;
 
     public int getRoom_id() {
         return room_id;
@@ -65,10 +59,12 @@ public class Room {
         this.status = status;
         return this.status;
     }
-    
-    
-    
-  
-    
-    
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

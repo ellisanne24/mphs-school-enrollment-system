@@ -72,7 +72,7 @@ public class Receipt extends javax.swing.JDialog {
         String brgyOrSubd = student.getRegistration().getAddressBrgyOrSubd() + " ";
         String city = student.getRegistration().getAddressCity();
         String address = roomHouseNo + street + brgyOrSubd + city;
-        String gradeLevel = student.getCurrentGradeLevel().getLevel() + "";
+        String gradeLevel = student.getGradeLevelNo()+"";
 
         double amountTendered = payment.getAmountTendered();
         double change = payment.getChange();
@@ -100,7 +100,7 @@ public class Receipt extends javax.swing.JDialog {
         for (Object o : particulars.getBalanceBreakDownFees()) {
             BalanceBreakDownFee b = (BalanceBreakDownFee) o;
             double balance = b.getBalance().doubleValue();
-            String description = b.getDescription();
+            String description = b.getName();
             tableModel.addRow(new Object[]{description, " (" + "\u20B1" + decimalFormatter.format(balance) + " )"});
         }
         jtblParticulars.setModel(tableModel);

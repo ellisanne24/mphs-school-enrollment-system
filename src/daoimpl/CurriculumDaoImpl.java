@@ -1,603 +1,234 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package daoimpl;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import dao.ICurriculum;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
-import dao.ICurriculum;
 import model.curriculum.Curriculum;
 import model.gradelevel.GradeLevel;
-import model.schoolyear.SchoolYear;
 import model.subject.Subject;
 import utility.database.DBType;
 import utility.database.DBUtil;
 
 /**
  *
- * @author Acer
+ * @author Jordan
  */
 public class CurriculumDaoImpl implements ICurriculum {
 
-    // HAS - A
-    // HAS the ff classes
-    GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
-    SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
+    private GradeLevelDaoImpl gradeLevelDaoImpl;
+    private SchoolYearDaoImpl schoolYearDaoImpl;
+
+    public CurriculumDaoImpl() {
+        gradeLevelDaoImpl = new GradeLevelDaoImpl();
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+    }
 
     @Override
-    public int getCurriculumId(Curriculum aCurriculum) {
-        int curriculumId = 0; //initial value
-
-        String sql = "{call getCurriculumId(?)}";
-
+    public int getCurriculumIdByName(String curriculumName) {
+        int curriculumId = 0; 
+        String SQL = "{CALL getCurriculumIdByName(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(sql);) 
-        {   
-            cs.setString(1, aCurriculum.getCurriculumTitle());
-            try (ResultSet rs = cs.executeQuery();) 
-            {
-                while (rs.next()) {
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
                     curriculumId = rs.getInt("curriculum_id");
                 }
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return curriculumId;
     }
 
     @Override
-    public List<Subject> getCurriculumSubjects() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public boolean addCurriculum(Curriculum curriculum) {
+        boolean isSuccessful = true;
+        String SQLa = "{CALL addCurriculum(?,?,?,?)}";
+        String SQLb = "{CALL addCurriculumSubjects(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            con.setAutoCommit(false);
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);) {
+                csa.setInt(1, curriculum.getSchoolYearId());
+                csa.setString(2, curriculum.getTitle());
+                csa.setString(3, curriculum.getDescription());
+                csa.registerOutParameter(4, java.sql.Types.INTEGER);
+                csa.executeUpdate();
+                int curriculumId = csa.getInt(4);
 
-    @Override
-    public GradeLevel getCurriculumGradeLevel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+                System.out.println("Curriculum Id: " + curriculumId);
 
-    @Override
-    public SchoolYear getCurriculumSchoolYear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean createCurriculum(Curriculum aCurriculum, SchoolYear aSchoolYear, GradeLevel aGradeLevel) 
-    {
-        boolean isSuccesful;
-        String sql = "{call createCurriculum(?,?,?,?)}";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setInt(1, aSchoolYear.getSchoolYearId());
-            cs.setString(2, aCurriculum.getCurriculumTitle());
-            cs.setString(3, aCurriculum.getCurriculumDescription());
-            cs.registerOutParameter(4, java.sql.Types.INTEGER);
-            
-            cs.executeUpdate();
-            
-            //Setter call from Curriculum
-            aCurriculum.setCurriculumId(cs.getInt(4));
-            
-            isSuccesful = true;
-        }
-
-        catch(SQLException e)
-        {
-            isSuccesful = false;
-            System.out.println("Error at createCurriculum "+e);
-        }
-        
-        return isSuccesful;
-    }
-
-    @Override
-    public boolean curriculumExists(Curriculum aCurriculum) {
-        boolean exists = false;
-        int schoolYearId = sydi.getId(aCurriculum.getSchoolYear().getYearFrom());
-        int gradelevelId = gldi.getId(aCurriculum.getGradeLevel());
-
-        JOptionPane.showMessageDialog(null, "test: " + schoolYearId + " " + gradelevelId);
-        String SQL = "{CALL curriculumExists(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, gradelevelId);
-            cs.setInt(2, schoolYearId);
-            try (ResultSet rs = cs.executeQuery()) {
-                int rowCount = 0;
-                while (rs.next()) {
-                    rowCount++; //increment if record found
+                csb.setInt(1, curriculumId);
+                Object[] subjectList = curriculum.getSubjects().toArray();
+                System.out.println("SubjectList length: " + subjectList.length);
+                for (Object o : subjectList) {
+                    Subject s = (Subject) o;
+                    csb.setInt(2, s.getSubjectId());
+                    csb.setDouble(3, s.getSubjectHours());
+                    System.out.println("SubjectId : " + s.getSubjectId());
+                    System.out.println("SubjectHours : " + s.getSubjectHours());
+                    csb.executeUpdate();
                 }
-                exists = rowCount > 0; // returns 0 or any number of rows > 1
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                isSuccessful = false;
+                ex.printStackTrace();
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            isSuccessful = false;
         }
-        return exists;
-    }
 
-    
-
-    @Override
-    public List<Subject> getAllSubjectForCurriculum() 
-    {
-        String sql = "{call getAllSubjectForCurriculum()}";
-        List<Subject> listSubject = new ArrayList();
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Subject aSubject = new Subject();
-                    aSubject.setSubjectCode(rs.getString("code"));
-                    aSubject.setSubjectTitle(rs.getString("title"));
-                    aSubject.setSubjectDescription(rs.getString("description"));
-                    aSubject.gradeLevel.setLevel(rs.getInt("grade_level"));
-                    listSubject.add(aSubject);
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-             System.err.println("Error at getAllSubjectForCurriculum"+e);
-        }
-        
-        return listSubject;
-    }
-
-    
-
-    @Override
-    public List<Curriculum> getAllCurriculum() 
-    {
-        String sql = "{call getAllCurriculum()}";
-        List<Curriculum> list = new ArrayList();
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Curriculum aCurriculum = new Curriculum();
-                    aCurriculum.setCurriculumId(rs.getInt("curriculum_id"));
-                    aCurriculum.setCurriculumTitle(rs.getString("curriculum_title"));
-                    aCurriculum.schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    aCurriculum.schoolYear.setYearTo(rs.getInt("yearTo"));
-                    aCurriculum.setCurriculumDescription(rs.getString("description"));
-                    aCurriculum.setDateCreated(rs.getString("date_created"));
-                    aCurriculum.setIsActive(rs.getInt("isActive"));
-                    
-                    list.add(aCurriculum);
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Error at getAllCurriculum "+e);
-        }
-        
-        return list;
+        return isSuccessful;
     }
 
     @Override
-    public List<Curriculum> getEachCurriculum(Curriculum aCurriculum, SchoolYear aSchoolYear) 
-    {
-        String sql = "{call getEachCurriculum(?,?)}";
-        List<Curriculum> list = new ArrayList();
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setInt(1, aSchoolYear.getYearFrom());
-            cs.setString(2, aCurriculum.getCurriculumDescription());
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Curriculum curriculum = new Curriculum();
-                    curriculum.schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    curriculum.schoolYear.setYearTo(rs.getInt("yearTo"));
-                    curriculum.gradeLevel.setLevel(rs.getInt("grade_level"));
-                    curriculum.setCurriculumDescription(rs.getString("description"));
-                    curriculum.setDateCreated(rs.getString("date_created"));
-                    list.add(curriculum);
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-            System.err.println("Error at getEachCurriculum"+e);
-        }
-        
-        return list;
-    }
-
-    @Override
-    public boolean createCurriculumSubjects(Curriculum aCurriculum, Subject aSubject, GradeLevel aGradeLevel) 
-    {
-        boolean isSuccesful;
-        String sql = "{call createCurriculumSubjects(?,?,?,?)}";
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-
-            cs.setInt(1, aCurriculum.getCurriculumId());
-            cs.setInt(2, aSubject.getSubjectId());
-            cs.setDouble(3, aSubject.getSubjectHours());
-            cs.setInt(4, aGradeLevel.getId());
-            cs.executeUpdate();
-            
-            isSuccesful = true;
-        }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at createCurriculumSubjects "+ex);
-            
-            isSuccesful = false;
-        }
-        
-        return isSuccesful;
-    }
-
-
-    @Override
-    public List<SchoolYear> getCurriculumYearStartEndByGradeLevel(GradeLevel aGradeLevel) {
-        String sql = "{call getCurriculumYearStartEndByGradeLevel(?)}";
-        List<SchoolYear> list = new ArrayList<>();
-
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(sql);) {
-            cs.setInt(1, aGradeLevel.getLevel());
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
-                    SchoolYear schoolYear = new SchoolYear();
-                    schoolYear.setYearFrom(rs.getInt(1));
-                    schoolYear.setYearTo(rs.getInt(2));
-                    list.add(schoolYear);
-                }
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error at getCurriculumYearStartEndByGradeLevel " + ex);
-        }
-        return list;
-    }
-
-    @Override
-    public List<Curriculum> getAllCurriculumByStartYear(SchoolYear aSchoolYear) {
-        String sql = "call getAllCurriculumByStartYear(?)";
-        List<Curriculum> list = new ArrayList<>();
-
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(sql);) {
-            cs.setInt(1, aSchoolYear.getYearFrom());
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
-                    Curriculum curriculum = new Curriculum();
-
-                    curriculum.setCurriculumTitle(rs.getString(1));
-
-                    list.add(curriculum);
-                }
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error at getAllCurriculumByStartYear " + ex);
-        }
-
-        return list;
-    }
-
-    @Override
-    public List<Curriculum> getAllSubjectsOfCurriculumByName(Curriculum aCurriculum) 
-    {
-        String sql = "call getAllSubjectsOfCurriculumByName(?)";
-        List <Curriculum> list = new ArrayList<>();
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setString(1, aCurriculum.getCurriculumTitle());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Curriculum curriculum = new Curriculum();
+    public boolean updateCurriculum(Curriculum curriculum) {
+        boolean isUpdated = false;
+        String SQLa = "{CALL updateCurriculumInfo(?,?,?,?,?)}";
+        String SQLb = "{CALL removeCurriculumSubjectsById(?)}";
+        String SQLc = "{CALL updateCurriculumSubjects(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            con.setAutoCommit(false);
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);
+                    CallableStatement csc = con.prepareCall(SQLc);) {
+                csa.setInt(1,curriculum.getCurriculumId());
+                csa.setInt(2,curriculum.getSchoolYearId());
+                csa.setString(3, curriculum.getTitle());
+                csa.setString(4, curriculum.getDescription());
+                csa.setBoolean(5, curriculum.getIsActive());
+                csa.executeUpdate();
                 
-                    curriculum.s.setSubjectCode(rs.getString(1));
-                    curriculum.s.setSubjectTitle(rs.getString(2));
-                    curriculum.s.setSubjectDescription(rs.getString(3));
-                    curriculum.s.setSubjectHours(rs.getDouble(4));
-                    curriculum.gradeLevel.setLevel(rs.getInt(5));
+                csb.setInt(1, curriculum.getCurriculumId());
+                csb.executeUpdate();
                 
-                    list.add(curriculum);
+                csc.setInt(1, curriculum.getCurriculumId());
+                Object[] curriculumSubjects = curriculum.getSubjects().toArray();
+                for(Object o : curriculumSubjects){
+                    Subject s = (Subject)o;
+                    csc.setInt(2, s.getSubjectId());
+                    csc.setDouble(3,s.getSubjectHours());
+                    csc.executeUpdate();
                 }
+                con.commit();
+                isUpdated = true;
+            } catch (SQLException ex) {
+                con.rollback();
+                ex.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getAllSubjectsOfCurriculumByName "+ex);
-        }
-        
-        return list;
+        return isUpdated;
     }
 
     @Override
-    public List<Curriculum> getCreatedCurriculumById(Curriculum aCurriculum) 
-    {
-        String sql = "{call getCreatedCurriculumById(?)}";
-        
-        List <Curriculum> list = new ArrayList();
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setInt(1, aCurriculum.getCurriculumId());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Curriculum curriculum = new Curriculum();
-                    
-                 
-                    curriculum.s.setSubjectId(rs.getInt("subject_id"));
-                    curriculum.s.setSubjectCode(rs.getString("code"));
-                    curriculum.s.setSubjectTitle(rs.getString("title"));
-                    curriculum.s.setSubjectHours(rs.getDouble("subject_hours"));
-                    curriculum.gradeLevel.setLevel(rs.getInt("grade_level"));
-                    
-                    list.add(curriculum);
-                }
-            }
-        }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getCreatedCurriculumById "+ex);
-        }
-        
-        return list;
-    }
-
-    @Override
-    public List<Curriculum> getAllCreatedCurriculumInfo() 
-    {
-        List <Curriculum> list = new ArrayList();
-        String sql = "{call getAllCreatedCurriculumInfo()}";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Curriculum curriculum = new Curriculum();
-                    
+    public Curriculum getCurriculumById(int curriculumId) {
+        Curriculum curriculum = new Curriculum();
+        String SQL = "{CALL getCurriculumById(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,curriculumId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
                     curriculum.setCurriculumId(rs.getInt("curriculum_id"));
-                    curriculum.s.setSubjectCode(rs.getString("code"));
-                    curriculum.s.setSubjectTitle(rs.getString("title"));
-                    curriculum.schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    curriculum.schoolYear.setYearTo(rs.getInt("yearTo"));
+                    curriculum.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    curriculum.setTitle(rs.getString("curriculum_title"));
+                    curriculum.setDescription(rs.getString("description"));
+                    curriculum.setIsActive(rs.getBoolean("isActive"));
+                    curriculum.setDateCreated(rs.getString("date_created"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return curriculum;
+    }
+
+    @Override
+    public List<Curriculum> getAllCurriculum() {
+        List<Curriculum> curriculumList = new ArrayList<>();
+        String SQL = "{CALL getAllCurriculum()}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Curriculum c = new Curriculum();
+                    c.setCurriculumId(rs.getInt("curriculum_id"));
+                    c.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    c.setTitle(rs.getString("curriculum_title"));
+                    c.setDescription(rs.getString("description"));
+                    c.setIsActive(rs.getBoolean("isActive"));
+                    c.setDateCreated(rs.getString("date_created"));
+                    c.setSubjectCount(rs.getInt("subjectCount"));
                     
-                    list.add(curriculum);
+                    curriculumList.add(c);
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getAllCreatedCurriculumInfo() " +ex);
-        }
-        
-        return list;
+        return curriculumList;
     }
 
     @Override
-    public List<Curriculum> getAllCurriculumNameByGradeLevel(GradeLevel aGradeLevel) 
-    {
-        List <Curriculum> list = new ArrayList();
-        String sql = "{call getAllCurriculumNameByGradeLevel(?)}";
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setInt(1, aGradeLevel.getLevel());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Curriculum curriculum = new Curriculum();
-                
-                    curriculum.setCurriculumTitle(rs.getString("curriculum_title"));
-                
-                    list.add(curriculum);
-                }
-            }
-        }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at getAllCurriculumNameByGradeLevel "+ex);
-        }
-        return list;
-    }
-
-    
-
-    @Override
-    public boolean checkCurriculumSubjectExists(Curriculum aCurriculum) 
-    {
-        String sql = "{call checkCurriculumSubjectExists(?)}";
-        boolean isSuccessful = false;
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            
-            cs.setInt(1, aCurriculum.getCurriculumId());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    isSuccessful = true;
-                }
-            }
-            
-        }
-        catch(SQLException ex)
-        {
-            isSuccessful = false;
-            System.err.println("Error at checkCurriculumSubjectExists "+ex);
-        }
-        
-        return isSuccessful;
-    }
-
-    
-    @Override
-    public boolean checkCurriculumExists(Curriculum aCurriculum, SchoolYear aSchoolYear) 
-    {
-        String sql = "{call checkCurriculumExists(?,?)}";
-        boolean isSuccessful = false;
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql);)
-        {
-            cs.setInt(1, aSchoolYear.getSchoolYearId());
-            cs.setString(2, aCurriculum.getCurriculumTitle());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    isSuccessful = true;
-                }
-            }
-        }
-        catch(SQLException ex)
-        {
-            isSuccessful = false;
-            System.err.println("Error at checkCurriculumExists"+ex);
-        }
-        
-        return isSuccessful;
-    }
-    
-    @Override
-    public List<Curriculum> checkCurriculumChanges(Curriculum aCurriculum)
-    {
-        String sql = "{call checkCurriculumChanges(?)}";
-        List <Curriculum> list = new ArrayList();
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
-            cs.setInt(1, aCurriculum.getCurriculumId());
-            
-            try(ResultSet rs = cs.executeQuery())
-            {
-                while(rs.next())
-                {
-                    Curriculum curriculum = new Curriculum();
+    public List<Subject> getCurriculumSubjectsById(int curriculumId) {
+        List<Subject> curriculumSubjects = new ArrayList<>();
+        String SQL = "{CALL getCurriculumSubjectsById(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,curriculumId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Subject s = new Subject();
+                    s.setSubjectId(rs.getInt("subject_id"));
+                    s.setSubjectTitle(rs.getString("title"));
+                    s.setSubjectCode(rs.getString("code"));
+                    s.setSubjectHours(rs.getDouble("subject_hours"));
+                    GradeLevel gradeLevel = new GradeLevel();
+                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    s.setGradeLevel(gradeLevel);
                     
-                    curriculum.gradeLevel.setLevel(rs.getInt("grade_level"));
-                    curriculum.schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    curriculum.schoolYear.setYearTo(rs.getInt("yearTo"));
-                    curriculum.setCurriculumTitle(rs.getString("curriculum_title"));
-                    curriculum.setCurriculumDescription(rs.getString("description"));
-                    curriculum.s.setSubjectCode(rs.getString("code"));
-                    curriculum.s.setSubjectTitle(rs.getString("title"));
-                    
-                    list.add(curriculum);
+                    curriculumSubjects.add(s);
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch(SQLException ex)
-        {
-            System.err.println("Error at checkCurriculumChanges "+ex);
-        }
-        
-        return list;
+        return curriculumSubjects;
     }
 
     @Override
-    public void deleteCurriculumById(Curriculum aCurriculum) 
-    {
-       String sql = "call deleteCurriculumById(?)";
-       try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-           CallableStatement cs = con.prepareCall(sql))
-       {
-           cs.setInt(1, aCurriculum.getCurriculumId());
-           
-           cs.executeUpdate();
-       }
-       catch(SQLException ex)
-       {
-           System.err.println("Error at deleteCurriculumById "+ex);
-       }
+    public List<Curriculum> getCurriculumByWildCard(String wildCardChar) {
+        List<Curriculum> curriculumList = new ArrayList<>();
+        String SQL = "{CALL getCurriculumByWildCard(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setString(1, wildCardChar);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Curriculum c = new Curriculum();
+                    c.setCurriculumId(rs.getInt("curriculum_id"));
+                    c.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    c.setTitle(rs.getString("curriculum_title"));
+                    c.setDescription(rs.getString("description"));
+                    c.setIsActive(rs.getBoolean("isActive"));
+                    c.setDateCreated(rs.getString("date_created"));
+                    c.setSubjectCount(rs.getInt("subjectCount"));
+                    
+                    curriculumList.add(c);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return curriculumList;
     }
-
-    @Override
-    public boolean updateCurriculumById(Curriculum aCurriculum, SchoolYear aSchoolYear) 
-    {
-        boolean isSuccessful;
-        String sql = "call updateCurriculumById(?,?,?,?)";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
-            cs.setInt(1, aCurriculum.getCurriculumId());
-            cs.setInt(2, aSchoolYear.getSchoolYearId());
-            cs.setString(3, aCurriculum.getCurriculumTitle());
-            cs.setString(4, aCurriculum.getCurriculumDescription());
-
-            cs.executeUpdate();
-        
-            isSuccessful = true;
-        }
-        catch(SQLException ex)
-        {
-            isSuccessful = false;
-            System.err.println("Error at updateCurriculumById "+ex);
-        }
-        
-        return isSuccessful;
-    }
-
-    @Override
-    public boolean updateSubjectIsAddedById(Subject aSubject) 
-    {
-        boolean isSuccessful;
-        String sql = "call updateSubjectIsAddedById(?)";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
-            CallableStatement cs = con.prepareCall(sql))
-        {
-            cs.setInt(1, aSubject.getSubjectId());
-
-            cs.executeUpdate();
-        
-            isSuccessful = true;
-        }
-        catch(SQLException ex)
-        {
-            isSuccessful = false;
-            System.err.println("Error at updateCurriculumById "+ex);
-        }
-        
-        return isSuccessful;
-    }
-
     
     
-    
-    
-
 }

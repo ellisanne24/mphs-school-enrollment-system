@@ -11,12 +11,12 @@ package utility.string;
  */
 public class StringUtil {
 
-    public static String getNumbers(String s) {
+    public static String removeAllNonNumeric(String s) {
         String cleansed = s.replaceAll("[^-?0-9]+", " ");
         return cleansed;
     }
     
-    public static String removeAllWhiteSpace(String s){
+    public static String removeWhiteSpaces(String s){
         String cleansed = s.replaceAll("\\s+", ""); // removes all whitespace
         return cleansed;
     }

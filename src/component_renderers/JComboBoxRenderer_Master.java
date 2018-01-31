@@ -38,10 +38,10 @@ public class JComboBoxRenderer_Master extends JLabel implements ListCellRenderer
             this.setText("" + ((GradeLevel) value).getLevel());
         }
         else if (value instanceof PaymentTerm) {
-            this.setText("" + ((PaymentTerm) value).getName());
+            this.setText("" + ((PaymentTerm) value).getPaymentTermName());
         }
         else if (value instanceof FeeCategory) {
-            this.setText("" + ((FeeCategory) value).getCategory());
+            this.setText("" + ((FeeCategory) value).getName());
         }
         else{
             this.setText("--");

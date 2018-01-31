@@ -217,9 +217,9 @@ public class GradeLevelDaoImpl implements IGradeLevel{
                 {
                     Student student = new Student();
                     
-                    student.setFirstName(rs.getString("firstname"));
-                    student.setMiddleName(rs.getString("middlename"));
-                    student.setLastName(rs.getString("lastname"));
+//                    student.setFirstName(rs.getString("firstname"));
+//                    student.setMiddleName(rs.getString("middlename"));
+//                    student.setLastName(rs.getString("lastname"));
                     
                     list.add(student);
                 }

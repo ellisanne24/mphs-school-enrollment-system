@@ -1,9 +1,9 @@
 package view.admintools;
 
 
-import component_model_loader.GradeLevelML;
-import component_model_loader.PaymentTermML;
-import component_model_loader.SchoolYearML;
+import component_model_loader.GradeLevelJCompModelLoader;
+import component_model_loader.PaymentTermJCompModelLoader;
+import component_model_loader.SchoolYearJCompModelLoader;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import controller.admintools.DeactivateAllStudents;
 import controller.admintools.DeleteAlPaymentAndTransactionRecord;
@@ -213,11 +213,11 @@ public class AdminTools extends javax.swing.JFrame {
     
     private void initializeModels(){
         jcmbRecordCount.setModel(getRecordCountModel());
-        jcmbGradeLevel.setModel(new GradeLevelML().getAllGradeLevels());
-        jcmbGradeLevelForDob.setModel(new GradeLevelML().getAllGradeLevels());
-        jcmbSchoolYear.setModel(new SchoolYearML().getAllSchoolYearStart());
+        jcmbGradeLevel.setModel(new GradeLevelJCompModelLoader().getAllGradeLevels());
+        jcmbGradeLevelForDob.setModel(new GradeLevelJCompModelLoader().getAllGradeLevels());
+        jcmbSchoolYear.setModel(new SchoolYearJCompModelLoader().getAllSchoolYearStart());
         jcmbSchoolYear.setSelectedIndex(-1);
-        jcmbPaymentTerm.setModel(new PaymentTermML().getNames());
+//        jcmbPaymentTerm.setModel(new PaymentTermJCompModelLoader().getNames());
     }
     
     private void initializeRenderers(){

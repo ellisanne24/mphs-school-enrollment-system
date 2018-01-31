@@ -31,7 +31,7 @@ public class SubjectUtility
             list.add(subject.getSubjectTitle());
             list.add(subject.getSubjectCode());
             list.add(subject.getSubjectDescription());
-            list.add(subject.gradeLevel.getLevel());
+            list.add(subject.getGradeLevel().getLevel());
         }
         
         return list;

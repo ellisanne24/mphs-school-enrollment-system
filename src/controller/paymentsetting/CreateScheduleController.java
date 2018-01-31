@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controller.paymentsetting;
 
 import daoimpl.PaymentTermDaoImpl;
@@ -10,347 +6,243 @@ import daoimpl.PeriodDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import model.paymentterm.Monthly;
 import model.paymentterm.PaymentTerm;
 import model.period.Period;
-import model.paymentterm.Quarterly;
-import model.semestral.Semestral;
+import org.jdatepicker.impl.JDatePickerImpl;
+import utility.date.DateUtil;
+import utility.form.FormInspector;
+import utility.form.FormValidator;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
-public class CreateScheduleController implements ActionListener{
+public class CreateScheduleController extends FormInspector implements ActionListener, FormValidator{
 
-    private final JComboBox syFromSelected;
-    private final JComboBox syToSelected;
-    private final JComboBox sem1Year;
-    private final JComboBox sem2Year;
-    private final JComboBox q1Year;
-    private final JComboBox q2Year;
-    private final JComboBox q3Year;
-    private final JComboBox q4Year;
-    private final JComboBox mo1Year;
-    private final JComboBox mo2Year;
-    private final JComboBox mo3Year;
-    private final JComboBox mo4Year;
-    private final JComboBox mo5Year;
-    private final JComboBox mo6Year;
-    private final JComboBox mo7Year;
-    private final JComboBox mo8Year;
-    private final JComboBox mo9Year;
-    private final JComboBox mo10Year;
-    
-    private final JComboBox sem1Month;
-    private final JComboBox sem2Month;
-    private final JComboBox q1Month;
-    private final JComboBox q2Month;
-    private final JComboBox q3Month;
-    private final JComboBox q4Month;
-    private final JComboBox mo1Month;
-    private final JComboBox mo2Month;
-    private final JComboBox mo3Month;
-    private final JComboBox mo4Month;
-    private final JComboBox mo5Month;
-    private final JComboBox mo6Month;
-    private final JComboBox mo7Month;
-    private final JComboBox mo8Month;
-    private final JComboBox mo9Month;
-    private final JComboBox mo10Month;
-    
-    private final JComboBox sem1Day;
-    private final JComboBox sem2Day;
-    private final JComboBox q1Day;
-    private final JComboBox q2Day;
-    private final JComboBox q3Day;
-    private final JComboBox q4Day;
-    private final JComboBox mo1Day;
-    private final JComboBox mo2Day;
-    private final JComboBox mo3Day;
-    private final JComboBox mo4Day;
-    private final JComboBox mo5Day;
-    private final JComboBox mo6Day;
-    private final JComboBox mo7Day;
-    private final JComboBox mo8Day;
-    private final JComboBox mo9Day;
-    private final JComboBox mo10Day;
-    
-    private final JTextField semestralLateFee;
-    private final JTextField quarterlyLateFee;
-    private final JTextField monthlyLateFee;
-    
-    private SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-    private PaymentTermDaoImpl paymentTermDaoImpl = new PaymentTermDaoImpl();
-    private PeriodDaoImpl periodDaoImpl = new PeriodDaoImpl();
-    
+    private final JPanel jpnlSchoolYear;
+    private final JPanel jpnlSemestral;
+    private final JPanel jpnlQuarterly;
+    private final JPanel jpnlMonthly;
+    private final JComboBox jcmbSchoolYear;
+    private final JTextField jtfSemestralPenalty;
+    private final JTextField jtfQuarterlyPenalty;
+    private final JTextField jtfMonthlyPenalty;
+
+    private final JDatePickerImpl dpFirstSemTo;
+    private final JDatePickerImpl dpSecondSemTo;
+    private final JDatePickerImpl dpFirstQuarterTo;
+    private final JDatePickerImpl dpSecondQuarterTo;
+    private final JDatePickerImpl dpThirdQuarterTo;
+    private final JDatePickerImpl dpFourthQuarterTo;
+    private final JDatePickerImpl dpFirstMonthTo;
+    private final JDatePickerImpl dpSecondMonthTo;
+    private final JDatePickerImpl dpThirdMonthTo;
+    private final JDatePickerImpl dpFourthMonthTo;
+    private final JDatePickerImpl dpFifthMonthTo;
+    private final JDatePickerImpl dpSixthMonthTo;
+    private final JDatePickerImpl dpSeventhMonthTo;
+    private final JDatePickerImpl dpEighthMonthTo;
+    private final JDatePickerImpl dpNinthMonthTo;
+    private final JDatePickerImpl dpTenthMonthTo;
+
+    private SchoolYearDaoImpl schoolYearDaoImpl;
+    private PaymentTermDaoImpl paymentTermDaoImpl;
+    private PeriodDaoImpl periodDaoImpl;
+    private DateUtil dateUtil;
+
     public CreateScheduleController(
-            JComboBox syFromSelected, JComboBox syToSelected,
-            JComboBox sem1Year, JComboBox sem2Year,
-            JComboBox q1Year, JComboBox q2Year, JComboBox q3Year, JComboBox q4Year,
-            JComboBox mo1Year, JComboBox mo2Year, JComboBox mo3Year, JComboBox mo4Year, JComboBox mo5Year,
-            JComboBox mo6Year, JComboBox mo7Year, JComboBox mo8Year, JComboBox mo9Year, 
-            JComboBox mo10Year,
-            
-            JComboBox sem1Month, JComboBox sem2Month,
-            JComboBox q1Month, JComboBox q2Month, JComboBox q3Month, JComboBox q4Month,
-            JComboBox mo1Month,JComboBox mo2Month,JComboBox mo3Month,JComboBox mo4Month,JComboBox mo5Month,
-            JComboBox mo6Month,JComboBox mo7Month,JComboBox mo8Month,JComboBox mo9Month,
-            JComboBox mo10Month,
-            
-            JComboBox sem1Day, JComboBox sem2Day,
-            JComboBox q1Day, JComboBox q2Day, JComboBox q3Day, JComboBox q4Day,
-            JComboBox mo1Day,JComboBox mo2Day,JComboBox mo3Day,JComboBox mo4Day,JComboBox mo5Day,
-            JComboBox mo6Day,JComboBox mo7Day,JComboBox mo8Day,JComboBox mo9Day,
-            JComboBox mo10Day,
-            
-            JTextField semestralLateFee, JTextField quarterlyLateFee, JTextField monthlyLateFee) {
-        
-        this.syFromSelected = syFromSelected;
-        this.syToSelected = syToSelected;
-        
-        this.sem1Year = sem1Year;
-        this.sem2Year = sem2Year;
-        
-        this.q1Year = q1Year;
-        this.q2Year = q2Year;
-        this.q3Year = q3Year;
-        this.q4Year = q4Year;
-        
-        this.mo1Year = mo1Year;
-        this.mo2Year = mo2Year;
-        this.mo3Year = mo3Year;
-        this.mo4Year = mo4Year;
-        this.mo5Year = mo5Year;
-        this.mo6Year = mo6Year;
-        this.mo7Year = mo7Year;
-        this.mo8Year = mo8Year;
-        this.mo9Year = mo9Year;
-        this.mo10Year = mo10Year;
-        
-        this.sem1Month = sem1Month;
-        this.sem2Month = sem2Month;
-        
-        this.q1Month = q1Month;
-        this.q2Month = q2Month;
-        this.q3Month = q3Month;
-        this.q4Month = q4Month;
-        
-        this.mo1Month = mo1Month;
-        this.mo2Month = mo2Month;
-        this.mo3Month = mo3Month;
-        this.mo4Month = mo4Month;
-        this.mo5Month = mo5Month;
-        this.mo6Month = mo6Month;
-        this.mo7Month = mo7Month;
-        this.mo8Month = mo8Month;
-        this.mo9Month = mo9Month;
-        this.mo10Month = mo10Month;
-        
-        this.sem1Day = sem1Day;
-        this.sem2Day = sem2Day;
-        
-        this.q1Day = q1Day;
-        this.q2Day = q2Day;
-        this.q3Day = q3Day;
-        this.q4Day = q4Day;
-        
-        this.mo1Day = mo1Day;
-        this.mo2Day = mo2Day;
-        this.mo3Day = mo3Day;
-        this.mo4Day = mo4Day;
-        this.mo5Day = mo5Day;
-        this.mo6Day = mo6Day;
-        this.mo7Day = mo7Day;
-        this.mo8Day = mo8Day;
-        this.mo9Day = mo9Day;
-        this.mo10Day = mo10Day;
-        
-        this.semestralLateFee = semestralLateFee;
-        this.quarterlyLateFee = quarterlyLateFee;
-        this.monthlyLateFee = monthlyLateFee;
+            JPanel jpnlSchoolYear,JPanel jpnlSemestral, JPanel jpnlQuarterly, JPanel jpnlMonthly,
+            JComboBox jcmbSchoolYear,
+            JTextField jtfSemestralPenalty, JTextField jtfQuarterlyPenalty, JTextField jtfMonthlyPenalty,
+            JDatePickerImpl dpFirstSemTo, JDatePickerImpl dpSecondSemTo,
+            JDatePickerImpl dpFirstQuarterTo, JDatePickerImpl dpSecondQuarterTo, JDatePickerImpl dpThirdQuarterTo,
+            JDatePickerImpl dpFourthQuarterTo, JDatePickerImpl dpFirstMonthTo, JDatePickerImpl dpSecondMonthTo,
+            JDatePickerImpl dpThirdMonthTo, JDatePickerImpl dpFourthMonthTo, JDatePickerImpl dpFifthMonthTo,
+            JDatePickerImpl dpSixthMonthTo, JDatePickerImpl dpSeventhMonthTo, JDatePickerImpl dpEighthMonthTo,
+            JDatePickerImpl dpNinthMonthTo, JDatePickerImpl dpTenthMonthTo
+    ) {
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        paymentTermDaoImpl = new PaymentTermDaoImpl();
+        periodDaoImpl = new PeriodDaoImpl();
+        dateUtil = new DateUtil();
+        this.jpnlSchoolYear = jpnlSchoolYear;
+        this.jpnlSemestral = jpnlSemestral;
+        this.jpnlQuarterly = jpnlQuarterly;
+        this.jpnlMonthly = jpnlMonthly;
+        this.jcmbSchoolYear = jcmbSchoolYear;
+        this.jtfSemestralPenalty = jtfSemestralPenalty;
+        this.jtfQuarterlyPenalty = jtfQuarterlyPenalty;
+        this.jtfMonthlyPenalty = jtfMonthlyPenalty;
+        this.dpFirstSemTo = dpFirstSemTo;
+        this.dpSecondSemTo = dpSecondSemTo;
+        this.dpFirstQuarterTo = dpFirstQuarterTo;
+        this.dpSecondQuarterTo = dpSecondQuarterTo;
+        this.dpThirdQuarterTo = dpThirdQuarterTo;
+        this.dpFourthQuarterTo = dpFourthQuarterTo;
+        this.dpFirstMonthTo = dpFirstMonthTo;
+        this.dpSecondMonthTo = dpSecondMonthTo;
+        this.dpThirdMonthTo = dpThirdMonthTo;
+        this.dpFourthMonthTo = dpFourthMonthTo;
+        this.dpFifthMonthTo = dpFifthMonthTo;
+        this.dpSixthMonthTo = dpSixthMonthTo;
+        this.dpSeventhMonthTo = dpSeventhMonthTo;
+        this.dpEighthMonthTo = dpEighthMonthTo;
+        this.dpNinthMonthTo = dpNinthMonthTo;
+        this.dpTenthMonthTo = dpTenthMonthTo;
+    }
+
+    @Override
+    public boolean formIsValid() {
+        boolean isValid = (!hasEmptyFields(jpnlSchoolYear) && !hasEmptyFields(jpnlSemestral)
+                && !hasEmptyFields(jpnlQuarterly) && !hasEmptyFields(jpnlMonthly));
+        return isValid;
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        int choice = JOptionPane.showConfirmDialog(null, "Create Payment Schedule?", "Create", JOptionPane.YES_NO_OPTION);
-        if(choice == JOptionPane.YES_OPTION){
-            createSchedule();
+        if (formIsValid()) {
+            int choice = JOptionPane.showConfirmDialog(null, "Create Payment Schedule?", "Create", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                createSchedule();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please check if all fields are filled.");
         }
     }
-    
+
     private void createSchedule() {
         List<PaymentTerm> paymentTerms = new ArrayList<>();
         paymentTerms.add(getSemestral());
         paymentTerms.add(getQuarterly());
         paymentTerms.add(getMonthly());
-        
-        boolean isAdded = paymentTermDaoImpl.addPaymentDeadline(paymentTerms);
-        if(isAdded){
-            JOptionPane.showMessageDialog(null,"Successfully created schedule.");
-        }else{
-            JOptionPane.showMessageDialog(null,"Error encountered. ");
+
+        boolean isAdded = paymentTermDaoImpl.addPaymentSchedule(paymentTerms);
+        if (isAdded) {
+            JOptionPane.showMessageDialog(null, "Successfully created schedule.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Error encountered. ");
+
         }
     }
     
-    private Date convertToDate(JComboBox year, JComboBox month, JComboBox day){
-        int yyyy = Integer.parseInt(year.getSelectedItem().toString().trim());
-        int mm = Integer.parseInt(month.getSelectedItem().toString().trim());
-        int dd = Integer.parseInt(day.getSelectedItem().toString().trim());
-        System.out.println("Day :"+day.getSelectedItem().toString().trim());
-        System.out.println("Month :"+month.getSelectedItem().toString().trim());
-        System.out.println("Year :"+year.getSelectedItem().toString().trim());
-        String strDate = yyyy + "-" + (mm+1) + "-" + dd;
-        System.out.println("STRDATE :"+strDate);
-        Date date = java.sql.Date.valueOf(strDate);
-        return date;
-    }
-    
-    private Semestral getSemestral(){
-        int schoolYearId = schoolYearDaoImpl.getId(Integer.parseInt(syFromSelected.getSelectedItem().toString()));
-
-        Date sem1Deadline = convertToDate(sem1Year, sem1Month, sem1Day);
-        Date sem2Deadline = convertToDate(sem2Year, sem2Month, sem2Day);
-        
-        Period firstSemester = new Period();
-        firstSemester.setDeadlineOfPayment(sem1Deadline);
-        firstSemester.setDescription("First Semester");
-        
-        Period secondSemester = new Period();
-        secondSemester.setDeadlineOfPayment(sem2Deadline);
-        secondSemester.setDescription("Second Semester");
-        
+    private PaymentTerm getSemestral() {
+        PaymentTerm semestral = new PaymentTerm();
         List<Period> semestralPeriods = new ArrayList<>();
-        semestralPeriods.add(firstSemester);
-        semestralPeriods.add(secondSemester);
-        
-        Semestral semestral = new Semestral();
-        semestral.setId(paymentTermDaoImpl.getId("semestral"));
-        semestral.setSchoolYearId(schoolYearId);
-        semestral.setPeriods(semestralPeriods);
-        
+        Period firstSemPeriod = new Period();
+        Period secondSemPeriod = new Period();
+        try {
+            firstSemPeriod.setPeriodName("First Semester");
+            firstSemPeriod.setPaymentDeadline(dateUtil.toDate(dpFirstSemTo.getJFormattedTextField().getText().trim()));
+            secondSemPeriod.setPeriodName("Second Semester");
+            secondSemPeriod.setPaymentDeadline(dateUtil.toDate(dpSecondSemTo.getJFormattedTextField().getText().trim()));
+            semestralPeriods.add(firstSemPeriod);
+            semestralPeriods.add(secondSemPeriod);
+            
+            semestral.setPaymentTermId(paymentTermDaoImpl.getPaymentTermIDByName("Semestral"));
+            semestral.setSchoolYearId(schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString())));
+            semestral.setPeriods(semestralPeriods);
+            semestral.setPenaltyAmount(BigDecimal.valueOf(Double.parseDouble(jtfSemestralPenalty.getText().trim())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return semestral;
     }
     
-    private Quarterly getQuarterly(){
-        int schoolYearId = schoolYearDaoImpl.getId(Integer.parseInt(syFromSelected.getSelectedItem().toString()));
-        String FIRST_QUARTER = "First Quarter";
-        String SECOND_QUARTER = "Second Quarter";
-        String THIRD_QUARTER = "Third Quarter";
-        String FOURTH_QUARTER = "Fourth Quarter";
-        
-        Date q1Deadline = convertToDate(q1Year, q1Month, q1Day);
-        Date q2Deadline = convertToDate(q2Year, q2Month, q2Day);
-        Date q3Deadline = convertToDate(q3Year, q3Month, q3Day);
-        Date q4Deadline = convertToDate(q4Year, q4Month, q4Day);
-        
-        Period q1Period = new Period();
-        q1Period.setDeadlineOfPayment(q1Deadline);
-        q1Period.setDescription(FIRST_QUARTER);
-        
-        Period q2Period = new Period();
-        q2Period.setDeadlineOfPayment(q2Deadline);
-        q2Period.setDescription(SECOND_QUARTER);
-        
-        Period q3Period = new Period();
-        q3Period.setDeadlineOfPayment(q3Deadline);
-        q3Period.setDescription(THIRD_QUARTER);
-        
-        Period q4Period = new Period();
-        q4Period.setDeadlineOfPayment(q4Deadline);
-        q4Period.setDescription(FOURTH_QUARTER);
-        
-        List<Period> periods = new ArrayList<>();
-        periods.add(q1Period);
-        periods.add(q2Period);
-        periods.add(q3Period);
-        periods.add(q4Period);
-        
-        Quarterly quarterly = new Quarterly();
-        quarterly.setId(paymentTermDaoImpl.getId("quarterly"));
-        quarterly.setSchoolYearId(schoolYearId);
-        quarterly.setPeriods(periods);
-        
+    private PaymentTerm getQuarterly() {
+        PaymentTerm quarterly = new PaymentTerm();
+        List<Period> quarterlyPeriods = new ArrayList<>();
+        Period firstQuarter = new Period();
+        Period secondQuarter = new Period();
+        Period thirdQuarter = new Period();
+        Period fourthQuarter = new Period();
+        try {
+            firstQuarter.setPeriodName("First Quarter");
+            firstQuarter.setPaymentDeadline(dateUtil.toDate(dpFirstQuarterTo.getJFormattedTextField().getText().trim()));
+            secondQuarter.setPeriodName("Second Quarter");
+            secondQuarter.setPaymentDeadline(dateUtil.toDate(dpSecondQuarterTo.getJFormattedTextField().getText().trim()));
+            thirdQuarter.setPeriodName("Third Quarter");
+            thirdQuarter.setPaymentDeadline(dateUtil.toDate(dpThirdQuarterTo.getJFormattedTextField().getText().trim()));
+            fourthQuarter.setPeriodName("Fourth Quarter");
+            fourthQuarter.setPaymentDeadline(dateUtil.toDate(dpFourthQuarterTo.getJFormattedTextField().getText().trim()));
+            quarterlyPeriods.add(firstQuarter);
+            quarterlyPeriods.add(secondQuarter);
+            quarterlyPeriods.add(thirdQuarter);
+            quarterlyPeriods.add(fourthQuarter);
+            
+            quarterly.setPaymentTermId(paymentTermDaoImpl.getPaymentTermIDByName("Quarterly"));
+            quarterly.setSchoolYearId(schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString().trim())));
+            quarterly.setPeriods(quarterlyPeriods);
+            quarterly.setPenaltyAmount(BigDecimal.valueOf(Double.parseDouble(jtfQuarterlyPenalty.getText().trim())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return quarterly;
     }
     
-    private Monthly getMonthly(){
-        int schoolYearId = schoolYearDaoImpl.getId(Integer.parseInt(syFromSelected.getSelectedItem().toString()));
-        
-        Date firstMonthDeadline = convertToDate(mo1Year, mo1Month, mo1Day);
-        Date secondMonthDeadline = convertToDate(mo2Year, mo2Month, mo2Day);
-        Date thirdMonthDeadline = convertToDate(mo3Year, mo3Month, mo3Day);
-        Date fourthMonthDeadline = convertToDate(mo4Year, mo4Month, mo4Day);
-        Date fifthMonthDeadline = convertToDate(mo5Year, mo5Month, mo5Day);
-        Date sixthMonthDeadline = convertToDate(mo6Year, mo6Month, mo6Day);
-        Date seventhMonthDeadline = convertToDate(mo7Year, mo7Month, mo7Day);
-        Date eighthMonthDeadline = convertToDate(mo8Year, mo8Month, mo8Day);
-        Date ninthMonthDeadline = convertToDate(mo9Year, mo9Month, mo9Day);
-        Date tenthMonthDeadline = convertToDate(mo10Year, mo10Month, mo10Day);
-        
+    private PaymentTerm getMonthly() {
+        PaymentTerm monthly = new PaymentTerm();
+        List<Period> monthlyPeriods = new ArrayList<>();
         Period firstMonth = new Period();
-        firstMonth.setDeadlineOfPayment(firstMonthDeadline);
-        firstMonth.setDescription("First Month");
-        
         Period secondMonth = new Period();
-        secondMonth.setDeadlineOfPayment(secondMonthDeadline);
-        secondMonth.setDescription("Second Month");
-        
         Period thirdMonth = new Period();
-        thirdMonth.setDeadlineOfPayment(thirdMonthDeadline);
-        thirdMonth.setDescription("Third Month");
-        
         Period fourthMonth = new Period();
-        fourthMonth.setDeadlineOfPayment(fourthMonthDeadline);
-        fourthMonth.setDescription("Fourth Month");
-        
         Period fifthMonth = new Period();
-        fifthMonth.setDeadlineOfPayment(fifthMonthDeadline);
-        fifthMonth.setDescription("Fifth Month");
-        
         Period sixthMonth = new Period();
-        sixthMonth.setDeadlineOfPayment(sixthMonthDeadline);
-        sixthMonth.setDescription("Sixth Month");
-        
         Period seventhMonth = new Period();
-        seventhMonth.setDeadlineOfPayment(seventhMonthDeadline);
-        seventhMonth.setDescription("Seventh Month");
-        
         Period eighthMonth = new Period();
-        eighthMonth.setDeadlineOfPayment(eighthMonthDeadline);
-        eighthMonth.setDescription("Eighth Month");
-        
         Period ninthMonth = new Period();
-        ninthMonth.setDeadlineOfPayment(ninthMonthDeadline);
-        ninthMonth.setDescription("Ninth Month");
-        
         Period tenthMonth = new Period();
-        tenthMonth.setDeadlineOfPayment(tenthMonthDeadline);
-        tenthMonth.setDescription("Tenth Month");
-        
-        List<Period> periods = new ArrayList<>();
-        periods.add(firstMonth);
-        periods.add(secondMonth);
-        periods.add(thirdMonth);
-        periods.add(fourthMonth);
-        periods.add(fifthMonth);
-        periods.add(sixthMonth);
-        periods.add(seventhMonth);
-        periods.add(eighthMonth);
-        periods.add(ninthMonth);
-        periods.add(tenthMonth);
-        
-        Monthly monthly = new Monthly();
-        monthly.setId(paymentTermDaoImpl.getId("monthly"));
-        monthly.setSchoolYearId(schoolYearId);
-        monthly.setPeriods(periods);
+
+        try {
+            firstMonth.setPeriodName("First Month");
+            firstMonth.setPaymentDeadline(dateUtil.toDate(dpFirstMonthTo.getJFormattedTextField().getText().trim()));
+            secondMonth.setPeriodName("Second Month");
+            secondMonth.setPaymentDeadline(dateUtil.toDate(dpSecondMonthTo.getJFormattedTextField().getText().trim()));
+            thirdMonth.setPeriodName("Third Month");
+            thirdMonth.setPaymentDeadline(dateUtil.toDate(dpThirdMonthTo.getJFormattedTextField().getText().trim()));
+            fourthMonth.setPeriodName("Fourth Month");
+            fourthMonth.setPaymentDeadline(dateUtil.toDate(dpFourthMonthTo.getJFormattedTextField().getText().trim()));
+            fifthMonth.setPeriodName("Fifth Month");
+            fifthMonth.setPaymentDeadline(dateUtil.toDate(dpFifthMonthTo.getJFormattedTextField().getText().trim()));
+            sixthMonth.setPeriodName("Sixth Month");
+            sixthMonth.setPaymentDeadline(dateUtil.toDate(dpSixthMonthTo.getJFormattedTextField().getText().trim()));
+            seventhMonth.setPeriodName("Seventh Month");
+            seventhMonth.setPaymentDeadline(dateUtil.toDate(dpSeventhMonthTo.getJFormattedTextField().getText().trim()));
+            eighthMonth.setPeriodName("Eighth Month");
+            eighthMonth.setPaymentDeadline(dateUtil.toDate(dpEighthMonthTo.getJFormattedTextField().getText().trim()));
+            ninthMonth.setPeriodName("Ninth Month");
+            ninthMonth.setPaymentDeadline(dateUtil.toDate(dpNinthMonthTo.getJFormattedTextField().getText().trim()));
+            tenthMonth.setPeriodName("Tenth Month");
+            tenthMonth.setPaymentDeadline(dateUtil.toDate(dpTenthMonthTo.getJFormattedTextField().getText().trim()));
+            monthlyPeriods.add(firstMonth);
+            monthlyPeriods.add(secondMonth);
+            monthlyPeriods.add(thirdMonth);
+            monthlyPeriods.add(fourthMonth);
+            monthlyPeriods.add(fifthMonth);
+            monthlyPeriods.add(sixthMonth);
+            monthlyPeriods.add(seventhMonth);
+            monthlyPeriods.add(eighthMonth);
+            monthlyPeriods.add(ninthMonth);
+            monthlyPeriods.add(tenthMonth);
+            
+            monthly.setPaymentTermId(paymentTermDaoImpl.getPaymentTermIDByName("Monthly"));
+            monthly.setSchoolYearId(schoolYearDaoImpl.getId(Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString().trim())));
+            monthly.setPeriods(monthlyPeriods);
+            monthly.setPenaltyAmount(BigDecimal.valueOf(Double.parseDouble(jtfMonthlyPenalty.getText().trim())));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         
         return monthly;
     }
-    
+
 }

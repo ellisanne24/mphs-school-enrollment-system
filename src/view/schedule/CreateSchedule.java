@@ -4,9 +4,9 @@ package view.schedule;
 import component_editor.ScheduleDayCellEditor;
 import component_editor.ScheduleRoomCellEditor;
 import component_editor.ScheduleTimeCellEditor;
-import component_model_loader.RoomML;
+import component_model_loader.RoomJCompModelLoader;
 import controller.schedule.CreateScheduleController;
-import component_model_loader.SchoolYearML;
+import component_model_loader.SchoolYearJCompModelLoader;
 import component_renderers.ScheduleTableCellRenderer;
 import controller.global.SchoolYearController;
 import controller.schedule.AddRowToSchedule;
@@ -38,7 +38,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class CreateSchedule extends javax.swing.JDialog {
 
-    SchoolYearML schoolYearModelLoader = new SchoolYearML();
+    SchoolYearJCompModelLoader schoolYearModelLoader = new SchoolYearJCompModelLoader();
 
     public CreateSchedule(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -88,8 +88,8 @@ public class CreateSchedule extends javax.swing.JDialog {
     private void initializeModels() {
         jcmbSchoolYearFrom.setModel(schoolYearModelLoader.getCurrentSchoolYearFrom());
         jcmbSchoolYearTo.setModel(schoolYearModelLoader.getCurrentSchoolYearTo());
-        jcmbGradeLevel.setModel(new component_model_loader.GradeLevelML().getAllGradeLevels());
-        jcmbRoom.setModel(new RoomML().getRoomNames());
+        jcmbGradeLevel.setModel(new component_model_loader.GradeLevelJCompModelLoader().getAllGradeLevels());
+//        jcmbRoom.setModel(new RoomJCompModelLoader().getRoomNames());
     }
     
     public static void initializeTableCellEditors() {

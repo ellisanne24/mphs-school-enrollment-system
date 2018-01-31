@@ -5,38 +5,42 @@ import model.tuitionfee.TuitionFee;
 import java.util.Date;
 import model.admission.Admission;
 import model.gradelevel.GradeLevel;
-import model.gradelevel.CurrentGradeLevel;
-import model.gradelevel.PromotedGradeLevel;
 import model.paymentterm.PaymentTerm;
 import model.registration.Registration;
-import model.schoolyear.SchoolYear;
 
 
 public class Student {
-    private Integer studentId;
+    private int studentId;
+    private int studentNo;
     private int studentType; 
     private Registration registration;
     private Admission admission;
-    private GradeLevel admissionGradeLevel;
     private PaymentTerm paymentTerm;
-    private PromotedGradeLevel promotedGradeLevel;
-    private SchoolYear schoolYearEnrolled;
-    private CurrentGradeLevel currentGradeLevel;
-    private GradeLevel recommendedGradeLevelToEnroll;
-    private GradeLevel lastGradeLevelEnrolled;
-    private SchoolYear lastGradeLevelEnrolledSchoolYear;
+    private boolean exists;
     private boolean isActive;
     private boolean isGraduated;
-    private boolean isNew;
     private Date entryDate;
     private Date dateGraduated;
     private TuitionFee tuitionFee;
 
-    private String firstName;
-    private String lastName;
-    private String middleName;
-    public GradeLevel gradeLevel;
+    public int gradeLevelNo; //current gradelevelNo
 
+    public int getStudentNo() {
+        return studentNo;
+    }
+
+    public void setStudentNo(int studentNo) {
+        this.studentNo = studentNo;
+    }
+    
+    public boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
+    
     public PaymentTerm getPaymentTerm() {
         return paymentTerm;
     }
@@ -45,47 +49,13 @@ public class Student {
         this.paymentTerm = paymentTerm;
     }
     
-    public boolean isNew() {
-        return isNew;
+    public int getGradeLevelNo() {
+        return gradeLevelNo;
     }
 
-    public void setIsNew(boolean isNew) {
-        this.isNew = isNew;
+    public void setGradeLevelNo(int gradeLevel) {
+        this.gradeLevelNo = gradeLevel;
     }
-    
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public GradeLevel getGradeLevel() {
-        return gradeLevel;
-    }
-
-    public void setGradeLevel(GradeLevel gradeLevel) {
-        this.gradeLevel = gradeLevel;
-    }
-    
-    
     
     public TuitionFee getTuitionFee() {
         return tuitionFee;
@@ -93,14 +63,6 @@ public class Student {
 
     public void setTuitionFee(TuitionFee tuitionFee) {
         this.tuitionFee = tuitionFee;
-    }
-    
-    public GradeLevel getRecommendedGradeLevelToEnroll() {
-        return recommendedGradeLevelToEnroll;
-    }
-
-    public void setRecommendedGradeLevelToEnroll(GradeLevel recommendedGradeLevelToEnroll) {
-        this.recommendedGradeLevelToEnroll = recommendedGradeLevelToEnroll;
     }
     
     public int getStudentType() {
@@ -111,58 +73,7 @@ public class Student {
         this.studentType = studentType;
     }
 
-    public GradeLevel getAdmissionGradeLevel() {
-        return admissionGradeLevel;
-    }
-
-    public void setAdmissionGradeLevel(GradeLevel admissionGradeLevel) {
-        this.admissionGradeLevel = admissionGradeLevel;
-    }
-
-    public PromotedGradeLevel getPromotedGradeLevel() {
-        return promotedGradeLevel;
-    }
-
-    public void setPromotedGradeLevel(PromotedGradeLevel promotedGradeLevel) {
-        this.promotedGradeLevel = promotedGradeLevel;
-    }
-
-    public GradeLevel getLastGradeLevelEnrolled() {
-        return lastGradeLevelEnrolled;
-    }
-
-    public void setLastGradeLevelEnrolled(GradeLevel lastGradeLevelEnrolled) {
-        this.lastGradeLevelEnrolled = lastGradeLevelEnrolled;
-    }
-
-    public SchoolYear getSchoolYearEnrolled() {
-        return schoolYearEnrolled;
-    }
-
-    public void setSchoolYearEnrolled(SchoolYear schoolYearEnrolled) {
-        this.schoolYearEnrolled = schoolYearEnrolled;
-    }
-    
-    public SchoolYear getLastGradeLevelEnrolledSchoolYear() {
-        return lastGradeLevelEnrolledSchoolYear;
-    }
-
-    public void setLastGradeLevelEnrolledSchoolYear(SchoolYear lastGradeLevelEnrolledSchoolYear) {
-        this.lastGradeLevelEnrolledSchoolYear = lastGradeLevelEnrolledSchoolYear;
-    }
-
-    
-    public CurrentGradeLevel getCurrentGradeLevel() {
-        return currentGradeLevel;
-    }
-
-    public void setCurrentGradeLevel(CurrentGradeLevel currentGradeLevel) {
-        this.currentGradeLevel = currentGradeLevel;
-    }
-
-    
-    
-    public Integer getStudentId() {
+    public int getStudentId() {
         return studentId;
     }
 

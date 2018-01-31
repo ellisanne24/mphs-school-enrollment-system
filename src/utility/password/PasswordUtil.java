@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 public class PasswordUtil {
     
+    
+    
     public static String toString(char[] password){
         String stringPass; //serves as container of converted char[] password to String
         stringPass = String.valueOf(password); //converts char[] value of password to String value and stores it to stringPass

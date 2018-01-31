@@ -48,25 +48,19 @@ public class DisplayRecordGeneratorController implements MouseListener{
             }
 //             showFrame(UIManager.getSystemLookAndFeelClassName());
 //            showFrame(UIManager.getCrossPlatformLookAndFeelClassName());
-            showFrame("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            showFrame();
         }
     }
     
-    private void showFrame(String plaf){
-         try {
-            UIManager.setLookAndFeel(plaf);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-         
+    private void showFrame() {
         AdminTools rrg = new AdminTools();
-            rrg.setResizable(false);
-            rrg.setTitle("Admin Tools");
-            rrg.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            rrg.setPreferredSize(new Dimension(750, 250));
-            rrg.pack();
-            rrg.setLocationRelativeTo(null);
-            rrg.setVisible(true);
+        rrg.setResizable(false);
+        rrg.setTitle("Admin Tools");
+        rrg.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        rrg.setPreferredSize(new Dimension(750, 250));
+        rrg.pack();
+        rrg.setLocationRelativeTo(null);
+        rrg.setVisible(true);
     }
 
     @Override

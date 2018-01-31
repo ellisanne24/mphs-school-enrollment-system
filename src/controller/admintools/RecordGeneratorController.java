@@ -68,7 +68,7 @@ public class RecordGeneratorController implements ActionListener{
         
         int gradeLevelId = gradeLevelDaoImpl.getId(level);
         int schoolYearId = schoolYearDaoImpl.getId(schoolYear);
-        int paymentTermId = paymentTermDaoImpl.getId(paymentTerm);
+        int paymentTermId = paymentTermDaoImpl.getPaymentTermIDByName(paymentTerm);
         
         int countOfFailed = 0;
         int countOfAdded = 0;

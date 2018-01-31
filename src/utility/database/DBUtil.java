@@ -71,15 +71,15 @@ public class DBUtil {
 
     private static String getPassword() {
         Properties dbConfiguration = new Properties();
-        File f = new File(".\\src\\configuration\\dbConnection.cfg");
-        FileInputStream fis = null;
+        File dbConnectionConfigFile = new File(".\\src\\configuration\\dbConnection.cfg");
+        FileInputStream dbConnectionFileInputStream = null;
         try {
-            fis = new FileInputStream(f);
+            dbConnectionFileInputStream = new FileInputStream(dbConnectionConfigFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DBUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            dbConfiguration.load(fis);
+            dbConfiguration.load(dbConnectionFileInputStream);
         } catch (IOException ex) {
             Logger.getLogger(DBUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -89,16 +89,15 @@ public class DBUtil {
     }
 
     public static void verifySettings() {
-        File f = new File(".\\src\\configuration\\dbConnection.cfg");
-
-        if (f.exists() && !f.isDirectory()) {
+        File file = new File(".\\src\\configuration\\dbConnection.cfg");
+        if (file.exists() && !file.isDirectory()) {
             System.out.println( "Database connection configuration found. ");
         } else {
-            JOptionPane.showMessageDialog(null, "No database connection configuration found. ");
-            DBConnectionForm databaseConnectionSettings = new DBConnectionForm(null, true);
-            databaseConnectionSettings.setSize(new Dimension(400, 220));
-            databaseConnectionSettings.setLocationRelativeTo(null);
-            databaseConnectionSettings.setVisible(true);
+            System.out.println("No database connection configuration found. ");
+            DBConnectionForm dbConnectionSettings = new DBConnectionForm(null, true);
+            dbConnectionSettings.setSize(new Dimension(400, 220));
+            dbConnectionSettings.setLocationRelativeTo(null);
+            dbConnectionSettings.setVisible(true);
         }
     }
 

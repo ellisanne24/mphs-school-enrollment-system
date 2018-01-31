@@ -1,5 +1,0 @@
-=IF(ISBLANK($B$3);IF($B$3="Fruit";Lists!$D$3:$D$6;"");IF($B$3="Vegetable";Lists!$F$3:$F$5;"") )
-
-
-=IF(ISBLANK(C1),TRUE,(TRIM(C1)=""))
-

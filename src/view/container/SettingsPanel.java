@@ -1,25 +1,16 @@
 
 package view.container;
 
-import view.fees.FeesSetting;
-import view.rooms.RoomsContainer;
-import view.schedule.ScheduleRecord;
 
-import view.curriculum.CurriculumManagementContainer;
-
-import view.faculty.*;
-import view.paymentsetting.PaymentScheduleSettings;
-import view.schoolyear.SchoolYearManagementContainer;
-import view.subject.SubjectManagementContainer;
 import daoimpl.CredentialDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
-import component_model_loader.CredentialML;
+import component_model_loader.CredentialJCompModelLoader;
 import constants.DashboardMenuItem;
 import utility.component.JPanelUtil;
 import controller.navigation.UINavigationExit;
+import controller.settings.AddSettingsPanelToTabbedPaneOnMouseClick;
 import java.awt.Component;
-import java.awt.GridBagConstraints;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,25 +20,23 @@ import model.credential.Credential;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import utility.component.JInternalFrameUtil;
-import view.penalty.PenaltySettings;
-import view.section.SectionManagementContainer;
+import utility.initializer.Initializer;
 
 
-public class SettingsPanel extends javax.swing.JPanel {
+public class SettingsPanel extends javax.swing.JPanel implements Initializer{
 
     private final CredentialDaoImpl credentialDaoImpl = new CredentialDaoImpl();
     private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
     private final SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-    private final CredentialML credentialGUIUtil = new CredentialML();
+    private final CredentialJCompModelLoader credentialGUIUtil = new CredentialJCompModelLoader();
     
     public SettingsPanel() {
         initComponents();
-        initializeComponents();
-        initializeControllers();
+
+        initRenderers();
+        initViewComponents();
+        initControllers();
         setCredentialsJList();
-        addFacultyPanel();
-        addPaymentSchedule();
-        addPenaltySettings();
     }
 
     @SuppressWarnings("unchecked")
@@ -60,22 +49,24 @@ public class SettingsPanel extends javax.swing.JPanel {
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jpnlContent = new javax.swing.JPanel();
         jtpManagementTabbedPane = new javax.swing.JTabbedPane();
-        jspCurriculumManagement = new javax.swing.JScrollPane();
-        jpnlCurriculumManagement = new javax.swing.JPanel();
-        jspSubjectManagement = new javax.swing.JScrollPane();
-        jpnlSubjectManagement = new javax.swing.JPanel();
-        jspSchoolYearManagement = new javax.swing.JScrollPane();
-        jpnlSchoolYearManagement = new javax.swing.JPanel();
-        jspSectionsManagement = new javax.swing.JScrollPane();
-        jpnlSectionsManagement = new javax.swing.JPanel();
-        jspRoomManagement = new javax.swing.JScrollPane();
-        jpnlRoomManagement = new javax.swing.JPanel();
-        jspScheduleManagement = new javax.swing.JScrollPane();
-        jpnlScheduleManagement = new javax.swing.JPanel();
-        jspFeesAndDiscountManagement = new javax.swing.JScrollPane();
-        jpnlFeesAndDiscountsManagement = new javax.swing.JPanel();
+        jspSubjectMgmt = new javax.swing.JScrollPane();
+        jpnlSubjectMgmt = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jspSubjectCatMgmt = new javax.swing.JScrollPane();
+        jpnlSubjectCatMgmt = new javax.swing.JPanel();
+        jspCurriculumMgmt = new javax.swing.JScrollPane();
+        jpnlCurriculumMgmt = new javax.swing.JPanel();
+        jspFacultyMgmt = new javax.swing.JScrollPane();
+        jpnlFacultyMgmt = new javax.swing.JPanel();
+        jspSectionMgmt = new javax.swing.JScrollPane();
+        jpnlSectionMgmt = new javax.swing.JPanel();
+        jspRoomMgmt = new javax.swing.JScrollPane();
+        jpnlRoomMgmt = new javax.swing.JPanel();
+        jspScheduleMgmt = new javax.swing.JScrollPane();
+        jpnlScheduleMgmt = new javax.swing.JPanel();
+        jpnlFeesMgmt = new javax.swing.JPanel();
         jspCredentialRequirementsManagement = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
+        jpnlCredentialsMgmt = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jpnlCreateCredential = new javax.swing.JPanel();
         jlblCredentialName = new javax.swing.JLabel();
@@ -109,12 +100,14 @@ public class SettingsPanel extends javax.swing.JPanel {
         jcmbYearCreated = new javax.swing.JComboBox<>();
         jpnlDeleteCredential = new javax.swing.JPanel();
         jbtnDeleteCredential = new javax.swing.JButton();
-        jspFacultyManagement = new javax.swing.JScrollPane();
-        jpnlFacultyContainer = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jpnlPayment = new javax.swing.JPanel();
-        jpnlPenalty = new javax.swing.JPanel();
-        jpnlLanSettings = new javax.swing.JPanel();
+        jspPaymentScheduleMgmt = new javax.swing.JScrollPane();
+        jpnlPaymentScheduleMgmt = new javax.swing.JPanel();
+        jpnlDiscountsMgmt = new javax.swing.JPanel();
+        jspLanMgmt = new javax.swing.JScrollPane();
+        jpnlLanMgmt = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        jspSchoolYearMgmt = new javax.swing.JScrollPane();
+        jpnlSchoolYearMgmt = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jmnFile = new javax.swing.JMenu();
         jmiExit = new javax.swing.JMenuItem();
@@ -132,48 +125,50 @@ public class SettingsPanel extends javax.swing.JPanel {
         jpnlContent.setLayout(new java.awt.GridBagLayout());
 
         jtpManagementTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jtpManagementTabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtpManagementTabbedPaneMouseClicked(evt);
-            }
-        });
 
-        jpnlCurriculumManagement.setLayout(new java.awt.BorderLayout());
-        jspCurriculumManagement.setViewportView(jpnlCurriculumManagement);
+        jpnlSubjectMgmt.setLayout(new java.awt.GridBagLayout());
 
-        jtpManagementTabbedPane.addTab("Curriculum", jspCurriculumManagement);
+        jPanel7.setLayout(new java.awt.GridBagLayout());
+        jpnlSubjectMgmt.add(jPanel7, new java.awt.GridBagConstraints());
 
-        jpnlSubjectManagement.setLayout(new java.awt.BorderLayout());
-        jspSubjectManagement.setViewportView(jpnlSubjectManagement);
+        jspSubjectMgmt.setViewportView(jpnlSubjectMgmt);
 
-        jtpManagementTabbedPane.addTab("Subjects", jspSubjectManagement);
+        jtpManagementTabbedPane.addTab("Subjects", jspSubjectMgmt);
 
-        jpnlSchoolYearManagement.setLayout(new java.awt.BorderLayout());
-        jspSchoolYearManagement.setViewportView(jpnlSchoolYearManagement);
+        jpnlSubjectCatMgmt.setLayout(new java.awt.BorderLayout());
+        jspSubjectCatMgmt.setViewportView(jpnlSubjectCatMgmt);
 
-        jtpManagementTabbedPane.addTab("School Year", jspSchoolYearManagement);
+        jtpManagementTabbedPane.addTab("Subject Category", jspSubjectCatMgmt);
 
-        jpnlSectionsManagement.setLayout(new java.awt.BorderLayout());
-        jspSectionsManagement.setViewportView(jpnlSectionsManagement);
+        jpnlCurriculumMgmt.setLayout(new java.awt.BorderLayout());
+        jspCurriculumMgmt.setViewportView(jpnlCurriculumMgmt);
 
-        jtpManagementTabbedPane.addTab("Sections", jspSectionsManagement);
+        jtpManagementTabbedPane.addTab("Curriculum", jspCurriculumMgmt);
 
-        jpnlRoomManagement.setLayout(new java.awt.BorderLayout());
-        jspRoomManagement.setViewportView(jpnlRoomManagement);
+        jpnlFacultyMgmt.setLayout(new java.awt.BorderLayout());
+        jspFacultyMgmt.setViewportView(jpnlFacultyMgmt);
 
-        jtpManagementTabbedPane.addTab("Rooms", jspRoomManagement);
+        jtpManagementTabbedPane.addTab("Faculty", jspFacultyMgmt);
 
-        jpnlScheduleManagement.setLayout(new java.awt.BorderLayout());
-        jspScheduleManagement.setViewportView(jpnlScheduleManagement);
+        jpnlSectionMgmt.setLayout(new java.awt.BorderLayout());
+        jspSectionMgmt.setViewportView(jpnlSectionMgmt);
 
-        jtpManagementTabbedPane.addTab("Schedules", jspScheduleManagement);
+        jtpManagementTabbedPane.addTab("Section", jspSectionMgmt);
 
-        jpnlFeesAndDiscountsManagement.setLayout(new java.awt.BorderLayout());
-        jspFeesAndDiscountManagement.setViewportView(jpnlFeesAndDiscountsManagement);
+        jpnlRoomMgmt.setLayout(new java.awt.BorderLayout());
+        jspRoomMgmt.setViewportView(jpnlRoomMgmt);
 
-        jtpManagementTabbedPane.addTab("Fees & Discounts", jspFeesAndDiscountManagement);
+        jtpManagementTabbedPane.addTab("Room", jspRoomMgmt);
 
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        jpnlScheduleMgmt.setLayout(new java.awt.BorderLayout());
+        jspScheduleMgmt.setViewportView(jpnlScheduleMgmt);
+
+        jtpManagementTabbedPane.addTab("Schedule", jspScheduleMgmt);
+
+        jpnlFeesMgmt.setLayout(new java.awt.BorderLayout());
+        jtpManagementTabbedPane.addTab("Fees", jpnlFeesMgmt);
+
+        jpnlCredentialsMgmt.setLayout(new java.awt.BorderLayout());
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
@@ -442,7 +437,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         jlblYearCreated.setText("Year Created");
         jpnlSortCredentialList.add(jlblYearCreated, new java.awt.GridBagConstraints());
 
-        jcmbYearCreated.setModel(new component_model_loader.SchoolYearML().getAllSchoolYearStart());
+        jcmbYearCreated.setModel(new component_model_loader.SchoolYearJCompModelLoader().getAllSchoolYearStart());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSortCredentialList.add(jcmbYearCreated, gridBagConstraints);
@@ -471,25 +466,30 @@ public class SettingsPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel3.add(jpnlDeleteCredential, gridBagConstraints);
 
-        jPanel2.add(jPanel3, java.awt.BorderLayout.CENTER);
+        jpnlCredentialsMgmt.add(jPanel3, java.awt.BorderLayout.CENTER);
 
-        jspCredentialRequirementsManagement.setViewportView(jPanel2);
+        jspCredentialRequirementsManagement.setViewportView(jpnlCredentialsMgmt);
 
         jtpManagementTabbedPane.addTab("Credentials", jspCredentialRequirementsManagement);
 
-        jpnlFacultyContainer.setLayout(new java.awt.GridBagLayout());
-        jspFacultyManagement.setViewportView(jpnlFacultyContainer);
+        jpnlPaymentScheduleMgmt.setLayout(new java.awt.BorderLayout());
+        jspPaymentScheduleMgmt.setViewportView(jpnlPaymentScheduleMgmt);
 
-        jtpManagementTabbedPane.addTab("Faculty", jspFacultyManagement);
+        jtpManagementTabbedPane.addTab("Payment Schedules", jspPaymentScheduleMgmt);
+        jtpManagementTabbedPane.addTab("Discounts", jpnlDiscountsMgmt);
 
-        jpnlPayment.setLayout(new java.awt.GridBagLayout());
-        jScrollPane1.setViewportView(jpnlPayment);
+        jpnlLanMgmt.setLayout(new java.awt.GridBagLayout());
 
-        jtpManagementTabbedPane.addTab("Payment", jScrollPane1);
+        jPanel8.setLayout(new java.awt.GridBagLayout());
+        jpnlLanMgmt.add(jPanel8, new java.awt.GridBagConstraints());
 
-        jpnlPenalty.setLayout(new java.awt.BorderLayout());
-        jtpManagementTabbedPane.addTab("Penalty", jpnlPenalty);
-        jtpManagementTabbedPane.addTab("LAN", jpnlLanSettings);
+        jspLanMgmt.setViewportView(jpnlLanMgmt);
+
+        jtpManagementTabbedPane.addTab("Lan", jspLanMgmt);
+
+        jspSchoolYearMgmt.setViewportView(jpnlSchoolYearMgmt);
+
+        jtpManagementTabbedPane.addTab("School Year", jspSchoolYearMgmt);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -533,84 +533,75 @@ public class SettingsPanel extends javax.swing.JPanel {
         add(jPanel4, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initializeComponents(){
-        JInternalFrameUtil.removeTitleBar(jInternalFrame1);
-    }
-    private void initializeControllers(){
-        jmiExit.addActionListener(new UINavigationExit(this,DashboardMenuItem.SETTINGS));
-    }
-    
-    private void addFacultyPanel(){
-        NewFaculty nf = new NewFaculty();
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.fill = GridBagConstraints.BOTH;
-        gc.weightx = 0.5;
-        gc.weighty = 0.5;
-        jpnlFacultyContainer.add(nf,gc);
-    }
-    
-    private void addPaymentSchedule(){
-        PaymentScheduleSettings ps = new PaymentScheduleSettings();
-        jpnlPayment.add(ps);
-    }
-    
-    private void addPenaltySettings(){
-        PenaltySettings pes = new PenaltySettings();
-        jpnlPenalty.add(pes);
-    }
-    
-    private void jtpManagementTabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtpManagementTabbedPaneMouseClicked
-        if (evt.getClickCount() == 1) {
-            switch (jtpManagementTabbedPane.getSelectedIndex()) {
-                case 0:
-                    jpnlCurriculumManagement.removeAll();
-                    jpnlCurriculumManagement.add(new CurriculumManagementContainer());
-                    jtpManagementTabbedPane.repaint();
-                    break;
-                case 1:
-                    jpnlSubjectManagement.removeAll();
-                    jpnlSubjectManagement.add(new SubjectManagementContainer());
-                    jtpManagementTabbedPane.repaint();
-                    break;
-                case 2:
-                    jpnlSchoolYearManagement.removeAll();
-                    jpnlSchoolYearManagement.add(new SchoolYearManagementContainer());
-                    jtpManagementTabbedPane.repaint();
-                    break;
-                case 3:
-                    jpnlSectionsManagement.removeAll();
-                    jpnlSectionsManagement.add(new SectionManagementContainer());
-                    jtpManagementTabbedPane.repaint();
-                    break;
-                case 4:
-                    jpnlRoomManagement.removeAll();
-                    jpnlRoomManagement.add(new RoomsContainer());
-                    jtpManagementTabbedPane.repaint();
-                    break;
-                case 5:
-                    jpnlScheduleManagement.removeAll();
-                    jpnlScheduleManagement.add(new ScheduleRecord());
-                    jtpManagementTabbedPane.repaint();
-                    break;
-                case 6:
-                    jpnlFeesAndDiscountsManagement.removeAll();
-                    jpnlFeesAndDiscountsManagement.add(new FeesSetting());
-                    jtpManagementTabbedPane.repaint();
-                    break;
-                default:
-                    break;
+    private void jbtnDeleteCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnDeleteCredentialActionPerformed
+        boolean itemIsSelectedOnList = jlstCredentialNamesList.getSelectedIndex() > -1;
+        if (itemIsSelectedOnList) {
+
+            String aCredentialName = jlstCredentialNamesList.getSelectedValue().trim();
+            int choice = JOptionPane.showConfirmDialog(null, "Remove " + aCredentialName + "?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                int aCredentialId = credentialDaoImpl.getCredentialIdByName(aCredentialName);
+                boolean isRemoved = credentialDaoImpl.removeCredentialById(aCredentialId);
+                if (isRemoved) {
+                    JOptionPane.showMessageDialog(null, "Successfully removed " + aCredentialName);
+                    setCredentialJList();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error encountered while removing " + aCredentialName);
+                }
             }
         }
-    }//GEN-LAST:event_jtpManagementTabbedPaneMouseClicked
+    }//GEN-LAST:event_jbtnDeleteCredentialActionPerformed
 
-    private void jcbKindergartenCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbKindergartenCtgItemStateChanged
-        if(jcbKindergartenCtg.isSelected()){
-            JPanelUtil.uncheckCheckBoxes(jpnlGradeLevelSelection);
-            jcbKindergarten.setSelected(true);
-        }else{
-            jcbKindergarten.setSelected(false);
+    private void jbtnCreateCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCreateCredentialActionPerformed
+
+        if (credentialDaoImpl.alreadyExists(jtfCredentialName.getText().trim())) {
+            String credentialName = jtfCredentialName.getText().trim();
+            JOptionPane.showMessageDialog(null,credentialName+" already exists on record.\nPlease try a different name");
+        } else {
+            int selected = JOptionPane.showConfirmDialog(null, "Add Credential?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+            if (selected==JOptionPane.YES_OPTION) {
+                String credentialDescription = jtaCredentialDescription.getText();
+                String credentialName = jtfCredentialName.getText().trim();
+
+                SchoolYear yearCreated = new SchoolYear();
+                yearCreated.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
+
+                Credential credential = new Credential();
+                credential.setCredentialName(credentialName);
+                credential.setCredentialDescription(credentialDescription);
+                credential.setGradeLevelsAssigned(getGradeLevelsAssigned());
+                credential.setSchoolYearCreated(yearCreated);
+
+                boolean isSuccessfullyAdded = credentialDaoImpl.addCredential(credential);
+                if (isSuccessfullyAdded) {
+                    JOptionPane.showMessageDialog(null, "Successfully added " + credential.getCredentialName());
+                    resetCreateCredentialFormPanel();
+                    setCredentialsJList();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Adding of " + credential.getCredentialName()+ " failed.");
+                }
+            }
         }
-    }//GEN-LAST:event_jcbKindergartenCtgItemStateChanged
+    }//GEN-LAST:event_jbtnCreateCredentialActionPerformed
+
+    private void jbtnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnClearActionPerformed
+        resetCreateCredentialFormPanel();
+    }//GEN-LAST:event_jbtnClearActionPerformed
+
+    private void jcbJuniorHighCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbJuniorHighCtgItemStateChanged
+        if(jcbJuniorHighCtg.isSelected()){
+            jcbGradeSeven.setSelected(true);
+            jcbGradeEight.setSelected(true);
+            jcbGradeNine.setSelected(true);
+            jcbGradeTen.setSelected(true);
+        }else if(!jcbJuniorHighCtg.isSelected()){
+            jcbGradeSeven.setSelected(false);
+            jcbGradeEight.setSelected(false);
+            jcbGradeNine.setSelected(false);
+            jcbGradeTen.setSelected(false);
+        }
+    }//GEN-LAST:event_jcbJuniorHighCtgItemStateChanged
 
     private void jcbElementaryCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbElementaryCtgItemStateChanged
         if(jcbElementaryCtg.isSelected()){
@@ -630,20 +621,64 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jcbElementaryCtgItemStateChanged
 
-    private void jcbJuniorHighCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbJuniorHighCtgItemStateChanged
-        if(jcbJuniorHighCtg.isSelected()){
-            jcbGradeSeven.setSelected(true);
-            jcbGradeEight.setSelected(true);
-            jcbGradeNine.setSelected(true);
-            jcbGradeTen.setSelected(true);
-        }else if(!jcbJuniorHighCtg.isSelected()){
-            jcbGradeSeven.setSelected(false);
-            jcbGradeEight.setSelected(false);
-            jcbGradeNine.setSelected(false);
-            jcbGradeTen.setSelected(false);
+    private void jcbKindergartenCtgItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbKindergartenCtgItemStateChanged
+        if(jcbKindergartenCtg.isSelected()){
+            JPanelUtil.uncheckCheckBoxes(jpnlGradeLevelSelection);
+            jcbKindergarten.setSelected(true);
+        }else{
+            jcbKindergarten.setSelected(false);
         }
-    }//GEN-LAST:event_jcbJuniorHighCtgItemStateChanged
+    }//GEN-LAST:event_jcbKindergartenCtgItemStateChanged
 
+    private void jtfCredentialNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfCredentialNameKeyPressed
+        boolean credentialNameIsNotEmpty = !jtfCredentialName.getText().trim().isEmpty();
+        if(credentialNameIsNotEmpty && evt.getKeyCode() == KeyEvent.VK_ENTER){
+            jcbElementaryCtg.setEnabled(true);
+            jcbJuniorHighCtg.setEnabled(true);
+            jcbKindergartenCtg.setEnabled(true);
+            JPanelUtil.enableCheckBoxes(jpnlGradeLevelSelection);
+        }
+    }//GEN-LAST:event_jtfCredentialNameKeyPressed
+
+    @Override
+    public void initRenderers() {
+    }
+    
+    @Override
+    public void initGridBagConstraints() {
+    }
+
+    @Override
+    public void initJCompModelLoaders() {
+    }
+
+    @Override
+    public void initModels() {
+    }
+
+    @Override
+    public void initViewComponents() {
+        JInternalFrameUtil.removeTitleBar(jInternalFrame1);
+    }
+
+    @Override
+    public void initControllers() {
+        jtpManagementTabbedPane.addMouseListener(
+                new AddSettingsPanelToTabbedPaneOnMouseClick(
+                        jtpManagementTabbedPane, jpnlSubjectMgmt, jpnlSubjectCatMgmt, 
+                        jpnlCurriculumMgmt, jpnlFacultyMgmt, jpnlSectionMgmt, 
+                        jpnlRoomMgmt, jpnlScheduleMgmt, jpnlFeesMgmt, 
+                        jpnlCredentialsMgmt, jpnlPaymentScheduleMgmt, 
+                        jpnlDiscountsMgmt, jpnlLanMgmt, jpnlSchoolYearMgmt)
+        );
+        jmiExit.addActionListener(new UINavigationExit(this,DashboardMenuItem.SETTINGS));
+    }
+
+    @Override
+    public void initDaoImpl() {
+
+    }
+    
     private void resetCreateCredentialFormPanel(){
         JPanelUtil.uncheckCheckBoxes(jpnlGradeLevelSelection);
         JPanelUtil.disableAllJCheckBox(jpnlGradeLevelSelection);
@@ -651,10 +686,6 @@ public class SettingsPanel extends javax.swing.JPanel {
         jtaCredentialDescription.setText(null);
     }
     
-    private void jbtnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnClearActionPerformed
-        resetCreateCredentialFormPanel();
-    }//GEN-LAST:event_jbtnClearActionPerformed
-
     private List<GradeLevel> getGradeLevelsAssigned() {
         List<GradeLevel> gradeLevelList = new ArrayList<>();
         List<Integer> levelsList = new ArrayList<>();
@@ -690,81 +721,19 @@ public class SettingsPanel extends javax.swing.JPanel {
         jlstCredentialNamesList.setModel(credentialGUIUtil.getAllCredentialNames());
     }
     
-    private void jbtnCreateCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCreateCredentialActionPerformed
-
-        if (credentialDaoImpl.alreadyExists(jtfCredentialName.getText().trim())) {
-            String credentialName = jtfCredentialName.getText().trim();
-            JOptionPane.showMessageDialog(null,credentialName+" already exists on record.\nPlease try a different name");
-        } else {
-            int selected = JOptionPane.showConfirmDialog(null, "Add Credential?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-            if (selected==JOptionPane.YES_OPTION) {
-                String credentialDescription = jtaCredentialDescription.getText();
-                String credentialName = jtfCredentialName.getText().trim();
-
-                SchoolYear yearCreated = new SchoolYear();
-                yearCreated.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
-                
-                Credential credential = new Credential();
-                credential.setCredentialName(credentialName);
-                credential.setCredentialDescription(credentialDescription);
-                credential.setGradeLevelsAssigned(getGradeLevelsAssigned());
-                credential.setSchoolYearCreated(yearCreated);
-
-                boolean isSuccessfullyAdded = credentialDaoImpl.addCredential(credential);
-                if (isSuccessfullyAdded) {
-                    JOptionPane.showMessageDialog(null, "Successfully added " + credential.getCredentialName());
-                    resetCreateCredentialFormPanel();
-                    setCredentialsJList();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Adding of " + credential.getCredentialName()+ " failed.");
-                }
-            }
-        }
-    }//GEN-LAST:event_jbtnCreateCredentialActionPerformed
-
     private void setCredentialJList(){
         jlstCredentialNamesList.setModel(credentialGUIUtil.getAllCredentialNames());
     }
     
-    private void jbtnDeleteCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnDeleteCredentialActionPerformed
-        boolean itemIsSelectedOnList = jlstCredentialNamesList.getSelectedIndex() > -1;
-        if (itemIsSelectedOnList) {
-
-            String aCredentialName = jlstCredentialNamesList.getSelectedValue().trim();
-            int choice = JOptionPane.showConfirmDialog(null, "Remove " + aCredentialName + "?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
-
-            if (choice == JOptionPane.YES_OPTION) {
-                int aCredentialId = credentialDaoImpl.getCredentialIdByName(aCredentialName);
-                boolean isRemoved = credentialDaoImpl.removeCredentialById(aCredentialId);
-                if (isRemoved) {
-                    JOptionPane.showMessageDialog(null, "Successfully removed " + aCredentialName);
-                    setCredentialJList();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error encountered while removing " + aCredentialName);
-                }
-            }
-        }
-    }//GEN-LAST:event_jbtnDeleteCredentialActionPerformed
-
-    private void jtfCredentialNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfCredentialNameKeyPressed
-        boolean credentialNameIsNotEmpty = !jtfCredentialName.getText().trim().isEmpty();
-        if(credentialNameIsNotEmpty && evt.getKeyCode() == KeyEvent.VK_ENTER){
-            jcbElementaryCtg.setEnabled(true);
-            jcbJuniorHighCtg.setEnabled(true);
-            jcbKindergartenCtg.setEnabled(true);
-            JPanelUtil.enableCheckBoxes(jpnlGradeLevelSelection);
-        }
-    }//GEN-LAST:event_jtfCredentialNameKeyPressed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JButton jbtnClear;
     private javax.swing.JButton jbtnCreateCredential;
     private javax.swing.JButton jbtnDeleteCredential;
@@ -789,35 +758,39 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JList<String> jlstCredentialNamesList;
     private javax.swing.JMenuItem jmiExit;
     private javax.swing.JMenu jmnFile;
-    private javax.swing.JPanel jpnlContent;
+    public static javax.swing.JPanel jpnlContent;
     private javax.swing.JPanel jpnlCreateCredential;
     private javax.swing.JPanel jpnlCreateCredentialControls;
     private javax.swing.JPanel jpnlCreateNewCredentialDescription;
-    private javax.swing.JPanel jpnlCurriculumManagement;
+    private javax.swing.JPanel jpnlCredentialsMgmt;
+    private javax.swing.JPanel jpnlCurriculumMgmt;
     private javax.swing.JPanel jpnlDeleteCredential;
-    private javax.swing.JPanel jpnlFacultyContainer;
-    private javax.swing.JPanel jpnlFeesAndDiscountsManagement;
+    private javax.swing.JPanel jpnlDiscountsMgmt;
+    private javax.swing.JPanel jpnlFacultyMgmt;
+    private javax.swing.JPanel jpnlFeesMgmt;
     private javax.swing.JPanel jpnlGradeLevelSelection;
-    private javax.swing.JPanel jpnlLanSettings;
-    private javax.swing.JPanel jpnlPayment;
-    private javax.swing.JPanel jpnlPenalty;
-    private javax.swing.JPanel jpnlRoomManagement;
-    private javax.swing.JPanel jpnlScheduleManagement;
-    private javax.swing.JPanel jpnlSchoolYearManagement;
-    private javax.swing.JPanel jpnlSectionsManagement;
+    private javax.swing.JPanel jpnlLanMgmt;
+    private javax.swing.JPanel jpnlPaymentScheduleMgmt;
+    private javax.swing.JPanel jpnlRoomMgmt;
+    private javax.swing.JPanel jpnlScheduleMgmt;
+    private javax.swing.JPanel jpnlSchoolYearMgmt;
+    private javax.swing.JPanel jpnlSectionMgmt;
     private javax.swing.JPanel jpnlSortCredentialList;
-    private javax.swing.JPanel jpnlSubjectManagement;
+    private javax.swing.JPanel jpnlSubjectCatMgmt;
+    private javax.swing.JPanel jpnlSubjectMgmt;
     private javax.swing.JScrollPane jspCredentialDescription;
     private javax.swing.JScrollPane jspCredentialRequirementsManagement;
     private javax.swing.JScrollPane jspCredentialsList;
-    private javax.swing.JScrollPane jspCurriculumManagement;
-    private javax.swing.JScrollPane jspFacultyManagement;
-    private javax.swing.JScrollPane jspFeesAndDiscountManagement;
-    private javax.swing.JScrollPane jspRoomManagement;
-    private javax.swing.JScrollPane jspScheduleManagement;
-    private javax.swing.JScrollPane jspSchoolYearManagement;
-    private javax.swing.JScrollPane jspSectionsManagement;
-    private javax.swing.JScrollPane jspSubjectManagement;
+    private javax.swing.JScrollPane jspCurriculumMgmt;
+    private javax.swing.JScrollPane jspFacultyMgmt;
+    private javax.swing.JScrollPane jspLanMgmt;
+    private javax.swing.JScrollPane jspPaymentScheduleMgmt;
+    private javax.swing.JScrollPane jspRoomMgmt;
+    private javax.swing.JScrollPane jspScheduleMgmt;
+    private javax.swing.JScrollPane jspSchoolYearMgmt;
+    private javax.swing.JScrollPane jspSectionMgmt;
+    private javax.swing.JScrollPane jspSubjectCatMgmt;
+    private javax.swing.JScrollPane jspSubjectMgmt;
     private javax.swing.JTextArea jtaCredentialDescription;
     private javax.swing.JTextField jtfCredentialName;
     private javax.swing.JTabbedPane jtpManagementTabbedPane;

@@ -1,6 +1,6 @@
 package view.user;
 
-import component_model_loader.UserML;
+import component_model_loader.UserJCompModelLoader;
 import daoimpl.RoleDaoImpl;
 import daoimpl.UserDaoImpl;
 import javax.swing.DefaultComboBoxModel;
@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import model.role.Role;
 import model.user.User;
 import utility.password.PasswordUtil;
+import utility.puzzler.Puzzler;
 import utility.string.StringUtil;
 import static view.user.AllUsersRecord.jtblRecord;
 
@@ -16,13 +17,11 @@ import static view.user.AllUsersRecord.jtblRecord;
  * @author John Ferdinand Antonio
  */
 public class UserInfo extends javax.swing.JDialog {
-    UserDaoImpl udi = new UserDaoImpl();
-    private final DefaultComboBoxModel rolesComboModel;
+    UserDaoImpl userDaoImpl = new UserDaoImpl();
    
     public UserInfo(java.awt.Frame parent, boolean modal, DefaultComboBoxModel rolesComboModel) {
         super(parent, modal);
         initComponents();
-        this.rolesComboModel = rolesComboModel;
         jcmbUserRole.setModel(rolesComboModel);
         initializeControllers();
     }
@@ -33,7 +32,7 @@ public class UserInfo extends javax.swing.JDialog {
     
     private boolean addUser(User user) {
         boolean isAdded;
-        isAdded = udi.add(user);
+        isAdded = userDaoImpl.add(user);
         return isAdded;
     }
     
@@ -249,7 +248,8 @@ public class UserInfo extends javax.swing.JDialog {
         RoleDaoImpl rdi = new RoleDaoImpl();
         String username = jtfUserName.getText().trim();
         String password = PasswordUtil.toString(jpfPassword.getPassword());
-        String passwordReEntered = PasswordUtil.toString(jpfPasswordReEnter.getPassword());
+        Puzzler puzzler = new Puzzler(password);
+        String enryptedPassword = puzzler.getEncrypted();
         String firstName = jtfFirstName.getText().trim();
         String lastName = jtfLastName.getText().trim();
         String middleName = jtfMiddleName.getText().trim();
@@ -261,7 +261,7 @@ public class UserInfo extends javax.swing.JDialog {
         
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(enryptedPassword);
         user.setLastName(lastName);
         user.setMiddleName(middleName);
         user.setFirstName(firstName);
@@ -274,14 +274,11 @@ public class UserInfo extends javax.swing.JDialog {
         if (isFormValid()) {
             if (addUser(getUser())) {
                 JOptionPane.showMessageDialog(null, "Successfully added user");
-                jtblRecord.setModel(new UserML().getAllUsers(jtblRecord));
+                jtblRecord.setModel(new UserJCompModelLoader().getAllUsers(jtblRecord));
             } else {
                 JOptionPane.showMessageDialog(null, "Error encountered. User not added.");
             }
-        } else {
-            
-        }
-        
+        } 
     }//GEN-LAST:event_jbtnSaveActionPerformed
 
     
