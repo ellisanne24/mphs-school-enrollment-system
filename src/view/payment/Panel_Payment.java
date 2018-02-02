@@ -1568,7 +1568,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
             },
             new String [] {
-                "Name", "Amount Due", "Balance", "Due Date", "Paid", "Penalty", "OR #"
+                "Name", "Amount Due", "Balance", "Due Date", "Paid", "Category", "Penalty"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -1607,6 +1607,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
         jbtnMakePayment.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jbtnMakePayment.setText("Make Payment");
+        jbtnMakePayment.setActionCommand("makepayment");
         jbtnMakePayment.setEnabled(false);
         jbtnMakePayment.setMaximumSize(new java.awt.Dimension(200, 50));
         jbtnMakePayment.setMinimumSize(new java.awt.Dimension(200, 50));

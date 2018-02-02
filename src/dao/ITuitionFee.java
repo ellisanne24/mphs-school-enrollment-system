@@ -6,14 +6,14 @@
 package dao;
 
 import model.student.Student;
-import model.tuitionfee.TuitionFee;
+import model.tuitionfee.Tuition;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
 public interface ITuitionFee{
-    boolean add(TuitionFee tuitionFee);
-    TuitionFee get(int studentId, int schoolyearId);
-    boolean pay(TuitionFee tuitionFee);
+    boolean add(Tuition tuitionFee);
+    Tuition get(int studentId, int schoolyearId);
+    boolean pay(Tuition tuitionFee);
 }

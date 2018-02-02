@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.balancebreakdownfee.BalanceBreakDownFee;
-import model.tuitionfee.TuitionFee;
+import model.tuitionfee.Tuition;
 import static view.payment.Old_PaymentAndAssessmentForm.jtblBalanceBreakdown;
 
 /**
@@ -27,7 +27,7 @@ public class BalanceBreakDownJCompModelLoader {
     }
     
     public DefaultTableModel getBalanceBreakDownFee(int studentId, int schoolYearId){
-        TuitionFee tuitionFee = tuitionFeeDaoImpl.get(studentId, schoolYearId);
+        Tuition tuitionFee = tuitionFeeDaoImpl.get(studentId, schoolYearId);
         List<BalanceBreakDownFee> balanceBreakDownFee = tuitionFee.getBalanceBreakDownFees();
             DefaultTableModel model = (DefaultTableModel) jtblBalanceBreakdown.getModel();
             model.setRowCount(0);

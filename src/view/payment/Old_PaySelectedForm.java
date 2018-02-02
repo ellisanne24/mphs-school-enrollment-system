@@ -18,7 +18,7 @@ import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.receipt.OfficialReceipt;
 import model.particulars.Particulars;
 import model.payment.Payment;
-import model.tuitionfee.TuitionFee;
+import model.tuitionfee.Tuition;
 import org.joda.time.LocalDate;
 import service.PaymentProcessor;
 import view.container.Dashboard;
@@ -35,12 +35,12 @@ public class Old_PaySelectedForm extends javax.swing.JDialog {
     private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
     private final StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
 
-    private final TuitionFee tuitionFee;
+    private final Tuition tuitionFee;
     private final Particulars particulars;
     private final SchoolYear schoolYear;
     private final Student student;
 
-    public Old_PaySelectedForm(Particulars particulars, TuitionFee tuitionFee) {
+    public Old_PaySelectedForm(Particulars particulars, Tuition tuitionFee) {
         super(null, ModalityType.APPLICATION_MODAL);
         initComponents();
         this.particulars = particulars;
@@ -297,7 +297,7 @@ public class Old_PaySelectedForm extends javax.swing.JDialog {
         }
     }
     
-    private boolean addTuitionFees(TuitionFee t) {
+    private boolean addTuitionFees(Tuition t) {
         boolean isAdded;
         Student s = t.getStudent();
         isAdded = tuitionFeeDaoImpl.add(t);
@@ -311,7 +311,7 @@ public class Old_PaySelectedForm extends javax.swing.JDialog {
         return isAdded;
     }
     
-    private boolean payTuitionFee(TuitionFee t) {
+    private boolean payTuitionFee(Tuition t) {
         boolean isPaid;
         isPaid = tuitionFeeDaoImpl.pay(t);
         if (isPaid) {

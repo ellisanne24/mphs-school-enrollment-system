@@ -8,14 +8,21 @@ public class BalanceBreakDownFee {
 
     private int id;
     private String name; //name of breakdown e.g. Academic Fee for Quarter 1, Academic Fee for Quarter2
+    private String category;
     private Date dateAssigned;
     private BigDecimal amount;
     private BigDecimal balance;
     private double totalPaid;
     private boolean isPaid;
-    private int studentId;
-    private int schoolYearId;
     private Date deadline;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public int getId() {
         return id;
@@ -72,22 +79,6 @@ public class BalanceBreakDownFee {
         this.isPaid = isPaid;
     }
 
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
-
-    public int getSchoolYearId() {
-        return schoolYearId;
-    }
-
-    public void setSchoolYearId(int schoolYearId) {
-        this.schoolYearId = schoolYearId;
-    }
-
     public Date getDeadline() {
         return deadline;
     }
@@ -95,9 +86,4 @@ public class BalanceBreakDownFee {
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
-
-    
-    
-    
-
 }

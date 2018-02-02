@@ -1,7 +1,7 @@
 
 package model.student;
 
-import model.tuitionfee.TuitionFee;
+import model.tuitionfee.Tuition;
 import java.util.Date;
 import model.admission.Admission;
 import model.gradelevel.GradeLevel;
@@ -21,7 +21,7 @@ public class Student {
     private boolean isGraduated;
     private Date entryDate;
     private Date dateGraduated;
-    private TuitionFee tuitionFee;
+    private Tuition tuitionFee;
 
     public int gradeLevelNo; //current gradelevelNo
 
@@ -57,11 +57,11 @@ public class Student {
         this.gradeLevelNo = gradeLevel;
     }
     
-    public TuitionFee getTuitionFee() {
+    public Tuition getTuitionFee() {
         return tuitionFee;
     }
 
-    public void setTuitionFee(TuitionFee tuitionFee) {
+    public void setTuitionFee(Tuition tuitionFee) {
         this.tuitionFee = tuitionFee;
     }
     

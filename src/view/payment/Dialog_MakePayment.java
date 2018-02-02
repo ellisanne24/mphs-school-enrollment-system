@@ -1,19 +1,18 @@
 package view.payment;
 
+import controller.global.ExitJDialog;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import model.tuitionfee.TuitionFee;
+import model.tuitionfee.Tuition;
 import utility.initializer.Initializer;
 
 public class Dialog_MakePayment extends javax.swing.JDialog implements Initializer{
 
-    private final TuitionFee tuitionFee;
+    private final Tuition tuition;
     
-    public Dialog_MakePayment(java.awt.Frame parent, boolean modal, TuitionFee tuitionFee) {
-        super(parent, modal);
-        this.tuitionFee = tuitionFee;
+    public Dialog_MakePayment(Tuition tuition) {
+        this.tuition = tuition;
         initComponents();
         
         initViewComponents();
@@ -38,17 +37,34 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
 
     @Override
     public void initViewComponents() {
-        initBalanceBreakDownJCombo();
+        initBalanceJCombo();
+        initOthersJCombo();
     }
 
-    private void initBalanceBreakDownJCombo(){
-        DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
-        cbModel.addElement("Select");
-        cbModel.addElement("All");
-        for(int i = 0; i<tuitionFee.getBalanceBreakDownFees().size(); i++){
-            cbModel.addElement(tuitionFee.getBalanceBreakDownFees().get(i).getName().trim());
+    private void initBalanceJCombo() {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        comboModel.addElement("Select");
+        comboModel.addElement("All");
+        for (int i = 0; i < tuition.getBalanceBreakDownFees().size(); i++) {
+            String category = tuition.getBalanceBreakDownFees().get(i).getCategory().trim();
+            if (category.equalsIgnoreCase("Balance")) {
+                comboModel.addElement(tuition.getBalanceBreakDownFees().get(i).getName().trim());
+            }
         }
-        jcmbBalance.setModel(cbModel);
+        jcmbBalance.setModel(comboModel);
+    }
+    
+    private void initOthersJCombo(){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        comboModel.addElement("Select");
+        comboModel.addElement("All");
+        for (int i = 0; i < tuition.getBalanceBreakDownFees().size(); i++) {
+            String category = tuition.getBalanceBreakDownFees().get(i).getCategory().trim();
+            if (category.equalsIgnoreCase("Other")) {
+                comboModel.addElement(tuition.getBalanceBreakDownFees().get(i).getName().trim());
+            }
+        }
+        jcmbOthers.setModel(comboModel);
     }
     
     @Override
@@ -65,6 +81,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
                 jcmbOthers.setEnabled(jcbOthers.isSelected());
             }
         });
+        jbtnCancel.addActionListener(new ExitJDialog(this));
     }
 
     @Override
@@ -120,7 +137,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         jtfPenaltyName = new javax.swing.JTextField();
         jtfTotal = new javax.swing.JTextField();
         panel_footer = new javax.swing.JPanel();
-        btn_cancel = new javax.swing.JButton();
+        jbtnCancel = new javax.swing.JButton();
         btn_saveandclose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -537,17 +554,17 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         panel_footer.setPreferredSize(new java.awt.Dimension(490, 50));
         panel_footer.setLayout(new java.awt.GridBagLayout());
 
-        btn_cancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_cancel.setText("Cancel");
-        btn_cancel.setMaximumSize(new java.awt.Dimension(69, 40));
-        btn_cancel.setMinimumSize(new java.awt.Dimension(69, 40));
-        btn_cancel.setPreferredSize(new java.awt.Dimension(69, 40));
+        jbtnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnCancel.setText("Cancel");
+        jbtnCancel.setMaximumSize(new java.awt.Dimension(69, 40));
+        jbtnCancel.setMinimumSize(new java.awt.Dimension(69, 40));
+        jbtnCancel.setPreferredSize(new java.awt.Dimension(69, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 0.5;
-        panel_footer.add(btn_cancel, gridBagConstraints);
+        panel_footer.add(jbtnCancel, gridBagConstraints);
 
         btn_saveandclose.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btn_saveandclose.setText("Proceed Payment");
@@ -579,7 +596,6 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_cancel;
     private javax.swing.JButton btn_saveandclose;
     private javax.swing.JLabel display_lastname10;
     private javax.swing.JLabel display_lastname12;
@@ -591,6 +607,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbtnCancel;
     private javax.swing.JCheckBox jcbBalance;
     private javax.swing.JCheckBox jcbDownPayment;
     private javax.swing.JCheckBox jcbOthers;

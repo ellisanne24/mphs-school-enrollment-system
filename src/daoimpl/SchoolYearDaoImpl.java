@@ -38,7 +38,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return aYearFrom;
     }
@@ -55,7 +55,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return idOfCurrentSchoolYear;
     }
@@ -66,25 +66,25 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 CallableStatement cs = con.prepareCall(SQL);){
             cs.executeUpdate();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
     }
     
     public static SchoolYear getCurrentSchoolYear(){
         String SQL = "{CALL getCurrentSchoolYear()}";
-        SchoolYear schoolYear = new SchoolYear();
+        SchoolYear sy = new SchoolYear();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    schoolYear.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
-                    schoolYear.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
+                    sy.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
+                    sy.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
-        return schoolYear;
+        return sy;
     }
     
     @Override
@@ -100,7 +100,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return isCurrent;
     }
@@ -113,19 +113,19 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 CallableStatement cs = con.prepareCall(SQL);){
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    SchoolYear schoolYear = new SchoolYear();
-                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    schoolYear.setYearTo(rs.getInt("yearTo"));
-                    schoolYear.setIsActive(rs.getBoolean("isActive"));
-                    schoolYear.setSchoolYearStartDate(rs.getDate("start_date"));
-                    schoolYear.setSchoolYearEndDate(rs.getDate("end_date"));
-                    schoolYear.setRegularEnrollmentStartDate(rs.getDate("reg_enroll_start_date"));
-                    schoolYear.setRegularEnrollmentEndDate(rs.getDate("reg_enroll_end_date"));
-                    schoolYear.setSummerEnrollmentStartDate(rs.getDate("summer_enroll_start_date"));
-                    schoolYear.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
-                    schoolYear.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
-                    schoolYear.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
+                    SchoolYear sy = new SchoolYear();
+                    sy.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    sy.setYearFrom(rs.getInt("yearFrom"));
+                    sy.setYearTo(rs.getInt("yearTo"));
+                    sy.setIsActive(rs.getBoolean("isActive"));
+                    sy.setSchoolYearStartDate(rs.getDate("start_date"));
+                    sy.setSchoolYearEndDate(rs.getDate("end_date"));
+                    sy.setRegularEnrollmentStartDate(rs.getDate("reg_enroll_start_date"));
+                    sy.setRegularEnrollmentEndDate(rs.getDate("reg_enroll_end_date"));
+                    sy.setSummerEnrollmentStartDate(rs.getDate("summer_enroll_start_date"));
+                    sy.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
+                    sy.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
+                    sy.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
                     
                     List<Quarter> quarters = new ArrayList<>();
                     Quarter first = new Quarter();
@@ -156,9 +156,9 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     fourth.setGradingDueDate(rs.getDate("Q4GradingDueDate"));
                     quarters.add(fourth);
                     
-                    schoolYear.setQuarters(quarters);
+                    sy.setQuarters(quarters);
                     
-                    list.add(schoolYear);
+                    list.add(sy);
                 }
             }
         } catch (SQLException e) {
@@ -175,9 +175,9 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 CallableStatement cs = con.prepareCall(SQL);){
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    SchoolYear schoolYear = new SchoolYear();
-                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    schoolYearList.add(schoolYear);
+                    SchoolYear sy = new SchoolYear();
+                    sy.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYearList.add(sy);
                 }
             }
         } catch (SQLException e) {
@@ -208,24 +208,24 @@ public class SchoolYearDaoImpl implements ISchoolYear{
     @Override
     public SchoolYear getSchoolYearById(int schoolYearId) {
         String SQL = "{CALL getSchoolYearById(?)}";
-        SchoolYear schoolYear = new SchoolYear();
+        SchoolYear sy = new SchoolYear();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             cs.setInt(1, schoolYearId);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    schoolYear.setYearTo(rs.getInt("yearTo"));
-                    schoolYear.setIsActive(rs.getBoolean("isActive"));
-                    schoolYear.setSchoolYearStartDate(rs.getDate("start_date"));
-                    schoolYear.setSchoolYearEndDate(rs.getDate("end_date"));
-                    schoolYear.setRegularEnrollmentStartDate(rs.getDate("reg_enroll_start_date"));
-                    schoolYear.setRegularEnrollmentEndDate(rs.getDate("reg_enroll_end_date"));
-                    schoolYear.setSummerEnrollmentStartDate(rs.getDate("summer_enroll_start_date"));
-                    schoolYear.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
-                    schoolYear.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
-                    schoolYear.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
+                    sy.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    sy.setYearFrom(rs.getInt("yearFrom"));
+                    sy.setYearTo(rs.getInt("yearTo"));
+                    sy.setIsActive(rs.getBoolean("isActive"));
+                    sy.setSchoolYearStartDate(rs.getDate("start_date"));
+                    sy.setSchoolYearEndDate(rs.getDate("end_date"));
+                    sy.setRegularEnrollmentStartDate(rs.getDate("reg_enroll_start_date"));
+                    sy.setRegularEnrollmentEndDate(rs.getDate("reg_enroll_end_date"));
+                    sy.setSummerEnrollmentStartDate(rs.getDate("summer_enroll_start_date"));
+                    sy.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
+                    sy.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
+                    sy.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
                     
                     List<Quarter> quarters = new ArrayList<>();
                     Quarter first = new Quarter();
@@ -256,13 +256,13 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     fourth.setGradingDueDate(rs.getDate("Q4GradingDueDate"));
                     quarters.add(fourth);
                     
-                    schoolYear.setQuarters(quarters);
+                    sy.setQuarters(quarters);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return schoolYear;
+        return sy;
     }
 
     @Override
@@ -278,7 +278,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return schoolYearId;
     }

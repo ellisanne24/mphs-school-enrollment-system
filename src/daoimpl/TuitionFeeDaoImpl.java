@@ -19,7 +19,7 @@ import model.discount.Discount;
 import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
-import model.tuitionfee.TuitionFee;
+import model.tuitionfee.Tuition;
 
 /**
  *
@@ -50,7 +50,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     }
     
     @Override
-    public boolean add(TuitionFee tuitionFee) {
+    public boolean add(Tuition tuitionFee) {
         boolean isAdded = true;
         PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
         if(tuitionFee.getPayment() == null){
@@ -129,8 +129,8 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     }
 
     @Override
-    public TuitionFee get(int studentId, int schoolyearId) {
-        TuitionFee tuitionFee = new TuitionFee();
+    public Tuition get(int studentId, int schoolyearId) {
+        Tuition tuitionFee = new Tuition();
         
         List<BalanceBreakDownFee> balanceBreakDownFeeList = new ArrayList<>();
         boolean exists = false;
@@ -173,9 +173,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                         balanceBreakDownFee.setId(rsb.getInt("balance_breakdown_fee_id"));
                         balanceBreakDownFee.setDateAssigned(rsb.getTimestamp("date_assigned"));
                         balanceBreakDownFee.setIsPaid(rsb.getBoolean("isPaid"));
-                        balanceBreakDownFee.setSchoolYearId(rsb.getInt("schoolyear_id"));
                         balanceBreakDownFee.setName(rsb.getString("description"));
-                        balanceBreakDownFee.setStudentId(rsb.getInt("student_id"));
 
                         balanceBreakDownFeeList.add(balanceBreakDownFee);
                     }
@@ -246,7 +244,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     }
 
     @Override
-    public boolean pay(TuitionFee tuitionFee) {
+    public boolean pay(Tuition tuitionFee) {
         boolean isSuccessfullyPaid = false;
         String SQL_addTransaction = "{CALL addTransaction(?,?)}";
         String SQL_payTuitionFee = "{CALL payTuitionFee(?,?,?)}";

@@ -14,40 +14,29 @@ import model.student.Student;
  *
  * @author John Ferdinand Antonio
  */
-public class TuitionFee {
+public class Tuition {
 
     private Payment payment;
+    private PaymentTerm paymentTerm;
+    private int schoolyearId;
     private boolean hasDiscount;
     private double totalFees;
     private boolean exists;
     private double totalPaid;
     private double remainingBalance;
-    private PaymentTerm paymentTerm;
     private Discount discount;
     
-    private Fee downpayment;
-    private List<Fee> others;
     private List<BalanceBreakDownFee> balanceBreakDownFees; //composed only of (basic + miscellaneous)/paymentterm
     
     private SchoolYear schoolYear;
     private Student student;
 
-    public Fee getDownpayment() {
-        return downpayment;
+    public int getSchoolyearId() {
+        return schoolyearId;
     }
 
-    public void setDownpayment(Fee downpayment) {
-        this.downpayment = downpayment;
-    }
-
-    
-    
-    public List<Fee> getOthers() {
-        return others;
-    }
-
-    public void setOthers(List<Fee> others) {
-        this.others = others;
+    public void setSchoolyearId(int schoolyearId) {
+        this.schoolyearId = schoolyearId;
     }
 
     public Payment getPayment() {
