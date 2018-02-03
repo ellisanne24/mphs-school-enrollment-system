@@ -1,161 +1,140 @@
-
 package daoimpl;
 
-import constants.EnrollmentTable;
-import constants.SchoolYearTable;
-import utility.database.DBType;
-import utility.database.DBUtil;
+import dao.IEnrollment;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import model.enrollment.Enrollment;
-import model.schoolyear.SchoolYear;
+import model.registration.Registration;
 import model.student.Student;
-import dao.IEnrollment;
+import utility.database.DBType;
+import utility.database.DBUtil;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
-public class EnrollmentDaoImpl implements IEnrollment{
+public class EnrollmentDaoImpl implements IEnrollment {
 
-    private GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
-    private StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
+
+    public EnrollmentDaoImpl(SchoolYearDaoImpl schoolYearDaoImpl) {
+        this.schoolYearDaoImpl = schoolYearDaoImpl;
+    }
 
     @Override
-    public boolean hasEnrollmentRecord(int studentId) {
-        boolean hasRecord = true;
-        String SQL = "{CALL studentHasEnrollmentRecord(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, studentId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    hasRecord = rs.getBoolean("hasEnrollmentRecord");
-                }
+    public boolean enroll(Student student) {
+        boolean isEnrolled = false;
+        String SQLa = "{CALL addEnrollment(?,?,?,?)}";
+        String SQLb = "{CALL activateStudent(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);) {
+                con.setAutoCommit(false);
+                csa.setInt(1, student.getEnrollment().getSchoolYearId());
+                csa.setInt(2, student.getStudentId());
+                csa.setString(3, student.getEnrollment().getEnrollmentType().trim());
+                csa.registerOutParameter(4, Types.INTEGER);
+                csa.executeUpdate();
+                int enrollmentId = csa.getInt(4);
+
+                csb.setInt(1, student.getStudentId());
+                csb.executeUpdate();
+                con.commit();
+                isEnrolled = true;
+            } catch (SQLException e) {
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return hasRecord;
+        return isEnrolled;
     }
-    
+
     @Override
-    public boolean isEnrollmentClosedForSchoolYear(SchoolYear aSchoolYear) {
-        String SQL = "{CALL isEnrollmentClosedForSchoolYear(?)}";
-        int schoolYearId = aSchoolYear.getSchoolYearId();
-        boolean isClosed = false;
+    public List<Student> getAllEnrolledBySchoolYearId(int schoolYearId) {
+        List<Student> studentList = new ArrayList<>();
+        String SQL = "{CALL getAllEnrolledBySchoolYearId(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
+                CallableStatement cs = con.prepareCall(SQL);) {
             cs.setInt(1, schoolYearId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    isClosed = rs.getBoolean("is_enrollment_closed"); //alias 
-                }
-            }
-                    
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return isClosed;
-    }
-
-    @Override
-    public boolean isEnrollmentClosedForCurrentSchoolYear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean enrollStudent(Student student) {
-        boolean isSuccessfullyEnrolled;
-        String SQL = "{CALL enrollStudent(?,?,?)}";
-        Integer enrolledGradeLevelId;
-        System.out.println("Student Id: "+student.getStudentId());
-        if(student.getStudentType() == 1){
-            int level = student.getRegistration().getGradeLevelNo();
-            enrolledGradeLevelId = gradeLevelDaoImpl.getId(level);
-        }else{
-//            enrolledGradeLevelId = studentDaoImpl.getCurrentGradeLevelId(student.getStudentId());
-        }
-        
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
-            cs.setInt(1, sydi.getCurrentSchoolYearId());
-            cs.setInt(2, student.getStudentId());
-//            cs.setInt(3, enrolledGradeLevelId);
-            cs.executeUpdate();
-            isSuccessfullyEnrolled = true;
-        } catch (SQLException e) {
-            isSuccessfullyEnrolled = false;
-            e.printStackTrace();
-        }
-        return isSuccessfullyEnrolled;
-    }
-
-    @Override
-    public List<Enrollment> getAllEnrollmentSchedulesOfAllSchoolYears() {
-        String SQL = "{CALL getAllEnrollmentSchedulesOfAllSchoolYears()}";
-        List<Enrollment> list = new ArrayList<>();
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
             try (ResultSet rs = cs.executeQuery();) {
-                while(rs.next()){
+                while (rs.next()) {
+                    Student student = new Student();
+                    Registration r = new Registration();
+                    r.setRegistrationId(rs.getInt("registration_id"));
+                    r.setStudentType(rs.getString("student_type"));
+                    r.setLastName(rs.getString("lastname"));
+                    r.setFirstName(rs.getString("firstname"));
+                    r.setMiddleName(rs.getString("middlename"));
+                    r.setBirthday(rs.getDate("dob"));
+                    r.setPlaceOfBirth(rs.getString("pob"));
+                    r.setNationality(rs.getString("nationality"));
+                    r.setReligion(rs.getString("religion"));
+                    r.setGender(rs.getInt("gender") == 1 ? "Male" : "Female");
+                    r.setFatherFirstName(rs.getString("father_firstname"));
+                    r.setFatherMiddleName(rs.getString("father_middlename"));
+                    r.setFatherLastName(rs.getString("father_lastname"));
+                    r.setFatherOccupation(rs.getString("father_occupation"));
+                    r.setFatherOfficePhoneNo(rs.getString("father_officephone_no"));
+                    r.setFatherMobileNo(rs.getString("father_mobile_no"));
+                    r.setIsFatherContactInCaseEmergency(rs.getBoolean("isFatherContactInCaseEmergency"));
+                    r.setMotherFirstName(rs.getString("mother_firstname"));
+                    r.setMotherMiddleName(rs.getString("mother_middlename"));
+                    r.setMotherLastName(rs.getString("mother_lastname"));
+                    r.setMotherOccupation(rs.getString("mother_occupation"));
+                    r.setMotherOfficePhoneNo(rs.getString("mother_officephone_no"));
+                    r.setMotherMobileNo(rs.getString("mother_mobile_no"));
+                    r.setIsMotherContactInCaseEmergency(rs.getBoolean("isMotherContactInCaseEmergency"));
+                    r.setGuardianLastName(rs.getString("guardian_lastname"));
+                    r.setGuardianFirstName(rs.getString("guardian_firstname"));
+                    r.setGuardianMiddleName(rs.getString("guardian_middlename"));
+                    r.setGuardianOccupation(rs.getString("guardian_occupation"));
+                    r.setGuardianMobileNo(rs.getString("guardian_mobile_no"));
+                    r.setGuardianRelationToStudent(rs.getString("guardian_relation_to_student"));
+                    r.setIsGuardianContactInCaseEmergency(rs.getBoolean("isGuardianContactInCaseEmergency"));
+                    r.setSchoolLastAttended(rs.getString("school_last_attended"));
+                    r.setSchoolLastAttendedAddress(rs.getString("school_last_attended_address"));
+                    r.setAddressRoomOrHouseNo(rs.getString("room_or_house_no"));
+                    r.setAddressStreet(rs.getString("street"));
+                    r.setAddressBrgyOrSubd(rs.getString("brgy_or_subd"));
+                    r.setAddressCity(rs.getString("city"));
+                    r.setRegion(rs.getString("region"));
+                    r.setGradeLevelNo(rs.getInt("gradelevel_no"));
+                    r.setSchoolYearYearFrom(rs.getInt("schoolyear_yearfrom"));
+                    r.setRegistrationDate(rs.getDate("date_registered"));
+
+                    String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
+                    r.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes") ? true : false);
+                    
                     Enrollment enrollment = new Enrollment();
-                    SchoolYear schoolYear = new SchoolYear();
-                    enrollment.setEnrollmentId(rs.getInt(EnrollmentTable.ENROLLMENTID));
-                    enrollment.setOpeningDate(rs.getDate(EnrollmentTable.OPENINGDATE));
-                    enrollment.setClosingDate(rs.getDate(EnrollmentTable.CLOSINGDATE));
-                    enrollment.setDateCreated(rs.getDate(EnrollmentTable.DATECREATED));
-                    enrollment.setIsClosed(rs.getBoolean("isClosed")); //alias
+                    enrollment.setEnrollmentId(rs.getInt("enrollment_id"));
+                    enrollment.setSchoolYearId(rs.getInt("enrolledSchoolYearId"));
+                    enrollment.setEnrollmentDate(rs.getDate("dateEnrolled"));
+                    enrollment.setIsWithdrawn(rs.getBoolean("isEnrollmentWithdrawn"));
+                    enrollment.setEnrollmentType(rs.getString("enrollment_type"));
                     
-                    schoolYear.setSchoolYearId(rs.getInt(EnrollmentTable.SCHOOLYEARID));
-                    schoolYear.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
-                    schoolYear.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
-                    
-                    enrollment.setSchoolYear(schoolYear);
-                    list.add(enrollment);
+                    student.setStudentId(rs.getInt("student_id"));
+                    student.setStudentNo(rs.getInt("student_no"));
+                    student.setIsActive(rs.getBoolean("isStudentActive"));
+                    student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O") == true ? 0 : 1);
+                    student.setGradeLevelNo(rs.getInt("currentGradeLevel"));
+                    student.setRegistration(r);
+                    student.setEnrollment(enrollment);
+
+                    studentList.add(student);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return studentList;
     }
 
-    @Override
-    public Enrollment getEnrollmentScheduleBySchoolYear(SchoolYear aSchoolYear) {
-        String SQL = "{CALL getEnrollmentScheduleBySchoolYear(?)}";
-        Enrollment enrollment = new Enrollment(); //Parent Table
-        SchoolYear schoolYear = new SchoolYear(); //Child Table
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, aSchoolYear.getSchoolYearId());
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    enrollment.setEnrollmentId(rs.getInt(EnrollmentTable.ENROLLMENTID));
-                    enrollment.setOpeningDate(rs.getDate(EnrollmentTable.OPENINGDATE));
-                    enrollment.setClosingDate(rs.getDate(EnrollmentTable.CLOSINGDATE));
-                    enrollment.setDateCreated(rs.getDate(EnrollmentTable.DATECREATED));
-                    schoolYear.setSchoolYearId(rs.getInt(EnrollmentTable.SCHOOLYEARID));
-                    schoolYear.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
-                    schoolYear.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
-                    schoolYear.setSchoolYearStartDate(rs.getDate(SchoolYearTable.STARTDATE));
-                    schoolYear.setSchoolYearEndDate(rs.getDate(SchoolYearTable.ENDDATE));
-                    schoolYear.setIsActive(rs.getBoolean(SchoolYearTable.ISACTIVE));
-                    schoolYear.setIsCurrentSchoolYear(rs.getBoolean(SchoolYearTable.ISCURRENTSCHOOLYEAR));
-                    enrollment.setSchoolYear(schoolYear);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return enrollment;
-    }
-    
-    
 }

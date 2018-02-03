@@ -8,38 +8,10 @@ import java.util.Date;
 
 public class Enrollment {
     private int enrollmentId;
-    private SchoolYear schoolYear;
-    private Student student;
-    private Date openingDate; //date the enrollment is open to accept enrollments
-    private Date closingDate;
-    private Date dateCreated;
-    private boolean isClosed;
-
-    public boolean getIsClosed() {
-        return isClosed;
-    }
-
-    public void setIsClosed(boolean isClosed) {
-        this.isClosed = isClosed;
-    }
-    
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-    
+    private int schoolYearId;
+    private String enrollmentType;
+    private Date enrollmentDate;
+    private boolean isWithdrawn;
 
     public int getEnrollmentId() {
         return enrollmentId;
@@ -49,32 +21,39 @@ public class Enrollment {
         this.enrollmentId = enrollmentId;
     }
 
-    public SchoolYear getSchoolYear() {
-        return schoolYear;
+    public int getSchoolYearId() {
+        return schoolYearId;
     }
 
-    public void setSchoolYear(SchoolYear schoolYear) {
-        this.schoolYear = schoolYear;
+    public void setSchoolYearId(int schoolYearId) {
+        this.schoolYearId = schoolYearId;
     }
 
-    public Date getOpeningDate() {
-        return openingDate;
+    public String getEnrollmentType() {
+        return enrollmentType;
     }
 
-    public void setOpeningDate(Date openingDate) {
-        this.openingDate = openingDate;
+    public void setEnrollmentType(String enrollmentType) {
+        this.enrollmentType = enrollmentType;
     }
 
-    public Date getClosingDate() {
-        return closingDate;
+    public Date getEnrollmentDate() {
+        return enrollmentDate;
     }
 
-    public void setClosingDate(Date closingDate) {
-        this.closingDate = closingDate;
+    public void setEnrollmentDate(Date enrollmentDate) {
+        this.enrollmentDate = enrollmentDate;
     }
-   
-    
-    
+
+    public boolean isIsWithdrawn() {
+        return isWithdrawn;
+    }
+
+    public void setIsWithdrawn(boolean isWithdrawn) {
+        this.isWithdrawn = isWithdrawn;
+    }
+
+        
     
     
 }

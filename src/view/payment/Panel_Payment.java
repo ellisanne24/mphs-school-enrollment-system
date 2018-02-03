@@ -1,5 +1,6 @@
 package view.payment;
 
+import controller.payment.Display_Dialog_MakePayment;
 import controller.payment.SearchStudent;
 import daoimpl.FeeDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
@@ -57,6 +58,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     @Override
     public void initControllers() {
         jtfSearchBoxMakePayment.addKeyListener(new SearchStudent(this, studentDaoImpl, gradeLevelDaoImpl, feeDaoImpl, paymentTermDaoImpl));
+        jbtnMakePayment.addActionListener(new Display_Dialog_MakePayment(this));
     }
 
     @Override

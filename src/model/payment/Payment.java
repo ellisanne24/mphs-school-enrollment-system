@@ -1,66 +1,61 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model.payment;
 
-import model.schoolyear.SchoolYear;
-import model.student.Student;
+import java.math.BigDecimal;
 import java.util.Date;
-import model.particulars.Particulars;
+import java.util.List;
+import model.particulars.Particular;
 
 /**
  *
  * @author Jordan
  */
 public class Payment {
-    
-    private double amountTendered;
-    private double change;
+
+    private BigDecimal amountReceived;
+    private BigDecimal amountCharged;
+    private BigDecimal change;
     private Date dateOfPayment;
-    private Student student;
-    private SchoolYear schoolYear;
-    private Particulars particulars;
+    private int orNo;
+    private List<Particular> particulars;
 
-    public double getChange() {
-        return change;
+    public BigDecimal getAmountReceived() {
+        return amountReceived;
     }
 
-    public void setChange(double change) {
-        this.change = change;
+    public void setAmountReceived(BigDecimal amountReceived) {
+        this.amountReceived = amountReceived;
+    }
+
+    public BigDecimal getAmountCharged() {
+        return amountCharged;
+    }
+
+    public void setAmountCharged(BigDecimal amountCharged) {
+        this.amountCharged = amountCharged;
     }
     
-    public Particulars getParticulars() {
+    public List<Particular> getParticulars() {
         return particulars;
     }
 
-    public void setParticulars(Particulars particulars) {
+    public void setParticulars(List<Particular> particulars) {
         this.particulars = particulars;
     }
-    
-    public Student getStudent() {
-        return student;
+
+    public int getOrNo() {
+        return orNo;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setOrNo(int orNo) {
+        this.orNo = orNo;
     }
 
-    public SchoolYear getSchoolYear() {
-        return schoolYear;
+    public BigDecimal getChange() {
+        return change;
     }
 
-    public void setSchoolYear(SchoolYear schoolYear) {
-        this.schoolYear = schoolYear;
-    }
-
-    public double getAmountTendered() {
-        return amountTendered;
-    }
-
-    public void setAmountTendered(double amountTendered) {
-        this.amountTendered = amountTendered;
+    public void setChange(BigDecimal change) {
+        this.change = change;
     }
 
     public Date getDateOfPayment() {
@@ -70,6 +65,5 @@ public class Payment {
     public void setDateOfPayment(Date dateOfPayment) {
         this.dateOfPayment = dateOfPayment;
     }
-    
-    
+
 }

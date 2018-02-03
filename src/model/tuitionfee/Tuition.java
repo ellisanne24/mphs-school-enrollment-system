@@ -4,10 +4,8 @@ package model.tuitionfee;
 import java.util.List;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
-import model.fee.Fee;
 import model.payment.Payment;
 import model.paymentterm.PaymentTerm;
-import model.schoolyear.SchoolYear;
 import model.student.Student;
 
 /**
@@ -28,7 +26,6 @@ public class Tuition {
     
     private List<BalanceBreakDownFee> balanceBreakDownFees; //composed only of (basic + miscellaneous)/paymentterm
     
-    private SchoolYear schoolYear;
     private Student student;
 
     public int getSchoolyearId() {
@@ -61,14 +58,6 @@ public class Tuition {
 
     public void setStudent(Student student) {
         this.student = student;
-    }
-
-    public SchoolYear getSchoolYear() {
-        return schoolYear;
-    }
-
-    public void setSchoolYear(SchoolYear schoolYear) {
-        this.schoolYear = schoolYear;
     }
 
     public double getTotalFees() {

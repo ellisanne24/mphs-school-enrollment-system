@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
-import view.student.JdlgStudentInfo;
 
 /**
  *
@@ -47,13 +46,13 @@ public class DisplayTablePopupMenu implements MouseListener{
         int rowSelected = jtblStudentsList.getSelectedRow();
         int studentId = Integer.parseInt(jtblStudentsList.getValueAt(rowSelected, 0).toString());
         if (e.getClickCount() == 2) {
-            JdlgStudentInfo jdlgStudentInfo = new JdlgStudentInfo(studentId);
-            jdlgStudentInfo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            jdlgStudentInfo.setTitle("Student Information");
-            jdlgStudentInfo.setPreferredSize(new Dimension(1080,700));
-            jdlgStudentInfo.setLocationRelativeTo(null);
-            jdlgStudentInfo.pack();
-            jdlgStudentInfo.setVisible(true);
+//            JdlgStudentInfo jdlgStudentInfo = new JdlgStudentInfo(studentId);
+//            jdlgStudentInfo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//            jdlgStudentInfo.setTitle("Student Information");
+//            jdlgStudentInfo.setPreferredSize(new Dimension(1080,700));
+//            jdlgStudentInfo.setLocationRelativeTo(null);
+//            jdlgStudentInfo.pack();
+//            jdlgStudentInfo.setVisible(true);
         }
     }
 

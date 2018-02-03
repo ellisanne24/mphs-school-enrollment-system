@@ -4,42 +4,27 @@ import component_model_loader.PaymentTermJCompModelLoader;
 import daoimpl.FeeDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.PaymentTermDaoImpl;
-import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.fee.Fee;
 import model.paymentterm.PaymentTerm;
 import model.student.Student;
-import model.tuitionfee.Tuition;
 import service.tuition.TuitionPopulator;
-import view.payment.Dialog_MakePayment;
 import view.payment.Panel_Payment;
 
 /**
@@ -153,33 +138,6 @@ public class SearchStudent implements KeyListener {
         return sum;
     }
     
-    private List<BalanceBreakDownFee> getBalanceBreakDownFeeList() {
-        List<BalanceBreakDownFee> bbFeeList = new ArrayList<>();
-        for (int i = 0; i < view.getJtblBalanceBreakDown().getRowCount(); i++) {
-            try {
-                BalanceBreakDownFee bbFee = new BalanceBreakDownFee();
-                String name = view.getJtblBalanceBreakDown().getValueAt(i, 0).toString().trim();
-                BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(view.getJtblBalanceBreakDown().getValueAt(i, 1).toString().trim()));
-                String date = (view.getJtblBalanceBreakDown().getValueAt(i, 3).toString().trim());
-                String category = (view.getJtblBalanceBreakDown().getValueAt(i, 5).toString().trim());
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                if (!date.contains("--")) {
-                    Date deadline = format.parse(date);
-                    bbFee.setDeadline(deadline);
-                }
-                bbFee.setAmount(amount);
-
-                bbFee.setName(name);
-                bbFee.setCategory(category);
-
-                bbFeeList.add(bbFee);
-            } catch (ParseException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return bbFeeList;
-    }
-    
     private void initFeeTableModelListenerFor(JTable table, JTextField textField) {
         table.getModel().addTableModelListener((TableModelEvent e) -> {
             BigDecimal sum = new BigDecimal(BigInteger.ZERO);
@@ -193,43 +151,19 @@ public class SearchStudent implements KeyListener {
     }
 
     private void initPaymentTermComboItemListener() {
-        view.getJcmbPaymentTerm().addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    String paymentTermName = e.getItem().toString().trim();
-                    int paymentTermID = paymentTermDaoImpl.getPaymentTermIDByName(paymentTermName);
-                    paymentTerm = paymentTermDaoImpl.getPaymentTermByPaymentTermId(paymentTermID);
-                    initBalanceBreakDownTable(paymentTerm);
-
-                    SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-                    Tuition tuition = new Tuition();
-                    tuition.setStudent(student);
-                    tuition.setBalanceBreakDownFees(getBalanceBreakDownFeeList());
-                    tuition.setPaymentTerm(paymentTerm);
-                    tuition.setSchoolyearId(schoolYearDaoImpl.getCurrentSchoolYearId());
-
-                    Dialog_MakePayment d = new Dialog_MakePayment(tuition);
-                    if (d.isShowing()) {
-                        d.dispose();
-                    } else {
-                        d.setModal(true);
-                        d.pack();
-                        d.setLocationRelativeTo(null);
-                        d.setVisible(true);
-                        d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    }
-                }
+        view.getJcmbPaymentTerm().addItemListener((ItemEvent e) -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String paymentTermName = e.getItem().toString().trim();
+                int paymentTermID = paymentTermDaoImpl.getPaymentTermIDByName(paymentTermName);
+                paymentTerm = paymentTermDaoImpl.getPaymentTermByPaymentTermId(paymentTermID);
+                initBalanceBreakDownTable(paymentTerm);
             }
         });
     }
 
     private void initBalanceBreakDownTableModelListener() {
-        view.getJtblBalanceBreakDown().getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
+        view.getJtblBalanceBreakDown().getModel().addTableModelListener((TableModelEvent e) -> {
                 view.getJbtnMakePayment().setEnabled(view.getJtblBalanceBreakDown().getRowCount() > 0);
-            }
         });
     }
 

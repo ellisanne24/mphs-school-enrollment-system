@@ -3,23 +3,21 @@ package daoimpl;
 
 import dao.ITuitionFee;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import utility.database.DBType;
 import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import model.balancebreakdownfee.BalanceBreakDownFee;
-import model.discount.Discount;
+import model.particulars.Particular;
+import model.payment.Payment;
 import model.paymentterm.PaymentTerm;
-import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.Tuition;
+import utility.date.DateUtil;
 
 /**
  *
@@ -27,102 +25,41 @@ import model.tuitionfee.Tuition;
  */
 public class TuitionFeeDaoImpl implements ITuitionFee {
 
-    private final StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
-    private final SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-
-    public static double round(double value, int places) {
-        if (places < 0) {
-            throw new IllegalArgumentException();
-        }
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+    public TuitionFeeDaoImpl (){
     }
 
-    private static BigDecimal truncateDecimal(double x, int numberofDecimals) {
-        System.out.println("value@truncateDecimal() :"+x);
-        if (x > 0) {
-            return new BigDecimal(String.valueOf(x)).setScale(numberofDecimals, BigDecimal.ROUND_FLOOR);
-        } else {
-            return new BigDecimal(String.valueOf(x)).setScale(numberofDecimals, BigDecimal.ROUND_CEILING);
-        }
-    }
-    
     @Override
     public boolean add(Tuition tuitionFee) {
-        boolean isAdded = true;
+        boolean isAdded = false;
+        DateUtil dateUtil = new DateUtil();
+        String SQLa = "{CALL addBalanceBreakDownFee(?,?,?,?,?,?,?,?)}";
         PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
-        if(tuitionFee.getPayment() == null){
-            System.out.println("Null PaymentTerm");
-        }
-        int paymentTermId = paymentTerm.getPaymentTermId();
-
-        Discount discount = tuitionFee.getDiscount();
-        int studentId = tuitionFee.getStudent().getStudentId();
-        int schoolYearId = tuitionFee.getSchoolYear().getSchoolYearId();
-
-        String SQL_addBalanceBreakDownFee = "{CALL addBalanceBreakDownFee(?,?,?,?)}"; //add to balance_breakdown_fee master
-        String SQL_addTuitionFee = "{CALL addTuitionFee(?,?,?)}"; 
-        String SQL_addStudentDiscount = "{CALL addStudentDiscount(?,?,?,?)}";
-        String SQL_addStudentPaymentTerm = "{CALL addStudentPaymentTerm(?,?,?)}";
-        String SQL_addTransaction = "{CALL addTransaction(?,?)}";
-        String SQL_payTuitionFee = "{CALL payTuitionFee(?,?,?)}";
-        String SQL_addTransactionPayment = "{CALL addTransactionPayment(?,?)}";
-
+        Student student = tuitionFee.getStudent();
+        int schoolYearId = tuitionFee.getSchoolyearId();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement CS_addBalBreakDownFee = con.prepareCall(SQL_addBalanceBreakDownFee);
-                    CallableStatement CS_addTuitionFee = con.prepareCall(SQL_addTuitionFee);
-                    CallableStatement CS_addStudentDiscount = con.prepareCall(SQL_addStudentDiscount);
-                    CallableStatement CS_addStudentPaymentTerm = con.prepareCall(SQL_addStudentPaymentTerm);
-                    CallableStatement CS_addTransaction = con.prepareCall(SQL_addTransaction);
-                    CallableStatement CS_payTuitionFee = con.prepareCall(SQL_payTuitionFee);) {
-                
-                if (!tuitionFee.exists()) {
-                    for (BalanceBreakDownFee b : tuitionFee.getBalanceBreakDownFees()) {
-                        
-                        CS_addBalBreakDownFee.setString(1, b.getName());
-                        CS_addBalBreakDownFee.setBigDecimal(2, b.getAmount());
-                        CS_addBalBreakDownFee.setDate(3, (Date) b.getDeadline());
-                        CS_addBalBreakDownFee.registerOutParameter(4, Types.INTEGER);
-                        CS_addBalBreakDownFee.executeUpdate();
-                        int balanceBreakDownFeeId = CS_addBalBreakDownFee.getInt(4);
-
-                        CS_addTuitionFee.setInt(1, balanceBreakDownFeeId);
-                        CS_addTuitionFee.setInt(2, studentId);
-                        CS_addTuitionFee.setInt(3, schoolYearId);
-                        CS_addTuitionFee.executeUpdate();
-                    }
-                    if (discount != null) {
-                        CS_addStudentDiscount.setInt(1, studentId);
-                        CS_addStudentDiscount.setInt(2, discount.getId());
-                        CS_addStudentDiscount.setInt(3, schoolYearId);
-                        CS_addStudentDiscount.setDouble(4,discount.getAmount());
-                        CS_addStudentDiscount.executeUpdate();
-                    }
-
-                    CS_addStudentPaymentTerm.setInt(1, studentId);
-                    CS_addStudentPaymentTerm.setInt(2, paymentTermId);
-                    CS_addStudentPaymentTerm.setInt(3, schoolYearId);
-                    CS_addStudentPaymentTerm.executeUpdate();
-                    
-//                    CS_addTransaction.setInt(1, studentId);
-//                    CS_addTransaction.registerOutParameter(2, Types.INTEGER);
-//                    int transactionId = CS_addTransaction.getInt(2);
-                    
-                    
-                    
+            try (CallableStatement csa = con.prepareCall(SQLa);) {
+                for (BalanceBreakDownFee b : tuitionFee.getBalanceBreakDownFees()) {
+                    csa.setString(1, b.getName().trim());
+                    csa.setBigDecimal(2, b.getAmount());
+                    csa.setDate(3, dateUtil.toSqlDate(b.getDeadline()));
+                    csa.setString(4, b.getCategory().trim());
+                    csa.setInt(5, student.getStudentId());
+                    csa.setInt(6, paymentTerm.getPaymentTermId());
+                    csa.setInt(7, schoolYearId);
+                    csa.registerOutParameter(8, Types.INTEGER);
+                    csa.executeUpdate();
+                    int balancebreakdownId = csa.getInt(8);
+                    System.out.println(b.getName()+" added.");
                 }
                 con.commit();
-            } catch (SQLException e) {
+                isAdded = true;
+            } catch (Exception e) {
                 con.rollback();
                 con.setAutoCommit(true);
-                isAdded = false;
                 e.printStackTrace();
             }
         } catch (SQLException e) {
-            isAdded = false;
             e.printStackTrace();
         }
         return isAdded;
@@ -132,162 +69,71 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     public Tuition get(int studentId, int schoolyearId) {
         Tuition tuitionFee = new Tuition();
         
-        List<BalanceBreakDownFee> balanceBreakDownFeeList = new ArrayList<>();
-        boolean exists = false;
-        SchoolYear schoolYear = schoolYearDaoImpl.getSchoolYearById(schoolyearId);
-        Student student = studentDaoImpl.getStudentByStudentNo(studentId);
-        PaymentTerm paymentTerm = new PaymentTerm();
-        Discount discount = new Discount();
-
-        String SQLa = "{CALL tuitionFeeExists(?,?)}";
-        String SQLb = "{CALL getTuitionFee(?,?)}";
-        String SQLc = "{CALL getTuitionFeeSum(?,?)}";
-        String SQLd = "{CALL getStudentPaymentTerm(?,?)}";
-        String SQLe = "{CALL getStudentDiscount(?,?)}";
-        String SQLf = "{CALL getTuitionFeeTotalPaid(?,?)}";
-        String SQLg = "{CALL hasTuitionFeeDiscount(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
-            try (CallableStatement csA = con.prepareCall(SQLa);
-                    CallableStatement csB = con.prepareCall(SQLb);
-                    CallableStatement csC = con.prepareCall(SQLc);
-                    CallableStatement csD = con.prepareCall(SQLd);
-                    CallableStatement csE = con.prepareCall(SQLe);
-                    CallableStatement csF = con.prepareCall(SQLf);
-                    CallableStatement csG = con.prepareCall(SQLg)) {
-                csA.setInt(1, studentId);
-                csA.setInt(2, schoolyearId);
-                try (ResultSet rsa = csA.executeQuery();) {
-                    while (rsa.next()) {
-                        exists = rsa.getBoolean("tuitionFeeExists");
-                    }
-                    tuitionFee.setExists(exists);
-                }
-
-                csB.setInt(1, studentId);
-                csB.setInt(2, schoolyearId);
-                try (ResultSet rsb = csB.executeQuery();) {
-                    while (rsb.next()) {
-                        BalanceBreakDownFee balanceBreakDownFee = new BalanceBreakDownFee();
-                        balanceBreakDownFee.setAmount(rsb.getBigDecimal("amount"));
-                        balanceBreakDownFee.setBalance(rsb.getBigDecimal("balance"));
-                        balanceBreakDownFee.setId(rsb.getInt("balance_breakdown_fee_id"));
-                        balanceBreakDownFee.setDateAssigned(rsb.getTimestamp("date_assigned"));
-                        balanceBreakDownFee.setIsPaid(rsb.getBoolean("isPaid"));
-                        balanceBreakDownFee.setName(rsb.getString("description"));
-
-                        balanceBreakDownFeeList.add(balanceBreakDownFee);
-                    }
-                    tuitionFee.setBalanceBreakDownFees(balanceBreakDownFeeList);
-                }
-
-                csC.setInt(1, studentId);
-                csC.setInt(2, schoolyearId);
-                try (ResultSet rsc = csC.executeQuery();) {
-                    while (rsc.next()) {
-                        tuitionFee.setTotalFees(rsc.getDouble("tuitionFeeSum"));
-                    }
-                }
-
-                csD.setInt(1, studentId);
-                csD.setInt(2, schoolyearId);
-                try(ResultSet rsD = csD.executeQuery();){
-                    while(rsD.next()){
-//                        paymentTerm.setPaymentTermId(rsD.getInt("paymentterm_id"));
-                        paymentTerm.setPaymentTermName(rsD.getString("paymentterm"));
-//                        paymentTerm.setIsActive(rsD.getBoolean("isActive"));
-                        paymentTerm.setDivisor(rsD.getInt("divisor"));
-                    }
-                }
-                
-                csE.setInt(1,studentId);
-                csE.setInt(2,schoolyearId);
-                try(ResultSet rsE = csE.executeQuery();){
-                    while(rsE.next()){
-                        discount.setAmount(rsE.getInt("amount"));
-                        discount.setId(rsE.getInt("discount_id"));
-                        discount.setDiscountName(rsE.getString("discount_name"));
-                        discount.setPercentOfDiscount(rsE.getInt("percentage"));
-                        discount.setDescription(rsE.getString("description"));
-                        discount.setDateCreated(rsE.getDate("date_created"));
-                        discount.setIsActive(rsE.getBoolean("isActive"));
-                    }
-                }
-                
-                csF.setInt(1,studentId);
-                csF.setInt(2,schoolyearId);
-                try(ResultSet rsF = csF.executeQuery();){
-                    while(rsF.next()){
-                        tuitionFee.setTotalPaid(rsF.getDouble("totalTuitionPaid"));
-                    }
-                }
-                
-                csG.setInt(1, studentId);
-                csG.setInt(2, studentId);
-                try(ResultSet rsG = csG.executeQuery();){
-                    while(rsG.next()){
-                        tuitionFee.setHasDiscount(rsG.getBoolean("hasDiscount"));
-                    }
-                }
-                
-                tuitionFee.setDiscount(discount);
-                tuitionFee.setPaymentTerm(paymentTerm);
-                tuitionFee.setStudent(student);
-                tuitionFee.setSchoolYear(schoolYear);
-                
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return tuitionFee;
     }
 
     @Override
+    public int getBalanceBreakDownId(String balancebreakdownName, int studentId, int schoolyearId) {
+        int balancebreakdownId = 0;
+        String SQL = "{CALL getBalanceBreakDownId(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setString(1, balancebreakdownName.trim());
+            cs.setInt(2, studentId);
+            cs.setInt(3, schoolyearId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    balancebreakdownId = rs.getInt("balancebreakdown_id");
+                    System.out.println("BalanceBreakDown Id: "+balancebreakdownId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return balancebreakdownId;
+    }
+
+    @Override
     public boolean pay(Tuition tuitionFee) {
-        boolean isSuccessfullyPaid = false;
-        String SQL_addTransaction = "{CALL addTransaction(?,?)}";
-        String SQL_payTuitionFee = "{CALL payTuitionFee(?,?,?)}";
-        String SQL_addTransactionPayment = "{CALL addTransactionPayment(?,?)}";
+        boolean isSuccessful = false;
+        Payment payment = tuitionFee.getPayment();
+        String SQLa = "{CALL addTransaction(?,?,?,?,?)}";
+        String SQLb = "{CALL addTransactionBalanceBreakDown(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement CS_AddTransaction = con.prepareCall(SQL_addTransaction);
-                    CallableStatement CS_PayTuitionFee = con.prepareCall(SQL_payTuitionFee);
-                    CallableStatement CS_AddTransactionPayment = con.prepareCall(SQL_addTransactionPayment);) {
-                CS_AddTransaction.setInt(1, tuitionFee.getStudent().getStudentId());
-                CS_AddTransaction.registerOutParameter(2, Types.INTEGER);
-                CS_AddTransaction.executeUpdate();
-                int transactionId = CS_AddTransaction.getInt(2);
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);) {
+                csa.setInt(1, tuitionFee.getStudent().getStudentId());
+                csa.setBigDecimal(2, payment.getAmountReceived());
+                csa.setBigDecimal(3, payment.getAmountCharged());
+                csa.setInt(4, payment.getOrNo());
+                csa.registerOutParameter(5, Types.INTEGER);
+                csa.executeUpdate();
+                int transactionId = csa.getInt(5);
+    
+                int studentId = tuitionFee.getStudent().getStudentId();
+                int schoolYearId = tuitionFee.getSchoolyearId();
                 
-                List<BalanceBreakDownFee> breakDownFeeList = tuitionFee.getPayment().getParticulars().getBalanceBreakDownFees();
-                double amountTendered = tuitionFee.getPayment().getAmountTendered();
-                for(BalanceBreakDownFee breakDownFee: breakDownFeeList){
-                    System.out.println("BreakdownFeeId :"+breakDownFee.getId());
-                    CS_PayTuitionFee.setInt(1, breakDownFee.getId());
-                    CS_PayTuitionFee.setDouble(2,amountTendered);
-                    CS_PayTuitionFee.registerOutParameter(3, Types.INTEGER);
-                    CS_PayTuitionFee.executeUpdate();
-                    int paymentId = CS_PayTuitionFee.getInt(3);
-                    
-                    CS_AddTransactionPayment.setInt(1, transactionId);
-                    CS_AddTransactionPayment.setInt(2, paymentId);
-                    CS_AddTransactionPayment.executeUpdate();
+                for (Particular p : payment.getParticulars()) {
+                    int particularId = getBalanceBreakDownId(p.getName().trim(), studentId, schoolYearId);
+                    csb.setInt(1,transactionId);
+                    csb.setInt(2,particularId);
+                    csb.setBigDecimal(3, p.getAmountPaid());
+                    csb.executeUpdate();
                 }
-                
                 con.commit();
-                isSuccessfullyPaid = true;
-            } catch (SQLException e) {
+                isSuccessful = true;
+            } catch (Exception e) {
                 con.rollback();
                 con.setAutoCommit(true);
                 e.printStackTrace();
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return isSuccessfullyPaid;
+        return isSuccessful;
     }
 
-
+    
     
 }

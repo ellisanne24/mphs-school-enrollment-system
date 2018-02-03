@@ -4,7 +4,7 @@ package model.student;
 import model.tuitionfee.Tuition;
 import java.util.Date;
 import model.admission.Admission;
-import model.gradelevel.GradeLevel;
+import model.enrollment.Enrollment;
 import model.paymentterm.PaymentTerm;
 import model.registration.Registration;
 
@@ -16,6 +16,7 @@ public class Student {
     private Registration registration;
     private Admission admission;
     private PaymentTerm paymentTerm;
+    private Enrollment enrollment;
     private boolean exists;
     private boolean isActive;
     private boolean isGraduated;
@@ -25,6 +26,14 @@ public class Student {
 
     public int gradeLevelNo; //current gradelevelNo
 
+    public Enrollment getEnrollment() {
+        return enrollment;
+    }
+
+    public void setEnrollment(Enrollment enrollment) {
+        this.enrollment = enrollment;
+    }
+    
     public int getStudentNo() {
         return studentNo;
     }

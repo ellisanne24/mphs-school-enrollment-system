@@ -2358,21 +2358,21 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void setjtblEnrollmentScheduleList() {
-        EnrollmentDaoImpl edi = new EnrollmentDaoImpl();
-        Object[] enrollmentScheduleRowData = edi.getAllEnrollmentSchedulesOfAllSchoolYears().toArray();
-        DefaultTableModel tModel = (DefaultTableModel) jtblEnrollmentSchedule.getModel();
-        tModel.setRowCount(0);
-        for (Object esrd : enrollmentScheduleRowData) {
-            Enrollment e = (Enrollment) esrd;
-            Object[] o = {
-                e.getSchoolYear().getSchoolYearId(),
-                e.getSchoolYear().getYearFrom() + "-" + e.getSchoolYear().getYearTo(),
-                e.getOpeningDate(),
-                e.getClosingDate(),
-                e.getIsClosed() == true ? "Yes" : "No"
-            };
-            tModel.addRow(o);
-        }
+//        EnrollmentDaoImpl edi = new EnrollmentDaoImpl();
+//        Object[] enrollmentScheduleRowData = edi.getAllEnrollmentSchedulesOfAllSchoolYears().toArray();
+//        DefaultTableModel tModel = (DefaultTableModel) jtblEnrollmentSchedule.getModel();
+//        tModel.setRowCount(0);
+//        for (Object esrd : enrollmentScheduleRowData) {
+//            Enrollment e = (Enrollment) esrd;
+//            Object[] o = {
+//                e.getSchoolYear().getSchoolYearId(),
+//                e.getSchoolYear().getYearFrom() + "-" + e.getSchoolYear().getYearTo(),
+//                e.getOpeningDate(),
+//                e.getClosingDate(),
+//                e.getIsClosed() == true ? "Yes" : "No"
+//            };
+//            tModel.addRow(o);
+//        }
     }
 
     private void setjtblSchoolYearList() {
@@ -2555,7 +2555,7 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
             openingDay = Integer.parseInt(jcmbEnrollmentOpeningDateDay.getSelectedItem().toString());
             strOpenDate = openingYear + "-" + (openingMonth+1) + "-" + openingDay;
             openDate = java.sql.Date.valueOf(strOpenDate);
-            enrollment.setOpeningDate(openDate);
+//            enrollment.setOpeningDate(openDate);
 
             // SCHOOL YEAR ENROLLMENT CLOSING DATE 
             int closingYear, closingMonth, closingDay;
@@ -2567,7 +2567,7 @@ public class SchoolYearManagementContainer extends javax.swing.JPanel {
             closingDay = Integer.parseInt(jcmbEnrollmentClosingDateDay.getSelectedItem().toString());
             strCloseDate = closingYear + "-" + (closingMonth+1) + "-" + closingDay;
             closeDate = java.sql.Date.valueOf(strCloseDate);
-            enrollment.setClosingDate(closeDate);
+//            enrollment.setClosingDate(closeDate);
 
 //            schoolYear.setEnrollment(enrollment);
         }

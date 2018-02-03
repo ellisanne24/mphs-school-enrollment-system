@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -19,7 +20,7 @@ import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.receipt.OfficialReceipt;
-import model.particulars.Particulars;
+import model.particulars.Particular;
 import model.payment.Payment;
 
 /**
@@ -28,14 +29,14 @@ import model.payment.Payment;
  */
 public class Receipt extends javax.swing.JDialog {
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    private final SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-    private final DecimalFormat decimalFormatter = new DecimalFormat("#0.00");
-    private final Image schoolLogo;
-    private final Payment payment;
-    private final Student student;
-    private final SchoolYear schoolYear;
-    private final Particulars particulars;
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
+    private DecimalFormat decimalFormatter = new DecimalFormat("#0.00");
+    private Image schoolLogo;
+    private Payment payment;
+    private Student student;
+    private SchoolYear schoolYear;
+    private Particular particulars;
 
     public Receipt(OfficialReceipt officialReceipt) {
         super(null, ModalityType.APPLICATION_MODAL);
@@ -43,10 +44,8 @@ public class Receipt extends javax.swing.JDialog {
         initializeControllers();
         schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.jpg", 200, 200);
 
-        this.particulars = officialReceipt.getPayment().getParticulars();
         this.payment = officialReceipt.getPayment();
         this.student = officialReceipt.getStudent();
-        this.schoolYear = officialReceipt.getPayment().getSchoolYear();
         setFormDetails();
 
         JTableHeader header = jtblParticulars.getTableHeader();
@@ -74,9 +73,9 @@ public class Receipt extends javax.swing.JDialog {
         String address = roomHouseNo + street + brgyOrSubd + city;
         String gradeLevel = student.getGradeLevelNo()+"";
 
-        double amountTendered = payment.getAmountTendered();
-        double change = payment.getChange();
-        double particularsBalanceSum = particulars.getBalanceSum();
+        BigDecimal amountTendered = payment.getAmountReceived();
+        BigDecimal change = payment.getChange();
+//        BigDecimal particularsBalanceSum = particulars.getBalanceSum();
 
         int schoolYearFrom = schoolYear.getYearFrom();
         int schoolYearTo = schoolYear.getYearTo();
@@ -87,8 +86,8 @@ public class Receipt extends javax.swing.JDialog {
         jlblStudentIdText.setText(studentId + "");
         jlblNameText.setText(studentName);
         jlblAddressText.setText(address);
-        jlblTotalPaymentDueText.setText("\u20B1 " + decimalFormatter.format(particularsBalanceSum) + "");
-        jlblCashText.setText("\u20B1 " + decimalFormatter.format(particularsBalanceSum) + "");
+//        jlblTotalPaymentDueText.setText("\u20B1 " + decimalFormatter.format(particularsBalanceSum) + "");
+//        jlblCashText.setText("\u20B1 " + decimalFormatter.format(particularsBalanceSum) + "");
         jlblCashReceivedText.setText("\u20B1 " + decimalFormatter.format(amountTendered) + "");
         jlblChangeText.setText("\u20B1 " + decimalFormatter.format(change));
         jlblGradeLevelText.setText(gradeLevel);
@@ -97,12 +96,12 @@ public class Receipt extends javax.swing.JDialog {
         DefaultTableModel tableModel = (DefaultTableModel) jtblParticulars.getModel();
         tableModel.setRowCount(0);
 
-        for (Object o : particulars.getBalanceBreakDownFees()) {
-            BalanceBreakDownFee b = (BalanceBreakDownFee) o;
-            double balance = b.getBalance().doubleValue();
-            String description = b.getName();
-            tableModel.addRow(new Object[]{description, " (" + "\u20B1" + decimalFormatter.format(balance) + " )"});
-        }
+//        for (Object o : particulars.getBalanceBreakDownFees()) {
+//            BalanceBreakDownFee b = (BalanceBreakDownFee) o;
+//            double balance = b.getBalance().doubleValue();
+//            String description = b.getName();
+//            tableModel.addRow(new Object[]{description, " (" + "\u20B1" + decimalFormatter.format(balance) + " )"});
+//        }
         jtblParticulars.setModel(tableModel);
     }
 

@@ -107,8 +107,10 @@ public class StudentDaoImpl implements IStudent {
                         String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
                         r.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes") ? true : false);
                         
+                        student.setStudentId(rs.getInt("student_id"));
                         student.setStudentNo(rs.getInt("student_no"));
-                        student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O")==true?0:1);
+                        student.setIsActive(rs.getBoolean("isStudentActive"));
+                        student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O") == true ? 0 : 1);
                         student.setGradeLevelNo(rs.getInt("currentGradeLevel"));
                         student.setRegistration(r);
                     }

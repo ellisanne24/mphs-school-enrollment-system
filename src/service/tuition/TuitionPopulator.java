@@ -7,6 +7,8 @@ package service.tuition;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JTable;
@@ -94,7 +96,7 @@ public class TuitionPopulator {
     private void addOtherFees(DefaultTableModel tableModel) {
         for (Fee f : fees) {
             if (f.getFeeCategory().getName().trim().equalsIgnoreCase("Others")) {
-                Object[] otherFeeRowData = {f.getName(), f.getAmount(), f.getAmount(), "--", "No", "Other"};
+                Object[] otherFeeRowData = {f.getName(), f.getAmount(), f.getAmount(), "1970-01-01", "No", "Other"};
                 tableModel.addRow(otherFeeRowData);
             }
         }
