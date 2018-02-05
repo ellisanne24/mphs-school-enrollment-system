@@ -99,10 +99,12 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         Payment payment = tuitionFee.getPayment();
         String SQLa = "{CALL addTransaction(?,?,?,?,?)}";
         String SQLb = "{CALL addTransactionBalanceBreakDown(?,?,?)}";
+        String SQLc = "{CALL markOrNoAsUsed(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
             try (CallableStatement csa = con.prepareCall(SQLa);
-                    CallableStatement csb = con.prepareCall(SQLb);) {
+                    CallableStatement csb = con.prepareCall(SQLb);
+                    CallableStatement csc = con.prepareCall(SQLc);) {
                 csa.setInt(1, tuitionFee.getStudent().getStudentId());
                 csa.setBigDecimal(2, payment.getAmountReceived());
                 csa.setBigDecimal(3, payment.getAmountCharged());
@@ -121,6 +123,10 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     csb.setBigDecimal(3, p.getAmountPaid());
                     csb.executeUpdate();
                 }
+                
+                csc.setInt(1, payment.getOrNo());
+                csc.executeUpdate();
+                
                 con.commit();
                 isSuccessful = true;
             } catch (Exception e) {

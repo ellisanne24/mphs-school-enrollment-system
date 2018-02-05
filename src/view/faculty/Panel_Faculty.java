@@ -85,7 +85,6 @@ public class Panel_Faculty extends javax.swing.JPanel{
         panel_control = new javax.swing.JPanel();
         btn_addnewfaculty = new javax.swing.JButton();
         btn_Edit = new javax.swing.JButton();
-        btn_View = new javax.swing.JButton();
         btn_Print = new javax.swing.JButton();
         jtfSearchBox = new javax.swing.JTextField();
         jbtnSearch = new javax.swing.JButton();
@@ -168,14 +167,6 @@ public class Panel_Faculty extends javax.swing.JPanel{
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         panel_control.add(btn_Edit, gridBagConstraints);
-
-        btn_View.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_View.setText("View");
-        btn_View.setActionCommand("view");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        panel_control.add(btn_View, gridBagConstraints);
 
         btn_Print.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btn_Print.setText("Print");
@@ -326,7 +317,6 @@ public class Panel_Faculty extends javax.swing.JPanel{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Edit;
     private javax.swing.JButton btn_Print;
-    private javax.swing.JButton btn_View;
     private javax.swing.JButton btn_addnewfaculty;
     private javax.swing.JComboBox<String> combo_filter;
     private javax.swing.JScrollPane jScrollPane1;

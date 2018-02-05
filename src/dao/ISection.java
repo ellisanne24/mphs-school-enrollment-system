@@ -3,11 +3,7 @@ package dao;
 
 
 import java.util.List;
-import model.faculty.Faculty;
-import model.gradelevel.GradeLevel;
-import model.schoolyear.SchoolYear;
 import model.section.Section;
-import model.session.Session;
 import model.student.Student;
 
 
@@ -19,12 +15,15 @@ public interface ISection{
     */
     
     boolean addSection(Section section);
+    boolean addStudentsToSection(Section section);
     boolean updateSection(Section section);
+    boolean sectionExists(String sectionName);
     Section getSectionById(int sectionId);
     List<Section> getAllSections();
+    List<Section> getAllSectionsByStatusAndSchoolYearId(boolean status, int schoolYearId);
     List<Section> getSectionsByWildCard(String wildCardChar);
-    List<Section> getSectionsByGradeLevelNo(int gradeLevelNo);
-    
+    List<Section> getSectionsByGradeLevelNoAndSchoolYearId(int gradeLevelNo, int schoolYearId);
+    List<Student> getSectionStudentsBySectionIdAndSchoolYearId(Section section);
     /*
     End 
     */

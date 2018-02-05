@@ -4,12 +4,23 @@ import component_model_loader.EnrollmentJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.RegistrationJCompModelLoader;
 import component_renderers.GradeLevelJComboBoxRenderer;
+import controller.enrollment.DisplayAllEnrolledOnGradeLevelFilter;
+import controller.enrollment.DisplayDialogSectionAssignment;
+import controller.enrollment.RefreshEnrolledRecord;
 import controller.registration.DisplayRegistrationJDialog;
 import controller.registration.DisplayRegistrationRecordByAdmissionStatus;
 import controller.registration.DisplayRegistrationRecordByWildCard;
 import controller.registration.RefreshRegistrationList;
 import daoimpl.EnrollmentDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.user.User;
 import utility.initializer.Initializer;
@@ -72,6 +83,9 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initControllers() {
+        jbtnSectioning.addActionListener(new DisplayDialogSectionAssignment());
+        jbtnRefreshEnrolledRecords.addActionListener(new RefreshEnrolledRecord(this));
+        jcmbEnrolledFilterGradeLevel.addItemListener(new DisplayAllEnrolledOnGradeLevelFilter(this));
         jcmbFilterRegistered.addItemListener(new DisplayRegistrationRecordByAdmissionStatus(jtblRegisteredMasterList, jcmbFilterRegistered));
         jbtnEditRegistration.addActionListener(new DisplayRegistrationJDialog(jtblRegisteredMasterList, jbtnEditRegistration.getActionCommand()));
         jbtnRefreshRegistrationList.addActionListener(new RefreshRegistrationList(jtblRegisteredMasterList));
@@ -82,6 +96,278 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
+    }
+
+    public JPanel getjPanel1() {
+        return jPanel1;
+    }
+
+    public void setjPanel1(JPanel jPanel1) {
+        this.jPanel1 = jPanel1;
+    }
+
+    public JScrollPane getjScrollPane1() {
+        return jScrollPane1;
+    }
+
+    public void setjScrollPane1(JScrollPane jScrollPane1) {
+        this.jScrollPane1 = jScrollPane1;
+    }
+
+    public JScrollPane getjScrollPane2() {
+        return jScrollPane2;
+    }
+
+    public void setjScrollPane2(JScrollPane jScrollPane2) {
+        this.jScrollPane2 = jScrollPane2;
+    }
+
+    public JButton getJbtnEditRegistration() {
+        return jbtnEditRegistration;
+    }
+
+    public void setJbtnEditRegistration(JButton jbtnEditRegistration) {
+        this.jbtnEditRegistration = jbtnEditRegistration;
+    }
+
+    public JButton getJbtnEnrolledSearch() {
+        return jbtnEnrolledSearch;
+    }
+
+    public void setJbtnEnrolledSearch(JButton jbtnEnrolledSearch) {
+        this.jbtnEnrolledSearch = jbtnEnrolledSearch;
+    }
+
+    public JButton getJbtnRefreshEnrolledRecords() {
+        return jbtnRefreshEnrolledRecords;
+    }
+
+    public void setJbtnRefreshEnrolledRecords(JButton jbtnRefreshEnrolledRecords) {
+        this.jbtnRefreshEnrolledRecords = jbtnRefreshEnrolledRecords;
+    }
+
+    public JButton getJbtnRefreshRegistrationList() {
+        return jbtnRefreshRegistrationList;
+    }
+
+    public void setJbtnRefreshRegistrationList(JButton jbtnRefreshRegistrationList) {
+        this.jbtnRefreshRegistrationList = jbtnRefreshRegistrationList;
+    }
+
+    public JButton getJbtnSearchRegistered() {
+        return jbtnSearchRegistered;
+    }
+
+    public void setJbtnSearchRegistered(JButton jbtnSearchRegistered) {
+        this.jbtnSearchRegistered = jbtnSearchRegistered;
+    }
+
+    public JButton getJbtnSectioning() {
+        return jbtnSectioning;
+    }
+
+    public void setJbtnSectioning(JButton jbtnSectioning) {
+        this.jbtnSectioning = jbtnSectioning;
+    }
+
+    public JButton getJbtnWithdrawEnrollment() {
+        return jbtnWithdrawEnrollment;
+    }
+
+    public void setJbtnWithdrawEnrollment(JButton jbtnWithdrawEnrollment) {
+        this.jbtnWithdrawEnrollment = jbtnWithdrawEnrollment;
+    }
+
+    public JComboBox<String> getJcmbEnrolledFilterGradeLevel() {
+        return jcmbEnrolledFilterGradeLevel;
+    }
+
+    public void setJcmbEnrolledFilterGradeLevel(JComboBox<String> jcmbEnrolledFilterGradeLevel) {
+        this.jcmbEnrolledFilterGradeLevel = jcmbEnrolledFilterGradeLevel;
+    }
+
+    public JComboBox<String> getJcmbEnrolledShowFilter() {
+        return jcmbEnrolledShowFilter;
+    }
+
+    public void setJcmbEnrolledShowFilter(JComboBox<String> jcmbEnrolledShowFilter) {
+        this.jcmbEnrolledShowFilter = jcmbEnrolledShowFilter;
+    }
+
+    public JComboBox<String> getJcmbFilterRegistered() {
+        return jcmbFilterRegistered;
+    }
+
+    public void setJcmbFilterRegistered(JComboBox<String> jcmbFilterRegistered) {
+        this.jcmbFilterRegistered = jcmbFilterRegistered;
+    }
+
+    public JLabel getJlblCurrentSchoolYearEnrolled() {
+        return jlblCurrentSchoolYearEnrolled;
+    }
+
+    public void setJlblCurrentSchoolYearEnrolled(JLabel jlblCurrentSchoolYearEnrolled) {
+        this.jlblCurrentSchoolYearEnrolled = jlblCurrentSchoolYearEnrolled;
+    }
+
+    public JLabel getJlblCurrentSchoolYearRegistered() {
+        return jlblCurrentSchoolYearRegistered;
+    }
+
+    public void setJlblCurrentSchoolYearRegistered(JLabel jlblCurrentSchoolYearRegistered) {
+        this.jlblCurrentSchoolYearRegistered = jlblCurrentSchoolYearRegistered;
+    }
+
+    public JPanel getJpnlContent() {
+        return jpnlContent;
+    }
+
+    public void setJpnlContent(JPanel jpnlContent) {
+        this.jpnlContent = jpnlContent;
+    }
+
+    public JPanel getJpnlEnrolled() {
+        return jpnlEnrolled;
+    }
+
+    public void setJpnlEnrolled(JPanel jpnlEnrolled) {
+        this.jpnlEnrolled = jpnlEnrolled;
+    }
+
+    public JPanel getJpnlRegistered() {
+        return jpnlRegistered;
+    }
+
+    public void setJpnlRegistered(JPanel jpnlRegistered) {
+        this.jpnlRegistered = jpnlRegistered;
+    }
+
+    public JTable getJtblEnrolledMasterList() {
+        return jtblEnrolledMasterList;
+    }
+
+    public void setJtblEnrolledMasterList(JTable jtblEnrolledMasterList) {
+        this.jtblEnrolledMasterList = jtblEnrolledMasterList;
+    }
+
+    public JTable getJtblRegisteredMasterList() {
+        return jtblRegisteredMasterList;
+    }
+
+    public void setJtblRegisteredMasterList(JTable jtblRegisteredMasterList) {
+        this.jtblRegisteredMasterList = jtblRegisteredMasterList;
+    }
+
+    public JTextField getJtfEnrolledSearchBox() {
+        return jtfEnrolledSearchBox;
+    }
+
+    public void setJtfEnrolledSearchBox(JTextField jtfEnrolledSearchBox) {
+        this.jtfEnrolledSearchBox = jtfEnrolledSearchBox;
+    }
+
+    public JTextField getJtfSearchRegistered() {
+        return jtfSearchRegistered;
+    }
+
+    public void setJtfSearchRegistered(JTextField jtfSearchRegistered) {
+        this.jtfSearchRegistered = jtfSearchRegistered;
+    }
+
+    public JTabbedPane getJtpContainer() {
+        return jtpContainer;
+    }
+
+    public void setJtpContainer(JTabbedPane jtpContainer) {
+        this.jtpContainer = jtpContainer;
+    }
+
+    public JLabel getLbl_show() {
+        return lbl_show;
+    }
+
+    public void setLbl_show(JLabel lbl_show) {
+        this.lbl_show = lbl_show;
+    }
+
+    public JLabel getLbl_show1() {
+        return lbl_show1;
+    }
+
+    public void setLbl_show1(JLabel lbl_show1) {
+        this.lbl_show1 = lbl_show1;
+    }
+
+    public JLabel getLbl_show2() {
+        return lbl_show2;
+    }
+
+    public void setLbl_show2(JLabel lbl_show2) {
+        this.lbl_show2 = lbl_show2;
+    }
+
+    public JLabel getLbl_show3() {
+        return lbl_show3;
+    }
+
+    public void setLbl_show3(JLabel lbl_show3) {
+        this.lbl_show3 = lbl_show3;
+    }
+
+    public JLabel getLbl_show5() {
+        return lbl_show5;
+    }
+
+    public void setLbl_show5(JLabel lbl_show5) {
+        this.lbl_show5 = lbl_show5;
+    }
+
+    public JPanel getPanel_control() {
+        return panel_control;
+    }
+
+    public void setPanel_control(JPanel panel_control) {
+        this.panel_control = panel_control;
+    }
+
+    public JPanel getPanel_control1() {
+        return panel_control1;
+    }
+
+    public void setPanel_control1(JPanel panel_control1) {
+        this.panel_control1 = panel_control1;
+    }
+
+    public JPanel getPanel_masterrecord() {
+        return panel_masterrecord;
+    }
+
+    public void setPanel_masterrecord(JPanel panel_masterrecord) {
+        this.panel_masterrecord = panel_masterrecord;
+    }
+
+    public JPanel getPanel_masterrecord1() {
+        return panel_masterrecord1;
+    }
+
+    public void setPanel_masterrecord1(JPanel panel_masterrecord1) {
+        this.panel_masterrecord1 = panel_masterrecord1;
+    }
+
+    public JPanel getPanel_toppanel() {
+        return panel_toppanel;
+    }
+
+    public void setPanel_toppanel(JPanel panel_toppanel) {
+        this.panel_toppanel = panel_toppanel;
+    }
+
+    public JPanel getPanel_toppanel1() {
+        return panel_toppanel1;
+    }
+
+    public void setPanel_toppanel1(JPanel panel_toppanel1) {
+        this.panel_toppanel1 = panel_toppanel1;
     }
 
     

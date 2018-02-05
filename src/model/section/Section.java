@@ -21,7 +21,16 @@ public class Section {
     private List<Student> students;
     private String requiredAverage;
     private String category;
+    private int capacity;
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+    
     public Faculty getAdviser() {
         return adviser;
     }

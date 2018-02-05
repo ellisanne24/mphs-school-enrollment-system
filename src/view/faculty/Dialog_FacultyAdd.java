@@ -3,20 +3,22 @@ package view.faculty;
 
 import controller.faculty.AddFacultyDialogListener;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
 public class Dialog_FacultyAdd extends javax.swing.JDialog {
 
-    /**
-     * Creates new form dialog_facultyadd
-     */
     public Dialog_FacultyAdd(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         btn_savennew.addActionListener(new AddFacultyDialogListener(this));
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    public JPanel getPanel_facultydetails() {
+        return panel_facultydetails;
     }
     
     public JButton getBtnSaveNew(){
@@ -59,8 +61,6 @@ public class Dialog_FacultyAdd extends javax.swing.JDialog {
         tf_email = new javax.swing.JTextField();
         lbl_mobile = new javax.swing.JLabel();
         tf_mobile = new javax.swing.JTextField();
-        lbl_status = new javax.swing.JLabel();
-        combo_status = new javax.swing.JComboBox<>();
         panel_footer = new javax.swing.JPanel();
         btn_cancel = new javax.swing.JButton();
         btn_clear = new javax.swing.JButton();
@@ -177,26 +177,6 @@ public class Dialog_FacultyAdd extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
         panel_facultydetails.add(tf_mobile, gridBagConstraints);
 
-        lbl_status.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_status.setText("Active :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panel_facultydetails.add(lbl_status, gridBagConstraints);
-
-        combo_status.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        combo_status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes" }));
-        combo_status.setMinimumSize(new java.awt.Dimension(60, 25));
-        combo_status.setPreferredSize(new java.awt.Dimension(60, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panel_facultydetails.add(combo_status, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -284,13 +264,11 @@ public class Dialog_FacultyAdd extends javax.swing.JDialog {
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_savennew;
-    private javax.swing.JComboBox<String> combo_status;
     private javax.swing.JLabel lbl_email;
     private javax.swing.JLabel lbl_firstname;
     private javax.swing.JLabel lbl_lastname;
     private javax.swing.JLabel lbl_middlename;
     private javax.swing.JLabel lbl_mobile;
-    private javax.swing.JLabel lbl_status;
     private javax.swing.JPanel panel_facultydetails;
     private javax.swing.JPanel panel_footer;
     private javax.swing.JPanel panel_toppanel;

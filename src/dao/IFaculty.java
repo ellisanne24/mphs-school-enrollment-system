@@ -6,7 +6,7 @@ import model.faculty.Faculty;
 import model.subjectcategory.SubjectCategory;
 
 public interface IFaculty {
-    void createFaculty(Faculty faculty);
+    boolean createFaculty(Faculty faculty);
     List <Faculty> getFacultyByName(Faculty faculty);
     List <Faculty> getFacultyInfoById(Faculty faculty);
     int countFacultySpecialization(Faculty faculty);
@@ -15,4 +15,10 @@ public interface IFaculty {
     List <SubjectCategory> loadFacultySpecialization(Faculty faculty, SubjectCategory subjectCategory);
     void updateFaculty(Faculty faculty);
     List getAllFaculty(Faculty faculty);
+    
+    // Jordan
+    List getAllFacultyWithNoAdvisory();
+    List getAllFaculty();
+    int getFacultyIdByName(String lastName, String firstName, String middleName);
+    Faculty getFacultyById(int facultyId);
 }

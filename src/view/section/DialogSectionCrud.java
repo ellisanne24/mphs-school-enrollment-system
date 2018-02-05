@@ -1,32 +1,41 @@
 package view.section;
 
+import component_model_loader.FacultyJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SectionJCompModelLoader;
+import component_renderers.FacultyJComboBoxRenderer;
 import component_renderers.GradeLevelJComboBoxRenderer;
 import controller.global.ExitJDialog;
 import controller.section.CreateSection;
 import controller.section.EditSection;
 import daoimpl.SectionDaoImpl;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import model.section.Section;
 import utility.initializer.Initializer;
 
-public class DialogSectionCrud extends javax.swing.JDialog implements Initializer{
+public class DialogSectionCrud extends javax.swing.JDialog implements Initializer {
 
     private int sectionIdOfSelected;
     private String action;
     private SectionJCompModelLoader sectionJCompModelLoader;
-    
+
     private GradeLevelJComboBoxRenderer gradeLevelJComboBoxRenderer;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
+    private FacultyJCompModelLoader facultyJCompModelLoader;
+    private FacultyJComboBoxRenderer facultyJComboBoxRenderer;
     
     private SectionDaoImpl sectionDaoImpl;
-    
+
     public DialogSectionCrud(java.awt.Frame parent, boolean modal, String action) {
         super(parent, modal);
         initComponents();
-        
+
         this.action = action;
-        
+
         initJCompModelLoaders();
         initRenderers();
         initModels();
@@ -36,26 +45,27 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     }
 
     /**
-     * Use this constructor during VIEW or EDIT operations.
-     * This requires a sectionId of what was selected in record to be supplied.
+     * Use this constructor during VIEW or EDIT operations. This requires a
+     * sectionId of what was selected in record to be supplied.
+     *
      * @param parent
      * @param model
      * @param action
-     * @param sectionIdOfSelected 
+     * @param sectionIdOfSelected
      */
-    public DialogSectionCrud(java.awt.Frame parent, boolean model, String action, int sectionIdOfSelected){
-        super(parent,model);
+    public DialogSectionCrud(java.awt.Frame parent, boolean model, String action, int sectionIdOfSelected) {
+        super(parent, model);
         initComponents();
         this.action = action;
         this.sectionIdOfSelected = sectionIdOfSelected;
-        
+
         initJCompModelLoaders();
         initRenderers();
         initModels();
         initViewComponents();
         initControllers();
         initDaoImpl();
-        
+
         initForm();
     }
 
@@ -65,20 +75,20 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         java.awt.GridBagConstraints gridBagConstraints;
 
         panel_toppanel = new javax.swing.JPanel();
-        panel_subjectdetails = new javax.swing.JPanel();
-        lbl_subcode = new javax.swing.JLabel();
+        jpnlSectionDetails = new javax.swing.JPanel();
+        jlblSectionName = new javax.swing.JLabel();
         jtfSectionName = new javax.swing.JTextField();
-        jlblRequiredAverage = new javax.swing.JLabel();
-        lbl_subcode1 = new javax.swing.JLabel();
+        jlblGradeLevel = new javax.swing.JLabel();
         jcmbGradeLevel = new javax.swing.JComboBox<>();
         jlblSession = new javax.swing.JLabel();
         jcmbSession = new javax.swing.JComboBox<>();
-        jlblAverage = new javax.swing.JLabel();
-        lbl_subcode3 = new javax.swing.JLabel();
+        jlblAdviser = new javax.swing.JLabel();
         jcmbAdviser = new javax.swing.JComboBox<>();
         jlblStatus = new javax.swing.JLabel();
         jcmbStatus = new javax.swing.JComboBox<>();
-        panel_footer = new javax.swing.JPanel();
+        jlblCapacity = new javax.swing.JLabel();
+        jtfCapacity = new javax.swing.JTextField();
+        jpnlFooter = new javax.swing.JPanel();
         jbtnCancel = new javax.swing.JButton();
         jbtnClear = new javax.swing.JButton();
         jbtnSave = new javax.swing.JButton();
@@ -95,19 +105,19 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         panel_toppanel.setPreferredSize(new java.awt.Dimension(555, 270));
         panel_toppanel.setLayout(new java.awt.GridBagLayout());
 
-        panel_subjectdetails.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Section Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        panel_subjectdetails.setMinimumSize(new java.awt.Dimension(550, 150));
-        panel_subjectdetails.setPreferredSize(new java.awt.Dimension(550, 150));
-        panel_subjectdetails.setLayout(new java.awt.GridBagLayout());
+        jpnlSectionDetails.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Section Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        jpnlSectionDetails.setMinimumSize(new java.awt.Dimension(550, 150));
+        jpnlSectionDetails.setPreferredSize(new java.awt.Dimension(550, 150));
+        jpnlSectionDetails.setLayout(new java.awt.GridBagLayout());
 
-        lbl_subcode.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_subcode.setText("Section Name :");
+        jlblSectionName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jlblSectionName.setText("Section Name :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panel_subjectdetails.add(lbl_subcode, gridBagConstraints);
+        jpnlSectionDetails.add(jlblSectionName, gridBagConstraints);
 
         jtfSectionName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jtfSectionName.setMinimumSize(new java.awt.Dimension(150, 25));
@@ -117,25 +127,16 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panel_subjectdetails.add(jtfSectionName, gridBagConstraints);
+        jpnlSectionDetails.add(jtfSectionName, gridBagConstraints);
 
-        jlblRequiredAverage.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jlblRequiredAverage.setText("Required Average :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 30, 10, 0);
-        panel_subjectdetails.add(jlblRequiredAverage, gridBagConstraints);
-
-        lbl_subcode1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_subcode1.setText("Grade Level :");
+        jlblGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jlblGradeLevel.setText("Grade Level :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panel_subjectdetails.add(lbl_subcode1, gridBagConstraints);
+        jpnlSectionDetails.add(jlblGradeLevel, gridBagConstraints);
 
         jcmbGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jcmbGradeLevel.setMinimumSize(new java.awt.Dimension(100, 25));
@@ -145,7 +146,7 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panel_subjectdetails.add(jcmbGradeLevel, gridBagConstraints);
+        jpnlSectionDetails.add(jcmbGradeLevel, gridBagConstraints);
 
         jlblSession.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jlblSession.setText("Session :");
@@ -154,7 +155,7 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panel_subjectdetails.add(jlblSession, gridBagConstraints);
+        jpnlSectionDetails.add(jlblSession, gridBagConstraints);
 
         jcmbSession.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jcmbSession.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AM", "PM" }));
@@ -164,67 +165,75 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panel_subjectdetails.add(jcmbSession, gridBagConstraints);
+        jpnlSectionDetails.add(jcmbSession, gridBagConstraints);
 
-        jlblAverage.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jlblAverage.setText("80.00");
-        jlblAverage.setMaximumSize(new java.awt.Dimension(50, 17));
-        jlblAverage.setMinimumSize(new java.awt.Dimension(50, 17));
-        jlblAverage.setPreferredSize(new java.awt.Dimension(50, 17));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 50);
-        panel_subjectdetails.add(jlblAverage, gridBagConstraints);
-
-        lbl_subcode3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_subcode3.setText("Adviser :");
+        jlblAdviser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jlblAdviser.setText("Adviser :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        panel_subjectdetails.add(lbl_subcode3, gridBagConstraints);
+        jpnlSectionDetails.add(jlblAdviser, gridBagConstraints);
 
         jcmbAdviser.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jcmbAdviser.setMinimumSize(new java.awt.Dimension(150, 25));
-        jcmbAdviser.setPreferredSize(new java.awt.Dimension(150, 25));
+        jcmbAdviser.setMinimumSize(new java.awt.Dimension(180, 25));
+        jcmbAdviser.setPreferredSize(new java.awt.Dimension(180, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_subjectdetails.add(jcmbAdviser, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlSectionDetails.add(jcmbAdviser, gridBagConstraints);
 
         jlblStatus.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jlblStatus.setText("Active :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        panel_subjectdetails.add(jlblStatus, gridBagConstraints);
+        jpnlSectionDetails.add(jlblStatus, gridBagConstraints);
 
         jcmbStatus.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jcmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
+        jcmbStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcmbStatusActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_subjectdetails.add(jcmbStatus, gridBagConstraints);
+        jpnlSectionDetails.add(jcmbStatus, gridBagConstraints);
+
+        jlblCapacity.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jlblCapacity.setText("Capacity :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlSectionDetails.add(jlblCapacity, gridBagConstraints);
+
+        jtfCapacity.setColumns(5);
+        jtfCapacity.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlSectionDetails.add(jtfCapacity, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 3);
-        panel_toppanel.add(panel_subjectdetails, gridBagConstraints);
+        panel_toppanel.add(jpnlSectionDetails, gridBagConstraints);
 
-        panel_footer.setMinimumSize(new java.awt.Dimension(550, 50));
-        panel_footer.setPreferredSize(new java.awt.Dimension(550, 50));
-        panel_footer.setLayout(new java.awt.GridBagLayout());
+        jpnlFooter.setMinimumSize(new java.awt.Dimension(550, 50));
+        jpnlFooter.setPreferredSize(new java.awt.Dimension(550, 50));
+        jpnlFooter.setLayout(new java.awt.GridBagLayout());
 
         jbtnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnCancel.setText("Cancel");
+        jbtnCancel.setActionCommand("cancel");
         jbtnCancel.setMaximumSize(new java.awt.Dimension(69, 40));
         jbtnCancel.setMinimumSize(new java.awt.Dimension(69, 40));
         jbtnCancel.setPreferredSize(new java.awt.Dimension(69, 40));
@@ -233,30 +242,33 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 0.5;
-        panel_footer.add(jbtnCancel, gridBagConstraints);
+        jpnlFooter.add(jbtnCancel, gridBagConstraints);
 
         jbtnClear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnClear.setText("Clear");
+        jbtnClear.setActionCommand("clear");
         jbtnClear.setMaximumSize(new java.awt.Dimension(60, 40));
         jbtnClear.setMinimumSize(new java.awt.Dimension(60, 40));
         jbtnClear.setPreferredSize(new java.awt.Dimension(60, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        panel_footer.add(jbtnClear, gridBagConstraints);
+        jpnlFooter.add(jbtnClear, gridBagConstraints);
 
         jbtnSave.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnSave.setText("Save");
+        jbtnSave.setActionCommand("save");
         jbtnSave.setMaximumSize(new java.awt.Dimension(59, 40));
         jbtnSave.setMinimumSize(new java.awt.Dimension(59, 40));
         jbtnSave.setPreferredSize(new java.awt.Dimension(59, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        panel_footer.add(jbtnSave, gridBagConstraints);
+        jpnlFooter.add(jbtnSave, gridBagConstraints);
 
         jbtnSaveAndNew.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnSaveAndNew.setText("Save & New");
+        jbtnSaveAndNew.setActionCommand("save_and_new");
         jbtnSaveAndNew.setMaximumSize(new java.awt.Dimension(102, 40));
         jbtnSaveAndNew.setMinimumSize(new java.awt.Dimension(102, 40));
         jbtnSaveAndNew.setPreferredSize(new java.awt.Dimension(102, 40));
@@ -264,13 +276,13 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 30);
-        panel_footer.add(jbtnSaveAndNew, gridBagConstraints);
+        jpnlFooter.add(jbtnSaveAndNew, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 30, 0);
-        panel_toppanel.add(panel_footer, gridBagConstraints);
+        panel_toppanel.add(jpnlFooter, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -280,11 +292,16 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jcmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmbStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcmbStatusActionPerformed
+
     @Override
     public void initRenderers() {
         gradeLevelJComboBoxRenderer = new GradeLevelJComboBoxRenderer();
+        facultyJComboBoxRenderer = new FacultyJComboBoxRenderer();
     }
-    
+
     @Override
     public void initGridBagConstraints() {
     }
@@ -293,6 +310,7 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     public void initJCompModelLoaders() {
         sectionJCompModelLoader = new SectionJCompModelLoader();
         gradeLevelJCompModelLoader = new GradeLevelJCompModelLoader();
+        facultyJCompModelLoader = new FacultyJCompModelLoader();
     }
 
     @Override
@@ -303,12 +321,14 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     public void initViewComponents() {
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jcmbGradeLevel.setRenderer(gradeLevelJComboBoxRenderer);
-        
+        jcmbAdviser.setRenderer(facultyJComboBoxRenderer);
+        jcmbAdviser.setModel(facultyJCompModelLoader.getAllFaculty());
+
         if (action.equalsIgnoreCase("create")) {
             jcmbStatus.setVisible(false);
             jlblStatus.setVisible(false);
         } else if (action.equalsIgnoreCase("edit")) {
-            
+
         } else if (action.equalsIgnoreCase("view")) {
             jtfSectionName.setEnabled(false);
             jcmbGradeLevel.setEnabled(false);
@@ -322,9 +342,9 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     public void initControllers() {
         jbtnCancel.addActionListener(new ExitJDialog(this));
         if (action.equalsIgnoreCase("create")) {
-            jbtnSave.addActionListener(new CreateSection(this, jtfSectionName, jcmbGradeLevel, jcmbAdviser, jcmbSession));
+            jbtnSave.addActionListener(new CreateSection(this));
         } else if (action.equalsIgnoreCase("edit")) {
-            jbtnSave.addActionListener(new EditSection(sectionIdOfSelected, this, jtfSectionName, jcmbGradeLevel, jcmbAdviser, jcmbSession, jcmbStatus));
+            jbtnSave.addActionListener(new EditSection(sectionIdOfSelected, this));
         }
     }
 
@@ -332,15 +352,95 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     public void initDaoImpl() {
         sectionDaoImpl = new SectionDaoImpl();
     }
-    
-    private void initForm(){
+
+    private void initForm() {
         Section section = sectionDaoImpl.getSectionById(sectionIdOfSelected);
         jtfSectionName.setText(section.getSectionName());
         jcmbGradeLevel.setSelectedItem(section.getGradeLevel().getLevel());
         jcmbSession.setSelectedItem(section.getSectionSession());
-        jcmbStatus.setSelectedItem(section.getIsActive()==true? "Yes":"No");
+        jcmbStatus.setSelectedItem(section.getIsActive() == true ? "Yes" : "No");
+        jtfCapacity.setText(""+section.getCapacity());
     }
 
+    
+    
+    public JButton getJbtnCancel() {
+        return jbtnCancel;
+    }
+
+    public JButton getJbtnClear() {
+        return jbtnClear;
+    }
+
+    public JButton getJbtnSave() {
+        return jbtnSave;
+    }
+
+    public JButton getJbtnSaveAndNew() {
+        return jbtnSaveAndNew;
+    }
+
+    public JComboBox<String> getJcmbAdviser() {
+        return jcmbAdviser;
+    }
+
+    public JComboBox<String> getJcmbGradeLevel() {
+        return jcmbGradeLevel;
+    }
+
+    public JComboBox<String> getJcmbSession() {
+        return jcmbSession;
+    }
+
+    public JComboBox<String> getJcmbStatus() {
+        return jcmbStatus;
+    }
+
+    public JLabel getJlblAdviser() {
+        return jlblAdviser;
+    }
+
+    public JLabel getJlblGradeLevel() {
+        return jlblGradeLevel;
+    }
+
+    public JLabel getJlblSectionName() {
+        return jlblSectionName;
+    }
+
+    public JLabel getJlblSession() {
+        return jlblSession;
+    }
+
+    public JLabel getJlblStatus() {
+        return jlblStatus;
+    }
+
+    public JPanel getJpnlFooter() {
+        return jpnlFooter;
+    }
+
+    public JPanel getJpnlSectionDetails() {
+        return jpnlSectionDetails;
+    }
+
+    public JTextField getJtfSectionName() {
+        return jtfSectionName;
+    }
+
+    public JPanel getPanel_toppanel() {
+        return panel_toppanel;
+    }
+
+    public JLabel getJlblCapacity() {
+        return jlblCapacity;
+    }
+
+    public JTextField getJtfCapacity() {
+        return jtfCapacity;
+    }
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jbtnCancel;
@@ -351,16 +451,16 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     private javax.swing.JComboBox<String> jcmbGradeLevel;
     private javax.swing.JComboBox<String> jcmbSession;
     private javax.swing.JComboBox<String> jcmbStatus;
-    private javax.swing.JLabel jlblAverage;
-    private javax.swing.JLabel jlblRequiredAverage;
+    private javax.swing.JLabel jlblAdviser;
+    private javax.swing.JLabel jlblCapacity;
+    private javax.swing.JLabel jlblGradeLevel;
+    private javax.swing.JLabel jlblSectionName;
     private javax.swing.JLabel jlblSession;
     private javax.swing.JLabel jlblStatus;
+    private javax.swing.JPanel jpnlFooter;
+    private javax.swing.JPanel jpnlSectionDetails;
+    private javax.swing.JTextField jtfCapacity;
     private javax.swing.JTextField jtfSectionName;
-    private javax.swing.JLabel lbl_subcode;
-    private javax.swing.JLabel lbl_subcode1;
-    private javax.swing.JLabel lbl_subcode3;
-    private javax.swing.JPanel panel_footer;
-    private javax.swing.JPanel panel_subjectdetails;
     private javax.swing.JPanel panel_toppanel;
     // End of variables declaration//GEN-END:variables
 }

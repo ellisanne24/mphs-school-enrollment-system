@@ -1,8 +1,6 @@
 package dao;
 
 import java.util.List;
-import model.enrollment.Enrollment;
-import model.schoolyear.SchoolYear;
 import model.student.Student;
 
 /**
@@ -13,4 +11,6 @@ public interface IEnrollment {
     
     boolean enroll(Student student);
     List<Student> getAllEnrolledBySchoolYearId(int schoolYearId);
+    List<Student> getAllEnrolledBySchoolYearIdAndGradeLevelId(int schoolyearId, int gradelevelId);
+    List<Student> getAllEnrolledUnsectionedByGradeLevelIdAndSchoolYearId(int gradelevelId, int schoolYearId);
 }

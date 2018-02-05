@@ -12,14 +12,14 @@ import javax.swing.JTable;
  *
  * @author John Ferdinand Antonio
  */
-public class DisplayTablePopupMenu implements MouseListener{
+public class Old_DisplayTablePopupMenu implements MouseListener{
     private final JTable jtblStudentsList;
     private JPopupMenu jPopupMenu;
     private JMenuItem jmiCopyStudentId;
     private JMenuItem jmiCopyRegistrationId;
     private JMenuItem jmiCopyStudentLastName;
     
-    public DisplayTablePopupMenu(JTable jtblStudentsList){
+    public Old_DisplayTablePopupMenu(JTable jtblStudentsList){
         initComponents();
         this.jtblStudentsList = jtblStudentsList;
     }
@@ -36,9 +36,9 @@ public class DisplayTablePopupMenu implements MouseListener{
     }
     
     private void initializeControllers(MouseEvent mouseEvent){
-        jmiCopyStudentId.addActionListener(new ClickPopupMenuItem(jtblStudentsList, jmiCopyStudentId, jmiCopyRegistrationId, jmiCopyStudentLastName,mouseEvent));
-        jmiCopyRegistrationId.addActionListener(new ClickPopupMenuItem(jtblStudentsList, jmiCopyStudentId, jmiCopyRegistrationId, jmiCopyStudentLastName,mouseEvent));
-        jmiCopyStudentLastName.addActionListener(new ClickPopupMenuItem(jtblStudentsList, jmiCopyStudentId, jmiCopyRegistrationId, jmiCopyStudentLastName,mouseEvent));
+        jmiCopyStudentId.addActionListener(new Old_ClickPopupMenuItem(jtblStudentsList, jmiCopyStudentId, jmiCopyRegistrationId, jmiCopyStudentLastName,mouseEvent));
+        jmiCopyRegistrationId.addActionListener(new Old_ClickPopupMenuItem(jtblStudentsList, jmiCopyStudentId, jmiCopyRegistrationId, jmiCopyStudentLastName,mouseEvent));
+        jmiCopyStudentLastName.addActionListener(new Old_ClickPopupMenuItem(jtblStudentsList, jmiCopyStudentId, jmiCopyRegistrationId, jmiCopyStudentLastName,mouseEvent));
     }
     
     @Override

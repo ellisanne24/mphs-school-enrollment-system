@@ -1,48 +1,38 @@
 
 package controller.section;
 
+import daoimpl.FacultyDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import model.faculty.Faculty;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
+import utility.form.FormValidator;
+import utility.string.StringUtil;
+import view.section.DialogSectionCrud;
 
 /**
  *
  * @author Jordan
  */
-public class EditSection implements ActionListener{
+public class EditSection implements ActionListener, FormValidator{
     
     private final int sectionIdOfSelected;
     
-    private final JDialog dialogSectionCrud;
-    private final JTextField jtfSectionName;
-    private final JComboBox jcmbGradeLevel;
-    private final JComboBox jcmbAdviser;
-    private final JComboBox jcmbSession;
-    private final JComboBox jcmbStatus;
+    private final DialogSectionCrud view;
     
     private SectionDaoImpl sectionDaoImpl;
     private GradeLevelDaoImpl gradeLevelDaoImpl;
     private SchoolYearDaoImpl schoolYearDaoImpl;
     
-    public EditSection(int sectionIfOfSelected, JDialog dialogSectionCrud,JTextField jtfSectionName, JComboBox jcmbGradeLevel, JComboBox jcmbAdviser, JComboBox jcmbSession,JComboBox jcmbStatus){
-        this.dialogSectionCrud = dialogSectionCrud;
-        
+    public EditSection(int sectionIfOfSelected, DialogSectionCrud view){
+        this.view = view;
         this.sectionIdOfSelected = sectionIfOfSelected;
-        
-        this.jtfSectionName = jtfSectionName;
-        this.jcmbGradeLevel = jcmbGradeLevel;
-        this.jcmbAdviser = jcmbAdviser;
-        this.jcmbSession = jcmbSession;
-        this.jcmbStatus = jcmbStatus;
         
         sectionDaoImpl = new SectionDaoImpl();
         gradeLevelDaoImpl = new GradeLevelDaoImpl();
@@ -54,36 +44,63 @@ public class EditSection implements ActionListener{
         int choice = 
                 JOptionPane.showConfirmDialog(null, "Update Section?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
         if(choice == JOptionPane.YES_OPTION){
-            if(update()){
-                JOptionPane.showMessageDialog(null,"Successfully updated section!");
-                dialogSectionCrud.dispose();
-            }else{
-                JOptionPane.showMessageDialog(null,"Failed to update section.");
-            }
+            if (formIsValid()) {
+                if (update()) {
+                    JOptionPane.showMessageDialog(null, "Successfully updated section!");
+                    view.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to update section.");
+                }
+            } 
         }
+    }
+
+    @Override
+    public boolean formIsValid() {
+        boolean isValid = true;
+        String selectedAdviser = StringUtil.removeAllNonNumeric(view.getJcmbAdviser().getSelectedItem().toString().trim());
+        int adviserId = Integer.parseInt(StringUtil.removeWhiteSpaces(selectedAdviser));
+        int currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
+        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
+        if(facultyDaoImpl.facultyHasAdvisory(adviserId, currentSchoolYearId)){
+            isValid = false;
+            JOptionPane.showMessageDialog(null, "Faculty already has an advisory class.");
+        }
+        if(sectionDaoImpl.sectionExists(view.getJtfSectionName().getText().trim())){
+            isValid = false;
+            JOptionPane.showMessageDialog(null, "Section name is already taken.\n Please try a different name.");
+        }
+        return isValid;
     }
     
     private boolean update(){
         boolean isUpdated = false;
-        Section section = new Section();
-        section.setSectionId(sectionIdOfSelected);
-        section.setSectionName(jtfSectionName.getText().trim());
-        section.setIsActive(jcmbStatus.getSelectedItem().toString().trim().equalsIgnoreCase("Yes")?true:false);
         
         SchoolYear schoolYear = new SchoolYear();
         schoolYear.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
         
-        section.setSchoolYear(schoolYear);
-        
         GradeLevel gradeLevel = new GradeLevel();
-        int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
+        int gradeLevelNo = Integer.parseInt(view.getJcmbGradeLevel().getSelectedItem().toString().trim());
         gradeLevel.setId(gradeLevelDaoImpl.getId(gradeLevelNo));
+
+        String selectedAdviser = StringUtil.removeAllNonNumeric(view.getJcmbAdviser().getSelectedItem().toString().trim());
+        int adviserId = Integer.parseInt(StringUtil.removeWhiteSpaces(selectedAdviser));
+        Faculty adviser = new Faculty();
+        adviser.setFacultyID(adviserId);
         
+        Section section = new Section();
+        section.setSectionId(sectionIdOfSelected);
+        section.setSectionName(view.getJtfSectionName().getText().trim());
+        section.setIsActive(view.getJcmbStatus().getSelectedItem().toString().trim().equalsIgnoreCase("Yes")?true:false);
+        section.setSchoolYear(schoolYear);
         section.setGradeLevel(gradeLevel);
-        section.setSectionSession(jcmbSession.getSelectedItem().toString().trim());
-        
+        section.setSectionSession(view.getJcmbSession().getSelectedItem().toString().trim());
+        section.setAdviser(adviser);
+        section.setCapacity(Integer.parseInt(view.getJtfCapacity().getText().trim()));
         isUpdated = sectionDaoImpl.updateSection(section);
         
         return isUpdated;
     }
+    
+    
 }

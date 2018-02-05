@@ -82,7 +82,6 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
         btn_Search = new javax.swing.JButton();
         lbl_show = new javax.swing.JLabel();
         jcmbFilterByGradeLevel = new javax.swing.JComboBox<>();
-        btn_section_assignment = new javax.swing.JButton();
         panel_masterrecord = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblSectionMasterList = new javax.swing.JTable();
@@ -171,15 +170,6 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         panel_control.add(jcmbFilterByGradeLevel, gridBagConstraints);
 
-        btn_section_assignment.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_section_assignment.setText("Section Assignment");
-        btn_section_assignment.setActionCommand("section_assignment");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        panel_control.add(btn_section_assignment, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -256,7 +246,6 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton btn_Search;
     private javax.swing.JButton btn_View;
     private javax.swing.JButton btn_createnew;
-    private javax.swing.JButton btn_section_assignment;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> jcmbFilterByGradeLevel;
     private javax.swing.JTable jtblSectionMasterList;

@@ -14,7 +14,7 @@ import javax.swing.JTable;
  *
  * @author John Ferdinand Antonio
  */
-public class ClickPopupMenuItem implements ActionListener {
+public class Old_ClickPopupMenuItem implements ActionListener {
 
     private final JMenuItem jmiCopyStudentId;
     private final JMenuItem jmiCopyRegistrationId;
@@ -22,7 +22,7 @@ public class ClickPopupMenuItem implements ActionListener {
     private final JTable jtblStudentsList;
     private final MouseEvent mouseEvent;
     
-    public ClickPopupMenuItem(JTable jtblStudentsList,JMenuItem jmiCopyStudentId,JMenuItem jmiCopyRegistrationId,JMenuItem jmiCopyStudentLastName,MouseEvent mouseEvent){
+    public Old_ClickPopupMenuItem(JTable jtblStudentsList,JMenuItem jmiCopyStudentId,JMenuItem jmiCopyRegistrationId,JMenuItem jmiCopyStudentLastName,MouseEvent mouseEvent){
         this.jtblStudentsList = jtblStudentsList;
         this.jmiCopyStudentId = jmiCopyStudentId;
         this.jmiCopyRegistrationId = jmiCopyRegistrationId;

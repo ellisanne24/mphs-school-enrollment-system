@@ -32,5 +32,38 @@ public class OrNoDaoImpl implements IOrNo{
         }
         return OrNo;
     }
+
+    @Override
+    public int getIdByOrNo(int orNo) {
+        int orNoID = 0;
+        String SQL = "{CALL getOrIdByOrNo(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    orNoID = rs.getInt("or_no_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orNoID;
+    }
+
+    @Override
+    public boolean markOrNoAsUsed(int orNo) {
+        boolean isSuccessful = false;
+        String SQL = "{CALL markOrNoAsUsed(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,orNo);
+            cs.executeUpdate();
+            isSuccessful = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isSuccessful;
+    }
+    
     
 }

@@ -22,42 +22,44 @@ public class FacultyDaoImpl implements IFaculty{
     
     
     @Override
-    public void createFaculty(Faculty faculty) {
+    public boolean createFaculty(Faculty faculty) {
+        boolean isCreated = false;
         String select = "{call checkFacultyExist(?,?,?,?)}";
         String create = "{call addFaculty(?,?,?,?,?)}";
         String result = "";
-        
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);){
-            CallableStatement cs = con.prepareCall(select);
-            CallableStatement cs1 = con.prepareCall(create);
-            
-            cs.setString(1, faculty.getLastName());
-            cs.setString(2, faculty.getFirstName());
-            cs.setString(3, faculty.getMiddleName());
-            cs.registerOutParameter(4, java.sql.Types.VARCHAR);
-            
-            cs.executeUpdate();
-            
-            result = cs.getString(4);
-            
-            if(!result.equals("Duplicate")){
-                cs1.setString(1, faculty.getFirstName());
-                cs1.setString(2, faculty.getLastName());
-                cs1.setString(3, faculty.getMiddleName());
-                cs1.setString(4, faculty.getEmail());
-                cs1.setString(5, faculty.getContactNo());
-                
-                cs1.executeUpdate();
-                
-                JOptionPane.showMessageDialog(null, "Successful!");
+
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            try (CallableStatement cs = con.prepareCall(select);
+                    CallableStatement cs1 = con.prepareCall(create);) {
+                con.setAutoCommit(false);
+                cs.setString(1, faculty.getLastName());
+                cs.setString(2, faculty.getFirstName());
+                cs.setString(3, faculty.getMiddleName());
+                cs.registerOutParameter(4, java.sql.Types.VARCHAR);
+                cs.executeUpdate();
+                result = cs.getString(4);
+
+                if (!result.equals("Duplicate")) {
+                    cs1.setString(1, faculty.getFirstName());
+                    cs1.setString(2, faculty.getLastName());
+                    cs1.setString(3, faculty.getMiddleName());
+                    cs1.setString(4, faculty.getEmail());
+                    cs1.setString(5, faculty.getContactNo());
+                    cs1.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Successful!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Faculty already exist!");
+                }
+                con.commit();
+                isCreated = true;
+            } catch (SQLException e) {
+                con.rollback();
+                e.printStackTrace();
             }
-            else{
-                JOptionPane.showMessageDialog(null, "Faculty already exist!");
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + e.getMessage());
-        }
+        return isCreated;
     }
 
     @Override
@@ -67,12 +69,9 @@ public class FacultyDaoImpl implements IFaculty{
         
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);){
             CallableStatement cs = con.prepareCall(select);
-            
             cs.setString(1, faculty.getLastName());
-            
             try(ResultSet rs = cs.executeQuery()){
                 while(rs.next()){
-                    
                     faculty = new Faculty();
                     faculty.setFacultyID(rs.getInt(1));
                     faculty.setLastName(rs.getString(2));
@@ -81,7 +80,6 @@ public class FacultyDaoImpl implements IFaculty{
                     faculty.setContactNo(rs.getString(5));
                     faculty.setEmail(rs.getString(6));
                     faculty.setStatus(rs.getBoolean(7));
-                    
                     list.add(faculty);
                 }
             }
@@ -89,7 +87,6 @@ public class FacultyDaoImpl implements IFaculty{
         catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getErrorCode() + e.getMessage());
         }
-        
         return list;
     }
 
@@ -240,16 +237,14 @@ public class FacultyDaoImpl implements IFaculty{
     }
 
     @Override
-    public List <Faculty> getAllFaculty(Faculty faculty) {
+    public List<Faculty> getAllFaculty(Faculty faculty) {
         String select = "{call getAllFaculty()}";
-        List <Faculty> list = new ArrayList<Faculty>();
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);){
+        List<Faculty> list = new ArrayList<Faculty>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             CallableStatement cs = con.prepareCall(select);
-            
-            try(ResultSet rs = cs.executeQuery()){
-                while(rs.next()){
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
                     faculty = new Faculty();
-                   
                     faculty.setFacultyID(rs.getInt(1));
                     faculty.setLastName(rs.getString(2));
                     faculty.setFirstName(rs.getString(3));
@@ -257,16 +252,123 @@ public class FacultyDaoImpl implements IFaculty{
                     faculty.setContactNo(rs.getString(5));
                     faculty.setEmail(rs.getString(6));
                     faculty.setStatus(rs.getBoolean(7));
-                    
                     list.add(faculty);
                 }
             }
-            
-        }
-        catch (SQLException e) {
+
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getErrorCode() + e.getMessage());
         }
-        
         return list;
     }
+
+    @Override
+    public List getAllFacultyWithNoAdvisory() {
+        String SQL = "{CALL getAllFacultyWithNoAdvisory()}";
+        List<Faculty> list = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            CallableStatement cs = con.prepareCall(SQL);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Faculty faculty = new Faculty();
+                    faculty.setFacultyID(rs.getInt(1));
+                    faculty.setLastName(rs.getString(2));
+                    faculty.setFirstName(rs.getString(3));
+                    faculty.setMiddleName(rs.getString(4));
+                    faculty.setContactNo(rs.getString(5));
+                    faculty.setEmail(rs.getString(6));
+                    faculty.setStatus(rs.getBoolean(7));
+                    list.add(faculty);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List getAllFaculty() {
+        List<Faculty> list = new ArrayList<>();
+        String SQL = "{CALL getAllFaculty()}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            CallableStatement cs = con.prepareCall(SQL);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Faculty faculty = new Faculty();
+                    faculty.setFacultyID(rs.getInt(1));
+                    faculty.setLastName(rs.getString(2));
+                    faculty.setFirstName(rs.getString(3));
+                    faculty.setMiddleName(rs.getString(4));
+                    faculty.setContactNo(rs.getString(5));
+                    faculty.setEmail(rs.getString(6));
+                    faculty.setStatus(rs.getBoolean(7));
+                    list.add(faculty);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public boolean facultyHasAdvisory(int facultyId, int schoolYearId){
+        boolean hasAdvisory = false;
+        String SQL = "{CALL facultyhasAdvisory(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,facultyId);
+            cs.setInt(2,schoolYearId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    hasAdvisory = rs.getBoolean("hasAdvisory");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hasAdvisory;
+    }
+
+    @Override
+    public int getFacultyIdByName(String lastName, String firstName, String middleName) {
+        int facultyId = 0;
+        String SQL = "{CALL getFacultyIdByName(?,?,?s)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    facultyId = rs.getInt("faculty_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return facultyId;
+    }
+
+    @Override
+    public Faculty getFacultyById(int facultyId) {
+        Faculty faculty = new Faculty();
+        String SQL = "{CALL getFacultyById(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,facultyId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
+                    faculty.setLastName(rs.getString("lastName"));
+                    faculty.setFirstName(rs.getString("firstName"));
+                    faculty.setMiddleName(rs.getString("middleName"));
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+                    faculty.setStatus(rs.getBoolean("status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return faculty;
+    }
+    
 }

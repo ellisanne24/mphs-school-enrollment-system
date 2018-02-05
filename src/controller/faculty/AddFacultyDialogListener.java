@@ -1,42 +1,64 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.faculty;
 
 import daoimpl.FacultyDaoImpl;
-import java.awt.Dialog;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import model.faculty.Faculty;
+import utility.form.FormValidator;
 import view.faculty.Dialog_FacultyAdd;
 
 /**
  *
  * @author franc
  */
-public class AddFacultyDialogListener implements ActionListener{
-    private Dialog_FacultyAdd facultyAdd;
+public class AddFacultyDialogListener implements ActionListener, FormValidator {
+
+    private Dialog_FacultyAdd view;
     private Faculty faculty = new Faculty();
     private FacultyDaoImpl fdi = new FacultyDaoImpl();
-    
-    public AddFacultyDialogListener(Dialog_FacultyAdd facultyAdd){
-        this.facultyAdd = facultyAdd;
+
+    public AddFacultyDialogListener(Dialog_FacultyAdd view) {
+        this.view = view;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       if(e.getSource().equals(facultyAdd.getBtnSaveNew())){
-           JOptionPane.showMessageDialog(null,"Test");
-           faculty.setLastName(facultyAdd.getTfLastname().getText().trim());
-           faculty.setFirstName(facultyAdd.getTfFirstname().getText().trim());
-           faculty.setMiddleName(facultyAdd.getTfMiddlename().getText().trim());
-           faculty.setEmail(facultyAdd.getTfEmail().getText().trim());
-           faculty.setContactNo(facultyAdd.getTfContact().getText().trim());
-           
-           fdi.createFaculty(faculty);
-       }
+        if (e.getSource().equals(view.getBtnSaveNew())) {
+            if (formIsValid()) {
+                boolean isSuccessful = createFaculty();
+                if (isSuccessful) {
+                    JOptionPane.showMessageDialog(null, "Successfully added faculty.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please fill out empty fields.");
+            }
+        }
     }
+
+    private boolean createFaculty() {
+        boolean isCreated = false;
+        faculty.setLastName(view.getTfLastname().getText().trim());
+        faculty.setFirstName(view.getTfFirstname().getText().trim());
+        faculty.setMiddleName(view.getTfMiddlename().getText().trim());
+        faculty.setEmail(view.getTfEmail().getText().trim());
+        faculty.setContactNo(view.getTfContact().getText().trim());
+        isCreated = fdi.createFaculty(faculty);
+        return isCreated;
+    }
+
+    @Override
+    public boolean formIsValid() {
+        boolean isValid = true;
+        Component[] compArr = view.getPanel_facultydetails().getComponents();
+        for (Component c : compArr) {
+            if (c instanceof JTextField) {
+                isValid = isValid && !((JTextField) c).getText().trim().isEmpty();
+            }
+        }
+        return isValid;
+    }
+
 }
