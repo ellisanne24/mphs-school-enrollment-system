@@ -1,6 +1,6 @@
 package controller.payment;
 
-import daoimpl.OrNoDaoImpl;
+import daoimpl.OfficialReceiptDaoImpl;
 import daoimpl.PaymentTermDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
@@ -29,10 +29,37 @@ import view.payment.Panel_Payment;
  */
 public class Display_Dialog_MakePayment implements ActionListener {
 
+    private final int currentSchoolYearId;
     private final Panel_Payment view;
-
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
+    private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
+    private final StudentDaoImpl studentDaoImpl;
+    private final OfficialReceiptDaoImpl officialReceiptDaoImpl;
+    private final PaymentTermDaoImpl paymentTermDaoImpl;
+    private Student student;
+    private PaymentTerm paymentTerm;
+    private Enrollment enrollment;
+    
     public Display_Dialog_MakePayment(Panel_Payment view) {
         this.view = view;
+        studentDaoImpl = new StudentDaoImpl();
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
+        officialReceiptDaoImpl = new OfficialReceiptDaoImpl();
+        paymentTermDaoImpl = new PaymentTermDaoImpl();
+        
+        //enable MakePayment button only if form is loaded with information on keypress search of panelpayment
+        //int studentNo = view.getJlblStudentNo
+        //studentDaoImpl.hasTuitionRecord(studentNo,schoolYearId)
+        //if hasTuitionRecord, Tuition tuition = tuitiondaoImpl.getBy(studentId, schoolYearId);
+        //    displayDialog(tuition)
+        //else populate Tuition fields by changing initializeX() methods to get() methods getStudent(), getEnrollment(), getPaymentTerm()
+        //remove if()'s isEmpty() getSelectedIndex() > -1 etc to avoid nulls
+        
+        currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
+        initializePaymentTerm();
+        initializeEnrollment(paymentTerm,currentSchoolYearId);
+        initializeStudent(enrollment);
     }
 
     @Override
@@ -40,29 +67,29 @@ public class Display_Dialog_MakePayment implements ActionListener {
         displayDialog();
     }
     
-    private Enrollment getEnrollment() {
-        SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-        Enrollment e = new Enrollment();
-        String enrollmentType = getPaymentTerm().getPaymentTermName().trim().equalsIgnoreCase("Summer") == true ? "S" : "R";
-        e.setEnrollmentType(enrollmentType.trim());
-        e.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
-        return e;
+    private void initializeStudent(Enrollment e) {
+        if (!view.getJtfStudentNo().getText().trim().isEmpty()) {
+            int studentNo = Integer.parseInt(view.getJtfStudentNo().getText().trim());
+            student = studentDaoImpl.getStudentByStudentNo(studentNo);
+            student.setEnrollment(e);
+        }
+    }
+    
+    private void initializeEnrollment(PaymentTerm pt, int syId) {
+        if (pt != null) {
+            enrollment = new Enrollment();
+            String enrollmentType = pt.getPaymentTermName().trim().equalsIgnoreCase("Summer") == true ? "S" : "R";
+            enrollment.setEnrollmentType(enrollmentType.trim());
+            enrollment.setSchoolYearId(syId);
+        }
     }
 
-    private Student getStudent() {
-        StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
-        int studentNo = Integer.parseInt(view.getJtfStudentNo().getText().trim());
-        Student student = studentDaoImpl.getStudentByStudentNo(studentNo);
-        student.setEnrollment(getEnrollment());
-        return student;
-    }
-
-    private PaymentTerm getPaymentTerm() {
-        PaymentTermDaoImpl paymentTermDaoImpl = new PaymentTermDaoImpl();
-        String paymentTermName = view.getJcmbPaymentTerm().getSelectedItem().toString().trim();
-        int paymentTermID = paymentTermDaoImpl.getPaymentTermIDByName(paymentTermName);
-        PaymentTerm paymentTerm = paymentTermDaoImpl.getPaymentTermByPaymentTermId(paymentTermID);
-        return paymentTerm;
+    private void initializePaymentTerm() {
+        if (view.getJcmbPaymentTerm().getSelectedIndex() > -1) {
+            String paymentTermName = view.getJcmbPaymentTerm().getSelectedItem().toString().trim();
+            int paymentTermID = paymentTermDaoImpl.getPaymentTermIDByName(paymentTermName);
+            paymentTerm = paymentTermDaoImpl.getPaymentTermByPaymentTermId(paymentTermID);
+        }
     }
 
     private List<BalanceBreakDownFee> getBalanceBreakDownFeeList() {
@@ -90,22 +117,18 @@ public class Display_Dialog_MakePayment implements ActionListener {
     }
 
     private Tuition getTuition() {
-        SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
         Tuition tuition = new Tuition();
-        tuition.setStudent(getStudent());
-        tuition.setPaymentTerm(getPaymentTerm());
+        tuition.setStudent(student);
+        tuition.setPaymentTerm(paymentTerm);
         tuition.setBalanceBreakDownFees(getBalanceBreakDownFeeList());
-        tuition.setSchoolyearId(schoolYearDaoImpl.getCurrentSchoolYearId());
+        tuition.setSchoolyearId(currentSchoolYearId);
         return tuition;
     }
 
     private void displayDialog() {
-        TuitionFeeDaoImpl tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
-        OrNoDaoImpl orNoDaoImpl = new OrNoDaoImpl();
-        SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
         Tuition tuition = getTuition();
 
-        Dialog_MakePayment dialog = new Dialog_MakePayment(tuition, tuitionFeeDaoImpl, orNoDaoImpl, schoolYearDaoImpl);
+        Dialog_MakePayment dialog = new Dialog_MakePayment(tuition, tuitionFeeDaoImpl, officialReceiptDaoImpl, schoolYearDaoImpl);
         if (dialog.isShowing()) {
             dialog.dispose();
         } else {

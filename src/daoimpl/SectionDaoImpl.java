@@ -66,15 +66,20 @@ public class SectionDaoImpl implements ISection {
     public boolean addStudentsToSection(Section section) {
         boolean isSuccessful = false;
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-        String SQL = "{CALL addStudentToSection(?,?,?)}";
+        String SQLa = "{CALL removeStudentsFromSectionBySectionIdandSchoolYearId(?,?) }";
+        String SQLb = "{CALL addStudentToSection(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
             con.setAutoCommit(false);
-            try (CallableStatement cs = con.prepareCall(SQL);){
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);){
+                csa.setInt(1, section.getSectionId());
+                csa.setInt(2, schoolYearDaoImpl.getCurrentSchoolYearId());
+                csa.executeUpdate();
                 for(Student s : section.getStudents()){
-                    cs.setInt(1, s.getStudentId());
-                    cs.setInt(2, section.getSectionId());
-                    cs.setInt(3, schoolYearDaoImpl.getCurrentSchoolYearId());
-                    cs.executeUpdate();
+                    csb.setInt(1, s.getStudentId());
+                    csb.setInt(2, section.getSectionId());
+                    csb.setInt(3, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csb.executeUpdate();
                 }
                 con.commit();
                 isSuccessful = true;

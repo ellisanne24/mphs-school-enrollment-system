@@ -14,8 +14,8 @@ public class Payment {
     private BigDecimal amountReceived;
     private BigDecimal amountCharged;
     private BigDecimal change;
-    private Date dateOfPayment;
-    private int orNo;
+    private Date dateCharged;
+    private int orNoAttached;
     private List<Particular> particulars;
 
     public BigDecimal getAmountReceived() {
@@ -42,12 +42,12 @@ public class Payment {
         this.particulars = particulars;
     }
 
-    public int getOrNo() {
-        return orNo;
+    public int getOrNoAttached() {
+        return orNoAttached;
     }
 
     public void setOrNo(int orNo) {
-        this.orNo = orNo;
+        this.orNoAttached = orNo;
     }
 
     public BigDecimal getChange() {
@@ -59,11 +59,11 @@ public class Payment {
     }
 
     public Date getDateOfPayment() {
-        return dateOfPayment;
+        return dateCharged;
     }
 
     public void setDateOfPayment(Date dateOfPayment) {
-        this.dateOfPayment = dateOfPayment;
+        this.dateCharged = dateOfPayment;
     }
 
 }

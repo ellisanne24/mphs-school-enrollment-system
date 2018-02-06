@@ -1,6 +1,7 @@
 
 package model.tuitionfee;
 
+import java.math.BigDecimal;
 import java.util.List;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
@@ -20,8 +21,8 @@ public class Tuition {
     private boolean hasDiscount;
     private double totalFees;
     private boolean exists;
-    private double totalPaid;
-    private double remainingBalance;
+    private BigDecimal totalPaid;
+    private BigDecimal remainingBalance;
     private Discount discount;
     
     private List<BalanceBreakDownFee> balanceBreakDownFees; //composed only of (basic + miscellaneous)/paymentterm
@@ -76,19 +77,19 @@ public class Tuition {
         this.exists = exists;
     }
 
-    public double getTotalPaid() {
+    public BigDecimal getTotalPaid() {
         return totalPaid;
     }
 
-    public void setTotalPaid(double totalPaid) {
+    public void setTotalPaid(BigDecimal totalPaid) {
         this.totalPaid = totalPaid;
     }
 
-    public double getRemainingBalance() {
+    public BigDecimal getRemainingBalance() {
         return remainingBalance;
     }
 
-    public void setRemainingBalance(double remainingBalance) {
+    public void setRemainingBalance(BigDecimal remainingBalance) {
         this.remainingBalance = remainingBalance;
     }
 

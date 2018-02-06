@@ -38,7 +38,10 @@ public class EnrollmentJCompModelLoader {
             Object[] rowData = {
                 s.getStudentId(), s.getStudentNo(), r.getLastName(), r.getFirstName(), r.getMiddleName(),
                 s.getStudentType() == 1 ? "New" : "Old",
-                s.getGradeLevelNo(), "--section--", "--adviser--", s.isActive() == true ? "Active" : "Inactive",
+                s.getGradeLevelNo(), s.getSection().getSectionName(), 
+                s.getSection().getAdviser().getLastName() +", "+ s.getSection().getAdviser().getFirstName() +" "+
+                s.getSection().getAdviser().getMiddleName(),
+                s.isActive() == true ? "Active" : "Inactive",
                 e.getEnrollmentDate(), e.getEnrollmentType().equalsIgnoreCase("R") ? "Regular" : "Summer"
             };
             tableModel.addRow(rowData);

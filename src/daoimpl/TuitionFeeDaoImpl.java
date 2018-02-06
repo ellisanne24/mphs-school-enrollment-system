@@ -2,7 +2,6 @@
 package daoimpl;
 
 import dao.ITuitionFee;
-import java.math.BigDecimal;
 import utility.database.DBType;
 import utility.database.DBUtil;
 import java.sql.CallableStatement;
@@ -10,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.particulars.Particular;
@@ -66,9 +66,62 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     }
 
     @Override
-    public Tuition get(int studentId, int schoolyearId) {
+    public Tuition getBy(int studentId, int schoolyearId) {
         Tuition tuitionFee = new Tuition();
-        
+        PaymentTerm paymentTerm = new PaymentTerm();
+        String SQLa = "{CALL getTuitionByStudentIdAndSchoolYearId(?,?)}";
+        String SQLb = "{CALL getTuitionTotalPaidAndRemainingBalance(?,?)}";
+        String SQLc = "{CALL getTuitionPaymentTermByStudentIdAndSchoolYearId(?,?)}";
+        List<BalanceBreakDownFee> bbFeeList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement csa = con.prepareCall(SQLa);
+                CallableStatement csb = con.prepareCall(SQLb);
+                CallableStatement csc = con.prepareCall(SQLc);){
+            csa.setInt(1,studentId);
+            csa.setInt(2,schoolyearId);
+            csb.setInt(1, studentId);
+            csb.setInt(2, schoolyearId);
+            csc.setInt(1, studentId);
+            csc.setInt(2,schoolyearId);
+            try(ResultSet rs = csa.executeQuery();){
+                while(rs.next()){
+                    BalanceBreakDownFee bb = new BalanceBreakDownFee();
+                    bb.setId(rs.getInt("balancebreakdown_id"));
+                    bb.setName(rs.getString("balancebreakdown_name").trim());
+                    bb.setAmount(rs.getBigDecimal("balancebreakdown_amount"));
+                    bb.setBalance(rs.getBigDecimal("balance"));
+                    bb.setIsPaid(rs.getBoolean("isPaid"));
+                    bb.setHasPenalty(rs.getBoolean("hasPenalty"));
+                    bb.setIsPastDueDate(rs.getBoolean("isPastDueDate"));
+                    bb.setDeadline(rs.getDate("due_date"));
+                    String category = rs.getString("category").equalsIgnoreCase("B")? "Balance" :
+                            rs.getString("category").equalsIgnoreCase("D")? "Downpayment" :
+                            rs.getString("category").equalsIgnoreCase("O")? "Other" : "";
+                    bb.setCategory(category);
+                    bbFeeList.add(bb);
+                }
+            }
+            
+            try(ResultSet rs = csb.executeQuery();){
+                while(rs.next()){
+                    tuitionFee.setTotalPaid(rs.getBigDecimal("totalPaid"));
+                    tuitionFee.setRemainingBalance(rs.getBigDecimal("remainingbalance"));
+                }
+            }
+            
+            try(ResultSet rs = csc.executeQuery();){
+                while(rs.next()){
+                    paymentTerm.setPaymentTermId(rs.getInt("paymentterm_id"));
+                    paymentTerm.setPaymentTermName(rs.getString("paymentterm_name"));
+                    paymentTerm.setIsPaymentTermActive(rs.getBoolean("isPaymentTermActive"));
+                    paymentTerm.setDivisor(rs.getInt("divisor"));
+                }
+            }
+            tuitionFee.setBalanceBreakDownFees(bbFeeList);
+            tuitionFee.setPaymentTerm(paymentTerm);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return tuitionFee;
     }
 
@@ -108,7 +161,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 csa.setInt(1, tuitionFee.getStudent().getStudentId());
                 csa.setBigDecimal(2, payment.getAmountReceived());
                 csa.setBigDecimal(3, payment.getAmountCharged());
-                csa.setInt(4, payment.getOrNo());
+                csa.setInt(4, payment.getOrNoAttached());
                 csa.registerOutParameter(5, Types.INTEGER);
                 csa.executeUpdate();
                 int transactionId = csa.getInt(5);
@@ -124,7 +177,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     csb.executeUpdate();
                 }
                 
-                csc.setInt(1, payment.getOrNo());
+                csc.setInt(1, payment.getOrNoAttached());
                 csc.executeUpdate();
                 
                 con.commit();

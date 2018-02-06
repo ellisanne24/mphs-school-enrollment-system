@@ -9,7 +9,7 @@ import model.tuitionfee.Tuition;
  */
 public interface ITuitionFee{
     boolean add(Tuition tuitionFee);
-    Tuition get(int studentId, int schoolyearId);
+    Tuition getBy(int studentId, int schoolyearId);
     boolean pay(Tuition tuitionFee);
     int getBalanceBreakDownId(String balancebreakdownName, int studentId, int schoolyearId);
 }

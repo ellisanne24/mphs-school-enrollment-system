@@ -5,7 +5,7 @@ import controller.payment.Dialog_MakePayment_AddItemToPay;
 import controller.payment.Dialog_MakePayment_PaymentBreakDown_TableModelListener;
 import controller.payment.Dialog_MakePayment_ProceedPayment;
 import controller.payment.Dialog_MakePayment_RemoveItemToPay;
-import daoimpl.OrNoDaoImpl;
+import daoimpl.OfficialReceiptDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.TuitionFeeDaoImpl;
 import java.awt.event.ItemEvent;
@@ -28,11 +28,11 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
 
     private final Tuition tuition;
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
-    private final OrNoDaoImpl orNoDaoImpl;
+    private final OfficialReceiptDaoImpl orNoDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
 
     public Dialog_MakePayment(Tuition tuition, TuitionFeeDaoImpl tuitionFeeDaoImpl, 
-            OrNoDaoImpl orNoDaoImpl, SchoolYearDaoImpl schoolYearDaoImpl) {
+            OfficialReceiptDaoImpl orNoDaoImpl, SchoolYearDaoImpl schoolYearDaoImpl) {
         this.tuition = tuition;
         this.tuitionFeeDaoImpl = tuitionFeeDaoImpl;
         this.orNoDaoImpl = orNoDaoImpl;
@@ -41,6 +41,9 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
 
         initViewComponents();
         initControllers();
+        
+        System.out.println("Student Id: "+tuition.getStudent().getStudentId());
+        System.out.println("Payment Term Name: "+tuition.getPaymentTerm().getPaymentTermName());
     }
 
     @Override

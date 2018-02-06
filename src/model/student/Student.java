@@ -7,6 +7,7 @@ import model.admission.Admission;
 import model.enrollment.Enrollment;
 import model.paymentterm.PaymentTerm;
 import model.registration.Registration;
+import model.section.Section;
 
 
 public class Student {
@@ -17,6 +18,7 @@ public class Student {
     private Admission admission;
     private PaymentTerm paymentTerm;
     private Enrollment enrollment;
+    private Section section;
     private boolean exists;
     private boolean isActive;
     private boolean isGraduated;
@@ -26,6 +28,14 @@ public class Student {
 
     public int gradeLevelNo; //current gradelevelNo
 
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
+    
     public Enrollment getEnrollment() {
         return enrollment;
     }

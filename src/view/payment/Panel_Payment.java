@@ -1,5 +1,6 @@
 package view.payment;
 
+import controller.payment.Dialog_MakePayment_ViewReceiptOfSelectedOR;
 import controller.payment.Display_Dialog_MakePayment;
 import controller.payment.SearchStudent;
 import daoimpl.FeeDaoImpl;
@@ -59,6 +60,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     public void initControllers() {
         jtfSearchBoxMakePayment.addKeyListener(new SearchStudent(this, studentDaoImpl, gradeLevelDaoImpl, feeDaoImpl, paymentTermDaoImpl));
         jbtnMakePayment.addActionListener(new Display_Dialog_MakePayment(this));
+        jbtnReceiptsView.addActionListener(new Dialog_MakePayment_ViewReceiptOfSelectedOR(jtblReceiptsMasterList,jtfStudentNo));
     }
 
     @Override
@@ -213,10 +215,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return jbtnPaymentHistorySearch;
     }
 
-    public JButton getJbtnReceiptsPrint() {
-        return jbtnReceiptsPrint;
-    }
-
     public JButton getJbtnReceiptsSearch() {
         return jbtnReceiptsSearch;
     }
@@ -354,7 +352,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     }
 
     public JTable getJtblReceipts() {
-        return jtblReceipts;
+        return jtblReceiptsMasterList;
     }
 
     public JTextField getJtfBasicFee() {
@@ -549,8 +547,8 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return panel_historycontrol5;
     }
 
-    public JPanel getPanel_historydetails1() {
-        return panel_historydetails1;
+    public JPanel getJpnlReceiptsMasterList() {
+        return jpnlReceiptsMasterList;
     }
 
     public JPanel getPanel_historydetails2() {
@@ -743,10 +741,9 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         lbl_show3 = new javax.swing.JLabel();
         jcmbReceiptsSearchBy = new javax.swing.JComboBox<>();
         jbtnReceiptsView = new javax.swing.JButton();
-        jbtnReceiptsPrint = new javax.swing.JButton();
-        panel_historydetails1 = new javax.swing.JPanel();
+        jpnlReceiptsMasterList = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jtblReceipts = new javax.swing.JTable();
+        jtblReceiptsMasterList = new javax.swing.JTable();
         tabpanel_Adjustments = new javax.swing.JPanel();
         panel_historycontrol3 = new javax.swing.JPanel();
         jbtnAdjustmentsSearchBox = new javax.swing.JTextField();
@@ -1634,8 +1631,8 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         tabpanel_paymenthistory.setPreferredSize(new java.awt.Dimension(1195, 450));
         tabpanel_paymenthistory.setLayout(new java.awt.GridBagLayout());
 
-        panel_historycontrol.setMinimumSize(new java.awt.Dimension(1190, 80));
-        panel_historycontrol.setPreferredSize(new java.awt.Dimension(1190, 80));
+        panel_historycontrol.setMinimumSize(new java.awt.Dimension(1190, 40));
+        panel_historycontrol.setPreferredSize(new java.awt.Dimension(1190, 40));
         panel_historycontrol.setLayout(new java.awt.GridBagLayout());
 
         jtfPaymentHistorySearchBox.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
@@ -1645,7 +1642,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 750, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_historycontrol.add(jtfPaymentHistorySearchBox, gridBagConstraints);
 
         jbtnPaymentHistorySearch.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -1656,7 +1653,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_historycontrol.add(jbtnPaymentHistorySearch, gridBagConstraints);
 
         lbl_show.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -1664,7 +1661,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_historycontrol.add(lbl_show, gridBagConstraints);
 
         jcmbPaymentHistorySearchBy.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -1674,7 +1671,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 5, 0, 100);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_historycontrol.add(jcmbPaymentHistorySearchBy, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1700,7 +1697,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
             },
             new String [] {
-                "OR Number", "Date", "Transaction Description", "Credit", "Debit", "Document Number"
+                "Date", "Description (BalanceBreakDown Category)", "Credit", "Debit", "Transaction Id", "OR No"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -1719,12 +1716,19 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlHistoryDetails.add(jScrollPane6, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         tabpanel_paymenthistory.add(jpnlHistoryDetails, gridBagConstraints);
 
         panel_totalcontainer.setMinimumSize(new java.awt.Dimension(1190, 40));
@@ -1768,10 +1772,12 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 0);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         tabpanel_paymenthistory.add(panel_totalcontainer, gridBagConstraints);
 
-        jTabbedPane1.addTab("Payment History", tabpanel_paymenthistory);
+        jTabbedPane1.addTab("Transaction History", tabpanel_paymenthistory);
 
         tabpanel_discounts.setMinimumSize(new java.awt.Dimension(1195, 450));
         tabpanel_discounts.setPreferredSize(new java.awt.Dimension(1195, 450));
@@ -1930,7 +1936,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_historycontrol1.add(jcmbReceiptsSearchBy, gridBagConstraints);
 
         jbtnReceiptsView.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -1941,18 +1947,10 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_historycontrol1.add(jbtnReceiptsView, gridBagConstraints);
-
-        jbtnReceiptsPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnReceiptsPrint.setText("Print");
-        jbtnReceiptsPrint.setMaximumSize(new java.awt.Dimension(71, 30));
-        jbtnReceiptsPrint.setMinimumSize(new java.awt.Dimension(71, 30));
-        jbtnReceiptsPrint.setPreferredSize(new java.awt.Dimension(71, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 500);
-        panel_historycontrol1.add(jbtnReceiptsPrint, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1960,46 +1958,52 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         tabpanel_Receipts.add(panel_historycontrol1, gridBagConstraints);
 
-        panel_historydetails1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Receipts Master List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        panel_historydetails1.setMinimumSize(new java.awt.Dimension(1195, 390));
-        panel_historydetails1.setPreferredSize(new java.awt.Dimension(1195, 390));
-        panel_historydetails1.setLayout(new java.awt.GridBagLayout());
+        jpnlReceiptsMasterList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Receipts Master List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        jpnlReceiptsMasterList.setMinimumSize(new java.awt.Dimension(1195, 390));
+        jpnlReceiptsMasterList.setPreferredSize(new java.awt.Dimension(1195, 390));
+        jpnlReceiptsMasterList.setLayout(new java.awt.GridBagLayout());
 
         jScrollPane7.setMinimumSize(new java.awt.Dimension(1182, 360));
         jScrollPane7.setName(""); // NOI18N
         jScrollPane7.setPreferredSize(new java.awt.Dimension(1182, 360));
 
-        jtblReceipts.setModel(new javax.swing.table.DefaultTableModel(
+        jtblReceiptsMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "OR Number", "Date", "Transaction Description", "School Year"
+                "OR Number", "Date", "School Year"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jtblReceipts.setIntercellSpacing(new java.awt.Dimension(20, 1));
-        jtblReceipts.setRowHeight(20);
-        jtblReceipts.getTableHeader().setReorderingAllowed(false);
-        jScrollPane7.setViewportView(jtblReceipts);
+        jtblReceiptsMasterList.setRowHeight(20);
+        jtblReceiptsMasterList.getTableHeader().setReorderingAllowed(false);
+        jScrollPane7.setViewportView(jtblReceiptsMasterList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        panel_historydetails1.add(jScrollPane7, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlReceiptsMasterList.add(jScrollPane7, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        tabpanel_Receipts.add(panel_historydetails1, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        tabpanel_Receipts.add(jpnlReceiptsMasterList, gridBagConstraints);
 
         jTabbedPane1.addTab("Receipts", tabpanel_Receipts);
 
@@ -2331,7 +2335,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton jbtnDiscountsView;
     private javax.swing.JButton jbtnMakePayment;
     private javax.swing.JButton jbtnPaymentHistorySearch;
-    private javax.swing.JButton jbtnReceiptsPrint;
     private javax.swing.JButton jbtnReceiptsSearch;
     private javax.swing.JButton jbtnReceiptsView;
     private javax.swing.JButton jbtnSearch;
@@ -2356,6 +2359,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel jpnlMiscellaneous;
     private javax.swing.JPanel jpnlOthers;
     private javax.swing.JPanel jpnlPhotoContainer;
+    private javax.swing.JPanel jpnlReceiptsMasterList;
     private javax.swing.JPanel jpnlStudentAdjustments;
     private javax.swing.JPanel jpnlStudentDetails;
     private javax.swing.JTable jtblAdjustments;
@@ -2366,7 +2370,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JTable jtblMiscellaneous;
     private javax.swing.JTable jtblOthers;
     private javax.swing.JTable jtblPaymentHistory;
-    private javax.swing.JTable jtblReceipts;
+    private javax.swing.JTable jtblReceiptsMasterList;
     private javax.swing.JTextField jtfBasicFee;
     private javax.swing.JTextField jtfDiscount;
     private javax.swing.JTextField jtfDiscountsSearch;
@@ -2415,7 +2419,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel panel_historycontrol2;
     private javax.swing.JPanel panel_historycontrol3;
     private javax.swing.JPanel panel_historycontrol5;
-    private javax.swing.JPanel panel_historydetails1;
     private javax.swing.JPanel panel_historydetails2;
     private javax.swing.JPanel panel_historydetails5;
     private javax.swing.JPanel panel_searchcontainer;

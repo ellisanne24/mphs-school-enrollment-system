@@ -1,10 +1,14 @@
 package controller.payment;
 
+import component_model_loader.OfficialReceiptJCompModelLoader;
 import component_model_loader.PaymentTermJCompModelLoader;
+import component_model_loader.TuitionFeesJCompModelLoader;
 import daoimpl.FeeDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.PaymentTermDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
+import daoimpl.TuitionFeeDaoImpl;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
@@ -24,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import model.fee.Fee;
 import model.paymentterm.PaymentTerm;
 import model.student.Student;
+import model.tuitionfee.Tuition;
 import service.tuition.TuitionPopulator;
 import view.payment.Panel_Payment;
 
@@ -34,18 +39,22 @@ import view.payment.Panel_Payment;
 public class SearchStudent implements KeyListener {
 
     private int studentNo;
+    private int currentSchoolYearId;
     private PaymentTerm paymentTerm;
     private Student student;
     private List<Fee> feeList;
 
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
     private final StudentDaoImpl studentDaoImpl;
     private final FeeDaoImpl feeDaoImpl;
     private final PaymentTermDaoImpl paymentTermDaoImpl;
     private final GradeLevelDaoImpl gradeLevelDaoImpl;
+    private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
 
-    private PaymentTermJCompModelLoader paymentTermJCompModelLoader;
+    private final PaymentTermJCompModelLoader paymentTermJCompModelLoader;
+    private final TuitionFeesJCompModelLoader tuitionFeesJCompModelLoader;
     
-    private Panel_Payment view;
+    private final Panel_Payment view;
 
     public SearchStudent(
             Panel_Payment view, StudentDaoImpl studentDaoImpl, GradeLevelDaoImpl gradeLevelDaoImpl,
@@ -55,7 +64,11 @@ public class SearchStudent implements KeyListener {
         this.feeDaoImpl = feeDaoImpl;
         this.paymentTermDaoImpl = paymentTermDaoImpl;
         this.gradeLevelDaoImpl = gradeLevelDaoImpl;
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
+        this.currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
         paymentTermJCompModelLoader = new PaymentTermJCompModelLoader();
+        tuitionFeesJCompModelLoader = new TuitionFeesJCompModelLoader();
     }
 
     @Override
@@ -81,21 +94,32 @@ public class SearchStudent implements KeyListener {
         if (inputIsValid()) {
             studentNo = Integer.parseInt(view.getJtfSearchBoxMakePayment().getText().trim());
             if (studentExist()) {
-                resetForm();
-                initStudent();
-                initFees();
-                initPaymentTermComboItemListener();
-                initBalanceBreakDownTableModelListener();
+                clearForm();
+                initializeStudent();
+                initializeFees();
+                initializeBalanceBreakDownTableModelListener();
+                if (studentHasTuitionRecord()) {
+                    Tuition t = tuitionFeeDaoImpl.getBy(student.getStudentId(), currentSchoolYearId);
+                    view.getJlblTotalPaidText().setText(""+t.getTotalPaid());
+                    view.getJlblRemainingBalanceText().setText(""+t.getRemainingBalance());
+                    view.getJcmbPaymentTerm().setSelectedItem(t.getPaymentTerm().getPaymentTermName().trim());
+                    view.getJcmbPaymentTerm().setEnabled(false);
+                    initializeBalanceBreakDownTable();
+                    initializeReceiptsMasterListTable();
+                } else {
+                    initializePaymentTermComboItemListener();
+                    
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Student not found.");
-                resetForm();
+                clearForm();
             }
         } else {
             JOptionPane.showMessageDialog(null, "You have entered an invalid input.");
         }
     }
 
-    private void initStudent() {
+    private void initializeStudent() {
         student = studentDaoImpl.getStudentByStudentNo(studentNo);
         view.getJcmbPaymentTerm().setModel(paymentTermJCompModelLoader.getPaymentTermNames());
         view.getJtfStudentNo().setText(student.getStudentNo() + "");
@@ -107,7 +131,7 @@ public class SearchStudent implements KeyListener {
         view.getJtfStatus().setText(student.isActive() == true ? "Active" : "Inactive");
     }
     
-    private void initFees(){
+    private void initializeFees(){
         feeList = feeDaoImpl.getFeesByGradeLevelId(gradeLevelDaoImpl.getId(student.getGradeLevelNo()));
         initFeeTableModelListenerFor(view.getJtblDownpayment(), view.getJtfDownPayment());
         initFeeTableModelListenerFor(view.getJtblBasic(), view.getJtfBasicFee());
@@ -118,6 +142,13 @@ public class SearchStudent implements KeyListener {
         setFeeRecordTo("Others", view.getJtblOthers());
         setFeeRecordTo("Miscellaneous", view.getJtblMiscellaneous());
         setFeeRecordTo("Basic", view.getJtblBasic());
+    }
+    
+    
+    private void initializeBalanceBreakDownTable(){
+        JTable table = view.getJtblBalanceBreakDown();
+        int studentId = student.getStudentId();
+        table.setModel(tuitionFeesJCompModelLoader.getTuitionByStudentIdAndSchoolYearId(table, studentId, currentSchoolYearId));
     }
     
     private boolean inputIsValid() {
@@ -150,7 +181,7 @@ public class SearchStudent implements KeyListener {
         });
     }
 
-    private void initPaymentTermComboItemListener() {
+    private void initializePaymentTermComboItemListener() {
         view.getJcmbPaymentTerm().addItemListener((ItemEvent e) -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 String paymentTermName = e.getItem().toString().trim();
@@ -161,19 +192,24 @@ public class SearchStudent implements KeyListener {
         });
     }
 
-    private void initBalanceBreakDownTableModelListener() {
+    private void initializeBalanceBreakDownTableModelListener() {
         view.getJtblBalanceBreakDown().getModel().addTableModelListener((TableModelEvent e) -> {
                 view.getJbtnMakePayment().setEnabled(view.getJtblBalanceBreakDown().getRowCount() > 0);
         });
     }
 
     private void initBalanceBreakDownTable(PaymentTerm paymentTerm) {
-//        if(!hasBalanceBreakDownRecord()){
-//              calculate
-//        }
         TuitionPopulator tFeeService = new TuitionPopulator(feeList, paymentTerm);
         DefaultTableModel tableModel = tFeeService.getTuitionItemsTableModel(view.getJtblBalanceBreakDown());
         view.getJtblBalanceBreakDown().setModel(tableModel);
+    }
+    
+    private void initializeReceiptsMasterListTable(){
+        OfficialReceiptJCompModelLoader officialReceiptJCompModelLoader = new OfficialReceiptJCompModelLoader();
+        JTable table = view.getJtblReceipts();
+        int studentId = student.getStudentId();
+        int schoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
+        table.setModel(officialReceiptJCompModelLoader.getAllOfficialReceiptsByStudentIdandSchoolYearId(table, studentId, schoolYearId));
     }
 
     private void setFeeRecordTo(String feeCategoryName, JTable table) {
@@ -188,7 +224,7 @@ public class SearchStudent implements KeyListener {
         }
     }
 
-    private void resetForm() {
+    private void clearForm() {
         List<Component[]> compArr = new ArrayList<>();
         compArr.add(view.getJpnlStudentDetails().getComponents());
         compArr.add(view.getJpnlDownpayment().getComponents());
@@ -197,6 +233,7 @@ public class SearchStudent implements KeyListener {
         compArr.add(view.getJpnlOthers().getComponents());
         compArr.add(view.getJpnlBalanceBreakdown().getComponents());
         compArr.add(view.getJpnlCurrentSchoolYearTuition().getComponents());
+        compArr.add(view.getJpnlReceiptsMasterList().getComponents());
         for (int i = 0; i < compArr.size(); i++) {
             for (Component c : compArr.get(i)) {
                 if (c instanceof JTextField) {
@@ -220,6 +257,11 @@ public class SearchStudent implements KeyListener {
         boolean exist;
         exist = studentDaoImpl.studentExist(studentNo);
         return exist;
+    }
+    
+    private boolean studentHasTuitionRecord() {
+        boolean hasTuitionRecord = studentDaoImpl.hasTuitionRecord(studentNo, currentSchoolYearId);
+        return hasTuitionRecord;
     }
 
 }

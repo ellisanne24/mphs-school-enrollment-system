@@ -14,7 +14,25 @@ public class BalanceBreakDownFee {
     private BigDecimal balance;
     private double totalPaid;
     private boolean isPaid;
+    private boolean isPastDueDate;
+    private boolean hasPenalty;
     private Date deadline;
+
+    public boolean hasPenalty() {
+        return hasPenalty;
+    }
+
+    public void setHasPenalty(boolean hasPenalty) {
+        this.hasPenalty = hasPenalty;
+    }
+    
+    public boolean getIsPastDueDate() {
+        return isPastDueDate;
+    }
+
+    public void setIsPastDueDate(boolean isPastDueDate) {
+        this.isPastDueDate = isPastDueDate;
+    }
 
     public String getCategory() {
         return category;
@@ -71,7 +89,7 @@ public class BalanceBreakDownFee {
         this.totalPaid = totalPaid;
     }
 
-    public boolean isIsPaid() {
+    public boolean getIsPaid() {
         return isPaid;
     }
 

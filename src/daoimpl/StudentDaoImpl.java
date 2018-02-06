@@ -1,25 +1,14 @@
 package daoimpl;
 
-import constants.AdmissionTable;
-import constants.RegistrationTable;
-import constants.StudentTable;
 import utility.database.DBType;
 import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JOptionPane;
-import model.admission.Admission;
-import model.gradelevel.GradeLevel;
-import model.gradelevel.CurrentGradeLevel;
 import model.registration.Registration;
-import model.schoolyear.SchoolYear;
 import model.student.Student;
 import dao.IStudent;
-import model.paymentterm.PaymentTerm;
 
 public class StudentDaoImpl implements IStudent {
 
@@ -51,6 +40,101 @@ public class StudentDaoImpl implements IStudent {
         return exists;
     }
 
+    @Override
+    public boolean hasTuitionRecord(int studentNo, int schoolyearId) {
+        boolean hasTuitionRecord = false;
+        String SQL = "{CALL hasTuitionRecord(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,studentNo);
+            cs.setInt(2,schoolyearId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    hasTuitionRecord = rs.getBoolean("hasTuition");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return hasTuitionRecord;
+    }
+    
+
+    @Override
+    public Student getStudentByStudentId(int studentId) {
+        String SQLa = "{CALL getStudentByStudentId(?)}";
+        Student student = new Student();
+        Registration r = new Registration();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            try (CallableStatement csA = con.prepareCall(SQLa);) {
+                csA.setInt(1, studentId);
+                try (ResultSet rs = csA.executeQuery();) {
+                    while (rs.next()) {
+                        r.setRegistrationId(rs.getInt("registration_id"));
+                        r.setStudentType(rs.getString("student_type"));
+                        r.setLastName(rs.getString("lastname"));
+                        r.setFirstName(rs.getString("firstname"));
+                        r.setMiddleName(rs.getString("middlename"));
+                        r.setBirthday(rs.getDate("dob"));
+                        r.setPlaceOfBirth(rs.getString("pob"));
+                        r.setNationality(rs.getString("nationality"));
+                        r.setReligion(rs.getString("religion"));
+                        r.setGender(rs.getInt("gender") == 1 ? "Male" : "Female");
+                        r.setFatherFirstName(rs.getString("father_firstname"));
+                        r.setFatherMiddleName(rs.getString("father_middlename"));
+                        r.setFatherLastName(rs.getString("father_lastname"));
+                        r.setFatherOccupation(rs.getString("father_occupation"));
+                        r.setFatherOfficePhoneNo(rs.getString("father_officephone_no"));
+                        r.setFatherMobileNo(rs.getString("father_mobile_no"));
+                        r.setIsFatherContactInCaseEmergency(rs.getBoolean("isFatherContactInCaseEmergency"));
+                        r.setMotherFirstName(rs.getString("mother_firstname"));
+                        r.setMotherMiddleName(rs.getString("mother_middlename"));
+                        r.setMotherLastName(rs.getString("mother_lastname"));
+                        r.setMotherOccupation(rs.getString("mother_occupation"));
+                        r.setMotherOfficePhoneNo(rs.getString("mother_officephone_no"));
+                        r.setMotherMobileNo(rs.getString("mother_mobile_no"));
+                        r.setIsMotherContactInCaseEmergency(rs.getBoolean("isMotherContactInCaseEmergency"));
+                        r.setGuardianLastName(rs.getString("guardian_lastname"));
+                        r.setGuardianFirstName(rs.getString("guardian_firstname"));
+                        r.setGuardianMiddleName(rs.getString("guardian_middlename"));
+                        r.setGuardianOccupation(rs.getString("guardian_occupation"));
+                        r.setGuardianMobileNo(rs.getString("guardian_mobile_no"));
+                        r.setGuardianRelationToStudent(rs.getString("guardian_relation_to_student"));
+                        r.setIsGuardianContactInCaseEmergency(rs.getBoolean("isGuardianContactInCaseEmergency"));
+                        r.setSchoolLastAttended(rs.getString("school_last_attended"));
+                        r.setSchoolLastAttendedAddress(rs.getString("school_last_attended_address"));
+                        r.setAddressRoomOrHouseNo(rs.getString("room_or_house_no"));
+                        r.setAddressStreet(rs.getString("street"));
+                        r.setAddressBrgyOrSubd(rs.getString("brgy_or_subd"));
+                        r.setAddressCity(rs.getString("city"));
+                        r.setRegion(rs.getString("region"));
+                        r.setGradeLevelNo(rs.getInt("gradelevel_no"));
+                        r.setSchoolYearYearFrom(rs.getInt("schoolyear_yearfrom"));
+                        r.setRegistrationDate(rs.getDate("date_registered"));
+
+                        String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
+                        r.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes") ? true : false);
+
+                        student.setStudentId(rs.getInt("student_id"));
+                        student.setStudentNo(rs.getInt("student_no"));
+                        student.setIsActive(rs.getBoolean("isStudentActive"));
+                        student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O") == true ? 0 : 1);
+                        student.setGradeLevelNo(rs.getInt("currentGradeLevel"));
+                        student.setRegistration(r);
+                    }
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return student;
+    }
+    
+
+    
     @Override
     public Student getStudentByStudentNo(int studentNo) {
         String SQLa = "{CALL getStudentByStudentNo(?)}";
