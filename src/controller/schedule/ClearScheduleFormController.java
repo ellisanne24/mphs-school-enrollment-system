@@ -7,6 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
@@ -14,11 +15,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ClearScheduleFormController implements ActionListener{
 
+    private final Dialog_CreateSchedule view;
     private final JTable jtblSchedule;
-    private JComboBox jcmbGradeLevel;
     
-    public ClearScheduleFormController(JTable jtblSchedule){
-        this.jtblSchedule = jtblSchedule;
+    public ClearScheduleFormController(Dialog_CreateSchedule view){
+        this.view = view;
+        this.jtblSchedule = view.getJtblSchedule();
     }
     
     @Override

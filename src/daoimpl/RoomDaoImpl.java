@@ -8,7 +8,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.util.List;
 import model.room.Room;
@@ -57,7 +56,7 @@ public class RoomDaoImpl implements IRoom {
     @Override
     public List<Room> getAllRoomInfo() {
         List<Room> list = new ArrayList();
-        String SQL = "{CALL getRooms}";
+        String SQL = "{CALL getRooms()}";
         
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
@@ -75,7 +74,32 @@ public class RoomDaoImpl implements IRoom {
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Room> getAllActiveRooms() {
+        String SQL = "{CALL getAllActiveRooms()}";
+        List<Room> list = new ArrayList();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    Room room = new Room();
+                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setStatus(rs.getBoolean("status"));
+                    room.setDateCreated(rs.getString("date_created"));
+                    room.setDescription(rs.getString("notes"));
+                    list.add(room);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return list;
     }

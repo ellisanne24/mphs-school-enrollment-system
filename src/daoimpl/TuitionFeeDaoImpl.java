@@ -98,6 +98,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                             rs.getString("category").equalsIgnoreCase("D")? "Downpayment" :
                             rs.getString("category").equalsIgnoreCase("O")? "Other" : "";
                     bb.setCategory(category);
+                    bb.setSchoolyearId(rs.getInt("schoolyear_id"));
                     bbFeeList.add(bb);
                 }
             }
@@ -117,6 +118,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     paymentTerm.setDivisor(rs.getInt("divisor"));
                 }
             }
+            tuitionFee.setSchoolyearId(schoolyearId);
             tuitionFee.setBalanceBreakDownFees(bbFeeList);
             tuitionFee.setPaymentTerm(paymentTerm);
         } catch (SQLException e) {
@@ -171,6 +173,10 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 
                 for (Particular p : payment.getParticulars()) {
                     int particularId = getBalanceBreakDownId(p.getName().trim(), studentId, schoolYearId);
+                    System.out.println("Particular Name: "+p.getName());
+                    System.out.println("Particular Id: "+particularId);
+                    System.out.println("Student Id: "+studentId);
+                    System.out.println("SchoolYear Id: "+schoolYearId);
                     csb.setInt(1,transactionId);
                     csb.setInt(2,particularId);
                     csb.setBigDecimal(3, p.getAmountPaid());

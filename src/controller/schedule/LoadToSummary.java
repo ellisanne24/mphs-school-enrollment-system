@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
@@ -12,6 +13,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class LoadToSummary implements ActionListener{
 
+    private final Dialog_CreateSchedule view;
+    
     private final JTable jtblSchedule;
     private final JTable jtblMonday;
     private final JTable jtblTuesday;
@@ -25,13 +28,14 @@ public class LoadToSummary implements ActionListener{
     private DefaultTableModel thursday;
     private DefaultTableModel friday;
     
-    public LoadToSummary(JTable jtblSchedule, JTable jtblMonday, JTable jtblTuesday, JTable jtblWednesday, JTable jtblThursday, JTable jtblFriday) {
-        this.jtblSchedule = jtblSchedule;
-        this.jtblMonday = jtblMonday;
-        this.jtblTuesday = jtblTuesday;
-        this.jtblWednesday = jtblWednesday;
-        this.jtblThursday = jtblThursday;
-        this.jtblFriday = jtblFriday;
+    public LoadToSummary(Dialog_CreateSchedule view) {
+        this.view = view;
+        this.jtblSchedule = view.getJtblSchedule();
+        this.jtblMonday = view.getJtblMonday();
+        this.jtblTuesday = view.getJtblTuesday();
+        this.jtblWednesday = view.getJtblWednesday();
+        this.jtblThursday = view.getJtblThursday();
+        this.jtblFriday = view.getJtblFriday();
     }
     
     @Override

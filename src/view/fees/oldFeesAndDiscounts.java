@@ -1364,7 +1364,7 @@ public class oldFeesAndDiscounts extends javax.swing.JPanel {
         DefaultListModel dlm = new DefaultListModel();
         for (Object o : obj) {
             GradeLevel g = (GradeLevel) o;
-            dlm.addElement(g.getLevel() == 0 ? "Kindergarten" : "Grade " + g.getLevel());
+            dlm.addElement(g.getLevelNo() == 0 ? "Kindergarten" : "Grade " + g.getLevelNo());
         }
         jlstFeeGradeLevels.setModel(dlm);
     }//GEN-LAST:event_jlstFeeNameListValueChanged

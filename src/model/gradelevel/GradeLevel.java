@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model.gradelevel;
 
 import model.credential.Credential;
@@ -10,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author Acer
+ * @author John Ferdinand Antonio
  */
 public class GradeLevel {
     private int id;
@@ -34,11 +30,11 @@ public class GradeLevel {
         this.id = id;
     }
 
-    public Integer getLevel() {
+    public Integer getLevelNo() {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    public void setLevelNo(Integer level) {
         this.level = level;
     }
 

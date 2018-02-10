@@ -7,6 +7,7 @@ import java.util.Date;
 public class BalanceBreakDownFee {
 
     private int id;
+    private int schoolyearId;
     private String name; //name of breakdown e.g. Academic Fee for Quarter 1, Academic Fee for Quarter2
     private String category;
     private Date dateAssigned;
@@ -17,6 +18,14 @@ public class BalanceBreakDownFee {
     private boolean isPastDueDate;
     private boolean hasPenalty;
     private Date deadline;
+
+    public int getSchoolyearId() {
+        return schoolyearId;
+    }
+
+    public void setSchoolyearId(int schoolyearId) {
+        this.schoolyearId = schoolyearId;
+    }
 
     public boolean hasPenalty() {
         return hasPenalty;
@@ -89,7 +98,7 @@ public class BalanceBreakDownFee {
         this.totalPaid = totalPaid;
     }
 
-    public boolean getIsPaid() {
+    public boolean isFullyPaid() {
         return isPaid;
     }
 

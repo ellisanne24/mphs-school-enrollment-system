@@ -37,7 +37,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
 
     @Override
     public List<GradeLevel> getAllGradeLevelsInfo() {
-        List<GradeLevel> list = new ArrayList();
+        List<GradeLevel> gradeLevelList = new ArrayList();
         String SQL = "{CALL getAllGradeLevelsInfo()}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
@@ -45,15 +45,15 @@ public class GradeLevelDaoImpl implements IGradeLevel{
                 while(rs.next()){
                     GradeLevel gradeLevel = new GradeLevel();
                     gradeLevel.setId(rs.getInt("gradelevel_id"));
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     gradeLevel.setIsActive(rs.getBoolean("isActive"));
-                    list.add(gradeLevel);
+                    gradeLevelList.add(gradeLevel);
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"getAllGradeLevelsInfo()\n"+e.getMessage());
+            e.printStackTrace();
         }
-        return list;
+        return gradeLevelList;
     }
 
     @Override
@@ -66,13 +66,13 @@ public class GradeLevelDaoImpl implements IGradeLevel{
                 while(rs.next()){
                     GradeLevel gradeLevel = new GradeLevel();
                     gradeLevel.setId(rs.getInt("gradelevel_id"));
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     gradeLevel.setIsActive(rs.getBoolean("isActive"));
                     list.add(gradeLevel);
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"getAllActiveGradeLevels()\n"+e.getMessage());
+            e.printStackTrace();
         }
         return list;
     }
@@ -87,7 +87,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
                 while(rs.next()){
                     GradeLevel gradeLevel = new GradeLevel();
                     gradeLevel.setId(rs.getInt("gradelevel_id"));
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     gradeLevel.setIsActive(rs.getBoolean("isActive"));
                     list.add(gradeLevel);
                 }
@@ -104,7 +104,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
         String SQL = "{CALL getGradeLevelId(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, gradelevel.getLevel());
+            cs.setInt(1, gradelevel.getLevelNo());
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     gradeLevelId = rs.getInt("gradelevel_id");
@@ -125,11 +125,13 @@ public class GradeLevelDaoImpl implements IGradeLevel{
             cs.setInt(1, gradeLevelId);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                   gradeLevel.setLevel(rs.getInt("grade_level"));
+                   gradeLevel.setId(rs.getInt("gradelevel_id"));
+                   gradeLevel.setLevelNo(rs.getInt("grade_level"));
+                   gradeLevel.setIsActive(rs.getBoolean("isActive"));
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"getGradeLevelById()\n"+e.getMessage());
+            e.printStackTrace();
         }
         return gradeLevel;
     }
@@ -140,7 +142,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
         String SQL = "{CALL addGradeLevel(?)}";
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, gradelevel.getLevel());
+            cs.setInt(1, gradelevel.getLevelNo());
             isAdded = cs.executeUpdate() == 1;
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null,"addGradeLevel()\n"+e.getMessage());
@@ -155,7 +157,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
        
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, gradelevel.getLevel());
+            cs.setInt(1, gradelevel.getLevelNo());
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     isActive = rs.getInt("isActive")==1;
@@ -191,7 +193,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     list.add(gradeLevel);
                 }
             }

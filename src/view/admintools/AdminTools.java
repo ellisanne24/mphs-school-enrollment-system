@@ -4,7 +4,7 @@ package view.admintools;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.PaymentTermJCompModelLoader;
 import component_model_loader.SchoolYearJCompModelLoader;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
 import controller.admintools.DeactivateAllStudents;
 import controller.admintools.DeleteAlPaymentAndTransactionRecord;
 import controller.admintools.DeleteAllStudentRecord;
@@ -221,8 +221,8 @@ public class AdminTools extends javax.swing.JFrame {
     }
     
     private void initializeRenderers(){
-        jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
-        jcmbGradeLevelForDob.setRenderer(new GradeLevelJComboBoxRenderer());
+        jcmbGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
+        jcmbGradeLevelForDob.setRenderer(new Renderer_GradeLevel_JComboBox());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

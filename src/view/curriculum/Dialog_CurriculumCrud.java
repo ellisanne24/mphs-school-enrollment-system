@@ -2,7 +2,7 @@ package view.curriculum;
 
 import component_model_loader.CurriculumJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
 import controller.curriculum.CreateCurriculum;
 import controller.curriculum.CurrentSubjectsTableModelListener;
 import controller.curriculum.EditCurriculum;
@@ -25,7 +25,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
     private CurriculumDaoImpl curriculumDaoImpl;
     private CurriculumJCompModelLoader curriculumJCompModelLoader;
     private GradeLevelDaoImpl gradeLevelDaoImpl;
-    private GradeLevelJComboBoxRenderer gradeLevelJComboBoxRenderer;
+    private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     
     public Dialog_CurriculumCrud(java.awt.Frame parent, boolean modal, String action) {
@@ -70,7 +70,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
 
     @Override
     public void initRenderers() {
-        gradeLevelJComboBoxRenderer = new GradeLevelJComboBoxRenderer();
+        gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
     }
     
     @Override

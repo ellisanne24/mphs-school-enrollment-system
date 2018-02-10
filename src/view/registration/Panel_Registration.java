@@ -1,7 +1,7 @@
 package view.registration;
 
 import component_model_loader.GradeLevelJCompModelLoader;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
 import controller.registration.DisplayRegistrationRecordByAdmissionStatus;
 import controller.registration.Register;
 import controller.registration.UpdateRegistration;
@@ -23,7 +23,7 @@ public class Panel_Registration extends javax.swing.JPanel implements Initialize
     private RegistrationDaoImpl registrationDaoImpl;
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
-    private GradeLevelJComboBoxRenderer gradeLevelJComboBoxRenderer;
+    private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
     
     private JDatePanelImpl dpnlBirthday;
     private JDatePickerImpl dpBirthday; 
@@ -76,7 +76,7 @@ public class Panel_Registration extends javax.swing.JPanel implements Initialize
 
     @Override
     public void initRenderers() {
-        gradeLevelJComboBoxRenderer = new GradeLevelJComboBoxRenderer();
+        gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
     }
 
     @Override

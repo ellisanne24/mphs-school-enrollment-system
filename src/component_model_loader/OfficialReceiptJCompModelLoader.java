@@ -24,7 +24,8 @@ public class OfficialReceiptJCompModelLoader {
         DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
         tableModel.setRowCount(0);
         for(OfficialReceipt o : orList){
-            Object[] rowData = {o.getPayment().getOrNoAttached(),o.getPayment().getDateOfPayment(),
+            Object[] rowData = {
+                o.getPayment().getOrNoAttached(),o.getPayment().getDateOfPayment(),
                 o.getSchoolYear().getYearFrom()+"-"+o.getSchoolYear().getYearTo()};
             tableModel.addRow(rowData);
         }

@@ -102,7 +102,7 @@ public class FeeDaoImpl implements IFee {
     @Override
     public double getDownpaymentFeeByGradeLevel(GradeLevel aGradeLevel) {
         double amountOfDownpayment = 0;
-        int gradeLevel = aGradeLevel.getLevel();
+        int gradeLevel = aGradeLevel.getLevelNo();
         String SQL = "{CALL getDownpaymentFeeByGradeLevel(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
@@ -121,7 +121,7 @@ public class FeeDaoImpl implements IFee {
     @Override
     public List<Fee> getFeesByGradeLevelAndCategory(GradeLevel aGradeLevel, FeeCategory aFeeCategory) {
         String feeCategory = aFeeCategory.getName();
-        int gradeLevel = aGradeLevel.getLevel();
+        int gradeLevel = aGradeLevel.getLevelNo();
 
         List<Fee> list = new ArrayList<>();
         String SQL = "{CALL getFeesByGradeLevelAndCategory(?,?)}";
@@ -140,7 +140,7 @@ public class FeeDaoImpl implements IFee {
                     fc.setName(rs.getString("fee_category"));
 
                     gl.setId(rs.getInt("gradelevel_id"));
-                    gl.setLevel(rs.getInt("grade_level"));
+                    gl.setLevelNo(rs.getInt("grade_level"));
                     sy.setYearFrom(rs.getInt("year_created"));
 
                     fee.setFeeCategory(fc);
@@ -243,7 +243,7 @@ public class FeeDaoImpl implements IFee {
                     fee.setFeeCategory(feeCategory);
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     fee.setGradeLevel(gradeLevel);
 
                     fee.setAmount(rs.getBigDecimal("fee_amount"));
@@ -281,7 +281,7 @@ public class FeeDaoImpl implements IFee {
                     fee.setFeeCategory(feeCategory);
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     fee.setGradeLevel(gradeLevel);
 
                     fee.setAmount(rs.getBigDecimal("fee_amount"));
@@ -331,7 +331,7 @@ public class FeeDaoImpl implements IFee {
                     fee.setFeeCategory(feeCategory);
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     fee.setGradeLevel(gradeLevel);
 
                     fee.setAmount(rs.getBigDecimal("fee_amount"));
@@ -355,7 +355,7 @@ public class FeeDaoImpl implements IFee {
         String SQL = "{CALL getFeesByGradeLevel(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, aGradeLevel.getLevel());
+            cs.setInt(1, aGradeLevel.getLevelNo());
 
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
@@ -370,7 +370,7 @@ public class FeeDaoImpl implements IFee {
                     fee.setFeeCategory(feeCategory);
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     fee.setGradeLevel(gradeLevel);
 
                     fee.setAmount(rs.getBigDecimal("fee_amount"));
@@ -434,7 +434,7 @@ public class FeeDaoImpl implements IFee {
                     fee.setFeeCategory(fc);
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     fee.setGradeLevel(gradeLevel);
 
                     fee.setAmount(rs.getBigDecimal("fee_amount"));
@@ -470,7 +470,7 @@ public class FeeDaoImpl implements IFee {
                     fee.setFeeCategory(fc);
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     fee.setGradeLevel(gradeLevel);
 
                     fee.setAmount(rs.getBigDecimal("fee_amount"));
@@ -581,7 +581,7 @@ public class FeeDaoImpl implements IFee {
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     GradeLevel g = new GradeLevel();
-                    g.setLevel(rs.getInt("grade_level"));
+                    g.setLevelNo(rs.getInt("grade_level"));
                     g.setId(rs.getInt("gradelevel_id"));
                     g.setIsActive(rs.getBoolean("isActive"));
                     gradeLevelList.add(g);
@@ -613,7 +613,7 @@ public class FeeDaoImpl implements IFee {
                     fee.setFeeCategory(feeCategory);
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     fee.setGradeLevel(gradeLevel);
 
                     fee.setAmount(rs.getBigDecimal("fee_amount"));

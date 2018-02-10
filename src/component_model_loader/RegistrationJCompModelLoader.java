@@ -52,7 +52,8 @@ public class RegistrationJCompModelLoader {
                 r.getMiddleName(),
                 r.getGradeLevelNo() == 0 ? "Kindergarten" : r.getGradeLevelNo(),
                 r.getRegistrationDate(),
-                r.getIsAdmissionComplete() == true? "Completed" : "Pending"
+                r.getIsAdmissionComplete() == true? "Completed" : "Pending",
+                r.getStudentNo() == 0? "None assigned yet" : r.getStudentNo()
             };
             tableModel.addRow(rowData);
         }

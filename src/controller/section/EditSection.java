@@ -58,19 +58,24 @@ public class EditSection implements ActionListener, FormValidator{
     @Override
     public boolean formIsValid() {
         boolean isValid = true;
-        String selectedAdviser = StringUtil.removeAllNonNumeric(view.getJcmbAdviser().getSelectedItem().toString().trim());
-        int adviserId = Integer.parseInt(StringUtil.removeWhiteSpaces(selectedAdviser));
+        int adviserId = Integer.parseInt(view.getJcmbAdviser().getSelectedItem().toString().trim());
         int currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
         FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
-        if(facultyDaoImpl.facultyHasAdvisory(adviserId, currentSchoolYearId)){
+
+        if (facultyDaoImpl.facultyHasAdvisory(adviserId, currentSchoolYearId)) {
             isValid = false;
             JOptionPane.showMessageDialog(null, "Faculty already has an advisory class.");
         }
-        if(sectionDaoImpl.sectionExists(view.getJtfSectionName().getText().trim())){
+
+        if (sectionNameExists()) {
             isValid = false;
             JOptionPane.showMessageDialog(null, "Section name is already taken.\n Please try a different name.");
         }
         return isValid;
+    }
+    
+    private boolean sectionNameExists(){
+        return sectionDaoImpl.sectionExists(view.getJtfSectionName().getText().trim());
     }
     
     private boolean update(){

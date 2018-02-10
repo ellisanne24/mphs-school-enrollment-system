@@ -3,9 +3,9 @@ package view.section;
 import component_model_loader.FacultyJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SectionJCompModelLoader;
-import component_renderers.FacultyJComboBoxRenderer;
-import component_renderers.GradeLevelJComboBoxRenderer;
-import component_renderers.SectionJComboBoxRenderer;
+import component_renderers.Renderer_Faculty_JComboBox;
+import component_renderers.Renderer_GradeLevel_JComboBox;
+import component_renderers.Renderer_Section_JComboBox;
 import controller.enrollment.DialogSectionAssignment_CapacityDenominatorDocumentPropertyListener;
 import controller.enrollment.DialogSectionAssignment_Clear;
 import controller.enrollment.DialogSectionAssignment_MoveStudentToSection;
@@ -59,9 +59,9 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
 
     @Override
     public void initRenderers() {
-        jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
-        jcmbSection.setRenderer(new SectionJComboBoxRenderer());
-        jcmbAdviser.setRenderer(new FacultyJComboBoxRenderer());
+        jcmbGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
+        jcmbSection.setRenderer(new Renderer_Section_JComboBox());
+        jcmbAdviser.setRenderer(new Renderer_Faculty_JComboBox());
     }
 
     @Override

@@ -112,7 +112,8 @@ public class Panel_Faculty extends javax.swing.JPanel{
         jScrollPane3.setMinimumSize(new java.awt.Dimension(590, 235));
         jScrollPane3.setPreferredSize(new java.awt.Dimension(590, 235));
 
-        jtblSpecializationSubjects.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblSpecializationSubjects.setAutoCreateRowSorter(true);
+        jtblSpecializationSubjects.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSpecializationSubjects.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -228,7 +229,8 @@ public class Panel_Faculty extends javax.swing.JPanel{
         jScrollPane2.setMinimumSize(new java.awt.Dimension(590, 235));
         jScrollPane2.setPreferredSize(new java.awt.Dimension(590, 235));
 
-        jtblSpecialization.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblSpecialization.setAutoCreateRowSorter(true);
+        jtblSpecialization.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSpecialization.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -238,7 +240,7 @@ public class Panel_Faculty extends javax.swing.JPanel{
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -267,7 +269,8 @@ public class Panel_Faculty extends javax.swing.JPanel{
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 265));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 265));
 
-        jtblFacultyMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblFacultyMasterList.setAutoCreateRowSorter(true);
+        jtblFacultyMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblFacultyMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

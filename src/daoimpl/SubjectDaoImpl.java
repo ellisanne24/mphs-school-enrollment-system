@@ -69,9 +69,9 @@ public class SubjectDaoImpl implements ISubject {
                     subject.setSubjectDescription(rs.getString("description"));
                     subject.setIsActive(rs.getBoolean("isActive"));
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     subject.setGradeLevel(gradeLevel);
-                    
+
                     list.add(subject);
                 }
             }
@@ -82,23 +82,58 @@ public class SubjectDaoImpl implements ISubject {
     }
 
     @Override
+    public List<Subject> getAllActiveSubjectsByStatusAndGradeLevelId(boolean isActive, int gradeLevelId) {
+        String SQL = "{CALL getAllSubjectsByStatusAndGradeLevelId(?,?)}";
+        List<Subject> subjectList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, isActive == true ? 1 : 0);
+            cs.setInt(2, gradeLevelId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    GradeLevel g = new GradeLevel();
+                    g.setLevelNo(rs.getInt("grade_level"));
+                    
+                    SchoolYear schoolYearCreated = new SchoolYear();
+                    schoolYearCreated.setSchoolYearId(rs.getInt("year_created_schoolyear_id"));
+                    
+                    Subject s = new Subject();
+                    s.setSubjectId(rs.getInt("subject_id"));
+                    s.setSubjectCode(rs.getString("code"));
+                    s.setSubjectTitle(rs.getString("title"));
+                    s.setSubjectDescription(rs.getString("description"));
+                    s.setGradeLevel(g);
+                    s.setSchoolYearCreated(schoolYearCreated);
+                    
+                    subjectList.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subjectList;
+    }
+    
+    
+
+    @Override
     public List<Subject> getSubjectInfoByWildCard(String wildCardChar) {
         List<Subject> subjectList = new ArrayList<>();
         String SQL = "{CALL getSubjectInfoByWildCard(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
+                CallableStatement cs = con.prepareCall(SQL);) {
             cs.setString(1, wildCardChar);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     Subject s = new Subject();
                     s.setSubjectId(rs.getInt("subject_id"));
                     s.setSubjectTitle(rs.getString("title"));
                     s.setSubjectCode(rs.getString("code"));
                     s.setSubjectDescription(rs.getString("description"));
                     s.setIsActive(rs.getBoolean("isActive"));
-                    
+
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     s.setGradeLevel(gradeLevel);
                     subjectList.add(s);
                 }
@@ -114,18 +149,18 @@ public class SubjectDaoImpl implements ISubject {
         Subject s = new Subject();
         String SQL = "{CALL getSubjectInfoById(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,subjectId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, subjectId);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     s.setSubjectId(rs.getInt("subject_id"));
                     s.setSubjectTitle(rs.getString("title"));
                     s.setSubjectCode(rs.getString("code"));
                     s.setSubjectDescription(rs.getString("description"));
                     s.setIsActive(rs.getBoolean("isActive"));
-                    
+
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     s.setGradeLevel(gradeLevel);
                 }
             }
@@ -153,7 +188,7 @@ public class SubjectDaoImpl implements ISubject {
                     subject.setSubjectDescription(rs.getString("description"));
                     subject.setIsActive(rs.getBoolean("isActive"));
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     subject.setGradeLevel(gradeLevel);
                     list.add(subject);
                 }
@@ -167,27 +202,29 @@ public class SubjectDaoImpl implements ISubject {
 
     @Override
     public List<Subject> getSubjectsByCurriculum(Curriculum aCurriculum) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Subject> subjectList = new ArrayList<>();
+        return subjectList;
     }
 
     @Override
     public List<Subject> getSubjectsBySchoolYear(SchoolYear aSchoolYear) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Subject> subjectList = new ArrayList<>();
+        return subjectList;
     }
 
     @Override
-    public boolean createSubject(Subject aSubject) {
+    public boolean createSubject(Subject subject) {
         boolean isSuccesful;
-        String sql = "{call createSubject(?,?,?,?,?)}";
+        String SQL = "{call createSubject(?,?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(sql);) {
-            cs.setString(1, aSubject.getSubjectCode());
-            cs.setString(2, aSubject.getSubjectTitle());
-            cs.setString(3, aSubject.getSubjectDescription());
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, subject.getSubjectCode());
+            cs.setString(2, subject.getSubjectTitle());
+            cs.setString(3, subject.getSubjectDescription());
             cs.registerOutParameter(4, java.sql.Types.INTEGER);
-            cs.setInt(5, aSubject.getGradeLevel().getId());
+            cs.setInt(5, subject.getGradeLevel().getId());
+            cs.setInt(6,subject.getSchoolYearCreated().getSchoolYearId());
             cs.executeUpdate();
-
             subject.setSubjectId(cs.getInt(4));
 
             isSuccesful = true;
@@ -203,29 +240,29 @@ public class SubjectDaoImpl implements ISubject {
         boolean isSuccessful = true;
         String SQLa = "{CALL updateSubject(?,?,?,?,?)}";
         String SQLb = "{CALL updateSubjectGradeLevelAssignment(?,?)}";
-        try(Connection con = DBUtil.getConnection(DBType.MYSQL);){
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try(CallableStatement csA = con.prepareCall(SQLa);
-                    CallableStatement csB = con.prepareCall(SQLb);){
+            try (CallableStatement csA = con.prepareCall(SQLa);
+                    CallableStatement csB = con.prepareCall(SQLb);) {
                 csA.setInt(1, aSubject.getSubjectId());
                 csA.setString(2, aSubject.getSubjectCode());
-                csA.setString(3,aSubject.getSubjectTitle());
+                csA.setString(3, aSubject.getSubjectTitle());
                 csA.setString(4, aSubject.getSubjectDescription());
                 csA.setBoolean(5, aSubject.isIsActive());
                 csA.executeUpdate();
-                
+
                 csB.setInt(1, aSubject.getSubjectId());
                 csB.setInt(2, aSubject.getGradeLevel().getId());
                 csB.executeUpdate();
-                
+
                 con.commit();
-            }catch(SQLException ex){
+            } catch (SQLException ex) {
                 con.rollback();
                 isSuccessful = false;
                 ex.printStackTrace();
             }
-            
-        }catch(Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return isSuccessful;
@@ -263,12 +300,10 @@ public class SubjectDaoImpl implements ISubject {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Subject subject = new Subject();
-
                     subject.setSubjectTitle(rs.getString("title"));
                     subject.setSubjectCode(rs.getString("code"));
                     subject.setSubjectDescription(rs.getString("description"));
 //                    subject.gradeLevel.setLevel(rs.getInt("grade_level"));
-
                     list.add(subject);
                 }
             }
@@ -361,7 +396,7 @@ public class SubjectDaoImpl implements ISubject {
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(sql);) {
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
-            cs.setInt(2, aGradeLevel.getLevel());
+            cs.setInt(2, aGradeLevel.getLevelNo());
             cs.setInt(3, aGradeLevel.getId());
             cs.setString(4, aSubject.getSubjectCode());
             cs.setString(5, aSubject.getSubjectTitle());

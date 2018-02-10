@@ -28,7 +28,7 @@ public class SubjectJCompModelLoader {
            Object[] rowData = {
                s.getSubjectId(), s.getSubjectTitle(), 
                s.getSubjectCode(), s.getSubjectDescription(),
-               s.isIsActive()==true? "Yes":"No",s.getGradeLevel().getLevel()
+               s.isIsActive()==true? "Yes":"No",s.getGradeLevel().getLevelNo()
            };
            tableModel.addRow(rowData);
        }
@@ -44,7 +44,7 @@ public class SubjectJCompModelLoader {
            Object[] rowData = {
                s.getSubjectId(), s.getSubjectTitle(), 
                s.getSubjectCode(), s.getSubjectDescription(),
-               s.isIsActive()==true? "Yes":"No",s.getGradeLevel().getLevel()
+               s.isIsActive()==true? "Yes":"No",s.getGradeLevel().getLevelNo()
            };
            tableModel.addRow(rowData);
        }

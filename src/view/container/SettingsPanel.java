@@ -707,7 +707,7 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
         }
         for (int index = 0; index < levelsList.size(); index++) {
             GradeLevel gradeLevel = new GradeLevel();
-            gradeLevel.setLevel(levelsList.get(index));
+            gradeLevel.setLevelNo(levelsList.get(index));
             int gradeLevelId = gradeLevelDaoImpl.getId(gradeLevel);
             gradeLevel.setId(gradeLevelId);
             gradeLevelList.add(gradeLevel);

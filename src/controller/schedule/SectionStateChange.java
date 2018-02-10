@@ -1,64 +1,98 @@
 package controller.schedule;
 
-import component_editor.ScheduleSubjectCellEditor;
-import daoimpl.GradeLevelDaoImpl;
+import component_editor.ScheduleTimeCellEditor;
+import daoimpl.SectionDaoImpl;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import model.gradelevel.GradeLevel;
+import model.section.Section;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
-public class SectionStateChange implements ItemListener{
+public class SectionStateChange implements ItemListener {
 
+    private SectionDaoImpl sectionDaoImpl;
+    private Section section;
+    private final Dialog_CreateSchedule view;
     private final JComboBox jcmbRoom;
-    private final JComboBox jcmbGradeLevel;
     private final JComboBox jcmbSections;
     private final JTable jtblSchedule;
-    
-    public SectionStateChange(JComboBox jcmbSections, JTable jtblSchedule,JComboBox jcmbGradeLevel, JComboBox jcmbRoom){
-        this.jtblSchedule = jtblSchedule;
-        this.jcmbSections = jcmbSections;
-        this.jcmbGradeLevel = jcmbGradeLevel;
-        this.jcmbRoom = jcmbRoom;
+
+    public SectionStateChange(Dialog_CreateSchedule view) {
+        sectionDaoImpl = new SectionDaoImpl();
+        this.view = view;
+        this.jtblSchedule = view.getJtblSchedule();
+        this.jcmbSections = view.getJcmbSection();
+        this.jcmbRoom = view.getJcmbRoom();
     }
-    
+
     @Override
     public void itemStateChanged(ItemEvent e) {
         if (jcmbSections.getSelectedIndex() > -1) {
-                loadSubjectsToTable();
-                loadRoom();
-                jcmbRoom.setEnabled(true);
+            view.getJpnlScheduleTable().repaint();
+            initializeSection();//must be the first method call here
+            
+            loadInitialTimeValues();
+            applyStartandEndTimeCellEditors(section);
+            loadSectionInformationToScheduleHeader();
+            loadSessionToTable();
         }
     }
-    
-    private void loadSubjectsToTable() {
-        GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
-        String level = jcmbGradeLevel.getSelectedItem().toString().trim();
-        int gradeLevelId = gldi.getId(Integer.parseInt(level));
-        GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setId(gradeLevelId);
 
+    private void initializeSection() {
+        String sectionId = jcmbSections.getSelectedItem().toString().trim();
+        section = sectionDaoImpl.getSectionById(Integer.parseInt(sectionId));
+    }
+
+    private void loadSectionInformationToScheduleHeader() {
+        view.getJtfSectionName().setText(section.getSectionName());
+        view.getJtfAdviserName().
+                setText(section.getAdviser().getLastName() + ", "
+                        + section.getAdviser().getFirstName() + " "
+                        + section.getAdviser().getMiddleName());
+    }
+
+    private void applyStartandEndTimeCellEditors(Section section) {
         TableColumnModel columnModel = jtblSchedule.getColumnModel();
-        TableColumn subjectColumn = columnModel.getColumn(3);
-        subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule, gradeLevelId));
+        TableColumn startTimeCol = columnModel.getColumn(1);
+        TableColumn endTimeCol = columnModel.getColumn(2);
+        startTimeCol.setCellEditor(new ScheduleTimeCellEditor(jtblSchedule, section));
+        endTimeCol.setCellEditor(new ScheduleTimeCellEditor(jtblSchedule, section));
     }
     
-    private void loadRoom(){
-        if(jcmbRoom.getSelectedIndex() > -1){
-            String room = jcmbRoom.getSelectedItem().toString();
-            for(int r = 0; r<jtblSchedule.getRowCount(); r++){
-                jtblSchedule.setValueAt(room, r, 5);
-            }
+    private void loadInitialTimeValues() {
+        int startTimeCol = 1;
+        int endTimeCol = 2;
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm");
+
+        int startHour = section.getSectionSession().equalsIgnoreCase("AM") ? 7
+                : section.getSectionSession().equalsIgnoreCase("PM") ? 12
+                : section.getSectionSession().equalsIgnoreCase("WD") ? 7 : 7;
+        for (int row = 0; row < jtblSchedule.getRowCount(); row++,startHour++) {
+            start.set(Calendar.HOUR_OF_DAY, startHour);
+            start.set(Calendar.MINUTE, 0);
+            jtblSchedule.setValueAt(dateFormatter.format(start.getTime()), row, startTimeCol);
+            end.set(Calendar.HOUR_OF_DAY, startHour+1);
+            end.set(Calendar.MINUTE, 0);
+            jtblSchedule.setValueAt(dateFormatter.format(end.getTime()), row, endTimeCol);
         }
     }
-    
-    
-    
+
+    private void loadSessionToTable() {
+        int sessionCol = 6;
+        String sectionSession = section.getSectionSession();
+        for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
+            jtblSchedule.setValueAt(sectionSession, row, sessionCol);
+        }
+    }
 }

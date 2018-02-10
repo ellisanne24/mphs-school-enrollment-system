@@ -21,6 +21,7 @@ public interface ISubject {
     List<Subject> getSubjectsByCurriculum(Curriculum aCurriculum);
     List<Subject> getSubjectsBySchoolYear(SchoolYear aSchoolYear);
     List<Subject> getEachSubjectByGradeLevelId(GradeLevel aGradeLevel);
+    List<Subject> getAllActiveSubjectsByStatusAndGradeLevelId(boolean isActive, int gradeLevelId);
     
     boolean updateSubjectAndGradeLevel(Subject aSubject, GradeLevel aGradeLevel);
     boolean createSubject(Subject aSubject);

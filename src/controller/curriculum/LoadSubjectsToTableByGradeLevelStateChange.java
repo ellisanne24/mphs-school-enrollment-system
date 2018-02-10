@@ -50,7 +50,7 @@ public class LoadSubjectsToTableByGradeLevelStateChange implements ItemListener{
             Subject s = (Subject)o;
             Object[] rowData = {
                 s.getSubjectId(),s.getSubjectTitle(),
-                s.getSubjectCode(), s.getGradeLevel().getLevel()
+                s.getSubjectCode(), s.getGradeLevel().getLevelNo()
             };
             tableModel.addRow(rowData);
         }

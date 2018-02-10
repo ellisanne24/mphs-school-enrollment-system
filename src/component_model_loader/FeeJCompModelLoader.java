@@ -3,6 +3,7 @@ package component_model_loader;
 import daoimpl.FeeCategoryDaoImpl;
 import daoimpl.FeeDaoImpl;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class FeeJCompModelLoader {
         feeCategory.setName("Downpayment");
 
         GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setLevel(aGradeLevel);
+        gradeLevel.setLevelNo(aGradeLevel);
 
         Object[] data = feeDaoImpl.getFeesByGradeLevelAndCategory(gradeLevel, feeCategory).toArray();
         for (Object o : data) {
@@ -53,7 +54,7 @@ public class FeeJCompModelLoader {
         feeCategory.setName("Tuition");
 
         GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setLevel(aGradeLevel);
+        gradeLevel.setLevelNo(aGradeLevel);
 
         Object[] data = feeDaoImpl.getFeesByGradeLevelAndCategory(gradeLevel, feeCategory).toArray();
         for (Object o : data) {
@@ -70,7 +71,7 @@ public class FeeJCompModelLoader {
         FeeCategory feeCategory = new FeeCategory();
         feeCategory.setName("Miscellaneous");
         GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setLevel(aGradeLevel);
+        gradeLevel.setLevelNo(aGradeLevel);
 
         Object[] data = feeDaoImpl.getFeesByGradeLevelAndCategory(gradeLevel, feeCategory).toArray();
         for (Object o : data) {
@@ -89,7 +90,7 @@ public class FeeJCompModelLoader {
         feeCategory.setName("Others");
 
         GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setLevel(aGradeLevel);
+        gradeLevel.setLevelNo(aGradeLevel);
 
         Object[] data = feeDaoImpl.getFeesByGradeLevelAndCategory(gradeLevel, feeCategory).toArray();
         for (Object o : data) {
@@ -175,7 +176,7 @@ public class FeeJCompModelLoader {
         for(Map.Entry<Integer,BigDecimal> entry : map.entrySet()){
             Object[] tableRowData = {
                 entry.getKey() == 0? "Kindergarten":entry.getKey(),
-                entry.getValue()
+                entry.getValue().setScale(2,RoundingMode.HALF_UP)
             };
             tableModel.addRow(tableRowData);
         }

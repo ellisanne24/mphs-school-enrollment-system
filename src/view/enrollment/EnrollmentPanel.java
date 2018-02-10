@@ -3,7 +3,7 @@ package view.enrollment;
 import component_model_loader.EnrollmentJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.RegistrationJCompModelLoader;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
 import controller.enrollment.DisplayAllEnrolledOnGradeLevelFilter;
 import controller.enrollment.DisplayDialogSectionAssignment;
 import controller.enrollment.RefreshEnrolledRecord;
@@ -63,7 +63,7 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initRenderers() {
-        jcmbEnrolledFilterGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
+        jcmbEnrolledFilterGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
     }
 
     @Override
@@ -518,13 +518,13 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
 
         jtblRegisteredMasterList.setAutoCreateRowSorter(true);
-        jtblRegisteredMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblRegisteredMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblRegisteredMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Reg. ID", "Last Name", "First Name", "Middle Name", "Registered Grade Level", "Registration Date", "Admission Status", "Downpayment Status"
+                "Reg. ID", "Last Name", "First Name", "Middle Name", "Registered Grade Level", "Registration Date", "Admission Status", "Student No"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -690,7 +690,7 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
         jScrollPane2.setPreferredSize(new java.awt.Dimension(1185, 530));
 
         jtblEnrolledMasterList.setAutoCreateRowSorter(true);
-        jtblEnrolledMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblEnrolledMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblEnrolledMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

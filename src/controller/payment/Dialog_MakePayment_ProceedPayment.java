@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.particulars.Particular;
 import model.payment.Payment;
 import model.tuitionfee.Tuition;
@@ -22,11 +23,13 @@ import view.payment.Dialog_MakePayment;
  */
 public class Dialog_MakePayment_ProceedPayment implements ActionListener {
 
+    private final boolean hasTuitionRecord;
     private final Dialog_MakePayment view;
     private final Tuition tuition;
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
 
-    public Dialog_MakePayment_ProceedPayment(Dialog_MakePayment view, Tuition tuition, TuitionFeeDaoImpl tuitionFeeDaoImpl) {
+    public Dialog_MakePayment_ProceedPayment(boolean hasTuitionRecord,Dialog_MakePayment view, Tuition tuition, TuitionFeeDaoImpl tuitionFeeDaoImpl) {
+        this.hasTuitionRecord = hasTuitionRecord;
         this.view = view;
         this.tuition = tuition;
         this.tuitionFeeDaoImpl = tuitionFeeDaoImpl;
@@ -48,13 +51,22 @@ public class Dialog_MakePayment_ProceedPayment implements ActionListener {
         if (choice == JOptionPane.YES_OPTION) {
             Payment payment = getPayment();
             tuition.setPayment(payment);
-            boolean isAdded = tuitionFeeDaoImpl.add(tuition);
-            boolean isPaid = tuitionFeeDaoImpl.pay(tuition);
-            if (isAdded && isPaid) {
-                SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-                EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
-                isSuccessful = enrollmentDaoImpl.enroll(tuition.getStudent());
-            }
+            
+            if (!hasTuitionRecord) {
+                boolean isAdded = tuitionFeeDaoImpl.add(tuition);
+                boolean isPaid = tuitionFeeDaoImpl.pay(tuition);
+                if (isAdded && isPaid) {
+                    SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
+                    EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
+                    isSuccessful = enrollmentDaoImpl.enroll(tuition.getStudent());
+                }
+            } else {
+                boolean isPaid = tuitionFeeDaoImpl.pay(tuition);
+                if (isPaid) {
+                    isSuccessful = true;
+//                }
+                }
+            }            
         }
         return isSuccessful;
     }

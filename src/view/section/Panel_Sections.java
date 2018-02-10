@@ -2,7 +2,8 @@ package view.section;
 
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SectionJCompModelLoader;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
+import component_renderers.Renderer_Master_GradeLevel_JTableCell;
 import controller.section.DisplaySectionCrudDialog;
 import controller.section.DisplaySectionsByGradeLevelStateChange;
 import controller.section.DisplaySectionsByWildCardOnKeyPress;
@@ -14,7 +15,7 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
     private SectionJCompModelLoader sectionJCompModelLoader;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     
-    private GradeLevelJComboBoxRenderer gradeLevelJComboBoxRenderer;
+    private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
     
     public Panel_Sections() {
         initComponents();
@@ -29,7 +30,8 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initRenderers() {
-        gradeLevelJComboBoxRenderer = new GradeLevelJComboBoxRenderer();
+        jtblSectionMasterList.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(2));
+        gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
     }
     
     @Override
@@ -188,7 +190,7 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
 
         jtblSectionMasterList.setAutoCreateRowSorter(true);
-        jtblSectionMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblSectionMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSectionMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

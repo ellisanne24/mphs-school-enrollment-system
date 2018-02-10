@@ -179,7 +179,7 @@ public class SectionDaoImpl implements ISection {
                     s.setDateCreated(rs.getString("date_created"));
                     
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
 
                     Faculty adviser = new Faculty();
                     adviser.setFacultyID(rs.getInt("faculty_id"));
@@ -201,7 +201,59 @@ public class SectionDaoImpl implements ISection {
         return sectionList;
     }
 
+    @Override
+    public List<Section> getSectionsWithNoAssignedScheduleByStatusAndSchoolYearId(boolean isActive, int schoolyearId) {
+        String SQL = "{CALL getSectionsWithNoAssignedScheduleByStatusAndSchoolYearId(?,?)}";
+        List<Section> sectionList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, isActive == true ? 1 : 0);
+            cs.setInt(2, schoolyearId);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    section.setSectionSession(rs.getString("session"));
+                    sectionList.add(section);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sectionList;
+    }
     
+    
+    @Override
+    public List<Section> getSectionsWithNoAssignedScheduleBy_Status_SchoolYearId_GradeLevelId(boolean isActive, int schoolyearId, int gradeLevelId) {
+        String SQL = "{CALL getSectionsWithNoAssignedScheduleBySchoolYearIdGradeLevelId(?,?,?)}";
+        List<Section> sectionList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, isActive == true ? 1 : 0);
+            cs.setInt(2, schoolyearId);
+            cs.setInt(3, gradeLevelId);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    section.setSectionSession(rs.getString("session"));
+                    sectionList.add(section);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sectionList;
+    }
+            
+            
     @Override
     public List<Section> getAllSectionsByStatusAndSchoolYearId(boolean status, int schoolYearId) {
         List<Section> sectionList = new ArrayList<>();
@@ -222,7 +274,7 @@ public class SectionDaoImpl implements ISection {
                     s.setDateCreated(rs.getString("date_created"));
                     
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
 
                     Faculty adviser = new Faculty();
                     adviser.setFacultyID(rs.getInt("faculty_id"));
@@ -263,7 +315,7 @@ public class SectionDaoImpl implements ISection {
                     s.setDateCreated(rs.getString("date_created"));
                     
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     
                     Faculty adviser = new Faculty();
                     adviser.setFacultyID(rs.getInt("faculty_id"));
@@ -305,7 +357,7 @@ public class SectionDaoImpl implements ISection {
                     s.setDateCreated(rs.getString("date_created"));
                     
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     
                     Faculty adviser = new Faculty();
                     adviser.setFacultyID(rs.getInt("faculty_id"));
@@ -346,7 +398,7 @@ public class SectionDaoImpl implements ISection {
                     section.setDateCreated(rs.getString("date_created"));
 
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     
                     Faculty adviser = new Faculty();
                     adviser.setFacultyID(rs.getInt("faculty_id"));

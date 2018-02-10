@@ -1,6 +1,6 @@
 package controller.schedule;
 
-import component_renderers.ScheduleTableCellRenderer;
+import component_renderers.Renderer_Schedule_JTableCell;
 import daoimpl.FacultyDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.ScheduleDaoImpl;
@@ -52,7 +52,7 @@ public class CreateScheduleController implements ActionListener{
             validateSchedule();
             create();
         }else{
-            jtblSchedule.setDefaultRenderer(Object.class, new ScheduleTableCellRenderer(jlblConflictInfo));
+            jtblSchedule.setDefaultRenderer(Object.class, new Renderer_Schedule_JTableCell(jlblConflictInfo));
             jtblSchedule.repaint();
             JOptionPane.showMessageDialog(null,"Empty fields are not allowed.");
         }

@@ -12,8 +12,35 @@ public class Faculty {
     private String contactNo;
     private String email;
     private boolean status;
+    private boolean isAdviser;
+    private boolean hasAmAdvisory;
+    private boolean hasPmAdvisory;
     private List<SubjectCategory> subjectCategories;
 
+    public boolean isIsAdviser() {
+        return isAdviser;
+    }
+
+    public void setIsAdviser(boolean isAdviser) {
+        this.isAdviser = isAdviser;
+    }
+
+    public boolean isHasAmAdvisory() {
+        return hasAmAdvisory;
+    }
+
+    public void setHasAmAdvisory(boolean hasAmAdvisory) {
+        this.hasAmAdvisory = hasAmAdvisory;
+    }
+
+    public boolean isHasPmAdvisory() {
+        return hasPmAdvisory;
+    }
+
+    public void setHasPmAdvisory(boolean hasPmAdvisory) {
+        this.hasPmAdvisory = hasPmAdvisory;
+    }
+    
     public int getFacultyID() {
         return facultyID;
     }

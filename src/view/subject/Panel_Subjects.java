@@ -2,7 +2,8 @@ package view.subject;
 
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SubjectJCompModelLoader;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
+import component_renderers.Renderer_Master_GradeLevel_JTableCell;
 import controller.subject.DisplaySubjectCrudDialog;
 import controller.subject.SearchSubjectByWildCard;
 import utility.initializer.Initializer;
@@ -10,7 +11,7 @@ import utility.initializer.Initializer;
 
 public class Panel_Subjects extends javax.swing.JPanel implements Initializer{
 
-    private GradeLevelJComboBoxRenderer gradeLevelJComboBoxRenderer;
+    private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     private SubjectJCompModelLoader subjectJCompModelLoader;
     
@@ -27,7 +28,8 @@ public class Panel_Subjects extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initRenderers() {
-        gradeLevelJComboBoxRenderer = new GradeLevelJComboBoxRenderer();
+        jtblSubjectMasterList.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(5));
+        gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
     }
     
     @Override
@@ -187,7 +189,7 @@ public class Panel_Subjects extends javax.swing.JPanel implements Initializer{
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 530));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
 
-        jtblSubjectMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblSubjectMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSubjectMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -210,11 +212,19 @@ public class Panel_Subjects extends javax.swing.JPanel implements Initializer{
         jtblSubjectMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblSubjectMasterList);
 
-        panel_masterrecord.add(jScrollPane1, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        panel_masterrecord.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_masterrecord, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

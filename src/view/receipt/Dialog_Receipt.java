@@ -68,8 +68,8 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
         String firstName = student.getRegistration().getFirstName();
         String middleName = student.getRegistration().getMiddleName();
         
-        jlblGradeLevelText.setText(""+student.getGradeLevelNo());
-        jlblSchoolYearText.setText(""+officialReceipt.getSchoolYear().getYearFrom()+" - "+officialReceipt.getSchoolYear().getYearTo());
+        jlblGradeLevelText.setText(student.getGradeLevelNo() == 0 ? ("Kindergarten") : (student.getGradeLevelNo() + ""));
+        jlblSchoolYearText.setText("" + officialReceipt.getSchoolYear().getYearFrom() + " - " + officialReceipt.getSchoolYear().getYearTo());
         jlblStudentNoText.setText(""+student.getStudentNo());
         jlblStudentNameText.setText(lastName+", "+firstName+" "+middleName);
         jlblDateOfPayment.setText(""+officialReceipt.getPayment().getDateOfPayment());
@@ -97,7 +97,6 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
                     BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(jtblParticulars.getValueAt(i, 1).toString().trim()));
                     totalPaymentDue = totalPaymentDue.add(amount);
                 }
-                
                 jlblTotalPaymentDueText.setText("" + totalPaymentDue);
             }
         });

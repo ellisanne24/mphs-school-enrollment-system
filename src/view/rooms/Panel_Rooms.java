@@ -99,16 +99,6 @@ public class Panel_Rooms extends javax.swing.JPanel implements Initializer {
         jbtnCreateRoom.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnCreateRoom.setText("Create New Room");
         jbtnCreateRoom.setActionCommand("create");
-        jbtnCreateRoom.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jbtnCreateRoomMouseClicked(evt);
-            }
-        });
-        jbtnCreateRoom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnCreateRoomActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -190,7 +180,7 @@ public class Panel_Rooms extends javax.swing.JPanel implements Initializer {
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 530));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
 
-        jtblRoomMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblRoomMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblRoomMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

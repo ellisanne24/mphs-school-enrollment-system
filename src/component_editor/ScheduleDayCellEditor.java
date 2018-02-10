@@ -21,8 +21,8 @@ public class ScheduleDayCellEditor extends DefaultCellEditor{
         super(new JComboBox());
         model = new DefaultComboBoxModel(new String[]{"Mon","Tue","Wed","Thu","Fri"});
         jcmbDays = new JComboBox(model);
-        jcmbDays.setEditable(false);
-        jcmbDays.setSelectedItem(null);
+//        jcmbDays.setEditable(false);
+//        jcmbDays.setSelectedItem(null);
         
     }
 

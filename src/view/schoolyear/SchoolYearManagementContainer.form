@@ -337,7 +337,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -434,7 +434,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -572,7 +572,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -669,7 +669,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -807,7 +807,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -904,7 +904,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -1042,7 +1042,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -1139,7 +1139,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -1374,7 +1374,7 @@
                                   <Dimension value="[43, 26]"/>
                                 </Property>
                                 <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                                  <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                                  <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                                 </Property>
                               </Properties>
                               <Events>
@@ -1461,7 +1461,7 @@
                                   <Dimension value="[43, 26]"/>
                                 </Property>
                                 <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                                  <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                                  <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                                 </Property>
                               </Properties>
                               <Events>
@@ -1593,7 +1593,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -1700,7 +1700,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -1825,7 +1825,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -1931,7 +1931,7 @@
                               <Dimension value="[43, 26]"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -2172,7 +2172,7 @@
                               <StringArray count="0"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -2252,7 +2252,7 @@
                               <StringArray count="0"/>
                             </Property>
                             <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                              <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -2506,7 +2506,7 @@
                                 </Property>
                                 <Property name="enabled" type="boolean" value="false"/>
                                 <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                                  <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                                  <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                                 </Property>
                               </Properties>
                               <Events>
@@ -2589,7 +2589,7 @@
                                 </Property>
                                 <Property name="enabled" type="boolean" value="false"/>
                                 <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                                  <Connection code="new component_renderers.MonthJComboBoxRenderer(&quot;--&quot;)" type="code"/>
+                                  <Connection code="new component_renderers.Renderer_Month_JComboBox(&quot;--&quot;)" type="code"/>
                                 </Property>
                               </Properties>
                               <Events>

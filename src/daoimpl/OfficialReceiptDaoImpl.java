@@ -119,8 +119,6 @@ public class OfficialReceiptDaoImpl implements IOfficialReceipt{
     @Override
     public List<OfficialReceipt> getAllOfficialReceiptsByStudentIdandSchoolYearId(int studentId, int schoolyearId) {
         List<OfficialReceipt> officialReceiptList = new ArrayList<>();
-        SchoolYear schoolYear = new SchoolYear();
-        Payment payment = new Payment();
         String SQL = "{CALL getAllOfficialReceiptsByStudentIdandSchoolYearId(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
@@ -129,6 +127,8 @@ public class OfficialReceiptDaoImpl implements IOfficialReceipt{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     OfficialReceipt OR = new OfficialReceipt();
+                    Payment payment = new Payment();
+                    SchoolYear schoolYear = new SchoolYear();
                     schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
                     schoolYear.setYearFrom(rs.getInt("yearfrom"));
                     schoolYear.setYearTo(rs.getInt("yearTo"));
@@ -137,7 +137,8 @@ public class OfficialReceiptDaoImpl implements IOfficialReceipt{
                     payment.setChange(rs.getBigDecimal("change_amount"));
                     payment.setDateOfPayment(rs.getDate("date_charged"));
                     payment.setOrNo(rs.getInt("or_no_attached"));
-                    
+                    System.out.println(rs.getInt("or_no_id"));
+                    System.out.println(schoolYear.getYearFrom()+"-"+schoolYear.getYearTo());
                     OR.setId(rs.getInt("or_no_id"));
                     OR.setSchoolYear(schoolYear);
                     OR.setPayment(payment);

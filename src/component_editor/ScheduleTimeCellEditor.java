@@ -1,23 +1,17 @@
 package component_editor;
 
 import java.awt.Component;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultCellEditor;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SpinnerDateModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import static view.schedule.CreateSchedule.jtblSchedule;
+import model.section.Section;
 
 /**
  *
@@ -25,6 +19,7 @@ import static view.schedule.CreateSchedule.jtblSchedule;
  */
 public class ScheduleTimeCellEditor extends DefaultCellEditor {
 
+    private final Section section;
     private final JSpinner spinner;
     private final SpinnerDateModel spinnerDateModel;
     private SimpleDateFormat format;
@@ -36,12 +31,15 @@ public class ScheduleTimeCellEditor extends DefaultCellEditor {
         return spinner;
     }
     
-    public ScheduleTimeCellEditor(JTable jtblSchedule) {
+    public ScheduleTimeCellEditor(JTable jtblSchedule, Section section) {
         super(new JTextField());
         this.jtblSchedule = jtblSchedule;
+        this.section = section;
+        
+        CustomSpinnerModelArgumentLoader customModelArgumentLoader = new CustomSpinnerModelArgumentLoader(section);
         spinnerDateModel = new SpinnerDateModel();
-        spinnerDateModel.setValue(new CustomSpinnerModelArg().getValue());
-        spinnerDateModel.setCalendarField(new CustomSpinnerModelArg().getStep());
+        spinnerDateModel.setValue(customModelArgumentLoader.getValue());
+        spinnerDateModel.setCalendarField(customModelArgumentLoader.getStep());
         
         spinner = new JSpinner(spinnerDateModel);
         
@@ -49,27 +47,12 @@ public class ScheduleTimeCellEditor extends DefaultCellEditor {
         editor.getTextField().setEditable(true);
         spinner.setEditor(editor);
        
-        final JLabel label = new JLabel();
         spinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                if(!tableHasEmptyFields()){
-                    checkConflict();
-                }
                 
             }
         });
-        
-//        ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().addKeyListener(new KeyAdapter() {
-//            @Override
-//            public void keyTyped(KeyEvent e) {
-//                if (e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB) {
-//                    int columnSelected = jtblSchedule.getSelectedColumn();
-//                    jtblSchedule.changeSelection(jtblSchedule.getSelectedRow(), columnSelected+1, false, false);
-//                    JOptionPane.showMessageDialog(null,"User keytyped ENTER!");
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -77,8 +60,8 @@ public class ScheduleTimeCellEditor extends DefaultCellEditor {
         Date date = (Date) spinner.getValue();
         int time = getDateAsIntTime(date);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-//        return editor.getFormat().format(spinner.getValue());
-        return sdf.format(spinner.getValue());
+        return editor.getFormat().format(spinner.getValue());
+//        return sdf.format(spinner.getValue());
     }
     
     private int getDateAsIntTime(Date date){
@@ -91,13 +74,16 @@ public class ScheduleTimeCellEditor extends DefaultCellEditor {
         return time;
     }
     
-    public class CustomSpinnerModelArg {
-        Calendar value;
-        Calendar minimum;
-        Calendar maximum;
-        Calendar step;
+    public class CustomSpinnerModelArgumentLoader {
 
-        public CustomSpinnerModelArg() {
+        private Calendar value;
+        private Calendar minimum;
+        private Calendar maximum;
+        private Calendar step;
+        private final Section s;
+        
+        public CustomSpinnerModelArgumentLoader(Section s) {
+            this.s = s;
             value = Calendar.getInstance();
             minimum = Calendar.getInstance();
             maximum = Calendar.getInstance();
@@ -105,26 +91,49 @@ public class ScheduleTimeCellEditor extends DefaultCellEditor {
         }
         
         public Date getValue() {
-            value.set(Calendar.HOUR_OF_DAY, 7);
+            int defaultClassStartsAt = 7;
+            int amStartsAt = 7; //7am
+            int pmStartsAt = 12; //12pm
+            int wholeDayStartsAt = 7;
+            int startHr = s.getSectionSession().equalsIgnoreCase("AM") ? amStartsAt
+                    : s.getSectionSession().equalsIgnoreCase("PM") ? pmStartsAt
+                    : s.getSectionSession().equalsIgnoreCase("WD") ? wholeDayStartsAt : defaultClassStartsAt;
+            value.set(Calendar.HOUR_OF_DAY, startHr);
             value.set(Calendar.MINUTE, 0);
             return value.getTime();
         }
 
-        public Calendar getMinimum() {
-            minimum.set(Calendar.HOUR_OF_DAY, 7);
-            maximum.set(Calendar.MINUTE, 0);
-            return minimum;
+        public Date getMinimum() {
+            int defaultClassStartsAt = 7;
+            int amStartsAt = 7; //7am
+            int pmStartsAt = 12; //12pm
+            int wholeDayStartsAt = 7;
+            
+            int startsAtHour = s.getSectionSession().equalsIgnoreCase("AM") ? amStartsAt
+                    : s.getSectionSession().equalsIgnoreCase("PM") ? pmStartsAt
+                    : s.getSectionSession().equalsIgnoreCase("WD") ? wholeDayStartsAt : defaultClassStartsAt;
+            
+            minimum.set(Calendar.HOUR_OF_DAY, startsAtHour);
+            minimum.set(Calendar.MINUTE, 0);
+            return minimum.getTime();
         }
 
-        public Calendar getMaximum() {
-            maximum.set(Calendar.HOUR_OF_DAY, 18);
+        public Date getMaximum() {
+            int defaultEndsAt = 17;
+            int amEndsAt = 12; //12pm or 12:00
+            int pmEndsAt = 17; //17pm or 5:00
+            int wholeDayEndsAt = 17;
+            
+            int endsAtHour = s.getSectionSession().equalsIgnoreCase("AM") ? amEndsAt
+                    : s.getSectionSession().equalsIgnoreCase("PM") ? pmEndsAt
+                    : s.getSectionSession().equalsIgnoreCase("WD") ? wholeDayEndsAt : defaultEndsAt;
+            maximum.set(Calendar.HOUR_OF_DAY, endsAtHour);
             maximum.set(Calendar.MINUTE, 0);
-            return maximum;
+            return maximum.getTime();
         }
 
         public int getStep() {
             step.set(Calendar.HOUR_OF_DAY, 00);
-            step.set(Calendar.MINUTE, 15);
             return step.get(Calendar.HOUR_OF_DAY);
         }
     }

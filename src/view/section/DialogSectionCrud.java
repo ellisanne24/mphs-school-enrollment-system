@@ -3,8 +3,9 @@ package view.section;
 import component_model_loader.FacultyJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SectionJCompModelLoader;
-import component_renderers.FacultyJComboBoxRenderer;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_Faculty_JComboBox;
+import component_renderers.Renderer_GradeLevel_JComboBox;
+import component_renderers.Renderer_Section_Session_JComboBox;
 import controller.global.ExitJDialog;
 import controller.section.CreateSection;
 import controller.section.EditSection;
@@ -23,10 +24,10 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     private String action;
     private SectionJCompModelLoader sectionJCompModelLoader;
 
-    private GradeLevelJComboBoxRenderer gradeLevelJComboBoxRenderer;
+    private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     private FacultyJCompModelLoader facultyJCompModelLoader;
-    private FacultyJComboBoxRenderer facultyJComboBoxRenderer;
+    private Renderer_Faculty_JComboBox facultyJComboBoxRenderer;
     
     private SectionDaoImpl sectionDaoImpl;
 
@@ -158,7 +159,7 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         jpnlSectionDetails.add(jlblSession, gridBagConstraints);
 
         jcmbSession.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jcmbSession.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AM", "PM" }));
+        jcmbSession.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AM", "PM", "WD" }));
         jcmbSession.setSelectedIndex(-1);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -298,8 +299,9 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
 
     @Override
     public void initRenderers() {
-        gradeLevelJComboBoxRenderer = new GradeLevelJComboBoxRenderer();
-        facultyJComboBoxRenderer = new FacultyJComboBoxRenderer();
+        jcmbSession.setRenderer(new Renderer_Section_Session_JComboBox());
+        gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
+        facultyJComboBoxRenderer = new Renderer_Faculty_JComboBox();
     }
 
     @Override
@@ -356,10 +358,11 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     private void initForm() {
         Section section = sectionDaoImpl.getSectionById(sectionIdOfSelected);
         jtfSectionName.setText(section.getSectionName());
-        jcmbGradeLevel.setSelectedItem(section.getGradeLevel().getLevel());
+        jcmbGradeLevel.setSelectedItem(section.getGradeLevel().getLevelNo());
         jcmbSession.setSelectedItem(section.getSectionSession());
         jcmbStatus.setSelectedItem(section.getIsActive() == true ? "Yes" : "No");
         jtfCapacity.setText(""+section.getCapacity());
+        jcmbAdviser.setSelectedItem(section.getAdviser().getFacultyID());
     }
 
     

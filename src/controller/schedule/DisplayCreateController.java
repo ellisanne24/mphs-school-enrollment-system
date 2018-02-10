@@ -8,7 +8,7 @@ package controller.schedule;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import view.schedule.CreateSchedule;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
@@ -18,7 +18,7 @@ public class DisplayCreateController implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        CreateSchedule c = new CreateSchedule(null,true);
+        Dialog_CreateSchedule c = new Dialog_CreateSchedule(null,true);
         c.setPreferredSize(new Dimension(1250,700));
         c.pack();
         c.setLocationRelativeTo(null);

@@ -4,6 +4,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
@@ -11,12 +12,14 @@ import javax.swing.JTable;
  */
 public class RoomStateChange implements ItemListener{
 
+    private final Dialog_CreateSchedule view;
     private final JComboBox jcmbRoom;
     private final JTable jtblSchedule;
     
-    public RoomStateChange(JComboBox jcmbRoom, JTable jtblSchedule){
-        this.jcmbRoom = jcmbRoom;
-        this.jtblSchedule = jtblSchedule;
+    public RoomStateChange(Dialog_CreateSchedule view){
+        this.view = view;
+        this.jcmbRoom = view.getJcmbRoom();
+        this.jtblSchedule = view.getJtblSchedule();
     }
     
     @Override

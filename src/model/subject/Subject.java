@@ -3,6 +3,7 @@ package model.subject;
 
 import java.util.Date;
 import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 
 public class Subject {
     private int subjectId;
@@ -14,10 +15,18 @@ public class Subject {
     private double totalHours;
     private Date dateAdded;
     private Date dateCreated;
+    private SchoolYear schoolYearCreated;
     private boolean isActive;
-    
     private GradeLevel gradeLevel;
 
+    public SchoolYear getSchoolYearCreated() {
+        return schoolYearCreated;
+    }
+
+    public void setSchoolYearCreated(SchoolYear schoolYearCreated) {
+        this.schoolYearCreated = schoolYearCreated;
+    }
+    
     public boolean isIsActive() {
         return isActive;
     }

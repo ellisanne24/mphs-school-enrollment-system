@@ -40,8 +40,6 @@ public class SchoolYear {
     public void setSummerClassEndDate(Date summerClassEnd) {
         this.summerClassEnd = summerClassEnd;
     }
-    
-    
 
     public Date getRegularEnrollmentStartDate() {
         return regularEnrollmentStartDate;

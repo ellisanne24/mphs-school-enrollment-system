@@ -2,13 +2,20 @@ package view.subject;
 
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SubjectJCompModelLoader;
-import component_renderers.GradeLevelJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
 import controller.global.ExitJDialog;
 import controller.subject.CreateSubject;
 import controller.subject.EditSubject;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SubjectDaoImpl;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import model.subject.Subject;
 import utility.initializer.Initializer;
 
@@ -18,7 +25,7 @@ public class DialogSubjectCrud extends javax.swing.JDialog implements Initialize
     private final String action;
     private int subjectIdOfSelected;
     private SubjectJCompModelLoader subjectJCompoCompModelLoader;
-    private GradeLevelJComboBoxRenderer gradeLevelJComboBoxRenderer;
+    private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     private GradeLevelDaoImpl gradeLevelDaoImpl;
     private SubjectDaoImpl subjectDaoImpl;
@@ -63,7 +70,7 @@ public class DialogSubjectCrud extends javax.swing.JDialog implements Initialize
 
     @Override
     public void initRenderers() {
-        gradeLevelJComboBoxRenderer = new GradeLevelJComboBoxRenderer();
+        gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
     }
     
     @Override
@@ -108,10 +115,7 @@ public class DialogSubjectCrud extends javax.swing.JDialog implements Initialize
     public void initControllers() {
         jbtnCancel.addActionListener(new ExitJDialog(this));
         if (action.equalsIgnoreCase("create")) {
-            jbtnSave.addActionListener(new CreateSubject(
-                    this, jtfSubjectCode, jtfSubjectName,
-                    jtaSubjectDescription, jcmbGradeLevel)
-            );
+            jbtnSave.addActionListener(new CreateSubject(this));
         } else if (action.equalsIgnoreCase("edit")) {
             jbtnSave.addActionListener(new EditSubject(
                     subjectIdOfSelected, jtfSubjectCode, jtfSubjectName,
@@ -134,9 +138,83 @@ public class DialogSubjectCrud extends javax.swing.JDialog implements Initialize
         jtfSubjectCode.setText(subject.getSubjectCode());
         jtfSubjectName.setText(subject.getSubjectTitle());
         jtaSubjectDescription.setText(subject.getSubjectDescription());
-        jcmbGradeLevel.setSelectedItem(subject.getGradeLevel().getLevel());
+        jcmbGradeLevel.setSelectedItem(subject.getGradeLevel().getLevelNo());
         jcmbStatus.setSelectedItem(subject.isIsActive()==true?"Yes":"No");
     }
+
+    public JScrollPane getjScrollPane1() {
+        return jScrollPane1;
+    }
+
+    public JButton getJbtnCancel() {
+        return jbtnCancel;
+    }
+
+    public JButton getJbtnClear() {
+        return jbtnClear;
+    }
+
+    public JButton getJbtnSave() {
+        return jbtnSave;
+    }
+
+    public JButton getJbtnSaveAndNew() {
+        return jbtnSaveAndNew;
+    }
+
+    public JComboBox<String> getJcmbGradeLevel() {
+        return jcmbGradeLevel;
+    }
+
+    public JComboBox<String> getJcmbStatus() {
+        return jcmbStatus;
+    }
+
+    public JLabel getJlblStatus() {
+        return jlblStatus;
+    }
+
+    public JTextArea getJtaSubjectDescription() {
+        return jtaSubjectDescription;
+    }
+
+    public JTextField getJtfSubjectCode() {
+        return jtfSubjectCode;
+    }
+
+    public JTextField getJtfSubjectName() {
+        return jtfSubjectName;
+    }
+
+    public JLabel getLbl_subcode() {
+        return lbl_subcode;
+    }
+
+    public JLabel getLbl_subcode2() {
+        return lbl_subcode2;
+    }
+
+    public JLabel getLbl_subname() {
+        return lbl_subname;
+    }
+
+    public JPanel getPanel_footer() {
+        return panel_footer;
+    }
+
+    public JPanel getPanel_subjectdetails() {
+        return panel_subjectdetails;
+    }
+
+    public JPanel getPanel_subjectdetails1() {
+        return panel_subjectdetails1;
+    }
+
+    public JPanel getPanel_toppanel() {
+        return panel_toppanel;
+    }
+    
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -249,6 +327,7 @@ public class DialogSubjectCrud extends javax.swing.JDialog implements Initialize
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         panel_subjectdetails.add(jcmbGradeLevel, gridBagConstraints);

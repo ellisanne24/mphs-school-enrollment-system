@@ -191,7 +191,7 @@ public class CurriculumDaoImpl implements ICurriculum {
                     s.setSubjectCode(rs.getString("code"));
                     s.setSubjectHours(rs.getDouble("subject_hours"));
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setLevel(rs.getInt("grade_level"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     s.setGradeLevel(gradeLevel);
                     
                     curriculumSubjects.add(s);

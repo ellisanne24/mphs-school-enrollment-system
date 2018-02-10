@@ -16,8 +16,11 @@ import javax.swing.JOptionPane;
 public  class SchoolYearLoaderThread extends Thread{
     JLabel schoolYearLabel;
 
+    private SchoolYearDaoImpl schoolYearDaoImpl;
+    
     public SchoolYearLoaderThread(JLabel aJLabel) {
         this.schoolYearLabel = aJLabel;
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
 
     @Override
@@ -25,8 +28,8 @@ public  class SchoolYearLoaderThread extends Thread{
         while (true) {
             
             SchoolYearDaoImpl.setCurrentSchoolYear();
-            int schoolYearFrom = SchoolYearDaoImpl.getCurrentSchoolYear().getYearFrom();
-            int schoolYearTo = SchoolYearDaoImpl.getCurrentSchoolYear().getYearTo();
+            int schoolYearFrom = schoolYearDaoImpl.getCurrentSchoolYear().getYearFrom();
+            int schoolYearTo = schoolYearDaoImpl.getCurrentSchoolYear().getYearTo();
             schoolYearLabel.setText("SY:"+schoolYearFrom+"-"+schoolYearTo);
             try {
                 Thread.sleep(1000);

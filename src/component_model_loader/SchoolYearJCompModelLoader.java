@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package component_model_loader;
 
 import daoimpl.SchoolYearDaoImpl;
@@ -10,12 +6,11 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.quarter.Quarter;
 import model.schoolyear.SchoolYear;
 
 /**
  *
- * @author Acer
+ * @author John Ferdinand Antonio
  */
 public class SchoolYearJCompModelLoader {
 
@@ -49,30 +44,28 @@ public class SchoolYearJCompModelLoader {
     }
     
     public DefaultComboBoxModel getCurrentSchoolYearFrom() {
-        DefaultComboBoxModel dcm = new DefaultComboBoxModel();
-        SchoolYear schoolYear = SchoolYearDaoImpl.getCurrentSchoolYear();
-        dcm.addElement(schoolYear.getYearFrom());
-        dcm.setSelectedItem(null);
-        return dcm;
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+        comboModel.addElement(schoolYear.getYearFrom());
+        comboModel.setSelectedItem(null);
+        return comboModel;
     }
 
     public DefaultComboBoxModel getCurrentSchoolYearTo() {
         DefaultComboBoxModel dcm = new DefaultComboBoxModel();
-        SchoolYear schoolYear = SchoolYearDaoImpl.getCurrentSchoolYear();
+        SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
         dcm.addElement(schoolYear.getYearTo());
         dcm.setSelectedItem(null);
         return dcm;
     }
 
     public DefaultComboBoxModel getAllSchoolYearStart() {
-        DefaultComboBoxModel dcm = new DefaultComboBoxModel();
-        List<SchoolYear> syList = schoolYearDaoImpl.getAllYearFrom();
-        Object[] oArr = syList.toArray();
-        for (Object o : oArr) {
-            SchoolYear s = (SchoolYear) o;
-            dcm.addElement(s.getYearFrom());
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<SchoolYear> schoolYearList = schoolYearDaoImpl.getAllYearFrom();
+        for (SchoolYear s : schoolYearList) {
+            comboModel.addElement(s.getYearFrom());
         }
-        return dcm;
+        return comboModel;
     }
 
     public DefaultComboBoxModel getAllSchoolYearEnd() {
@@ -84,5 +77,12 @@ public class SchoolYearJCompModelLoader {
             dcm.addElement(s.getYearTo());
         }
         return dcm;
+    }
+    
+    public DefaultComboBoxModel getCurrentSchoolYearId() {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+        comboModel.addElement(schoolYear.getSchoolYearId());
+        return comboModel;
     }
 }

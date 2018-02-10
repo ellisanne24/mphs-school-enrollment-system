@@ -107,8 +107,8 @@ public class SearchStudent implements KeyListener {
                     initializeBalanceBreakDownTable();
                     initializeReceiptsMasterListTable();
                 } else {
+                    view.getJcmbPaymentTerm().setEnabled(true);
                     initializePaymentTermComboItemListener();
-                    
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Student not found.");
@@ -126,7 +126,7 @@ public class SearchStudent implements KeyListener {
         view.getJtfLastName().setText(student.getRegistration().getLastName());
         view.getJtfFirstName().setText(student.getRegistration().getFirstName());
         view.getJtfMiddleName().setText(student.getRegistration().getMiddleName());
-        view.getJtfGradeLevel().setText(student.getGradeLevelNo() + "");
+        view.getJtfGradeLevel().setText(student.getGradeLevelNo() ==0?"Kindergarten":student.getGradeLevelNo() + "");
         view.getJtfStudentType().setText(student.getStudentType() == 1 ? "New" : "Old");
         view.getJtfStatus().setText(student.isActive() == true ? "Active" : "Inactive");
     }
@@ -251,6 +251,8 @@ public class SearchStudent implements KeyListener {
                 }
             }
         }
+        view.getJlblRemainingBalanceText().setText("");
+        view.getJlblTotalPaidText().setText("");
     }
 
     private boolean studentExist() {

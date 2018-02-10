@@ -27,11 +27,12 @@ public class Dialog_MakePayment_PaymentBreakDown_TableModelListener implements T
 
     private void setPaymentSummary() {
         if (view.getJtblPaymentBreakDown().getRowCount() > 0) {
-            BigDecimal sumOfFees = new BigDecimal(BigInteger.ZERO);
-            DefaultTableModel tableModel = (DefaultTableModel) view.getJtblPaymentBreakDown().getModel();
-            for (int i = 0; i < view.getJtblPaymentBreakDown().getModel().getRowCount(); i++) {
-                Double amount = Double.parseDouble(tableModel.getValueAt(i, 1).toString().trim());
-                sumOfFees = sumOfFees.add(BigDecimal.valueOf(amount).setScale(2, RoundingMode.HALF_UP));
+            BigDecimal sumOfFees = new BigDecimal(BigInteger.ZERO).setScale(2, RoundingMode.HALF_UP);
+            if (view.getJtblPaymentBreakDown().getRowCount() > 0) {
+                for (int i = 0; i < view.getJtblPaymentBreakDown().getRowCount(); i++) {
+                    Double amount = Double.parseDouble(view.getJtblPaymentBreakDown().getValueAt(i, 1).toString().trim());
+                    sumOfFees = sumOfFees.add(BigDecimal.valueOf(amount).setScale(2, RoundingMode.HALF_UP));
+                }
             }
             view.getJtfSubtotal().setText("" + sumOfFees);
         }

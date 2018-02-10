@@ -181,7 +181,7 @@ public class Panel_SubjectCategory extends javax.swing.JPanel implements Initial
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 245));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 245));
 
-        jtblSubjectCategoryMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblSubjectCategoryMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSubjectCategoryMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -220,7 +220,7 @@ public class Panel_SubjectCategory extends javax.swing.JPanel implements Initial
         jScrollPane2.setMinimumSize(new java.awt.Dimension(1185, 245));
         jScrollPane2.setPreferredSize(new java.awt.Dimension(1185, 245));
 
-        jtblAssignedSubjects.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblAssignedSubjects.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblAssignedSubjects.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

@@ -18,6 +18,7 @@ import javax.swing.UIManager;
  */
 public class SchoolYearController implements ItemListener{
 
+    private SchoolYearDaoImpl schoolYearDaoImpl;
     private final JComboBox yearFrom;
     private final JComboBox yearTo;
     
@@ -29,6 +30,8 @@ public class SchoolYearController implements ItemListener{
         UIManager.put("ComboBox.disabledForeground", Color.BLACK);
         UIManager.put("TextField.disabledBackground", new Color(255, 255, 255));
         UIManager.put("TextField.inactiveForeground", Color.BLACK);
+        
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
         
         this.yearFrom = yearFrom;
         this.yearTo = yearTo;
@@ -45,7 +48,7 @@ public class SchoolYearController implements ItemListener{
     }
     
     private void setCurrentSchoolYear(){
-        int current = SchoolYearDaoImpl.getCurrentSchoolYear().getYearFrom();
+        int current = schoolYearDaoImpl.getCurrentSchoolYear().getYearFrom();
         this.yearFrom.setSelectedItem(current);
         
         int yearFromIndex = this.yearFrom.getSelectedIndex();

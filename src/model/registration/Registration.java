@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class Registration {
     //STUDENT REGISTRATION ONLY APPLIES TO NEW STUDENTS & TRANSFEREES
-    
+    private int studentNo;
     private Integer registrationId;
     private String studentType; //NEW or TRANSFEREE ONLY OLD STUDENTS proceed to Enrollment
     private String firstName;
@@ -55,6 +55,14 @@ public class Registration {
     private int gradeLevelNo;
     private int schoolYearYearFrom;
 
+    public int getStudentNo() {
+        return studentNo;
+    }
+
+    public void setStudentNo(int studentNo) {
+        this.studentNo = studentNo;
+    }
+    
     public int getGradeLevelNo() {
         return gradeLevelNo;
     }

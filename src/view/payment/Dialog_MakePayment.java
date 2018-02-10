@@ -12,6 +12,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -21,29 +22,29 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.tuitionfee.Tuition;
 import utility.initializer.Initializer;
 
 public class Dialog_MakePayment extends javax.swing.JDialog implements Initializer {
 
+    private final boolean hasTuitionRecord;
     private final Tuition tuition;
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
     private final OfficialReceiptDaoImpl orNoDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
 
-    public Dialog_MakePayment(Tuition tuition, TuitionFeeDaoImpl tuitionFeeDaoImpl, 
-            OfficialReceiptDaoImpl orNoDaoImpl, SchoolYearDaoImpl schoolYearDaoImpl) {
+    public Dialog_MakePayment(boolean hasTuitionRecord, Tuition tuition) {
+        this.hasTuitionRecord = hasTuitionRecord;
         this.tuition = tuition;
-        this.tuitionFeeDaoImpl = tuitionFeeDaoImpl;
-        this.orNoDaoImpl = orNoDaoImpl;
-        this.schoolYearDaoImpl = schoolYearDaoImpl;
+        this.tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
+        this.orNoDaoImpl = new OfficialReceiptDaoImpl();
+        this.schoolYearDaoImpl = new SchoolYearDaoImpl();
         initComponents();
 
         initViewComponents();
         initControllers();
         
-        System.out.println("Student Id: "+tuition.getStudent().getStudentId());
-        System.out.println("Payment Term Name: "+tuition.getPaymentTerm().getPaymentTermName());
     }
 
     @Override
@@ -76,10 +77,13 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         comboModel.addElement("Select");
         comboModel.addElement("All");
-        for (int i = 0; i < tuition.getBalanceBreakDownFees().size(); i++) {
-            String category = tuition.getBalanceBreakDownFees().get(i).getCategory().trim();
-            if (category.equalsIgnoreCase("Balance")) {
-                comboModel.addElement(tuition.getBalanceBreakDownFees().get(i).getName().trim());
+        List<BalanceBreakDownFee> bbFeeList = tuition.getBalanceBreakDownFees();
+        for (int i = 0; i < bbFeeList.size(); i++) {
+            String category = bbFeeList.get(i).getCategory().trim();
+            if (category.equalsIgnoreCase("Balance") || category.equalsIgnoreCase("B")) {
+                if(!bbFeeList.get(i).isFullyPaid()){
+                    comboModel.addElement(bbFeeList.get(i).getName().trim());
+                }
             }
         }
         jcmbBalance.setModel(comboModel);
@@ -89,10 +93,13 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         comboModel.addElement("Select");
         comboModel.addElement("All");
-        for (int i = 0; i < tuition.getBalanceBreakDownFees().size(); i++) {
-            String category = tuition.getBalanceBreakDownFees().get(i).getCategory().trim();
-            if (category.equalsIgnoreCase("Other")) {
-                comboModel.addElement(tuition.getBalanceBreakDownFees().get(i).getName().trim());
+        List<BalanceBreakDownFee> bbFeeList = tuition.getBalanceBreakDownFees();
+        for (int i = 0; i < bbFeeList.size(); i++) {
+            String category = bbFeeList.get(i).getCategory().trim();
+            if (category.equalsIgnoreCase("Other") || category.equalsIgnoreCase("O")) {
+                if(!bbFeeList.get(i).isFullyPaid()){
+                   comboModel.addElement(bbFeeList.get(i).getName().trim());
+                }
             }
         }
         jcmbOthers.setModel(comboModel);
@@ -100,7 +107,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
 
     @Override
     public void initControllers() {
-        jbtnAdd.addActionListener(new Dialog_MakePayment_AddItemToPay(this, tuition));
+        jbtnAdd.addActionListener(new Dialog_MakePayment_AddItemToPay(hasTuitionRecord,this, tuition));
         jcbBalance.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -116,7 +123,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         jbtnCancel.addActionListener(new ExitJDialog(this));
         jbtnRemove.addActionListener(new Dialog_MakePayment_RemoveItemToPay(this));
         jtblPaymentBreakDown.getModel().addTableModelListener(new Dialog_MakePayment_PaymentBreakDown_TableModelListener(this));
-        jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(this,tuition, tuitionFeeDaoImpl));
+        jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(hasTuitionRecord,this,tuition, tuitionFeeDaoImpl));
     }
 
     @Override

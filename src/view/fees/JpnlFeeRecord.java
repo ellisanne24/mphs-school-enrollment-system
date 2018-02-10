@@ -187,7 +187,7 @@ public class JpnlFeeRecord extends javax.swing.JPanel implements Initializer {
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 265));
 
         jtblFeeRecord.setAutoCreateRowSorter(true);
-        jtblFeeRecord.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblFeeRecord.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblFeeRecord.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -231,7 +231,7 @@ public class JpnlFeeRecord extends javax.swing.JPanel implements Initializer {
         jScrollPane2.setMinimumSize(new java.awt.Dimension(1185, 230));
         jScrollPane2.setPreferredSize(new java.awt.Dimension(1185, 230));
 
-        jtblFeeGradeLevelAssignment.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblFeeGradeLevelAssignment.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblFeeGradeLevelAssignment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

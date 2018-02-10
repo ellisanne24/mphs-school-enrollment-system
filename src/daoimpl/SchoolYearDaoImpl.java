@@ -70,21 +70,32 @@ public class SchoolYearDaoImpl implements ISchoolYear{
         }
     }
     
-    public static SchoolYear getCurrentSchoolYear(){
+    public SchoolYear getCurrentSchoolYear(){
         String SQL = "{CALL getCurrentSchoolYear()}";
-        SchoolYear sy = new SchoolYear();
+        SchoolYear schoolYear = new SchoolYear();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    sy.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
-                    sy.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
+                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    schoolYear.setIsActive(rs.getBoolean("isActive"));
+                    schoolYear.setSchoolYearStartDate(rs.getDate("start_date"));
+                    schoolYear.setSchoolYearEndDate(rs.getDate("end_date"));
+                    schoolYear.setRegularEnrollmentStartDate(rs.getDate("reg_enroll_start_date"));
+                    schoolYear.setRegularEnrollmentEndDate(rs.getDate("reg_enroll_end_date"));
+                    schoolYear.setSummerEnrollmentStartDate(rs.getDate("summer_enroll_start_date"));
+                    schoolYear.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
+                    schoolYear.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
+                    schoolYear.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
+                    schoolYear.setIsCurrentSchoolYear(rs.getBoolean("isCurrentSchoolYear"));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return sy;
+        return schoolYear;
     }
     
     @Override

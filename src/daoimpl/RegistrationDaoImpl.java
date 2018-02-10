@@ -90,7 +90,8 @@ public class RegistrationDaoImpl implements IRegistration{
                     reg.setGradeLevelNo(rs.getInt("gradelevel_no"));
                     reg.setSchoolYearYearFrom(rs.getInt("schoolyear_yearfrom"));
                     reg.setRegistrationDate(rs.getDate("date_registered"));
-                   
+                    reg.setStudentNo(rs.getInt("student_no"));
+                    
                     String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
                     reg.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes")? true : false);
                     

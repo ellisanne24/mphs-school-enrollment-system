@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controller.schedule;
 
 import java.awt.event.ActionEvent;
@@ -10,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
@@ -17,12 +14,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AddRowToSchedule implements ActionListener {
 
+    private final Dialog_CreateSchedule view;
     private final JTable jtblSchedule;
     private final JComboBox jcmbRoom;
     
-    public AddRowToSchedule(JTable jtblSchedule, JComboBox jcmbRoom){
-        this.jtblSchedule = jtblSchedule;
-        this.jcmbRoom = jcmbRoom;
+    public AddRowToSchedule(Dialog_CreateSchedule view){
+        this.view = view;
+        this.jtblSchedule = view.getJtblSchedule();
+        this.jcmbRoom = view.getJcmbRoom();
     }
     
     @Override

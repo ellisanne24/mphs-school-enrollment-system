@@ -1,24 +1,20 @@
 package controller.schedule;
 
 import component_editor.ScheduleSubjectCellEditor;
+import component_model_loader.SectionJCompModelLoader;
 import daoimpl.GradeLevelDaoImpl;
-import daoimpl.SchoolYearDaoImpl;
-import daoimpl.SectionDaoImpl;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import daoimpl.SubjectDaoImpl;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import model.gradelevel.GradeLevel;
-import model.section.Section;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
@@ -26,78 +22,69 @@ import model.section.Section;
  */
 public class GradeLevelStateChangeController implements ItemListener {
 
+    private SubjectDaoImpl subjectDaoImpl;
+    private SectionJCompModelLoader sectionJCompModelLoader;
+    private GradeLevelDaoImpl gradeLevelDaoImpl;
+    private final Dialog_CreateSchedule view;
     private final JComboBox jcmbGradeLevel;
     private final JComboBox jcmbSections;
     private final JTable jtblSchedule;
     private final JButton jbtnRemoveEntry;
     private final JComboBox jcmbRoom;
+    private final JComboBox jcmbSchoolYear;
 
-    public GradeLevelStateChangeController(JTable jtblSchedule, JComboBox jcmbGradeLevel, JComboBox jcmbSections, JButton jbtnRemoveEntry, JComboBox jcmbRoom) {
-        this.jcmbGradeLevel = jcmbGradeLevel;
-        this.jcmbSections = jcmbSections;
-        this.jtblSchedule = jtblSchedule;
-        this.jbtnRemoveEntry = jbtnRemoveEntry;
-        this.jcmbRoom = jcmbRoom;
+    public GradeLevelStateChangeController(Dialog_CreateSchedule view) {
+        this.view = view;
+        this.jcmbGradeLevel = view.getJcmbGradeLevel();
+        this.jcmbSections = view.getJcmbSection();
+        this.jtblSchedule = view.getJtblSchedule();
+        this.jbtnRemoveEntry = view.getJbtnRemoveEntry();
+        this.jcmbRoom = view.getJcmbRoom();
+        this.jcmbSchoolYear = view.getJcmbSchoolYear();
 
-        jbtnRemoveEntry.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int[] rowsToDel = jtblSchedule.getSelectedRows();
-                int choice = JOptionPane.showConfirmDialog(null, "Remove Row?", "Remove Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                if (choice == JOptionPane.YES_OPTION) {
-                    DefaultTableModel model = (DefaultTableModel) jtblSchedule.getModel();
-                    for (int i = 0; i < rowsToDel.length; i++) {
-                        model.removeRow(rowsToDel[i] - i);
-                    }
-                }
-            }
-        });
+        subjectDaoImpl = new SubjectDaoImpl();
+        gradeLevelDaoImpl = new GradeLevelDaoImpl();
+        sectionJCompModelLoader = new SectionJCompModelLoader();
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
         if (jcmbGradeLevel.getSelectedIndex() > -1) {
-            GradeLevelDaoImpl gldi = new GradeLevelDaoImpl();
-            String level = jcmbGradeLevel.getSelectedItem().toString().trim();
-            int gradeLevelId = gldi.getId(Integer.parseInt(level));
-            GradeLevel gradeLevel = new GradeLevel();
-            gradeLevel.setId(gradeLevelId);
-
-            clearScheduleTableModel();
-            enableScheduleTable();
-            TableColumnModel columnModel = jtblSchedule.getColumnModel();
-            TableColumn subjectColumn = columnModel.getColumn(3);
-            subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule, gradeLevelId));
-
-            jcmbSections.setModel(getGradeLevelSections(gradeLevel));
-            jcmbSections.setEnabled(true);
-   
-            jcmbRoom.setEnabled(false);
-            jcmbRoom.setSelectedItem(null);
+            resetForm();
+            loadSectionIdsByGradeLevelSelected();
+            loadSubjectsByGradeLevelSelected();
+            loadGradeLevelToScheduleHeader();
         }
     }
 
-    private DefaultComboBoxModel getGradeLevelSections(GradeLevel g) {
-        SectionDaoImpl sdi = new SectionDaoImpl();
-        SchoolYearDaoImpl sydi = new SchoolYearDaoImpl();
-        DefaultComboBoxModel sectionModel = new DefaultComboBoxModel();
-//        List<Section> sections = sdi.getAllSectionsByGradeLevelId(g);
-//        for (Section s : sections) {
-//            if (!sdi.hasSchedule(s.getSectionId(), sydi.getCurrentSchoolYearId())) {
-//                sectionModel.addElement(s.getSectionName().trim());
-//            }
-//
-//        }
-        sectionModel.setSelectedItem(null);
-        return sectionModel;
+    private void loadSectionIdsByGradeLevelSelected() {
+        int gradeLevelId = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
+        int schoolYearId = Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString().trim());
+        jcmbSections.setModel(sectionJCompModelLoader.getSectionIdsWithoutSchedule(true, schoolYearId, gradeLevelId));
+    }
+    
+    private void loadSubjectsByGradeLevelSelected(){
+        int gradeLevelId = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
+        TableColumn subjectColumn = jtblSchedule.getColumnModel().getColumn(3);
+        subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule, gradeLevelId));
+    }
+    
+    private void loadGradeLevelToScheduleHeader() {
+        String gradeLevelId = view.getJcmbGradeLevel().getSelectedItem().toString().trim();
+        GradeLevel g = gradeLevelDaoImpl.getById(Integer.parseInt(gradeLevelId));
+        view.getJtfGradeLevel().setText(g.getLevelNo() == 0 ? "Kindergarten" : g.getLevelNo() + "");
     }
 
-    private void enableScheduleTable() {
-        jtblSchedule.setEnabled(true);
-    }
-
-    private void clearScheduleTableModel() {
-        DefaultTableModel model = (DefaultTableModel) jtblSchedule.getModel();
-        model.setRowCount(0);
+    private void resetForm(){
+        view.getJbtnGrpDays().clearSelection();
+        view.getJtfSectionName().setText("");
+        view.getJtfAdviserName().setText("");
+        view.getJtfGradeLevel().setText("");
+        ((DefaultTableModel)view.getJtblSchedule().getModel()).setRowCount(0);
+        ((DefaultTableModel)view.getJtblMonday().getModel()).setRowCount(0);
+        ((DefaultTableModel)view.getJtblTuesday().getModel()).setRowCount(0);
+        ((DefaultTableModel)view.getJtblWednesday().getModel()).setRowCount(0);
+        ((DefaultTableModel)view.getJtblThursday().getModel()).setRowCount(0);
+        ((DefaultTableModel)view.getJtblFriday().getModel()).setRowCount(0);
     }
 }

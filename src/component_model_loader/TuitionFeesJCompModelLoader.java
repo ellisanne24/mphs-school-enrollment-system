@@ -28,7 +28,7 @@ public class TuitionFeesJCompModelLoader {
                 b.getAmount(),
                 b.getBalance(),
                 b.getDeadline(),
-                b.getIsPaid() == true? "Yes" : "No",
+                b.isFullyPaid() == true? "Yes" : "No",
                 b.getCategory(),
                 b.hasPenalty() == true? "Yes" : "No",
             };

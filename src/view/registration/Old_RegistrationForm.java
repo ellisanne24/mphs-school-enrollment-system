@@ -25,9 +25,9 @@ import model.gradelevel.GradeLevel;
 import model.paymentterm.PaymentTerm;
 import model.registration.Registration;
 import model.schoolyear.SchoolYear;
-import component_renderers.GradeLevelJComboBoxRenderer;
-import component_renderers.JComboBoxRenderer_Master;
-import component_renderers.MonthJComboBoxRenderer;
+import component_renderers.Renderer_GradeLevel_JComboBox;
+import component_renderers.Renderer_Master_JComboBox;
+import component_renderers.Renderer_Month_JComboBox;
 import controller.global.DateScheduleController;
 import java.util.Calendar;
 import view.enrollment.EnrollmentPanel;
@@ -64,7 +64,7 @@ public class Old_RegistrationForm extends javax.swing.JPanel {
         jcbNewStudent.setSelected(true);
         
         jcmbGradeLevel.setModel(gradeLevelCompModelLoader.getAllGradeLevels());
-        jcmbGradeLevel.setRenderer(new GradeLevelJComboBoxRenderer());
+        jcmbGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
         jcmbGradeLevel.setSelectedIndex(-1);
         
         jcmbSchoolYearStart.setModel(schoolYearCompModelLoader.getCurrentSchoolYearFrom());
@@ -81,7 +81,7 @@ public class Old_RegistrationForm extends javax.swing.JPanel {
 //        jcmbDobMonth.setSelectedIndex(-1);
         jcmbDobYear.setSelectedIndex(-1);
         
-        jcmbDobMonth.setRenderer(new MonthJComboBoxRenderer("--"));
+        jcmbDobMonth.setRenderer(new Renderer_Month_JComboBox("--"));
         DateScheduleController dsc = new DateScheduleController(jcmbDobMonth, jcmbDobDay, jcmbDobYear);
         dsc.control();
         
@@ -1419,7 +1419,7 @@ public class Old_RegistrationForm extends javax.swing.JPanel {
         if (jcmbGradeLevel.getSelectedIndex() > -1) {
             int aGradeLevel = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString());
             GradeLevel gradeLevel = new GradeLevel();
-            gradeLevel.setLevel(aGradeLevel);
+            gradeLevel.setLevelNo(aGradeLevel);
             int aGradeLevelId = gradeLevelDaoImpl.getId(gradeLevel);
 
             jlstCredentialRequirements.setModel(credentialGUIUtil.getAllCredentialNamesByGradeLevelId(aGradeLevelId));
