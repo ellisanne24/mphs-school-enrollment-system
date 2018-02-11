@@ -24,9 +24,9 @@ public class Renderer_Room_JComboBox extends JLabel implements ListCellRenderer<
     
     @Override
     public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if(value instanceof Integer){
-            int roomId = Integer.parseInt(value.toString().trim());
-            this.setText(getValueToDisplay(roomId).toString().trim());
+        if(value instanceof Room){
+           Room room = (Room)value;
+           this.setText(""+room.getRoomName());
         }else{
             this.setText("Select");
         }
@@ -40,10 +40,5 @@ public class Renderer_Room_JComboBox extends JLabel implements ListCellRenderer<
             this.setForeground(list.getForeground());
         }
         return this;
-    }
-
-    private Object getValueToDisplay(int roomId){
-        Room room = roomDaoImpl.getRoomById(roomId);
-        return room.getRoomName();
     }
 }

@@ -147,4 +147,14 @@ public class SectionJCompModelLoader {
         comboModel.setSelectedItem(null);
         return comboModel;
     }
+    
+    public DefaultComboBoxModel getSectionsWithoutSchedule(boolean isActive, int schoolyearId, int gradeLevelId) {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Section> sectionList = sectionDaoImpl.getSectionsWithNoAssignedScheduleBy_Status_SchoolYearId_GradeLevelId(isActive, schoolyearId, gradeLevelId);
+        for (Section section : sectionList) {
+            comboModel.addElement(section);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
 }

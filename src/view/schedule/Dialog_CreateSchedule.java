@@ -1,25 +1,20 @@
 
 package view.schedule;
 
-import component_editor.ScheduleDayCellEditor;
-import component_editor.ScheduleRoomCellEditor;
-import component_editor.ScheduleTimeCellEditor;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.RoomJCompModelLoader;
 import component_model_loader.SchoolYearJCompModelLoader;
-import component_model_loader.SectionJCompModelLoader;
 import component_renderers.Renderer_Room_JComboBox;
 import component_renderers.Renderer_Schedule_Conflict_JTableCell;
 import component_renderers.Renderer_Schedule_GradeLevel_JComboBox;
+import component_renderers.Renderer_Schedule_Summary_JTable;
 import component_renderers.Renderer_SchoolYear_JComboBox;
 import component_renderers.Renderer_Section_JComboBox;
-import controller.schedule.AddRowToSchedule;
-import controller.schedule.ClearScheduleFormController;
-import controller.schedule.CreateScheduleController2;
 import controller.schedule.DayCheckBoxStateChange;
 import controller.schedule.GradeLevelStateChangeController;
 import controller.schedule.LoadToSummary;
 import controller.schedule.RoomStateChange;
+import controller.schedule.ScheduleTableLoadSubjectFacultyOnClick;
 import controller.schedule.SectionStateChange;
 import controller.schedule.TableModel_Listener_ScheduleSheet_JTable;
 import daoimpl.SchoolYearDaoImpl;
@@ -37,12 +32,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import utility.initializer.Initializer;
 
 /**
@@ -52,7 +46,6 @@ import utility.initializer.Initializer;
 public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initializer{
 
     private SchoolYearDaoImpl schoolYearDaoImpl;
-    private SectionJCompModelLoader sectionJCompModelLoader;
     private SchoolYearJCompModelLoader schoolYearJCompModelLoader;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     private RoomJCompModelLoader roomJCompModelLoader;
@@ -68,8 +61,6 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         initModels();
         initControllers();
         
-        
-        initializeTableCellEditors();
 //        applyKeyBindings();
 //        applyCellEditorListener();
         
@@ -78,20 +69,10 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
     private void initializeControllers() {
 //        CreateScheduleController2 createController = new CreateScheduleController2(this);
 //        jbtnCreate.addActionListener(createController);
-//        jbtnAddRow.addActionListener(new AddRowToSchedule(this));
 //        jcmbRoom.addItemListener(new RoomStateChange(this));
 //        jbtnClearSchedule.addActionListener(new ClearScheduleFormController(this));
 //        jcmbSection.addItemListener(new SectionStateChange(this));
 //        jbtnLoadToSummary.addActionListener(new LoadToSummary(this));
-    }
-    
-    public static void initializeTableCellEditors() {
-        TableColumnModel columnModel = jtblSchedule.getColumnModel();
-        TableColumn daysCol = columnModel.getColumn(0);
-        TableColumn roomsCol = columnModel.getColumn(5);
-        
-        daysCol.setCellEditor(new ScheduleDayCellEditor());
-        roomsCol.setCellEditor(new ScheduleRoomCellEditor());
     }
     
     private void applyKeyBindings() {
@@ -175,27 +156,13 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jspSchedule = new javax.swing.JScrollPane();
         jtblSchedule = new javax.swing.JTable();
         jpnlScheduleSummary = new javax.swing.JPanel();
-        jspScheduleSummary = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
-        jpnlMonday = new javax.swing.JPanel();
         jspMonday = new javax.swing.JScrollPane();
-        jtblMonday = new javax.swing.JTable();
-        jpnlTuesday = new javax.swing.JPanel();
-        jspMonday1 = new javax.swing.JScrollPane();
-        jtblTuesday = new javax.swing.JTable();
-        jpnlWednesday = new javax.swing.JPanel();
-        jspMonday2 = new javax.swing.JScrollPane();
-        jtblWednesday = new javax.swing.JTable();
-        jpnlThursday = new javax.swing.JPanel();
-        jspMonday3 = new javax.swing.JScrollPane();
-        jtblThursday = new javax.swing.JTable();
-        jpnlFriday = new javax.swing.JPanel();
-        jspMonday4 = new javax.swing.JScrollPane();
-        jtblFriday = new javax.swing.JTable();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        jtblScheduleSummary = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jpnlSubmitSchedule = new javax.swing.JPanel();
-        jbtnAddRow = new javax.swing.JButton();
         jbtnRemoveEntry = new javax.swing.JButton();
         jbtnClearSchedule = new javax.swing.JButton();
         jbtnCreate = new javax.swing.JButton();
@@ -358,7 +325,8 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jpnlDaysControl.add(jbtnEditDay, gridBagConstraints);
 
         jbtnGrpDays.add(jcbDayMonWedFri);
-        jcbDayMonWedFri.setText("M, W, F");
+        jcbDayMonWedFri.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcbDayMonWedFri.setText("MWF");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -368,7 +336,8 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jpnlDaysControl.add(jcbDayMonWedFri, gridBagConstraints);
 
         jbtnGrpDays.add(jcbDayTueThur);
-        jcbDayTueThur.setText("T, TH");
+        jcbDayTueThur.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcbDayTueThur.setText("TTH");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
@@ -515,13 +484,14 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlScheduleTable.add(jpnlScheduleHeader, gridBagConstraints);
 
+        jPanel1.setMinimumSize(new java.awt.Dimension(695, 300));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1078, 300));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         jspSchedule.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Schedule", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
         jspSchedule.setMinimumSize(new java.awt.Dimension(650, 650));
         jspSchedule.setPreferredSize(new java.awt.Dimension(650, 402));
 
-        jtblSchedule.setAutoCreateRowSorter(true);
         jtblSchedule.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSchedule.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -531,22 +501,15 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
                 "Day", "Start Time", "End Time", "Subject", "Faculty", "Room", "Session"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, true, true, false, true, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jtblSchedule.setRowHeight(30);
+        jtblSchedule.setRowHeight(20);
         jtblSchedule.getTableHeader().setReorderingAllowed(false);
         jtblSchedule.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -565,7 +528,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -574,26 +537,16 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jpnlScheduleSummary.setBorder(javax.swing.BorderFactory.createTitledBorder("Schedule Summary"));
         jpnlScheduleSummary.setLayout(new java.awt.GridBagLayout());
 
-        jspScheduleSummary.setMinimumSize(new java.awt.Dimension(500, 600));
-        jspScheduleSummary.setPreferredSize(new java.awt.Dimension(500, 600));
-
-        jPanel2.setMinimumSize(new java.awt.Dimension(306, 600));
-        jPanel2.setPreferredSize(new java.awt.Dimension(306, 600));
-        jPanel2.setLayout(new java.awt.GridBagLayout());
-
-        jpnlMonday.setMinimumSize(new java.awt.Dimension(300, 250));
-        jpnlMonday.setPreferredSize(new java.awt.Dimension(300, 200));
-        jpnlMonday.setLayout(new java.awt.GridBagLayout());
-
-        jspMonday.setBorder(javax.swing.BorderFactory.createTitledBorder("Monday Schedule"));
+        jspMonday.setBorder(null);
         jspMonday.setPreferredSize(new java.awt.Dimension(400, 250));
 
-        jtblMonday.setModel(new javax.swing.table.DefaultTableModel(
+        jtblScheduleSummary.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblScheduleSummary.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Subject", "Start Time", "End Time", "Subject", "Faculty ", "Room"
+                "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -604,7 +557,10 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
                 return canEdit [columnIndex];
             }
         });
-        jspMonday.setViewportView(jtblMonday);
+        jtblScheduleSummary.setRowHeight(20);
+        jtblScheduleSummary.setShowHorizontalLines(false);
+        jtblScheduleSummary.getTableHeader().setReorderingAllowed(false);
+        jspMonday.setViewportView(jtblScheduleSummary);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -613,208 +569,51 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlMonday.add(jspMonday, gridBagConstraints);
+        jpnlScheduleSummary.add(jspMonday, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        jPanel2.add(jpnlMonday, gridBagConstraints);
-
-        jpnlTuesday.setMinimumSize(new java.awt.Dimension(300, 250));
-        jpnlTuesday.setPreferredSize(new java.awt.Dimension(300, 200));
-        jpnlTuesday.setLayout(new java.awt.GridBagLayout());
-
-        jspMonday1.setBorder(javax.swing.BorderFactory.createTitledBorder("Tuesday Schedule"));
-        jspMonday1.setPreferredSize(new java.awt.Dimension(600, 423));
-
-        jtblTuesday.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Subject", "Start Time", "End Time", "Subject", "Faculty ", "Room"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jtblTuesday.getTableHeader().setReorderingAllowed(false);
-        jspMonday1.setViewportView(jtblTuesday);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlTuesday.add(jspMonday1, gridBagConstraints);
+        jPanel1.add(jpnlScheduleSummary, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel2.add(jpnlTuesday, gridBagConstraints);
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Warnings"));
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(20, 120));
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(13, 120));
 
-        jpnlWednesday.setMinimumSize(new java.awt.Dimension(300, 250));
-        jpnlWednesday.setPreferredSize(new java.awt.Dimension(300, 200));
-        jpnlWednesday.setLayout(new java.awt.GridBagLayout());
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jspMonday2.setBorder(javax.swing.BorderFactory.createTitledBorder("Wednesday Schedule"));
-        jspMonday2.setPreferredSize(new java.awt.Dimension(600, 423));
+        jScrollPane3.setBackground(new java.awt.Color(0, 0, 0));
+        jScrollPane3.setForeground(new java.awt.Color(204, 255, 51));
 
-        jtblWednesday.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Subject", "Start Time", "End Time", "Subject", "Faculty ", "Room"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jspMonday2.setViewportView(jtblWednesday);
+        jTextArea1.setBackground(new java.awt.Color(102, 102, 102));
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jTextArea1.setForeground(new java.awt.Color(255, 153, 0));
+        jTextArea1.setRows(5);
+        jTextArea1.setDisabledTextColor(new java.awt.Color(255, 153, 51));
+        jTextArea1.setEnabled(false);
+        jScrollPane3.setViewportView(jTextArea1);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlWednesday.add(jspMonday2, gridBagConstraints);
+        jPanel2.add(jScrollPane3, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel2.add(jpnlWednesday, gridBagConstraints);
-
-        jpnlThursday.setMinimumSize(new java.awt.Dimension(300, 250));
-        jpnlThursday.setPreferredSize(new java.awt.Dimension(300, 200));
-        jpnlThursday.setLayout(new java.awt.GridBagLayout());
-
-        jspMonday3.setBorder(javax.swing.BorderFactory.createTitledBorder("Thursday Schedule"));
-        jspMonday3.setPreferredSize(new java.awt.Dimension(600, 423));
-
-        jtblThursday.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Subject", "Start Time", "End Time", "Subject", "Faculty ", "Room"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jspMonday3.setViewportView(jtblThursday);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlThursday.add(jspMonday3, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel2.add(jpnlThursday, gridBagConstraints);
-
-        jpnlFriday.setMinimumSize(new java.awt.Dimension(300, 250));
-        jpnlFriday.setPreferredSize(new java.awt.Dimension(300, 200));
-        jpnlFriday.setLayout(new java.awt.GridBagLayout());
-
-        jspMonday4.setBorder(javax.swing.BorderFactory.createTitledBorder("Friday Schedule"));
-        jspMonday4.setPreferredSize(new java.awt.Dimension(600, 423));
-
-        jtblFriday.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Subject", "Start Time", "End Time", "Subject", "Faculty ", "Room"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jspMonday4.setViewportView(jtblFriday);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlFriday.add(jspMonday4, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel2.add(jpnlFriday, gridBagConstraints);
-
-        jspScheduleSummary.setViewportView(jPanel2);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlScheduleSummary.add(jspScheduleSummary, gridBagConstraints);
-
-        jLabel2.setText("Total Week Hours :");
-        jPanel3.add(jLabel2);
+        jScrollPane2.setViewportView(jPanel2);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlScheduleSummary.add(jPanel3, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel1.add(jpnlScheduleSummary, gridBagConstraints);
+        jPanel1.add(jScrollPane2, gridBagConstraints);
 
         jScrollPane1.setViewportView(jPanel1);
 
@@ -836,14 +635,6 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         getContentPane().add(jpnlScheduleTable, gridBagConstraints);
 
         jpnlSubmitSchedule.setLayout(new java.awt.GridBagLayout());
-
-        jbtnAddRow.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jbtnAddRow.setText("Add Row");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jpnlSubmitSchedule.add(jbtnAddRow, gridBagConstraints);
 
         jbtnRemoveEntry.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jbtnRemoveEntry.setText("Remove Row");
@@ -906,7 +697,6 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
 
     @Override
     public void initJCompModelLoaders() {
-        sectionJCompModelLoader = new SectionJCompModelLoader();
         schoolYearJCompModelLoader = new SchoolYearJCompModelLoader();
         gradeLevelJCompModelLoader = new GradeLevelJCompModelLoader();
         roomJCompModelLoader = new RoomJCompModelLoader();
@@ -919,6 +709,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jcmbSchoolYearFrom.setRenderer(new Renderer_SchoolYear_JComboBox());
         jcmbRoom.setRenderer(new Renderer_Room_JComboBox());
         jtblSchedule.setDefaultRenderer(Object.class, new Renderer_Schedule_Conflict_JTableCell());
+        jtblScheduleSummary.setDefaultRenderer(Object.class, new Renderer_Schedule_Summary_JTable());
     }
 
     @Override
@@ -934,29 +725,31 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         currentSy.append(schoolYearDaoImpl.getCurrentSchoolYear().getYearTo());
         jtfSchoolYear.setText(currentSy.toString());
         jcmbSchoolYearFrom.setModel(schoolYearJCompModelLoader.getCurrentSchoolYearId());
-        jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllActiveGradeLevelId());
-        jcmbRoom.setModel(roomJCompModelLoader.getAllActiveRoomId());
-        jspScheduleSummary.getVerticalScrollBar().setUnitIncrement(40);
+        jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllActiveGradeLevel());
+        jcmbRoom.setModel(roomJCompModelLoader.getAllActiveRooms());
         jlblConflictInfo.setText("");
     }
 
     @Override
     public void initControllers() {
-        jtblSchedule.getModel().addTableModelListener(new TableModel_Listener_ScheduleSheet_JTable(3));
+        jtblSchedule.getModel().addTableModelListener(new TableModel_Listener_ScheduleSheet_JTable(this));
+        jtblSchedule.addMouseListener(new ScheduleTableLoadSubjectFacultyOnClick());
         jcmbGradeLevel.addItemListener(new GradeLevelStateChangeController(this));
         jcmbSection.addItemListener(new SectionStateChange(this));
+        jcmbRoom.addItemListener(new RoomStateChange(this));
         jcbMonday.addActionListener(new DayCheckBoxStateChange(this));
         jcbTuesday.addActionListener(new DayCheckBoxStateChange(this));
         jcbWednesday.addActionListener(new DayCheckBoxStateChange(this));
         jcbThursday.addActionListener(new DayCheckBoxStateChange(this));
         jcbFriday.addActionListener(new DayCheckBoxStateChange(this));
+        jcbDayMonWedFri.addActionListener(new DayCheckBoxStateChange(this));
+        jbtnLoadToSummary.addActionListener(new LoadToSummary(this));
     }
 
     @Override
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
-    
     
     private void clearScheduleHeader(){
         jtfAdviserName.setText("");
@@ -969,20 +762,8 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         return jLabel1;
     }
 
-    public JLabel getjLabel2() {
-        return jLabel2;
-    }
-
     public JPanel getjPanel1() {
         return jpnlScheduleSummary;
-    }
-
-    public JPanel getjPanel2() {
-        return jPanel2;
-    }
-
-    public JPanel getjPanel3() {
-        return jPanel3;
     }
 
     public JPanel getjPanel5() {
@@ -995,10 +776,6 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
 
     public JScrollPane getjScrollPane1() {
         return jspSchedule;
-    }
-
-    public JButton getJbtnAddRow() {
-        return jbtnAddRow;
     }
 
     public JButton getJbtnClearSchedule() {
@@ -1105,14 +882,6 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         return jpnlCreateSchedule;
     }
 
-    public JPanel getJpnlFriday() {
-        return jpnlFriday;
-    }
-
-    public JPanel getJpnlMonday() {
-        return jpnlMonday;
-    }
-
     public JPanel getJpnlScheduleHeader() {
         return jpnlScheduleHeader;
     }
@@ -1125,64 +894,16 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         return jpnlSubmitSchedule;
     }
 
-    public JPanel getJpnlThursday() {
-        return jpnlThursday;
-    }
-
-    public JPanel getJpnlTuesday() {
-        return jpnlTuesday;
-    }
-
-    public JPanel getJpnlWednesday() {
-        return jpnlWednesday;
-    }
-
     public JScrollPane getJspMonday() {
         return jspMonday;
     }
 
-    public JScrollPane getJspMonday1() {
-        return jspMonday1;
-    }
-
-    public JScrollPane getJspMonday2() {
-        return jspMonday2;
-    }
-
-    public JScrollPane getJspMonday3() {
-        return jspMonday3;
-    }
-
-    public JScrollPane getJspMonday4() {
-        return jspMonday4;
-    }
-
-    public JScrollPane getJspScheduleSummary() {
-        return jspScheduleSummary;
-    }
-
-    public JTable getJtblFriday() {
-        return jtblFriday;
-    }
-
-    public JTable getJtblMonday() {
-        return jtblMonday;
+    public JTable getJtblScheduleSummary() {
+        return jtblScheduleSummary;
     }
 
     public JTable getJtblSchedule() {
         return jtblSchedule;
-    }
-
-    public JTable getJtblThursday() {
-        return jtblThursday;
-    }
-
-    public JTable getJtblTuesday() {
-        return jtblTuesday;
-    }
-
-    public JTable getJtblWednesday() {
-        return jtblWednesday;
     }
 
     public JTextField getJtfAdviserName() {
@@ -1289,16 +1010,22 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         this.jspSchedule = jspSchedule;
     }
 
+    public JTextArea getJtaWarnings() {
+        return jTextArea1;
+    }
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton jbtnAddRow;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton jbtnClearSchedule;
     private javax.swing.JButton jbtnCreate;
     private javax.swing.JButton jbtnEditDay;
@@ -1326,28 +1053,14 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
     private javax.swing.JLabel jlblsubSection;
     private javax.swing.JPanel jpnlCreateSchedule;
     private javax.swing.JPanel jpnlDaysControl;
-    private javax.swing.JPanel jpnlFriday;
-    private javax.swing.JPanel jpnlMonday;
     private javax.swing.JPanel jpnlScheduleHeader;
     private javax.swing.JPanel jpnlScheduleSummary;
     private javax.swing.JPanel jpnlScheduleTable;
     private javax.swing.JPanel jpnlSubmitSchedule;
-    private javax.swing.JPanel jpnlThursday;
-    private javax.swing.JPanel jpnlTuesday;
-    private javax.swing.JPanel jpnlWednesday;
     private javax.swing.JScrollPane jspMonday;
-    private javax.swing.JScrollPane jspMonday1;
-    private javax.swing.JScrollPane jspMonday2;
-    private javax.swing.JScrollPane jspMonday3;
-    private javax.swing.JScrollPane jspMonday4;
     private javax.swing.JScrollPane jspSchedule;
-    private javax.swing.JScrollPane jspScheduleSummary;
-    private javax.swing.JTable jtblFriday;
-    private javax.swing.JTable jtblMonday;
     public static javax.swing.JTable jtblSchedule;
-    private javax.swing.JTable jtblThursday;
-    private javax.swing.JTable jtblTuesday;
-    private javax.swing.JTable jtblWednesday;
+    private javax.swing.JTable jtblScheduleSummary;
     private javax.swing.JTextField jtfAdviserName;
     private javax.swing.JTextField jtfGradeLevel;
     private javax.swing.JTextField jtfSchoolYear;

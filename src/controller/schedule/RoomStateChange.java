@@ -25,12 +25,21 @@ public class RoomStateChange implements ItemListener{
     @Override
     public void itemStateChanged(ItemEvent e) {
         if(jcmbRoom.getSelectedIndex() > -1){
-            String room = jcmbRoom.getSelectedItem().toString().trim();
+            Object room = jcmbRoom.getSelectedItem();
             for(int i = 0; i<jtblSchedule.getRowCount(); i++){
                 jtblSchedule.setValueAt(room, i, 5);
             }
-            jtblSchedule.repaint();
         }
     }
     
+    
+    private boolean isOccupiedByAM(){
+        boolean isOccupied = false;
+        return isOccupiedByAM();
+    }
+    
+    private boolean isOccupiedByPM(){
+        boolean isOccupied = false;
+        return isOccupied;
+    }
 }

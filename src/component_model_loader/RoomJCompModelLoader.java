@@ -59,6 +59,16 @@ public class RoomJCompModelLoader {
         return tableModel;
     }
     
+    public DefaultComboBoxModel getAllActiveRooms(){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Room> roomList = roomDaoImpl.getAllActiveRooms();
+        for (Room room : roomList) {
+            comboModel.addElement(room);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
+    
     public DefaultComboBoxModel getAllActiveRoomId(){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<Room> roomList = roomDaoImpl.getAllActiveRooms();

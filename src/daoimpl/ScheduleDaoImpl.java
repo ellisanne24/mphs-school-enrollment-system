@@ -32,12 +32,12 @@ public class ScheduleDaoImpl implements ISchedule{
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
                     Schedule s = new Schedule();
-                    s.setScheduleId(sectionId);
-                    s.setDay(rs.getString("schedule_day"));
-                    s.setStartTime(rs.getInt("startTime"));
-                    s.setEndTime(rs.getInt("endTime"));
-                    s.setSubjectCode(rs.getString("code"));
-                    s.setRoomName(rs.getString("room_name_or_num"));
+//                    s.setScheduleId(sectionId);
+//                    s.setDay(rs.getString("schedule_day"));
+//                    s.setStartTime(rs.getInt("startTime"));
+//                    s.setEndTime(rs.getInt("endTime"));
+//                    s.setSubjectCode(rs.getString("code"));
+//                    s.setRoomName(rs.getString("room_name_or_num"));
                     schedList.add(s);
                 }
             }
@@ -64,15 +64,15 @@ public class ScheduleDaoImpl implements ISchedule{
                     faculty.setFacultyID(rs.getInt("faculty_id"));
                     
                     Schedule s = new Schedule();
-                    s.setScheduleId(rs.getInt("schedule_id"));
-                    s.setDay(rs.getString("schedule_day"));
-                    s.setStartTime(rs.getInt("startTime"));
-                    s.setEndTime(rs.getInt("endTime"));
-                    s.setRoomName(rs.getString("room_name_or_num"));
-                    s.setSectionName(rs.getString("sectionName"));
-                    s.setSubjectCode(rs.getString("title"));
-                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    s.setFaculty(faculty);
+//                    s.setScheduleId(rs.getInt("schedule_id"));
+//                    s.setDay(rs.getString("schedule_day"));
+//                    s.setStartTime(rs.getInt("startTime"));
+//                    s.setEndTime(rs.getInt("endTime"));
+//                    s.setRoomName(rs.getString("room_name_or_num"));
+//                    s.setSectionName(rs.getString("sectionName"));
+//                    s.setSubjectCode(rs.getString("title"));
+//                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
+//                    s.setFaculty(faculty);
                     scheduleList.add(s);
                 }
             }
@@ -94,23 +94,23 @@ public class ScheduleDaoImpl implements ISchedule{
                     CallableStatement csb = con.prepareCall(SQLb);) {
                 for (Schedule schedule : scheduleList) {
                     Schedule s = (Schedule) schedule;
-                    csa.setString(1, s.getDay());
-                    csa.setInt(2, s.getStartTime());
-                    csa.setInt(3, s.getEndTime());
-                    csa.setInt(4, s.getSchoolYearId());
+//                    csa.setString(1, s.getDay());
+//                    csa.setInt(2, s.getStartTime());
+//                    csa.setInt(3, s.getEndTime());
+//                    csa.setInt(4, s.getSchoolYearId());
 
                     Subject subject = new Subject();
-                    subject.setSubjectCode(s.getSubjectCode());
+//                    subject.setSubjectCode(s.getSubjectCode());
                     csa.setInt(5, subjectDaoImpl.getSubjectId(subject));
 
 //                    csa.setInt(6, sectionDaoImpl.getSectionIdByName(s.getSectionName().trim()));
-                    csa.setInt(7, roomDaoImpl.getRoomId(s.getRoomName().trim()));
-                    csa.setInt(8, s.getGradeLevelId());
+//                    csa.setInt(7, roomDaoImpl.getRoomId(s.getRoomName().trim()));
+//                    csa.setInt(8, s.getGradeLevelId());
                     csa.registerOutParameter(9, Types.INTEGER);
                     csa.executeUpdate();
                     int scheduleId = csa.getInt(9);
 
-                    csb.setInt(1, s.getFaculty().getFacultyID());
+//                    csb.setInt(1, s.getFaculty().getFacultyID());
                     csb.setInt(2, scheduleId);
                     csb.executeUpdate();
                 }
@@ -129,17 +129,20 @@ public class ScheduleDaoImpl implements ISchedule{
 
     @Override
     public boolean add(Schedule schedule) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean isAdded = false;
+        return isAdded;
     }
 
     @Override
-    public boolean get(int gradeLevelId, int schoolYearId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Schedule get(int gradeLevelId, int schoolYearId) {
+        Schedule schedule = new Schedule();
+        return schedule;
     }
 
     @Override
     public List<Schedule> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Schedule> scheduleList = new ArrayList<>();
+        return scheduleList;
     }
 
     @Override
@@ -158,15 +161,15 @@ public class ScheduleDaoImpl implements ISchedule{
                     faculty.setFacultyID(rs.getInt("faculty_id"));
                     
                     Schedule s = new Schedule();
-                    s.setScheduleId(rs.getInt("schedule_id"));
-                    s.setDay(rs.getString("schedule_day"));
-                    s.setStartTime(rs.getInt("startTime"));
-                    s.setEndTime(rs.getInt("endTime"));
-                    s.setRoomName(rs.getString("room_name_or_num"));
-                    s.setSectionName(rs.getString("sectionName"));
-                    s.setSubjectCode(rs.getString("title"));
-                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    s.setFaculty(faculty);
+//                    s.setScheduleId(rs.getInt("schedule_id"));
+//                    s.setDay(rs.getString("schedule_day"));
+//                    s.setStartTime(rs.getInt("startTime"));
+//                    s.setEndTime(rs.getInt("endTime"));
+//                    s.setRoomName(rs.getString("room_name_or_num"));
+//                    s.setSectionName(rs.getString("sectionName"));
+//                    s.setSubjectCode(rs.getString("title"));
+//                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
+//                    s.setFaculty(faculty);
                     scheduleList.add(s);
                 }
             }
@@ -193,15 +196,15 @@ public class ScheduleDaoImpl implements ISchedule{
                     faculty.setFacultyID(rs.getInt("faculty_id"));
                     
                     Schedule s = new Schedule();
-                    s.setScheduleId(rs.getInt("schedule_id"));
-                    s.setDay(rs.getString("schedule_day"));
-                    s.setStartTime(rs.getInt("startTime"));
-                    s.setEndTime(rs.getInt("endTime"));
-                    s.setRoomName(rs.getString("room_name_or_num"));
-                    s.setSectionName(rs.getString("sectionName"));
-                    s.setSubjectCode(rs.getString("title"));
-                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    s.setFaculty(faculty);
+//                    s.setScheduleId(rs.getInt("schedule_id"));
+//                    s.setDay(rs.getString("schedule_day"));
+//                    s.setStartTime(rs.getInt("startTime"));
+//                    s.setEndTime(rs.getInt("endTime"));
+//                    s.setRoomName(rs.getString("room_name_or_num"));
+//                    s.setSectionName(rs.getString("sectionName"));
+//                    s.setSubjectCode(rs.getString("title"));
+//                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
+//                    s.setFaculty(faculty);
                     scheduleList.add(s);
                 }
             }

@@ -12,8 +12,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import model.gradelevel.GradeLevel;
 import model.subject.Subject;
 
@@ -37,18 +35,6 @@ public class ScheduleSubjectCellEditor extends DefaultCellEditor {
         subjectModel = getAllSubjectNames();
         jcmbSubject = new JComboBox(subjectModel);
         jcmbSubject.setEditable(false);
-
-        jcmbSubject.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                String subjecCodeSelected = jcmbSubject.getSelectedItem().toString().trim();
-                Subject s = new Subject();
-                s.setSubjectCode(subjecCodeSelected);
-                int subjectId = subjectDaoImpl.getSubjectId(s);
-                System.out.println("SUBJECT ID: " + subjectId);
-                loadFaculty();
-            }
-        });
     }
 
     @Override
@@ -72,27 +58,22 @@ public class ScheduleSubjectCellEditor extends DefaultCellEditor {
         
         DefaultTableModel scheduleTableModel = (DefaultTableModel) jtblSchedule.getModel();
         int tableRow = 0;
-        for (Subject s : list) {
+        for (Subject subject : list) {
             subjectsCount++;
             scheduleTableModel.setRowCount(subjectsCount);
-            model.addElement(s.getSubjectCode());
-            model.setSelectedItem(s.getSubjectCode());
-            scheduleTableModel.setValueAt(s.getSubjectCode(), tableRow, 3);
+//            model.addElement(subject.getSubjectCode());
+//            model.setSelectedItem(subject.getSubjectCode());
+            model.addElement(subject);
+            model.setSelectedItem(subject);
+//            scheduleTableModel.setValueAt(subject.getSubjectCode(), tableRow, 3);
+            scheduleTableModel.setValueAt(subject, tableRow, 3);
             tableRow++;
         }
         scheduleTableModel.setRowCount(subjectsCount);
-
         model.setSelectedItem(null);
         return model;
     }
 
-    private void loadFaculty() {
-        TableColumnModel columnModel = jtblSchedule.getColumnModel();
-        TableColumn facultyColumn = columnModel.getColumn(4);
-        facultyColumn.setCellEditor(new ScheduleFacultyCellEditor());
-    }
-    
-    
     @Override
     public boolean isCellEditable(EventObject anEvent) {
         boolean cellEditable = super.isCellEditable(anEvent);

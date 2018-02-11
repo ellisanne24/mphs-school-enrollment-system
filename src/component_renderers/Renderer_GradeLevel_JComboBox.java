@@ -6,7 +6,7 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import model.gradelevel.GradeLevel;
+import model.room.Room;
 
 public class Renderer_GradeLevel_JComboBox extends JLabel implements ListCellRenderer<Object> {
 

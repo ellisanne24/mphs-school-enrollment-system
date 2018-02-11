@@ -29,12 +29,8 @@ public class Renderer_Schedule_JTableCell extends DefaultTableCellRenderer {
         Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
         
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        boolean hasDay = (model.getValueAt(row, 0)!=null);
         boolean hasStartTime = (model.getValueAt(row, 1) != null);
         boolean hasEndTime = (model.getValueAt(row, 2) != null);
-        boolean hasSubject = (model.getValueAt(row, 3)!=null);
-        boolean hasFaculty = (model.getValueAt(row, 4)!=null);
-        boolean hasRoom = (model.getValueAt(row, 5) != null);
         
         if (hasStartTime && hasEndTime) {
             int startTime = Integer.parseInt(model.getValueAt(row, 1).toString().replace(":", ""));

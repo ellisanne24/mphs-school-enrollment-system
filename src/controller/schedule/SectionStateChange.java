@@ -48,8 +48,8 @@ public class SectionStateChange implements ItemListener {
     }
 
     private void initializeSection() {
-        String sectionId = jcmbSections.getSelectedItem().toString().trim();
-        section = sectionDaoImpl.getSectionById(Integer.parseInt(sectionId));
+        Section s = (Section) jcmbSections.getSelectedItem();
+        section = sectionDaoImpl.getSectionById(s.getSectionId());
     }
 
     private void loadSectionInformationToScheduleHeader() {

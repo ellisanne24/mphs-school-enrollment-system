@@ -25,10 +25,9 @@ public class Renderer_Section_JComboBox extends JLabel implements ListCellRender
     
     @Override
     public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if(value instanceof Integer){
-            int sectionId = Integer.parseInt(value.toString());
-            String valueToDisplay = getSectionName(sectionId);
-            this.setText(valueToDisplay);
+        if(value instanceof Section){
+            Section section = (Section) value;
+            this.setText(section.getSectionName());
         }else {
             this.setText("Select");
         }
@@ -44,12 +43,4 @@ public class Renderer_Section_JComboBox extends JLabel implements ListCellRender
 
         return this;
     }
-    
-    private String getSectionName(int sectionId){
-        SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();
-        Section s = sectionDaoImpl.getSectionById(sectionId);
-        String sectionName = s.getSectionName();
-        return sectionName;
-    }
-    
 }

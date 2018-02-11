@@ -3,7 +3,9 @@ package controller.schedule;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import utility.string.StringUtil;
 import view.schedule.Dialog_CreateSchedule;
 
 /**
@@ -18,6 +20,7 @@ public class DayCheckBoxStateChange implements ActionListener {
     private final JCheckBox jcbWednesday;
     private final JCheckBox jcbThursday;
     private final JCheckBox jcbFriday;
+    private final JCheckBox jcbDayMonWedFri;
     private final JTable jtblSchedule;
 
     public DayCheckBoxStateChange(Dialog_CreateSchedule view) {
@@ -28,6 +31,7 @@ public class DayCheckBoxStateChange implements ActionListener {
         this.jcbWednesday = view.getJcbWednesday();
         this.jcbThursday = view.getJcbThursday();
         this.jcbFriday = view.getJcbFriday();
+        this.jcbDayMonWedFri = view.getJcbDayMonWedFri();
     }
 
     @Override
@@ -42,12 +46,15 @@ public class DayCheckBoxStateChange implements ActionListener {
             loadDaysToTable(jcbThursday);
         } else if (e.getSource() == jcbFriday && jcbFriday.isSelected()) {
             loadDaysToTable(jcbFriday);
+        } else if(e.getSource() == jcbDayMonWedFri && jcbDayMonWedFri.isSelected()){
+            loadDaysToTable(jcbDayMonWedFri);
         }
     }
 
     private void loadDaysToTable(JCheckBox jcbDay) {
         String day = jcbDay.getText().trim();
         int dayCol = 0;
+        
         for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
             jtblSchedule.setValueAt(day, row, dayCol);
         }

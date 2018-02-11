@@ -2,250 +2,165 @@ package controller.schedule;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import model.faculty.Faculty;
+import model.gradelevel.GradeLevel;
+import model.room.Room;
+import model.schedule.Schedule;
+import model.section.Section;
+import model.subject.Subject;
+import utility.form.FormValidator;
 import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
-public class LoadToSummary implements ActionListener{
+public class LoadToSummary implements ActionListener , FormValidator{
 
     private final Dialog_CreateSchedule view;
-    
     private final JTable jtblSchedule;
-    private final JTable jtblMonday;
-    private final JTable jtblTuesday;
-    private final JTable jtblWednesday;
-    private final JTable jtblThursday;
-    private final JTable jtblFriday;
-    
-    private DefaultTableModel monday ;
-    private DefaultTableModel tuesday;
-    private DefaultTableModel wednesday;
-    private DefaultTableModel thursday;
-    private DefaultTableModel friday;
-    
+    private final JTable jtblScheduleSummary;
+
     public LoadToSummary(Dialog_CreateSchedule view) {
         this.view = view;
         this.jtblSchedule = view.getJtblSchedule();
-        this.jtblMonday = view.getJtblMonday();
-        this.jtblTuesday = view.getJtblTuesday();
-        this.jtblWednesday = view.getJtblWednesday();
-        this.jtblThursday = view.getJtblThursday();
-        this.jtblFriday = view.getJtblFriday();
+        this.jtblScheduleSummary = view.getJtblScheduleSummary();
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        monday = (DefaultTableModel)jtblMonday.getModel();
-        tuesday = (DefaultTableModel)jtblTuesday.getModel();
-        wednesday = (DefaultTableModel)jtblWednesday.getModel();
-        thursday = (DefaultTableModel)jtblThursday.getModel();
-        friday = (DefaultTableModel)jtblFriday.getModel();
-        
-        if(!hasNullFields(jtblSchedule)){
-            check();
-        }else{
-            JOptionPane.showMessageDialog(null,"Empty fields are not allowed.");
+        if (formIsValid()) {
+            DefaultTableModel schedSummaryTableModel = (DefaultTableModel) jtblScheduleSummary.getModel();
+            schedSummaryTableModel.setRowCount(jtblSchedule.getRowCount() * 3);
+            jtblScheduleSummary.setModel(schedSummaryTableModel);
+            loadData();
+        }else{            
+            JOptionPane.showMessageDialog(null,"Please check form for empty fields or conflict.");
         }
     }
-    
-    private void populateScheduleModel() {
-        for (int i = 0; i < jtblSchedule.getRowCount(); i++) {
-            if (jtblSchedule.getValueAt(i, 0) != null) {
-                String day = jtblSchedule.getValueAt(i, 0).toString();
-                Object startTime = jtblSchedule.getValueAt(i, 1);
-                Object endTime = jtblSchedule.getValueAt(i, 2);
-                Object subjetct = jtblSchedule.getValueAt(i, 3);
-                Object faculty = jtblSchedule.getValueAt(i, 4);
-                Object room = jtblSchedule.getValueAt(i, 5);
-                System.out.println(day+","+startTime+","+endTime+","+subjetct+","+faculty+","+room);
-                if (day.equals("Mon")) {
-                    monday.addRow(new Object[]{day, startTime, endTime, subjetct, faculty, room});
-                } else if (day.equals("Tue")) {
-                    tuesday.addRow(new Object[]{day, startTime, endTime, subjetct, faculty, room});
-                } else if (day.equals("Wed")) {
-                    wednesday.addRow(new Object[]{day, startTime, endTime, subjetct, faculty, room});
-                } else if (day.equals("Thu")) {
-                    thursday.addRow(new Object[]{day, startTime, endTime, subjetct, faculty, room});
-                } else if (day.equals("Fri")) {
-                    friday.addRow(new Object[]{day, startTime, endTime, subjetct, faculty, room});
+
+    @Override
+    public boolean formIsValid() {
+        boolean isValid = true;
+        DefaultTableModel tableModel = (DefaultTableModel) jtblSchedule.getModel();
+        for (int row = 0; row < tableModel.getRowCount(); row++) {
+            Object startTime = tableModel.getValueAt(row, 1);
+            Object endTime = tableModel.getValueAt(row, 2);
+            Object subject = tableModel.getValueAt(row, 3);
+            Object faculty = tableModel.getValueAt(row, 4);
+            Object room = tableModel.getValueAt(row, 5);
+            Object session = tableModel.getValueAt(row, 6);
+            if (startTime == null || endTime == null || subject == null || faculty == null || room == null || session == null) {
+                isValid = false;
+                break;
+            } else if (startTime != null && endTime != null && session != null) {
+                int sTime = Integer.parseInt(startTime.toString().trim().replace(":", ""));
+                int eTime = Integer.parseInt(endTime.toString().trim().replace(":", ""));
+                if (hasDuplicateStartTime(startTime) || sTime == eTime || sTime > eTime || !startTimeMatchesSession(sTime, session)) {
+                    isValid = false;
+                    break;
                 }
             }
         }
-        System.out.println("Monday Row Count :"+monday.getRowCount());
-        System.out.println("Tuesday Row Count :"+tuesday.getRowCount());
-        System.out.println("Wednesday Row Count :"+wednesday.getRowCount());
-        System.out.println("Thursday Row Count :"+thursday.getRowCount());
-        System.out.println("Friday Row Count :"+friday.getRowCount());
+        return isValid;
     }
     
-    private void setScheduleModel(){
-        if(monday != null){
-            jtblMonday.setModel(monday);
-        }
-        else if(tuesday != null){
-            jtblTuesday.setModel(tuesday);
-        }
-        else if(wednesday != null){
-            jtblWednesday.setModel(wednesday);
-        }
-        else if(thursday != null){
-            jtblThursday.setModel(thursday);
-        }
-        else if(friday != null){
-            jtblFriday.setModel(friday);
-        }
-    }
-    
-    private void check(){
-        int errors = 0;
-        for(int row = 0; row < jtblSchedule.getRowCount(); row++){
-            if (hasConflict(row)) {
-                errors++;
-            }
-        }
-        if(errors >0){
-            System.out.println("Errors found on form.");
-        }else{
-            populateScheduleModel();
-            setScheduleModel();
-        }
-    }
-    
-    private boolean hasConflict(int rowIndex) {
-        boolean hasConflict = false;
-        String day1 = jtblSchedule.getValueAt(rowIndex, 0).toString();
-        String startTime1 = jtblSchedule.getValueAt(rowIndex, 1).toString();
-        String endTime1 = jtblSchedule.getValueAt(rowIndex, 2).toString();
-        String subject1 = jtblSchedule.getValueAt(rowIndex, 3).toString();
-        String faculty1 = jtblSchedule.getValueAt(rowIndex, 4).toString();
-        String room1 = jtblSchedule.getValueAt(rowIndex, 5).toString();
-
+    private void loadData() {
+        int dayCol = 0;
+        int startTimeCol = 1;
+        int endTimeCol = 2;
+        int subjCol = 3;
+        int facultyCol = 4;
+        int roomCol = 5;
+        
         for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
-            if (row != rowIndex) {
-                String day = jtblSchedule.getValueAt(row, 0).toString().trim();
-                String startTime = jtblSchedule.getValueAt(row, 1).toString().trim();
-                String endTime = jtblSchedule.getValueAt(row, 2).toString().trim();
-                String subject = jtblSchedule.getValueAt(row, 3).toString().trim();
-                String faculty = jtblSchedule.getValueAt(row, 4).toString().trim();
-                String room = jtblSchedule.getValueAt(row, 5).toString().trim();
-
-                if (hasSameRoom(room1, room)
-                        && hasSameFaculty(faculty1, faculty)
-                        && hasSameDay(day1, day)
-                        && hasSameTime(startTime1, endTime1, startTime, endTime)) {
-                    JOptionPane.showMessageDialog(null,"Time and Faculty conflict at row "+row +"& "+rowIndex);
-                    hasConflict = true;
-                } else if (hasSameRoom(room1, room) && hasSameFaculty(faculty1, faculty)
-                        && hasSameDay(day1, day) && !hasSameTime(startTime1, endTime1, startTime, endTime)
-                        && hasSameSubject(subject1, subject)) {
-                    hasConflict = true;
-                } else if(hasSameDay(day1, day) && hasTimeConflict(startTime1, endTime1, startTime, endTime)){
-                    JOptionPane.showMessageDialog(null, "Time conflict found on row "+row+" & "+rowIndex);
-                    hasConflict = true;
-                } else if(hasSameDay(day1, day) && hasSameSubject(subject1, subject)){
-                    JOptionPane.showMessageDialog(null,"Same subject on same day is not allowed.\n Check row "+row+"&"+rowIndex);
-                    hasConflict = true;
-                } 
-            }
-        }
-        return hasConflict;
-    }
-    
-    private boolean hasTimeConflict(String st1, String et1, String st, String et) {
-        boolean hasTimeConflict = false;
-        int startTime1 = Integer.parseInt(st1.replace(":", ""));
-        int endTime1 = Integer.parseInt(et1.replace(":", ""));
-        int startTime = Integer.parseInt(st.replace(":", ""));
-        int endTime = Integer.parseInt(et.replace(":", ""));
-        
-        System.out.println("Start Time1 : " + startTime1);
-        System.out.println("End Time1 : " + endTime1);
-        System.out.println("Start Time : "+startTime);
-        System.out.println("End Time : "+endTime);
-        
-        boolean timeConflictA = ((startTime >= startTime1) && (endTime <= endTime1));
-        boolean timeConflictB = ((startTime < startTime1) && (endTime > startTime1 && endTime <= endTime1));
-        boolean timeConflictC = (startTime == endTime);
-        boolean timeConflictD = (startTime == startTime1) && (endTime > endTime1);
-        boolean timeConflictE = (endTime1 < startTime1);
-
-        if (timeConflictA == true) {
-            hasTimeConflict = true;
-        } else if (timeConflictB == true) {
-            hasTimeConflict = true;
-        } else if (timeConflictC == true) {
-            hasTimeConflict = true;
-        } else if (timeConflictD) {
-            hasTimeConflict = true;
-        } else if(timeConflictE){
-            hasTimeConflict = true;
-        }
-
-        if (hasTimeConflict) {
-            System.out.println("Time conflict.");
-        }
-
-        return hasTimeConflict;
-    }
-    
-    private boolean hasNullFields(JTable table){
-        boolean hasNull = true;
-        int countOfNull = 0;
-        for(int r = 0; r < table.getRowCount(); r++){
-            for(int c = 0; c < table.getColumnCount(); c++){
-                if(table.getValueAt(r, c)==null){
-                    countOfNull++;
+            Object day = jtblSchedule.getValueAt(row, dayCol);
+            Object startTime = jtblSchedule.getValueAt(row, startTimeCol);
+            Object endTime = jtblSchedule.getValueAt(row, endTimeCol);
+            StringBuilder timeBuilder = new StringBuilder(startTime.toString() + "-" + endTime);
+            setScheduleSummaryTimeAt(timeBuilder, row, 0);
+            for (int col = 0; col < jtblSchedule.getColumnCount(); col++) {
+                if (col == subjCol || col == facultyCol || col == roomCol) {
+                    Object value = jtblSchedule.getValueAt(row, col);
+                    setScheduleSummaryValueAt(value, getColFor(day));
                 }
             }
         }
-        if(countOfNull == 0){
-            hasNull = false;
-        }
-        return hasNull;
     }
     
-    private boolean hasSameSubject(String subject1, String subject2) {
-        boolean hasSameSubject = false;
-        if (subject1.equals(subject2)) {
-            hasSameSubject = true;
+    private void setScheduleSummaryTimeAt(Object value, int row, int ssCol) {
+        int rowIncrement = row == 0 ? 1 : 3;
+        for (int ssRow = 0; ssRow < jtblScheduleSummary.getRowCount(); ssRow += rowIncrement) {
+            if (jtblScheduleSummary.getValueAt(ssRow, ssCol) == null && ssRow % 3 == 0) {
+                jtblScheduleSummary.setValueAt(value, ssRow, ssCol);
+                break;
+            }
         }
-        return hasSameSubject;
+    }
+    
+    private void setScheduleSummaryValueAt(Object value, int ssCol){
+        for (int ssRow = 0; ssRow < jtblScheduleSummary.getRowCount(); ssRow++) {
+            if(jtblScheduleSummary.getValueAt(ssRow, ssCol) == null){
+                jtblScheduleSummary.setValueAt(value, ssRow, ssCol);
+                break;
+            }
+        }
     }
 
-    private boolean hasSameFaculty(String faculty1, String faculty2) {
-        boolean hasSameFaculty = false;
-        if (faculty1.equals(faculty2)) {
-            hasSameFaculty = true;
+    private List<Schedule> getSchedules(){
+        List<Schedule> scheduleList = new ArrayList<>();
+        for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
+            Schedule schedule = new Schedule();
+            schedule.setSection((Section) view.getJcmbSection().getSelectedItem());
+            schedule.setGradeLevel((GradeLevel) view.getJcmbGradeLevel().getSelectedItem());
+            for(int col = 0; col < jtblSchedule.getRowCount(); col++){
+                switch(col){
+                   case 0: schedule.setDay(jtblSchedule.getValueAt(row, col).toString()); break;
+                   case 1: schedule.setStartTime(Integer.parseInt(jtblSchedule.getValueAt(row, col).toString().trim().replace(":", ""))); break;
+                   case 2: schedule.setEndTime(Integer.parseInt(jtblSchedule.getValueAt(row, col).toString().trim().replace(":", ""))); break;
+                   case 3: schedule.setSubject((Subject) jtblSchedule.getValueAt(row, col)); break;
+                   case 4: schedule.setFaculty((Faculty) jtblSchedule.getValueAt(row, col)); break;
+                   case 5: schedule.setRoom((Room) jtblSchedule.getValueAt(row, col)); break;
+                }
+            }
+            scheduleList.add(schedule);
         }
-        return hasSameFaculty;
+        return scheduleList;
     }
     
-    private boolean hasSameDay(String day1,String day2){
-        boolean hasSameDay = false;
-        if(day1.equals(day2)){
-            hasSameDay = true;
-        }
-        return hasSameDay;
+    private int getColFor(Object day){
+        int col = day.toString().trim().equalsIgnoreCase("Mon") ? 1
+                : day.toString().trim().equalsIgnoreCase("Tue") ? 2
+                : day.toString().trim().equalsIgnoreCase("Wed") ? 3
+                : day.toString().trim().equalsIgnoreCase("Thu") ? 4 : 5;
+        return col;
     }
     
-    private boolean hasSameTime(String startTime1, String endTime1, String startTime2, String endTime2) {
-        boolean hasSameTime = false;
-        if (startTime1.equals(startTime2) && endTime1.equals(endTime2)) {
-            hasSameTime = true;
+    private boolean startTimeMatchesSession(int startTime, Object session) {
+        boolean valid;
+        if (session.toString().trim().equalsIgnoreCase("PM")) {
+            valid = ((startTime >= 1200) && (startTime <= 1600));
+        } else if (session.toString().trim().equalsIgnoreCase("AM")) {
+            valid = ((startTime >= 700) && (startTime <= 1100));
+        } else {//WD
+            valid = ((startTime >= 700) && (startTime <= 1600));
         }
-        return hasSameTime;
+        return valid;
     }
     
-    private boolean hasSameRoom(String room1, String room2){
-        boolean hasSameRoom = false;
-        if(room1.equals(room2)){
-            hasSameRoom = true;
+    private boolean hasDuplicateStartTime(Object value) {
+        int countOfRecord = 0;
+        int startTimeCol = 1;
+        for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
+            if (value.equals(jtblSchedule.getValueAt(row, startTimeCol))) {
+                countOfRecord++;
+            }
         }
-        return hasSameRoom;
+        return countOfRecord > 1;
     }
 }

@@ -17,8 +17,9 @@ public interface IFaculty {
     List getAllFaculty(Faculty faculty);
     
     // Jordan
-    List getAllFacultyWithNoAdvisory();
-    List getAllFaculty();
+    List<Faculty> getAllFacultyWithNoAdvisory();
+    List<Faculty> getAllFaculty();
+    List<Faculty> getAllFacultyHandlingSubjectBySubjectCode(String subjectCode, int schoolyearId);
     int getFacultyIdByName(String lastName, String firstName, String middleName);
     Faculty getFacultyById(int facultyId);
 }

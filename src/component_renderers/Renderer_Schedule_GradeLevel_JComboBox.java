@@ -22,10 +22,9 @@ public class Renderer_Schedule_GradeLevel_JComboBox extends JLabel implements Li
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if(value instanceof Integer){
-            int gradeLevelId = Integer.parseInt(value.toString().trim());
-            Object valueToDisplay = getValueToDisplay(gradeLevelId);
-            this.setText(String.valueOf(valueToDisplay).equals("0")?"Kindergarten" : String.valueOf(valueToDisplay));
+        if(value instanceof GradeLevel){
+            GradeLevel gradeLevel = (GradeLevel) value;
+            this.setText(gradeLevel.getLevelNo() == 0? "Kindergarten" : gradeLevel.getLevelNo() +"");
         }else{
             this.setText("Select");
         }
@@ -42,9 +41,5 @@ public class Renderer_Schedule_GradeLevel_JComboBox extends JLabel implements Li
         return this;
     }
     
-    private Object getValueToDisplay(int gradeLevelId) {
-        GradeLevel gradeLevel = gradeLevelDaoImpl.getById(gradeLevelId);
-        return gradeLevel.getLevelNo();
-    }
     
 }

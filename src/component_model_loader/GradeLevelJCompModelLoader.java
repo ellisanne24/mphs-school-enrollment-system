@@ -47,6 +47,16 @@ public class GradeLevelJCompModelLoader {
         comboModel.setSelectedItem(null);
         return comboModel;
     }
+    
+    public DefaultComboBoxModel getAllActiveGradeLevel(){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<GradeLevel> gradeLevelList = gradeLevelDaoImpl.getAllActiveGradeLevels();
+        for (GradeLevel gradeLevel : gradeLevelList) {
+            comboModel.addElement(gradeLevel);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
 
     public DefaultComboBoxModel getAllRegisteredSubjectGradeLevel() {
         DefaultComboBoxModel dcm = new DefaultComboBoxModel();

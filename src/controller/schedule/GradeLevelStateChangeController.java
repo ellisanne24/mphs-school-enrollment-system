@@ -4,11 +4,9 @@ import component_editor.ScheduleSubjectCellEditor;
 import component_model_loader.SectionJCompModelLoader;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SubjectDaoImpl;
-import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -51,40 +49,37 @@ public class GradeLevelStateChangeController implements ItemListener {
     public void itemStateChanged(ItemEvent e) {
         if (jcmbGradeLevel.getSelectedIndex() > -1) {
             resetForm();
-            loadSectionIdsByGradeLevelSelected();
-            loadSubjectsByGradeLevelSelected();
-            loadGradeLevelToScheduleHeader();
+            loadSectionsByGradeLevel();
+            loadSubjectsByGradeLevel();
+//            loadGradeLevelToScheduleHeader();
         }
     }
 
-    private void loadSectionIdsByGradeLevelSelected() {
-        int gradeLevelId = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
+    private void loadSectionsByGradeLevel() {
+        GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
+        int gradeLevelId = gradeLevel.getId();
         int schoolYearId = Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString().trim());
-        jcmbSections.setModel(sectionJCompModelLoader.getSectionIdsWithoutSchedule(true, schoolYearId, gradeLevelId));
+        jcmbSections.setModel(sectionJCompModelLoader.getSectionsWithoutSchedule(true, schoolYearId, gradeLevelId));
     }
     
-    private void loadSubjectsByGradeLevelSelected(){
-        int gradeLevelId = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
+    private void loadSubjectsByGradeLevel() {
+        GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
         TableColumn subjectColumn = jtblSchedule.getColumnModel().getColumn(3);
-        subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule, gradeLevelId));
+        subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule, gradeLevel.getId()));
     }
     
     private void loadGradeLevelToScheduleHeader() {
-        String gradeLevelId = view.getJcmbGradeLevel().getSelectedItem().toString().trim();
-        GradeLevel g = gradeLevelDaoImpl.getById(Integer.parseInt(gradeLevelId));
-        view.getJtfGradeLevel().setText(g.getLevelNo() == 0 ? "Kindergarten" : g.getLevelNo() + "");
+        GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
+        view.getJtfGradeLevel().setText(gradeLevel.getLevelNo() == 0 ? "Kindergarten" : gradeLevel.getLevelNo() + "");
     }
 
     private void resetForm(){
+        view.getJcmbRoom().setSelectedIndex(-1);
         view.getJbtnGrpDays().clearSelection();
         view.getJtfSectionName().setText("");
         view.getJtfAdviserName().setText("");
         view.getJtfGradeLevel().setText("");
         ((DefaultTableModel)view.getJtblSchedule().getModel()).setRowCount(0);
-        ((DefaultTableModel)view.getJtblMonday().getModel()).setRowCount(0);
-        ((DefaultTableModel)view.getJtblTuesday().getModel()).setRowCount(0);
-        ((DefaultTableModel)view.getJtblWednesday().getModel()).setRowCount(0);
-        ((DefaultTableModel)view.getJtblThursday().getModel()).setRowCount(0);
-        ((DefaultTableModel)view.getJtblFriday().getModel()).setRowCount(0);
+        ((DefaultTableModel)view.getJtblScheduleSummary().getModel()).setRowCount(0);
     }
 }

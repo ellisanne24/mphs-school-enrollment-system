@@ -1,60 +1,54 @@
 package model.schedule;
 
-import java.util.ArrayList;
 import model.faculty.Faculty;
+import model.gradelevel.GradeLevel;
+import model.room.Room;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.subject.Subject;
 
 public class Schedule {
 
-    private int scheduleId;
+    private SchoolYear schoolYear;
+    private GradeLevel gradeLevel;
+    private Section section;
+    private Room room;
+    private Faculty faculty;
+    private Subject subject;
     private String day;
-    private ArrayList<String> days;
     private int startTime;
     private int endTime;
-    private String roomName;
-    private Faculty faculty;
-    private String sectionName;
-    private int schoolYearId;
-    private String subjectCode;
-    private int gradeLevelId;
 
-    public int getGradeLevelId() {
-        return gradeLevelId;
+    public SchoolYear getSchoolYear() {
+        return schoolYear;
     }
 
-    public void setGradeLevelId(int gradeLevelId) {
-        this.gradeLevelId = gradeLevelId;
+    public void setSchoolYear(SchoolYear schoolYear) {
+        this.schoolYear = schoolYear;
     }
 
-    public String getDay() {
-        return day;
+    public GradeLevel getGradeLevel() {
+        return gradeLevel;
     }
 
-    public void setDay(String day) {
-        this.day = day;
-    }
-    
-    public String getSubjectCode() {
-        return subjectCode;
+    public void setGradeLevel(GradeLevel gradeLevel) {
+        this.gradeLevel = gradeLevel;
     }
 
-    public void setSubjectCode(String subjectCode) {
-        this.subjectCode = subjectCode;
+    public Section getSection() {
+        return section;
     }
 
-    public int getSchoolYearId() {
-        return schoolYearId;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
-    public void setSchoolYearId(int schoolYearId) {
-        this.schoolYearId = schoolYearId;
+    public Room getRoom() {
+        return room;
     }
 
-    public String getSectionName() {
-        return sectionName;
-    }
-
-    public void setSectionName(String sectionName) {
-        this.sectionName = sectionName;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public Faculty getFaculty() {
@@ -65,20 +59,20 @@ public class Schedule {
         this.faculty = faculty;
     }
 
-    public int getScheduleId() {
-        return scheduleId;
+    public Subject getSubject() {
+        return subject;
     }
 
-    public void setScheduleId(int scheduleId) {
-        this.scheduleId = scheduleId;
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
-    public ArrayList<String> getDays() {
-        return days;
+    public String getDay() {
+        return day;
     }
 
-    public void setDays(ArrayList<String> days) {
-        this.days = days;
+    public void setDay(String day) {
+        this.day = day;
     }
 
     public int getStartTime() {
@@ -96,13 +90,7 @@ public class Schedule {
     public void setEndTime(int endTime) {
         this.endTime = endTime;
     }
-
-    public String getRoomName() {
-        return roomName;
-    }
-
-    public void setRoomName(String roomId) {
-        this.roomName = roomId;
-    }
-
+    
+    
+    
 }

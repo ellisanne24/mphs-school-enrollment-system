@@ -20,11 +20,11 @@ public class ScheduleJCompModelLoader {
         for (Object o : scheduleList) {
             Schedule s = (Schedule) o;
             model.addRow(new Object[]{
-                s.getScheduleId(), s.getDay(), s.getStartTime(), s.getEndTime(), s.getSectionName(),
-                s.getSubjectCode(), s.getRoomName(),
-                s.getFaculty().getLastName() == null ? "None assigned" : s.getFaculty().getLastName()
-                + ", "
-                + s.getFaculty().getFirstName() == null ? "" :  s.getFaculty().getFirstName()
+//                s.getScheduleId(), s.getDay(), s.getStartTime(), s.getEndTime(), s.getSectionName(),
+//                s.getSubjectCode(), s.getRoomName(),
+//                s.getFaculty().getLastName() == null ? "None assigned" : s.getFaculty().getLastName()
+//                + ", "
+//                + s.getFaculty().getFirstName() == null ? "" :  s.getFaculty().getFirstName()
             });
         }
         return model;
@@ -37,8 +37,8 @@ public class ScheduleJCompModelLoader {
         for(Object o : scheduleList){
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
-                s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+//                s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
+//                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;
@@ -51,14 +51,14 @@ public class ScheduleJCompModelLoader {
         for(Object o : scheduleList){
             Schedule s = (Schedule)o;
             model.addRow(new Object[]{
-                s.getScheduleId(),
-                s.getDay(),
-                intToTimeFormat(s.getStartTime()),
-                intToTimeFormat(s.getEndTime()),
-                s.getSectionName(),
-                s.getSubjectCode(), 
-                s.getRoomName(),
-                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
+//                s.getScheduleId(),
+//                s.getDay(),
+//                intToTimeFormat(s.getStartTime()),
+//                intToTimeFormat(s.getEndTime()),
+//                s.getSectionName(),
+//                s.getSubjectCode(), 
+//                s.getRoomName(),
+//                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
             });
         }
         return model;

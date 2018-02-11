@@ -16,7 +16,7 @@ public interface ISchedule {
     
     boolean add(Schedule schedule);
 
-    boolean get(int gradeLevelId, int schoolYearId);
+    Schedule get(int gradeLevelId, int schoolYearId);
 
     List<Schedule> getAll();
 
