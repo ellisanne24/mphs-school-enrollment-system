@@ -188,7 +188,7 @@ public class CredentialDaoImpl implements ICredential{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setId(rs.getInt("gradelevel_id"));
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
                     gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     gradeLevelList.add(gradeLevel);
                 }

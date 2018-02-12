@@ -59,7 +59,7 @@ public class CreateSection implements ActionListener, FormValidator{
 
         GradeLevel gradeLevel = new GradeLevel();
         int level = Integer.parseInt(view.getJcmbGradeLevel().getSelectedItem().toString().trim());
-        gradeLevel.setId(gradeLevelDaoImpl.getId(level));
+        gradeLevel.setGradeLevelID(gradeLevelDaoImpl.getId(level));
         
         Section section = new Section();
         section.setSectionName(view.getJtfSectionName().getText().trim());

@@ -10,19 +10,8 @@ import model.schedule.Schedule;
  */
 public interface ISchedule {
     
-    List<Schedule> getBySectionId(int sectionId);
-    
     boolean add(List<Schedule> schedule);
-    
-    boolean add(Schedule schedule);
-
-    Schedule get(int gradeLevelId, int schoolYearId);
-
-    List<Schedule> getAll();
-
-    List<Schedule> getAll(int schoolYearId);
-    
-    List<Schedule> getAll(int subjectId , int schoolYearId);
-    
-    List<Schedule> getByFacultyId(int facultyId, int schoolYearId);
+    List<Schedule> getAllSchedulesBySchoolYearFacultyAndStatus(int schoolYearId, int facultyId, boolean isSchedActive);
+    List<Schedule> getSchedulesByWildCardSchoolYearIdAndStatus(String aWildCardChar, int schoolYearId, boolean isActive);
+    List<Schedule> getSchedulesByDaySchoolYearAndStatus(String day, int schoolyearId, boolean isActive);
 }

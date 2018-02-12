@@ -1,4 +1,3 @@
-
 package daoimpl;
 
 import dao.ISchedule;
@@ -12,94 +11,43 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import model.faculty.Faculty;
+import model.gradelevel.GradeLevel;
+import model.room.Room;
 import model.schedule.Schedule;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
 import model.subject.Subject;
 
+public class ScheduleDaoImpl implements ISchedule {
 
-public class ScheduleDaoImpl implements ISchedule{
+    SubjectDaoImpl subjectDaoImpl;
+    RoomDaoImpl roomDaoImpl;
+    SectionDaoImpl sectionDaoImpl;
 
-    SubjectDaoImpl subjectDaoImpl = new SubjectDaoImpl();
-    RoomDaoImpl roomDaoImpl = new RoomDaoImpl();
-    SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();
-
-    @Override
-    public List<Schedule> getBySectionId(int sectionId) {
-        List<Schedule> schedList = new ArrayList<>();
-        String SQL = "{CALL getScheduleBySectionId(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, sectionId);
-            try (ResultSet rs = cs.executeQuery();) {
-                while (rs.next()) {
-                    Schedule s = new Schedule();
-//                    s.setScheduleId(sectionId);
-//                    s.setDay(rs.getString("schedule_day"));
-//                    s.setStartTime(rs.getInt("startTime"));
-//                    s.setEndTime(rs.getInt("endTime"));
-//                    s.setSubjectCode(rs.getString("code"));
-//                    s.setRoomName(rs.getString("room_name_or_num"));
-                    schedList.add(s);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return schedList;
+    public ScheduleDaoImpl() {
+        subjectDaoImpl = new SubjectDaoImpl();
+        roomDaoImpl = new RoomDaoImpl();
+        sectionDaoImpl = new SectionDaoImpl();
     }
-    
-    @Override
-    public List<Schedule> getByFacultyId(int facultyId, int schoolYearId) {
-        List<Schedule> scheduleList = new ArrayList<>();
-        String SQL = "{CALL getScheduleByFacultyIdAndSchoolYearId(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,facultyId);
-            cs.setInt(2,schoolYearId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    Faculty faculty = new Faculty();
-                    faculty.setLastName(rs.getString("lastName"));
-                    faculty.setFirstName(rs.getString("firstName"));
-                    faculty.setMiddleName(rs.getString("middleName"));
-                    faculty.setFacultyID(rs.getInt("faculty_id"));
-                    
-                    Schedule s = new Schedule();
-//                    s.setScheduleId(rs.getInt("schedule_id"));
-//                    s.setDay(rs.getString("schedule_day"));
-//                    s.setStartTime(rs.getInt("startTime"));
-//                    s.setEndTime(rs.getInt("endTime"));
-//                    s.setRoomName(rs.getString("room_name_or_num"));
-//                    s.setSectionName(rs.getString("sectionName"));
-//                    s.setSubjectCode(rs.getString("title"));
-//                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
-//                    s.setFaculty(faculty);
-                    scheduleList.add(s);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return scheduleList;
-    }
-    
+
     @Override
     public boolean add(List<Schedule> scheduleList) {
         boolean isAdded = false;
         String SQL = "{CALL addSchedule(?,?,?,?,?,?,?,?,?,?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement csa = con.prepareCall(SQL);){
-                for(Schedule schedule : scheduleList){
-                    csa.setString(1,schedule.getDay());
-                    csa.setInt(2,schedule.getStartTime());
-                    csa.setInt(3,schedule.getEndTime());
-                    csa.setInt(4,schedule.getSchoolYear().getSchoolYearId());
-                    csa.setInt(5,schedule.getSubject().getSubjectId());
-                    csa.setInt(6,schedule.getSection().getSectionId());
-                    csa.setInt(7,schedule.getRoom().getRoomID());
-                    csa.setInt(8,schedule.getGradeLevel().getGradeLevelId());
-                    csa.setInt(9,schedule.getFaculty().getFacultyID());
-                    csa.setString(10,schedule.getSection().getSectionSession());
+            try (CallableStatement csa = con.prepareCall(SQL);) {
+                for (Schedule schedule : scheduleList) {
+                    csa.setString(1, schedule.getDay());
+                    csa.setInt(2, schedule.getStartTime());
+                    csa.setInt(3, schedule.getEndTime());
+                    csa.setInt(4, schedule.getSchoolYear().getSchoolYearId());
+                    csa.setInt(5, schedule.getSubject().getSubjectId());
+                    csa.setInt(6, schedule.getSection().getSectionId());
+                    csa.setInt(7, schedule.getRoom().getRoomID());
+                    csa.setInt(8, schedule.getGradeLevel().getGradeLevelId());
+                    csa.setInt(9, schedule.getFaculty().getFacultyID());
+                    csa.setString(10, schedule.getSection().getSectionSession());
                     csa.registerOutParameter(11, Types.INTEGER);
                     csa.executeUpdate();
                     int schedule_id = csa.getInt(11);
@@ -118,49 +66,66 @@ public class ScheduleDaoImpl implements ISchedule{
     }
 
     @Override
-    public boolean add(Schedule schedule) {
-        boolean isAdded = false;
-        return isAdded;
-    }
-
-    @Override
-    public Schedule get(int gradeLevelId, int schoolYearId) {
-        Schedule schedule = new Schedule();
-        return schedule;
-    }
-
-    @Override
-    public List<Schedule> getAll() {
+    public List<Schedule> getAllSchedulesBySchoolYearFacultyAndStatus(int schoolYearId, int facultyId, boolean isSchedActive) {
         List<Schedule> scheduleList = new ArrayList<>();
-        return scheduleList;
-    }
-
-    @Override
-    public List<Schedule> getAll(int schoolYearId) {
-        List<Schedule> scheduleList = new ArrayList<>();
-        String SQL = "{CALL getAllScheduleBySchoolYearId(?)}";
+        String SQL = "{CALL getAllSchedulesBySchoolYearFacultyAndStatus(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1,schoolYearId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+            cs.setInt(1, schoolYearId);
+            cs.setInt(2, facultyId);
+            cs.setInt(3, isSchedActive == true ? 1 : 0);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    SchoolYear schoolYear = new SchoolYear();
+                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    schoolYear.setIsCurrentSchoolYear(rs.getBoolean("isCurrentSchoolYear"));
+                    schoolYear.setIsActive(rs.getBoolean("isActive"));
+
+                    Subject subject = new Subject();
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectTitle(rs.getString("title"));
+                    subject.setSubjectCode(rs.getString("code"));
+
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+
+                    Room room = new Room();
+                    room.setRoomID(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setDescription(rs.getString("notes"));
+
+                    GradeLevel gradeLevel = new GradeLevel();
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
+
                     Faculty faculty = new Faculty();
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
                     faculty.setLastName(rs.getString("lastName"));
                     faculty.setFirstName(rs.getString("firstName"));
                     faculty.setMiddleName(rs.getString("middleName"));
-                    faculty.setFacultyID(rs.getInt("faculty_id"));
-                    
-                    Schedule s = new Schedule();
-//                    s.setScheduleId(rs.getInt("schedule_id"));
-//                    s.setDay(rs.getString("schedule_day"));
-//                    s.setStartTime(rs.getInt("startTime"));
-//                    s.setEndTime(rs.getInt("endTime"));
-//                    s.setRoomName(rs.getString("room_name_or_num"));
-//                    s.setSectionName(rs.getString("sectionName"));
-//                    s.setSubjectCode(rs.getString("title"));
-//                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
-//                    s.setFaculty(faculty);
-                    scheduleList.add(s);
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+
+                    Schedule schedule = new Schedule();
+                    schedule.setStartTime(rs.getInt("startTime"));
+                    schedule.setEndTime(rs.getInt("endTime"));
+                    schedule.setScheduleSession(rs.getString("schedule_session"));
+                    schedule.setDay(rs.getString("schedule_day"));
+                    schedule.setScheduleID(rs.getInt("schedule_id"));
+                    schedule.setIsActive(rs.getBoolean("schedule_status"));
+                    schedule.setSchoolYear(schoolYear);
+                    schedule.setSubject(subject);
+                    schedule.setSection(section);
+                    schedule.setRoom(room);
+                    schedule.setGradeLevel(gradeLevel);
+                    schedule.setFaculty(faculty);
+
+                    scheduleList.add(schedule);
                 }
             }
         } catch (SQLException e) {
@@ -170,32 +135,66 @@ public class ScheduleDaoImpl implements ISchedule{
     }
 
     @Override
-    public List<Schedule> getAll(int subjectId, int schoolYearId) {
+    public List<Schedule> getSchedulesByWildCardSchoolYearIdAndStatus(String aWildCardChar, int schoolYearId, boolean isActive) {
+        String SQL = "{CALL getSchedulesByWildCardSchoolYearIdAndStatus(?,?,?)}";
         List<Schedule> scheduleList = new ArrayList<>();
-        String SQL = "{CALL getAllScheduleBySubjectIdAndSchoolYearId(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1,subjectId);
-            cs.setInt(2,schoolYearId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+            cs.setString(1, aWildCardChar);
+            cs.setInt(2, schoolYearId);
+            cs.setInt(3, isActive == true ? 1 : 0);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    SchoolYear schoolYear = new SchoolYear();
+                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    schoolYear.setIsCurrentSchoolYear(rs.getBoolean("isCurrentSchoolYear"));
+                    schoolYear.setIsActive(rs.getBoolean("isActive"));
+
+                    Subject subject = new Subject();
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectTitle(rs.getString("title"));
+                    subject.setSubjectCode(rs.getString("code"));
+
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+
+                    Room room = new Room();
+                    room.setRoomID(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setDescription(rs.getString("notes"));
+
+                    GradeLevel gradeLevel = new GradeLevel();
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
+
                     Faculty faculty = new Faculty();
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
                     faculty.setLastName(rs.getString("lastName"));
                     faculty.setFirstName(rs.getString("firstName"));
                     faculty.setMiddleName(rs.getString("middleName"));
-                    faculty.setFacultyID(rs.getInt("faculty_id"));
-                    
-                    Schedule s = new Schedule();
-//                    s.setScheduleId(rs.getInt("schedule_id"));
-//                    s.setDay(rs.getString("schedule_day"));
-//                    s.setStartTime(rs.getInt("startTime"));
-//                    s.setEndTime(rs.getInt("endTime"));
-//                    s.setRoomName(rs.getString("room_name_or_num"));
-//                    s.setSectionName(rs.getString("sectionName"));
-//                    s.setSubjectCode(rs.getString("title"));
-//                    s.setSchoolYearId(rs.getInt("schoolyear_id"));
-//                    s.setFaculty(faculty);
-                    scheduleList.add(s);
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+
+                    Schedule schedule = new Schedule();
+                    schedule.setStartTime(rs.getInt("startTime"));
+                    schedule.setEndTime(rs.getInt("endTime"));
+                    schedule.setScheduleSession(rs.getString("schedule_session"));
+                    schedule.setDay(rs.getString("schedule_day"));
+                    schedule.setScheduleID(rs.getInt("schedule_id"));
+                    schedule.setIsActive(rs.getBoolean("schedule_status"));
+                    schedule.setSchoolYear(schoolYear);
+                    schedule.setSubject(subject);
+                    schedule.setSection(section);
+                    schedule.setRoom(room);
+                    schedule.setGradeLevel(gradeLevel);
+                    schedule.setFaculty(faculty);
+
+                    scheduleList.add(schedule);
                 }
             }
         } catch (SQLException e) {
@@ -203,6 +202,74 @@ public class ScheduleDaoImpl implements ISchedule{
         }
         return scheduleList;
     }
-    
+
+    @Override
+    public List<Schedule> getSchedulesByDaySchoolYearAndStatus(String day, int schoolyearId, boolean isActive) {
+        String SQL = "{CALL getSchedulesByDaySchoolYearAndStatus(?,?,?)}";
+        List<Schedule> scheduleList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, day);
+            cs.setInt(2, schoolyearId);
+            cs.setInt(3, isActive == true ? 1 : 0);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    SchoolYear schoolYear = new SchoolYear();
+                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    schoolYear.setIsCurrentSchoolYear(rs.getBoolean("isCurrentSchoolYear"));
+                    schoolYear.setIsActive(rs.getBoolean("isActive"));
+
+                    Subject subject = new Subject();
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectTitle(rs.getString("title"));
+                    subject.setSubjectCode(rs.getString("code"));
+
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+
+                    Room room = new Room();
+                    room.setRoomID(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setDescription(rs.getString("notes"));
+
+                    GradeLevel gradeLevel = new GradeLevel();
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
+
+                    Faculty faculty = new Faculty();
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
+                    faculty.setLastName(rs.getString("lastName"));
+                    faculty.setFirstName(rs.getString("firstName"));
+                    faculty.setMiddleName(rs.getString("middleName"));
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+
+                    Schedule schedule = new Schedule();
+                    schedule.setStartTime(rs.getInt("startTime"));
+                    schedule.setEndTime(rs.getInt("endTime"));
+                    schedule.setScheduleSession(rs.getString("schedule_session"));
+                    schedule.setDay(rs.getString("schedule_day"));
+                    schedule.setScheduleID(rs.getInt("schedule_id"));
+                    schedule.setIsActive(rs.getBoolean("schedule_status"));
+                    schedule.setSchoolYear(schoolYear);
+                    schedule.setSubject(subject);
+                    schedule.setSection(section);
+                    schedule.setRoom(room);
+                    schedule.setGradeLevel(gradeLevel);
+                    schedule.setFaculty(faculty);
+
+                    scheduleList.add(schedule);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return scheduleList;
+    }
     
 }

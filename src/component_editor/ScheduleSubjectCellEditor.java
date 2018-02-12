@@ -50,7 +50,7 @@ public class ScheduleSubjectCellEditor extends DefaultCellEditor {
     private DefaultComboBoxModel getAllSubjectNames() {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setId(gradelevelId);
+        gradeLevel.setGradeLevelID(gradelevelId);
 
         List<Subject> list = subjectDaoImpl.getAllSubjectsByGradeLevelId(gradeLevel.getGradeLevelId());
         int subjectsCount = 0;

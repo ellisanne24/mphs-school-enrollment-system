@@ -65,7 +65,7 @@ public class CreateSubject implements ActionListener, FormValidator{
         int gradeLevelId = gradeLevelDaoImpl.getId(selectedGradeLevel);
         
         GradeLevel gradeLevel = new GradeLevel();
-        gradeLevel.setId(gradeLevelId);
+        gradeLevel.setGradeLevelID(gradeLevelId);
         
         SchoolYear schoolYearCreated = new SchoolYear();
         schoolYearCreated.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());

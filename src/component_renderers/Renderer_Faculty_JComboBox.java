@@ -29,7 +29,11 @@ public class Renderer_Faculty_JComboBox extends JLabel implements ListCellRender
             int facultyId = Integer.parseInt(value.toString());
             String valueToDisplay = getFacultyCompleteName(facultyId);
             this.setText(valueToDisplay);
-        }else {
+        }else if(value instanceof Faculty){
+            Faculty faculty = (Faculty) value;
+            this.setText(""+faculty.getLastName() +", "+faculty.getFirstName()+" "+faculty.getMiddleName());
+        }
+        else {
             this.setText("--");
         }
 

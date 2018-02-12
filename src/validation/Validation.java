@@ -37,7 +37,7 @@ public class Validation extends InputVerifier {
         if (input instanceof JTextField) {
             String tfCurriculumText = ((JTextField) input).getText();
             if (componentName.equals("tfCurriculumName")) {
-                gradeLevel.setId(gradeLevel.getGradeLevelId());
+                gradeLevel.setGradeLevelID(gradeLevel.getGradeLevelId());
                 schoolYear.getSchoolYearId();
 //                curriculum.setCurriculumTitle(tfCurriculumText);
 

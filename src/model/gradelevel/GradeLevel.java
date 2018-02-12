@@ -26,7 +26,7 @@ public class GradeLevel {
         return id;
     }
 
-    public void setId(int id) {
+    public void setGradeLevelID(int id) {
         this.id = id;
     }
 

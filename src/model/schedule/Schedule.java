@@ -9,6 +9,8 @@ import model.subject.Subject;
 
 public class Schedule {
 
+    private int scheduleID;
+    private String scheduleSession;
     private SchoolYear schoolYear;
     private GradeLevel gradeLevel;
     private Section section;
@@ -18,6 +20,33 @@ public class Schedule {
     private String day;
     private int startTime;
     private int endTime;
+    private boolean isActive;
+
+    public String getScheduleSession() {
+        return scheduleSession;
+    }
+
+    public void setScheduleSession(String scheduleSession) {
+        this.scheduleSession = scheduleSession;
+    }
+
+    
+    
+    public int getScheduleID() {
+        return scheduleID;
+    }
+
+    public void setScheduleID(int scheduleID) {
+        this.scheduleID = scheduleID;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 
     public SchoolYear getSchoolYear() {
         return schoolYear;

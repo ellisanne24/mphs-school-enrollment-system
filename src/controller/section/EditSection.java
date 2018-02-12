@@ -86,7 +86,7 @@ public class EditSection implements ActionListener, FormValidator{
         
         GradeLevel gradeLevel = new GradeLevel();
         int gradeLevelNo = Integer.parseInt(view.getJcmbGradeLevel().getSelectedItem().toString().trim());
-        gradeLevel.setId(gradeLevelDaoImpl.getId(gradeLevelNo));
+        gradeLevel.setGradeLevelID(gradeLevelDaoImpl.getId(gradeLevelNo));
 
         String selectedAdviser = StringUtil.removeAllNonNumeric(view.getJcmbAdviser().getSelectedItem().toString().trim());
         int adviserId = Integer.parseInt(StringUtil.removeWhiteSpaces(selectedAdviser));

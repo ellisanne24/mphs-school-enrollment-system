@@ -399,7 +399,7 @@ public class CredentialForm extends javax.swing.JPanel {
             GradeLevel gradeLevel = new GradeLevel();
             gradeLevel.setLevelNo(levelsList.get(index));
             int gradeLevelId = gradeLevelDaoImpl.getId(gradeLevel);
-            gradeLevel.setId(gradeLevelId);
+            gradeLevel.setGradeLevelID(gradeLevelId);
             gradeLevelList.add(gradeLevel);
             System.out.println("LevelId: " + gradeLevelId);
         }

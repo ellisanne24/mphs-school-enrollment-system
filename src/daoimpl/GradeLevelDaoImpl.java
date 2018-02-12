@@ -44,7 +44,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setId(rs.getInt("gradelevel_id"));
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
                     gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     gradeLevel.setIsActive(rs.getBoolean("isActive"));
                     gradeLevelList.add(gradeLevel);
@@ -65,7 +65,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setId(rs.getInt("gradelevel_id"));
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
                     gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     gradeLevel.setIsActive(rs.getBoolean("isActive"));
                     list.add(gradeLevel);
@@ -86,7 +86,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setId(rs.getInt("gradelevel_id"));
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
                     gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     gradeLevel.setIsActive(rs.getBoolean("isActive"));
                     list.add(gradeLevel);
@@ -125,7 +125,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
             cs.setInt(1, gradeLevelId);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                   gradeLevel.setId(rs.getInt("gradelevel_id"));
+                   gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
                    gradeLevel.setIsActive(rs.getBoolean("isActive"));
                 }

@@ -15,27 +15,41 @@ import model.subjectcategory.SubjectCategory;
  */
 public class FacultyJCompModelLoader {
 
+    private final FacultyDaoImpl facultyDaoImpl;
+    
+    public FacultyJCompModelLoader(){
+        facultyDaoImpl = new FacultyDaoImpl();
+    }
+    
     private Object[] columnNames() {
         return new Object[]{"Faculty Id", "Last Name", "First Name", "Middle Name", "Contact No", "Email Address", "Status"};
     }
-    
+
     public DefaultComboBoxModel getAllFacultyNamesWithNoAdvisory() {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
         List<Faculty> list = facultyDaoImpl.getAllFacultyWithNoAdvisory();
         for (Faculty f : list) {
             comboModel.addElement(f.getFacultyID());
         }
         return comboModel;
     }
-    
-    public DefaultComboBoxModel getAllFaculty(){
+
+    public DefaultComboBoxModel getAllFaculty() {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
         List<Faculty> list = facultyDaoImpl.getAllFaculty();
         for (Faculty f : list) {
             comboModel.addElement(f.getFacultyID());
         }
+        return comboModel;
+    }
+    
+    public DefaultComboBoxModel getAllFacultyByStatus(boolean isActive) {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Faculty> list = facultyDaoImpl.getAllFacultyByStatus(isActive);
+        for (Faculty f : list) {
+            comboModel.addElement(f);
+        }
+        comboModel.setSelectedItem(null);
         return comboModel;
     }
 
@@ -129,11 +143,9 @@ public class FacultyJCompModelLoader {
         Object[] columnObject = list.toArray();
         List<List<Object>> new2d = new ArrayList<List<Object>>(list.size());
         List<Object> newList = new ArrayList<Object>();
-
         for (Object object : columnObject) {
             newList = new ArrayList<Object>();
             Faculty faculty = (Faculty) object;
-
             newList.add(faculty.getFacultyID());
             newList.add(faculty.getLastName());
             newList.add(faculty.getFirstName());
@@ -145,18 +157,14 @@ public class FacultyJCompModelLoader {
             } else {
                 newList.add("Inactive");
             }
-
             new2d.add(newList);
         }
-
         for (int a = 0; a < new2d.size(); a++) {
             for (int b = 0; b < new2d.get(a).size(); b++) {
                 obj[a][b] = new2d.get(a).get(b);
             }
         }
-
         DefaultTableModel model = new DefaultTableModel(obj, columnNames());
-
         return model;
     }
 }

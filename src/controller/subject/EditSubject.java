@@ -72,7 +72,7 @@ public class EditSubject implements ActionListener {
         int level = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString());
         GradeLevel gradeLevel = new GradeLevel();
         gradeLevel.setLevelNo(level);
-        gradeLevel.setId(gradeLevelDaoImpl.getId(level));
+        gradeLevel.setGradeLevelID(gradeLevelDaoImpl.getId(level));
         
         subject.setGradeLevel(gradeLevel);
         

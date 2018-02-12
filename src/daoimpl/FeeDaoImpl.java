@@ -139,7 +139,7 @@ public class FeeDaoImpl implements IFee {
                     fc.setId(rs.getInt("fee_category_id"));
                     fc.setName(rs.getString("fee_category"));
 
-                    gl.setId(rs.getInt("gradelevel_id"));
+                    gl.setGradeLevelID(rs.getInt("gradelevel_id"));
                     gl.setLevelNo(rs.getInt("grade_level"));
                     sy.setYearFrom(rs.getInt("year_created"));
 
@@ -582,7 +582,7 @@ public class FeeDaoImpl implements IFee {
                 while(rs.next()){
                     GradeLevel g = new GradeLevel();
                     g.setLevelNo(rs.getInt("grade_level"));
-                    g.setId(rs.getInt("gradelevel_id"));
+                    g.setGradeLevelID(rs.getInt("gradelevel_id"));
                     g.setIsActive(rs.getBoolean("isActive"));
                     gradeLevelList.add(g);
                 }

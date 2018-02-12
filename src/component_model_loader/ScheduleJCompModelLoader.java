@@ -2,66 +2,75 @@
 package component_model_loader;
 
 import daoimpl.ScheduleDaoImpl;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import model.faculty.Faculty;
 import model.schedule.Schedule;
-import utility.component.TableUtility;
+import model.schoolyear.SchoolYear;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
 public class ScheduleJCompModelLoader {
-    ScheduleDaoImpl scheduleDaoImpl = new ScheduleDaoImpl();
-    public DefaultTableModel getAllBySchoolYearId(int aSchoolYearId, JTable jtable){
-        DefaultTableModel model = (DefaultTableModel) jtable.getModel();
-        model.setRowCount(0);
-        Object[] scheduleList = scheduleDaoImpl.getAll(aSchoolYearId).toArray();
-        for (Object o : scheduleList) {
-            Schedule s = (Schedule) o;
-            model.addRow(new Object[]{
-//                s.getScheduleId(), s.getDay(), s.getStartTime(), s.getEndTime(), s.getSectionName(),
-//                s.getSubjectCode(), s.getRoomName(),
-//                s.getFaculty().getLastName() == null ? "None assigned" : s.getFaculty().getLastName()
-//                + ", "
-//                + s.getFaculty().getFirstName() == null ? "" :  s.getFaculty().getFirstName()
-            });
-        }
-        return model;
+    
+    private ScheduleDaoImpl scheduleDaoImpl;
+    
+    public ScheduleJCompModelLoader(){
+        scheduleDaoImpl = new ScheduleDaoImpl();
     }
     
-    public DefaultTableModel getAll(int aSubjectId, int aSchoolYearId, JTable jtable){
-        DefaultTableModel model = (DefaultTableModel) jtable.getModel();
-        model.setRowCount(0);
-        Object[] scheduleList = scheduleDaoImpl.getAll(aSubjectId, aSchoolYearId).toArray();
-        for(Object o : scheduleList){
-            Schedule s = (Schedule)o;
-            model.addRow(new Object[]{
-//                s.getScheduleId(),s.getDay(),s.getStartTime(),s.getEndTime(),s.getSectionName(),
-//                s.getSubjectCode(), s.getRoomName(),s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
-            });
+    public DefaultTableModel getAllSchedulesBySchoolYearFacultyAndStatus(JTable table, SchoolYear schoolYear, Faculty faculty,boolean isActive){
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        tableModel.setRowCount(0);
+        int schoolYearId = schoolYear.getSchoolYearId();
+        int facultyId = faculty.getFacultyID();
+        List<Schedule> schedList = scheduleDaoImpl.getAllSchedulesBySchoolYearFacultyAndStatus(schoolYearId, facultyId, isActive);
+        for(Schedule s : schedList){
+            Object[] rowData = {
+                s.getScheduleID(),s.getDay(),intToTimeFormat(s.getStartTime()), intToTimeFormat(s.getEndTime()),
+                s.getSection().getSectionName(),s.getSubject().getSubjectCode(),s.getRoom().getRoomName(),
+                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()+" "+ s.getFaculty().getMiddleName(),
+                s.getScheduleSession()
+            };
+            tableModel.addRow(rowData);
         }
-        return model;
+        return tableModel;
     }
     
-    public DefaultTableModel getByFacultyId(int aFacultyId, int aSchoolYearId, JTable jtable){
-        DefaultTableModel model = (DefaultTableModel) jtable.getModel();
-        model.setRowCount(0);
-        Object[] scheduleList = scheduleDaoImpl.getByFacultyId(aFacultyId, aSchoolYearId).toArray();
-        for(Object o : scheduleList){
-            Schedule s = (Schedule)o;
-            model.addRow(new Object[]{
-//                s.getScheduleId(),
-//                s.getDay(),
-//                intToTimeFormat(s.getStartTime()),
-//                intToTimeFormat(s.getEndTime()),
-//                s.getSectionName(),
-//                s.getSubjectCode(), 
-//                s.getRoomName(),
-//                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()
-            });
+    public DefaultTableModel getSchedulesByWildCardSchoolYearIdAndStatus(JTable table, SchoolYear schoolYear, String searchKeyword,boolean isActive){
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        tableModel.setRowCount(0);
+        int schoolYearId = schoolYear.getSchoolYearId();
+        List<Schedule> scheduleList = scheduleDaoImpl.getSchedulesByWildCardSchoolYearIdAndStatus(searchKeyword, schoolYearId, isActive);
+        for(Schedule s : scheduleList){
+            Object[] rowData = {
+                s.getScheduleID(),s.getDay(),intToTimeFormat(s.getStartTime()), intToTimeFormat(s.getEndTime()),
+                s.getSection().getSectionName(),s.getSubject().getSubjectCode(),s.getRoom().getRoomName(),
+                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()+" "+ s.getFaculty().getMiddleName(),
+                s.getScheduleSession()
+            };
+            tableModel.addRow(rowData);
         }
-        return model;
+        return tableModel;
+    }
+    
+    public DefaultTableModel getSchedulesByDaySchoolYearAndStatus(JTable table, SchoolYear schoolYear, String day,boolean isActive){
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        tableModel.setRowCount(0);
+        int schoolYearId = schoolYear.getSchoolYearId();
+        List<Schedule> scheduleList = scheduleDaoImpl.getSchedulesByDaySchoolYearAndStatus(day, schoolYearId, isActive);
+        for(Schedule s : scheduleList){
+            Object[] rowData = {
+                s.getScheduleID(),s.getDay(),intToTimeFormat(s.getStartTime()), intToTimeFormat(s.getEndTime()),
+                s.getSection().getSectionName(),s.getSubject().getSubjectCode(),s.getRoom().getRoomName(),
+                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()+" "+ s.getFaculty().getMiddleName(),
+                s.getScheduleSession()
+            };
+            tableModel.addRow(rowData);
+        }
+        return tableModel;
     }
     
     private String intToTimeFormat(int time) {

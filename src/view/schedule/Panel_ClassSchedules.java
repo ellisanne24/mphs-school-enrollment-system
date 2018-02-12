@@ -2,9 +2,20 @@ package view.schedule;
 
 import component_model_loader.FacultyJCompModelLoader;
 import component_model_loader.SchoolYearJCompModelLoader;
+import component_renderers.Renderer_Faculty_JComboBox;
 import component_renderers.Renderer_SchoolYear_JComboBox;
 import controller.schedule.ActionListener_Schedule_Display_Create_Dialog_JButton;
+import controller.schedule.ItemListener_ScheduleMasterList_Day_JComboBox;
+import controller.schedule.ItemListener_ScheduleMasterRecord_Faculty_JComboBox;
+import controller.schedule.KeyListener_ScheduleMasterList_SearchBox_JTextField;
 import daoimpl.SchoolYearDaoImpl;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import utility.initializer.Initializer;
 
 
@@ -37,6 +48,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
     @Override
     public void initRenderers() {
         jcmbSchoolYear.setRenderer(new Renderer_SchoolYear_JComboBox());
+        jcmbFaculty.setRenderer(new Renderer_Faculty_JComboBox());
     }
 
     @Override
@@ -46,17 +58,91 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
     @Override
     public void initViewComponents() {
         jcmbSchoolYear.setModel(schoolYearJCompModelLoader.getCurrentSchoolYear());
+        jcmbFaculty.setModel(facultyJCompModelLoader.getAllFacultyByStatus(true));
+        jtfSearch.addKeyListener(new KeyListener_ScheduleMasterList_SearchBox_JTextField(this));
     }
 
     @Override
     public void initControllers() {
         jbtnCreate.addActionListener(new ActionListener_Schedule_Display_Create_Dialog_JButton());
+        jcmbFaculty.addItemListener(new ItemListener_ScheduleMasterRecord_Faculty_JComboBox(this));
+        jcmbDay.addItemListener(new ItemListener_ScheduleMasterList_Day_JComboBox(this));
     }
 
     @Override
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
+
+    public JComboBox<String> getJcmbDay() {
+        return jcmbDay;
+    }
+    
+    public JScrollPane getjScrollPane1() {
+        return jScrollPane1;
+    }
+
+    public JButton getJbtnCreate() {
+        return jbtnCreate;
+    }
+
+    public JButton getJbtnDelete() {
+        return jbtnDelete;
+    }
+
+    public JButton getJbtnEdit() {
+        return jbtnEdit;
+    }
+
+    public JButton getJbtnPrint() {
+        return jbtnPrint;
+    }
+
+    public JTable getJtblScheduleMasterList() {
+        return jtblScheduleMasterList;
+    }
+
+    public JButton getJbtnSearch() {
+        return jbtnSearch;
+    }
+
+    public JButton getJbtnView() {
+        return jbtnView;
+    }
+
+    public JComboBox<String> getJcmbFaculty() {
+        return jcmbFaculty;
+    }
+
+    public JComboBox<String> getJcmbSchoolYear() {
+        return jcmbSchoolYear;
+    }
+
+    public JPanel getJpnlControls() {
+        return jpnlControls;
+    }
+
+    public JTextField getJtfSearch() {
+        return jtfSearch;
+    }
+
+    public JLabel getLbl_sy() {
+        return lbl_sy;
+    }
+
+    public JLabel getLbl_sy1() {
+        return lbl_sy1;
+    }
+
+    public JPanel getPanel_masterrecord() {
+        return panel_masterrecord;
+    }
+
+    public JPanel getPanel_toppanel() {
+        return panel_toppanel;
+    }
+    
+    
     
     
     @SuppressWarnings("unchecked")
@@ -77,9 +163,11 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         jcmbSchoolYear = new javax.swing.JComboBox<>();
         lbl_sy1 = new javax.swing.JLabel();
         jcmbFaculty = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jcmbDay = new javax.swing.JComboBox<>();
         panel_masterrecord = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jbtnScheduleMasterList = new javax.swing.JTable();
+        jtblScheduleMasterList = new javax.swing.JTable();
 
         setMinimumSize(new java.awt.Dimension(1200, 600));
         setLayout(new java.awt.GridBagLayout());
@@ -141,7 +229,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 40, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jtfSearch, gridBagConstraints);
 
         jbtnSearch.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -187,6 +275,17 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 10);
         jpnlControls.add(jcmbFaculty, gridBagConstraints);
 
+        jLabel1.setText("Day :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlControls.add(jLabel1, gridBagConstraints);
+
+        jcmbDay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "T", "W", "TH", "F" }));
+        jcmbDay.setSelectedIndex(-1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlControls.add(jcmbDay, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -202,19 +301,29 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 530));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
 
-        jbtnScheduleMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jbtnScheduleMasterList.setModel(new javax.swing.table.DefaultTableModel(
+        jtblScheduleMasterList.setAutoCreateRowSorter(true);
+        jtblScheduleMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblScheduleMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
                 "ID", "Day", "Start Time", "End Time", "Section", "Subject", "Room", "Faculty", "Session"
             }
-        ));
-        jbtnScheduleMasterList.setMinimumSize(new java.awt.Dimension(1185, 530));
-        jbtnScheduleMasterList.setPreferredSize(new java.awt.Dimension(1185, 530));
-        jbtnScheduleMasterList.setRowHeight(20);
-        jScrollPane1.setViewportView(jbtnScheduleMasterList);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jtblScheduleMasterList.setMinimumSize(new java.awt.Dimension(1185, 530));
+        jtblScheduleMasterList.setPreferredSize(new java.awt.Dimension(1185, 530));
+        jtblScheduleMasterList.setRowHeight(20);
+        jtblScheduleMasterList.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jtblScheduleMasterList);
 
         panel_masterrecord.add(jScrollPane1, new java.awt.GridBagConstraints());
 
@@ -231,17 +340,19 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtnCreate;
     private javax.swing.JButton jbtnDelete;
     private javax.swing.JButton jbtnEdit;
     private javax.swing.JButton jbtnPrint;
-    private javax.swing.JTable jbtnScheduleMasterList;
     private javax.swing.JButton jbtnSearch;
     private javax.swing.JButton jbtnView;
+    private javax.swing.JComboBox<String> jcmbDay;
     private javax.swing.JComboBox<String> jcmbFaculty;
     private javax.swing.JComboBox<String> jcmbSchoolYear;
     private javax.swing.JPanel jpnlControls;
+    private javax.swing.JTable jtblScheduleMasterList;
     private javax.swing.JTextField jtfSearch;
     private javax.swing.JLabel lbl_sy;
     private javax.swing.JLabel lbl_sy1;
