@@ -44,7 +44,7 @@ public class SectionDaoImpl implements ISection {
 
                 csb.setInt(1, sectionId);
                 csb.setInt(2, section.getSchoolYear().getSchoolYearId());
-                csb.setInt(3, section.getGradeLevel().getId());
+                csb.setInt(3, section.getGradeLevel().getGradeLevelId());
                 csb.setString(4, section.getSectionSession());
                 csb.setInt(5, section.getAdviser().getFacultyID());
                 csb.setInt(6, section.getCapacity());
@@ -111,7 +111,7 @@ public class SectionDaoImpl implements ISection {
                 
                 csb.setInt(1, section.getSectionId());
                 csb.setInt(2, section.getSchoolYear().getSchoolYearId());
-                csb.setInt(3, section.getGradeLevel().getId());
+                csb.setInt(3, section.getGradeLevel().getGradeLevelId());
                 csb.setString(4, section.getSectionSession().trim());
                 csb.setInt(5,section.getAdviser().getFacultyID());
                 csb.setInt(6, section.getCapacity());

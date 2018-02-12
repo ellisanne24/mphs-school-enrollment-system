@@ -11,11 +11,11 @@ import view.schedule.Dialog_CreateSchedule;
  *
  * @author Jordan
  */
-public class TableModel_Listener_ScheduleSheet_JTable implements TableModelListener{
+public class TableModelListener_ScheduleSheet_JTable implements TableModelListener{
 
     private final Dialog_CreateSchedule view;
     
-    public TableModel_Listener_ScheduleSheet_JTable(Dialog_CreateSchedule view){
+    public TableModelListener_ScheduleSheet_JTable(Dialog_CreateSchedule view){
         this.view = view;
     }
     

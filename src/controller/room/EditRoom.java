@@ -66,7 +66,7 @@ public class EditRoom implements ActionListener {
     private boolean updateSubject(){
         boolean isUpdated = false;
         Room room = new Room(); 
-        room.setRoom_id(roomIdOfSelected);        
+        room.setRoomID(roomIdOfSelected);        
         room.setRoomName(jtfRoomName.getText().trim());
         room.setBuildingName(jtfBldgName.getText().trim());
         room.setCapacity(jtfCapacity.getText().trim());

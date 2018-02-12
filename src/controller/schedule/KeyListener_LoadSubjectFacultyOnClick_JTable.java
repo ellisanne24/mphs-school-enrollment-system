@@ -11,7 +11,7 @@ import javax.swing.table.TableColumn;
  *
  * @author Jordan
  */
-public class ScheduleTableLoadSubjectFacultyOnClick implements MouseListener{
+public class KeyListener_LoadSubjectFacultyOnClick_JTable implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {

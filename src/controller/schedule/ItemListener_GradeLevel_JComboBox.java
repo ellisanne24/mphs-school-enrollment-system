@@ -18,7 +18,7 @@ import view.schedule.Dialog_CreateSchedule;
  *
  * @author John Ferdinand Antonio
  */
-public class GradeLevelStateChangeController implements ItemListener {
+public class ItemListener_GradeLevel_JComboBox implements ItemListener {
 
     private SubjectDaoImpl subjectDaoImpl;
     private SectionJCompModelLoader sectionJCompModelLoader;
@@ -31,7 +31,7 @@ public class GradeLevelStateChangeController implements ItemListener {
     private final JComboBox jcmbRoom;
     private final JComboBox jcmbSchoolYear;
 
-    public GradeLevelStateChangeController(Dialog_CreateSchedule view) {
+    public ItemListener_GradeLevel_JComboBox(Dialog_CreateSchedule view) {
         this.view = view;
         this.jcmbGradeLevel = view.getJcmbGradeLevel();
         this.jcmbSections = view.getJcmbSection();
@@ -51,13 +51,13 @@ public class GradeLevelStateChangeController implements ItemListener {
             resetForm();
             loadSectionsByGradeLevel();
             loadSubjectsByGradeLevel();
-//            loadGradeLevelToScheduleHeader();
+            loadGradeLevelToScheduleHeader();
         }
     }
 
     private void loadSectionsByGradeLevel() {
         GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
-        int gradeLevelId = gradeLevel.getId();
+        int gradeLevelId = gradeLevel.getGradeLevelId();
         int schoolYearId = Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString().trim());
         jcmbSections.setModel(sectionJCompModelLoader.getSectionsWithoutSchedule(true, schoolYearId, gradeLevelId));
     }
@@ -65,7 +65,7 @@ public class GradeLevelStateChangeController implements ItemListener {
     private void loadSubjectsByGradeLevel() {
         GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
         TableColumn subjectColumn = jtblSchedule.getColumnModel().getColumn(3);
-        subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule, gradeLevel.getId()));
+        subjectColumn.setCellEditor(new ScheduleSubjectCellEditor(jtblSchedule, gradeLevel.getGradeLevelId()));
     }
     
     private void loadGradeLevelToScheduleHeader() {

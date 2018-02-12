@@ -173,7 +173,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
     public boolean deactivateGradeLevel(GradeLevel gradelevel) {
         boolean isDeactivated = false;
         String SQL = "{CALL deactivateGradeLevel(?)}";
-        int gradeLevelId = gradelevel.getId();
+        int gradeLevelId = gradelevel.getGradeLevelId();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             cs.setInt(1, gradeLevelId);
@@ -211,7 +211,7 @@ public class GradeLevelDaoImpl implements IGradeLevel{
         try(Connection con = DBUtil.getConnection(DBType.MYSQL);
             CallableStatement cs = con.prepareCall(sql);)
         {
-            cs.setInt(1, aGradeLevel.getId());
+            cs.setInt(1, aGradeLevel.getGradeLevelId());
             
             try(ResultSet rs = cs.executeQuery())
             {

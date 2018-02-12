@@ -39,7 +39,12 @@ public class Renderer_SchoolYear_JComboBox extends JLabel implements ListCellRen
         if (value instanceof Integer) {
             Object valueToDisplay = getValueToDisplay(Integer.parseInt(value.toString().trim()));
             this.setText(String.valueOf(valueToDisplay));
-        }else{
+        }
+        else if(value instanceof SchoolYear){
+            SchoolYear schoolYear = (SchoolYear) value;
+            this.setText(schoolYear.getYearFrom()+"-"+schoolYear.getYearTo());
+        }
+            else{
             this.setText("Select");
         }
 

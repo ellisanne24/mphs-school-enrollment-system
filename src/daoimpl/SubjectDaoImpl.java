@@ -222,7 +222,7 @@ public class SubjectDaoImpl implements ISubject {
             cs.setString(2, subject.getSubjectTitle());
             cs.setString(3, subject.getSubjectDescription());
             cs.registerOutParameter(4, java.sql.Types.INTEGER);
-            cs.setInt(5, subject.getGradeLevel().getId());
+            cs.setInt(5, subject.getGradeLevel().getGradeLevelId());
             cs.setInt(6,subject.getSchoolYearCreated().getSchoolYearId());
             cs.executeUpdate();
             subject.setSubjectId(cs.getInt(4));
@@ -252,7 +252,7 @@ public class SubjectDaoImpl implements ISubject {
                 csA.executeUpdate();
 
                 csB.setInt(1, aSubject.getSubjectId());
-                csB.setInt(2, aSubject.getGradeLevel().getId());
+                csB.setInt(2, aSubject.getGradeLevel().getGradeLevelId());
                 csB.executeUpdate();
 
                 con.commit();
@@ -322,7 +322,7 @@ public class SubjectDaoImpl implements ISubject {
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(sql);) {
             cs.setInt(1, aSubject.getSubjectId());
-            cs.setInt(2, aGradeLevel.getId());
+            cs.setInt(2, aGradeLevel.getGradeLevelId());
             cs.setString(3, aSubject.getSubjectCode());
             cs.setString(4, aSubject.getSubjectTitle());
             cs.setString(5, aSubject.getSubjectDescription());
@@ -397,7 +397,7 @@ public class SubjectDaoImpl implements ISubject {
                 CallableStatement cs = con.prepareCall(sql);) {
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
             cs.setInt(2, aGradeLevel.getLevelNo());
-            cs.setInt(3, aGradeLevel.getId());
+            cs.setInt(3, aGradeLevel.getGradeLevelId());
             cs.setString(4, aSubject.getSubjectCode());
             cs.setString(5, aSubject.getSubjectTitle());
             cs.setString(6, aSubject.getSubjectDescription());
@@ -420,7 +420,7 @@ public class SubjectDaoImpl implements ISubject {
         List<Subject> listSubject = new ArrayList();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(sql);) {
-            cs.setInt(1, aGradeLevel.getId());
+            cs.setInt(1, aGradeLevel.getGradeLevelId());
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
                     Subject aSubject = new Subject();

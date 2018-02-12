@@ -14,7 +14,7 @@ import view.schedule.Dialog_CreateSchedule;
  *
  * @author John Ferdinand Antonio
  */
-public class DisplayCreateController implements ActionListener{
+public class ActionListener_Schedule_Display_Create_Dialog_JButton implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {

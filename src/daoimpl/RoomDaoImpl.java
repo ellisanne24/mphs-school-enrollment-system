@@ -63,7 +63,7 @@ public class RoomDaoImpl implements IRoom {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Room room = new Room();
-                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomID(rs.getInt("room_id"));
                     room.setRoomName(rs.getString("room_name_or_num"));
                     room.setBuildingName(rs.getString("bldg_name_or_num"));
                     room.setCapacity(rs.getString("capacity"));
@@ -88,7 +88,7 @@ public class RoomDaoImpl implements IRoom {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Room room = new Room();
-                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomID(rs.getInt("room_id"));
                     room.setRoomName(rs.getString("room_name_or_num"));
                     room.setBuildingName(rs.getString("bldg_name_or_num"));
                     room.setCapacity(rs.getString("capacity"));
@@ -111,7 +111,7 @@ public class RoomDaoImpl implements IRoom {
 
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, aRoom.getRoom_id());
+            cs.setInt(1, aRoom.getRoomID());
             cs.setString(2, aRoom.getRoomName());
             cs.setString(3, aRoom.getBuildingName());
             cs.setString(4, aRoom.getCapacity());
@@ -137,7 +137,7 @@ public class RoomDaoImpl implements IRoom {
             cs.setInt(1, aRoomID);
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
-                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomID(rs.getInt("room_id"));
                     room.setRoomName(rs.getString("room_name_or_num"));
                     room.setBuildingName(rs.getString("bldg_name_or_num"));
                     room.setCapacity(rs.getString("capacity"));
@@ -184,7 +184,7 @@ public class RoomDaoImpl implements IRoom {
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     Room room = new Room();
-                    room.setRoom_id(rs.getInt("room_id"));
+                    room.setRoomID(rs.getInt("room_id"));
                     room.setRoomName(rs.getString("room_name_or_num"));
                     room.setBuildingName(rs.getString("bldg_name_or_num"));
                     room.setCapacity(rs.getString("capacity"));

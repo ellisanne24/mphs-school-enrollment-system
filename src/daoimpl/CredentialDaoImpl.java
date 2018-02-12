@@ -86,7 +86,7 @@ public class CredentialDaoImpl implements ICredential{
                 Integer aCredentialId = csa.getInt(3);// credential_id returned after adding credential by csa
                 
                 for (int index=0; index<countOfGradeLevels; index++ ) {
-                    Integer aGradeLevelId = aCredential.getGradeLevelsAssigned().get(index).getId();
+                    Integer aGradeLevelId = aCredential.getGradeLevelsAssigned().get(index).getGradeLevelId();
                     csb.setInt(1, aCredentialId);
                     csb.setInt(2, aGradeLevelId);
 //                    JOptionPane.showMessageDialog(null,"GradeLevelId: "+aGradeLevelId);

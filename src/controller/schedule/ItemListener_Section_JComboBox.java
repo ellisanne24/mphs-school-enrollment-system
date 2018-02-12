@@ -17,7 +17,7 @@ import view.schedule.Dialog_CreateSchedule;
  *
  * @author John Ferdinand Antonio
  */
-public class SectionStateChange implements ItemListener {
+public class ItemListener_Section_JComboBox implements ItemListener {
 
     private SectionDaoImpl sectionDaoImpl;
     private Section section;
@@ -26,7 +26,7 @@ public class SectionStateChange implements ItemListener {
     private final JComboBox jcmbSections;
     private final JTable jtblSchedule;
 
-    public SectionStateChange(Dialog_CreateSchedule view) {
+    public ItemListener_Section_JComboBox(Dialog_CreateSchedule view) {
         sectionDaoImpl = new SectionDaoImpl();
         this.view = view;
         this.jtblSchedule = view.getJtblSchedule();

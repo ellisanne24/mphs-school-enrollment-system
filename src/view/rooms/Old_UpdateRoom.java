@@ -184,7 +184,7 @@ public class Old_UpdateRoom extends javax.swing.JDialog {
         
         Room room = new Room();
         
-        room.setRoom_id(roomID);
+        room.setRoomID(roomID);
         room.setRoomName(roomName);
         room.setBuildingName(buildingName);
         room.setCapacity(capacity);

@@ -22,7 +22,7 @@ public class GradeLevel {
         this.credentialRequirements = credentialRequirements;
     }
     
-    public int getId() {
+    public int getGradeLevelId() {
         return id;
     }
 

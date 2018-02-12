@@ -85,4 +85,11 @@ public class SchoolYearJCompModelLoader {
         comboModel.addElement(schoolYear.getSchoolYearId());
         return comboModel;
     }
+    
+    public DefaultComboBoxModel getCurrentSchoolYear() {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+        comboModel.addElement(schoolYear);
+        return comboModel;
+    }
 }

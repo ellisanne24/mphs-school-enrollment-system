@@ -13,12 +13,12 @@ import view.schedule.Dialog_CreateSchedule;
  *
  * @author John Ferdinand Antonio
  */
-public class ClearScheduleFormController implements ActionListener{
+public class ActionListener_ClearForm_JButton implements ActionListener{
 
     private final Dialog_CreateSchedule view;
     private final JTable jtblSchedule;
     
-    public ClearScheduleFormController(Dialog_CreateSchedule view){
+    public ActionListener_ClearForm_JButton(Dialog_CreateSchedule view){
         this.view = view;
         this.jtblSchedule = view.getJtblSchedule();
     }

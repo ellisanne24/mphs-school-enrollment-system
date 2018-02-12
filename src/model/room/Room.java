@@ -11,11 +11,11 @@ public class Room {
     private String dateCreated;
     private String description;
 
-    public int getRoom_id() {
+    public int getRoomID() {
         return room_id;
     }
 
-    public void setRoom_id(int room_id) {
+    public void setRoomID(int room_id) {
         this.room_id = room_id;
     }
 

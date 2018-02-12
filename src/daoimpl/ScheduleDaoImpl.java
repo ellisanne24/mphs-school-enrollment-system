@@ -85,43 +85,33 @@ public class ScheduleDaoImpl implements ISchedule{
     @Override
     public boolean add(List<Schedule> scheduleList) {
         boolean isAdded = false;
-        String SQLa = "{CALL addSchedule(?,?,?,?,?,?,?,?,?)}";
-        String SQLb = "{CALL addScheduleToFaculty(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+        String SQL = "{CALL addSchedule(?,?,?,?,?,?,?,?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
             con.setAutoCommit(false);
-
-            try (CallableStatement csa = con.prepareCall(SQLa);
-                    CallableStatement csb = con.prepareCall(SQLb);) {
-                for (Schedule schedule : scheduleList) {
-                    Schedule s = (Schedule) schedule;
-//                    csa.setString(1, s.getDay());
-//                    csa.setInt(2, s.getStartTime());
-//                    csa.setInt(3, s.getEndTime());
-//                    csa.setInt(4, s.getSchoolYearId());
-
-                    Subject subject = new Subject();
-//                    subject.setSubjectCode(s.getSubjectCode());
-                    csa.setInt(5, subjectDaoImpl.getSubjectId(subject));
-
-//                    csa.setInt(6, sectionDaoImpl.getSectionIdByName(s.getSectionName().trim()));
-//                    csa.setInt(7, roomDaoImpl.getRoomId(s.getRoomName().trim()));
-//                    csa.setInt(8, s.getGradeLevelId());
-                    csa.registerOutParameter(9, Types.INTEGER);
+            try (CallableStatement csa = con.prepareCall(SQL);){
+                for(Schedule schedule : scheduleList){
+                    csa.setString(1,schedule.getDay());
+                    csa.setInt(2,schedule.getStartTime());
+                    csa.setInt(3,schedule.getEndTime());
+                    csa.setInt(4,schedule.getSchoolYear().getSchoolYearId());
+                    csa.setInt(5,schedule.getSubject().getSubjectId());
+                    csa.setInt(6,schedule.getSection().getSectionId());
+                    csa.setInt(7,schedule.getRoom().getRoomID());
+                    csa.setInt(8,schedule.getGradeLevel().getGradeLevelId());
+                    csa.setInt(9,schedule.getFaculty().getFacultyID());
+                    csa.setString(10,schedule.getSection().getSectionSession());
+                    csa.registerOutParameter(11, Types.INTEGER);
                     csa.executeUpdate();
-                    int scheduleId = csa.getInt(9);
-
-//                    csb.setInt(1, s.getFaculty().getFacultyID());
-                    csb.setInt(2, scheduleId);
-                    csb.executeUpdate();
+                    int schedule_id = csa.getInt(11);
                 }
                 con.commit();
                 isAdded = true;
             } catch (SQLException e) {
                 con.rollback();
+                con.setAutoCommit(true);
                 e.printStackTrace();
             }
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return isAdded;

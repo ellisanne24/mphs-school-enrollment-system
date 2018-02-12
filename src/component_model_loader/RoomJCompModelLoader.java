@@ -27,7 +27,7 @@ public class RoomJCompModelLoader {
         for (Object o : roomList) {
             Room r = (Room) o;
             Object[] rowData = {
-                r.getRoom_id(),
+                r.getRoomID(),
                 r.getRoomName(),
                 r.getBuildingName(),
                 r.getCapacity(),
@@ -46,7 +46,7 @@ public class RoomJCompModelLoader {
         List<Room> roomList = roomDaoImpl.getAllActiveRooms();
         for (Room r : roomList) {
             Object[] rowData = {
-                r.getRoom_id(),
+                r.getRoomID(),
                 r.getRoomName(),
                 r.getBuildingName(),
                 r.getCapacity(),
@@ -73,7 +73,7 @@ public class RoomJCompModelLoader {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<Room> roomList = roomDaoImpl.getAllActiveRooms();
         for (Room r : roomList) {
-            comboModel.addElement(r.getRoom_id());
+            comboModel.addElement(r.getRoomID());
         }
         comboModel.setSelectedItem(null);
         return comboModel;
@@ -86,7 +86,7 @@ public class RoomJCompModelLoader {
         for (Object o : roomList) {
             Room r = (Room) o;
             Object[] rowData = {
-                r.getRoom_id(),
+                r.getRoomID(),
                 r.getRoomName(),
                 r.getBuildingName(),
                 r.getCapacity(),

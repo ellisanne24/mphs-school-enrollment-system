@@ -12,7 +12,7 @@ import view.schedule.Dialog_CreateSchedule;
  *
  * @author John Ferdinand Antonio
  */
-public class DayCheckBoxStateChange implements ActionListener {
+public class ActionListener_Day_JCheckBox implements ActionListener {
 
     private final Dialog_CreateSchedule view;
     private final JCheckBox jcbMonday;
@@ -23,7 +23,7 @@ public class DayCheckBoxStateChange implements ActionListener {
     private final JCheckBox jcbDayMonWedFri;
     private final JTable jtblSchedule;
 
-    public DayCheckBoxStateChange(Dialog_CreateSchedule view) {
+    public ActionListener_Day_JCheckBox(Dialog_CreateSchedule view) {
         this.view = view;
         this.jtblSchedule = view.getJtblSchedule();
         this.jcbMonday = view.getJcbMonday();

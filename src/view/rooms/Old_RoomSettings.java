@@ -263,7 +263,7 @@ public class Old_RoomSettings extends javax.swing.JPanel {
            Room r = (Room)room;
            Object[] o = 
            {
-               r.getRoom_id(),
+               r.getRoomID(),
                r.getRoomName(),
                r.getBuildingName(),
                r.getCapacity(),

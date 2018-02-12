@@ -10,7 +10,7 @@ import view.faculty.Panel_Faculty;
 import view.fees.JpnlFeeRecord;
 import view.paymentsetting.PaymentScheduleSettings;
 import view.rooms.Panel_Rooms;
-import view.schedule.ScheduleRecord;
+import view.schedule.Panel_ClassSchedules;
 import view.schoolyear.Panel_SchoolYear;
 import view.section.Panel_Sections;
 import view.subject.Panel_Subjects;
@@ -89,7 +89,7 @@ public class AddSettingsPanelToTabbedPaneOnMouseClick implements MouseListener {
                     addPanelToTabbedPane(jpnlRoomMgmt, new Panel_Rooms());
                     break;
                 case 6:
-                    addPanelToTabbedPane(jpnlScheduleMgmt, new ScheduleRecord());
+                    addPanelToTabbedPane(jpnlScheduleMgmt, new Panel_ClassSchedules());
                     break;
                 case 7:
                     addPanelToTabbedPane(jpnlFeesMgmt, new JpnlFeeRecord());

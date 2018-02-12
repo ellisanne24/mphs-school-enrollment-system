@@ -2,17 +2,9 @@ package controller.schedule;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.faculty.Faculty;
-import model.gradelevel.GradeLevel;
-import model.room.Room;
-import model.schedule.Schedule;
-import model.section.Section;
-import model.subject.Subject;
 import utility.form.FormValidator;
 import view.schedule.Dialog_CreateSchedule;
 
@@ -20,13 +12,13 @@ import view.schedule.Dialog_CreateSchedule;
  *
  * @author John Ferdinand Antonio
  */
-public class LoadToSummary implements ActionListener , FormValidator{
+public class ActionListener_Schedule_LoadToSummary_JButton implements ActionListener , FormValidator{
 
     private final Dialog_CreateSchedule view;
     private final JTable jtblSchedule;
     private final JTable jtblScheduleSummary;
 
-    public LoadToSummary(Dialog_CreateSchedule view) {
+    public ActionListener_Schedule_LoadToSummary_JButton(Dialog_CreateSchedule view) {
         this.view = view;
         this.jtblSchedule = view.getJtblSchedule();
         this.jtblScheduleSummary = view.getJtblScheduleSummary();
@@ -112,27 +104,6 @@ public class LoadToSummary implements ActionListener , FormValidator{
         }
     }
 
-    private List<Schedule> getSchedules(){
-        List<Schedule> scheduleList = new ArrayList<>();
-        for (int row = 0; row < jtblSchedule.getRowCount(); row++) {
-            Schedule schedule = new Schedule();
-            schedule.setSection((Section) view.getJcmbSection().getSelectedItem());
-            schedule.setGradeLevel((GradeLevel) view.getJcmbGradeLevel().getSelectedItem());
-            for(int col = 0; col < jtblSchedule.getRowCount(); col++){
-                switch(col){
-                   case 0: schedule.setDay(jtblSchedule.getValueAt(row, col).toString()); break;
-                   case 1: schedule.setStartTime(Integer.parseInt(jtblSchedule.getValueAt(row, col).toString().trim().replace(":", ""))); break;
-                   case 2: schedule.setEndTime(Integer.parseInt(jtblSchedule.getValueAt(row, col).toString().trim().replace(":", ""))); break;
-                   case 3: schedule.setSubject((Subject) jtblSchedule.getValueAt(row, col)); break;
-                   case 4: schedule.setFaculty((Faculty) jtblSchedule.getValueAt(row, col)); break;
-                   case 5: schedule.setRoom((Room) jtblSchedule.getValueAt(row, col)); break;
-                }
-            }
-            scheduleList.add(schedule);
-        }
-        return scheduleList;
-    }
-    
     private int getColFor(Object day){
         int col = day.toString().trim().equalsIgnoreCase("Mon") ? 1
                 : day.toString().trim().equalsIgnoreCase("Tue") ? 2
