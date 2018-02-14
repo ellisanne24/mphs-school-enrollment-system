@@ -2,7 +2,7 @@
 package view.user;
 
 import component_model_loader.UserJCompModelLoader;
-import controller.user.DisplayCreateUser;
+import controller.user.ActionListener_Display_Dialog_Crud;
 import controller.user.DisplayEditUser;
 import utility.component.JInternalFrameUtil;
 import view.container.Dashboard;
@@ -21,7 +21,7 @@ public class AllUsersRecord extends javax.swing.JPanel {
     }
     
     private void initializeControllers(){
-        jmiNewUser.addActionListener(new DisplayCreateUser());
+        jmiNewUser.addActionListener(new ActionListener_Display_Dialog_Crud());
         jmiEditUser.addActionListener(new DisplayEditUser());
     }
     @SuppressWarnings("unchecked")
@@ -63,6 +63,7 @@ public class AllUsersRecord extends javax.swing.JPanel {
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
         jtblRecord.setAutoCreateRowSorter(true);
+        jtblRecord.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblRecord.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

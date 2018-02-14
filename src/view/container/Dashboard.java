@@ -29,7 +29,7 @@ import model.role.Role;
 import model.testdata.SubjectTestDataModel;
 import model.user.User;
 import threads.SchoolYearLoaderThread;
-import view.grades.JpnlGradingSystemTop;
+import view.grades.Panel_GradingSystem;
 import view.payment.Panel_Payment;
 import view.registration.Panel_Registration;
 
@@ -87,7 +87,7 @@ public class Dashboard extends javax.swing.JFrame {
         loadFacultyId();
         loadUserAdviserId();
 
-        System.out.println("User Id :" + user.getId());
+        System.out.println("User Id :" + user.getUserId());
         System.out.println("Faculty Id :" + facultyId);
         System.out.println("Adviser Id :" + adviserId);
 
@@ -154,7 +154,7 @@ public class Dashboard extends javax.swing.JFrame {
         lbl_FirstNameText.setText(user.getFirstName());
         lbl_LastNameText.setText(user.getLastName());
         lbl_MiddleNameText.setText(user.getMiddleName());
-        jlblUserIdText.setText(user.getId() + "");
+        jlblUserIdText.setText(user.getUserId() + "");
         jlblLastLoginText.setText("" + user.getLastLoginDate());
         jlblLastLoginText.setText(date);
         jlblTimeText.setText(time);
@@ -1211,9 +1211,9 @@ public class Dashboard extends javax.swing.JFrame {
             initDashboardPermissions();
             if (hasGradesAccess) {
                 if (GRADES_INSTANCE <= 0) {
-                    JpnlGradingSystemTop jpnlGradingSystemTop = new JpnlGradingSystemTop();
-                    jtpTopTabbedPane.add("Grades", jpnlGradingSystemTop);
-                    jtpTopTabbedPane.setSelectedComponent(jpnlGradingSystemTop);
+                    Panel_GradingSystem panel_GradingSystem = new Panel_GradingSystem(user);
+                    jtpTopTabbedPane.add("Grades", panel_GradingSystem);
+                    jtpTopTabbedPane.setSelectedComponent(panel_GradingSystem);
                     setGRADES_INSTANCE(1);
                     GRADES_TAB_INDEX = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {

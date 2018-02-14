@@ -28,7 +28,8 @@ public class Renderer_Section_JComboBox extends JLabel implements ListCellRender
         if(value instanceof Section){
             Section section = (Section) value;
             this.setText(section.getSectionName());
-        }else {
+        }
+        else {
             this.setText("Select");
         }
 

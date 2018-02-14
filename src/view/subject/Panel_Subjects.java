@@ -189,6 +189,7 @@ public class Panel_Subjects extends javax.swing.JPanel implements Initializer{
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 530));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
 
+        jtblSubjectMasterList.setAutoCreateRowSorter(true);
         jtblSubjectMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSubjectMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

@@ -6,7 +6,7 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import model.room.Room;
+import model.gradelevel.GradeLevel;
 
 public class Renderer_GradeLevel_JComboBox extends JLabel implements ListCellRenderer<Object> {
 
@@ -22,7 +22,12 @@ public class Renderer_GradeLevel_JComboBox extends JLabel implements ListCellRen
             }else{
                 this.setText(""+value);
             }
-        }else {
+        }else if(value instanceof GradeLevel){
+            GradeLevel gradeLevel = (GradeLevel) value;
+            String levelNo = gradeLevel.getLevelNo() == 0? "Kindergarten" : gradeLevel.getLevelNo()+""; 
+            this.setText(levelNo);
+        }
+        else {
             this.setText("Select");
         }
 

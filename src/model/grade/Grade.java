@@ -1,162 +1,98 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model.grade;
 
-
-import model.gradelevel.GradeLevel;
-import model.gradingperiod.GradingPeriod;
+import java.util.Date;
 import model.schoolyear.SchoolYear;
-import model.student.Student;
-import model.subject.Subject;
+import model.user.User;
 
 /**
  *
  * @author John Ferdinand Antonio
  */
 public class Grade {
-    private int id;
-    private int periodId;
-    private String first_qtr;
-    private String second_qtr;
-    private String third_qtr;
-    private String fourth_qtr;
-    private double finalGrade;
-    private double gwa;
-    private String grade;
-    private boolean isPassed;
-    private boolean isActive;
-    private boolean isSubmitted;
-    private String coreValues;
-    private String behavior;
-    public Subject subject = new Subject();
-    public Student student = new Student();
-    public SchoolYear schoolYear = new SchoolYear();
-    public GradeLevel gradeLevel = new GradeLevel();
-    public GradingPeriod gradingPeriod = new GradingPeriod();
-//    public Attendance attendance = new Attendance();
+   private int studentId;
+   private int subjectId;
+   private int gradeId;
+   private int value;
+   private int gradingPeriod;
+   private String gradeType; //summer or regular
+   private SchoolYear schoolYear;
+   private Date dateSubmitted;
+   private User addedBy;
 
-    public int getId() {
-        return id;
+    public int getStudentId() {
+        return studentId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
-    public String getFirstQtr() {
-        return first_qtr;
+    public int getSubjectId() {
+        return subjectId;
     }
 
-    public void setFirstQtr(String first_qtr) {
-        this.first_qtr = first_qtr;
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
+    }
+   
+    public User getAddedBy() {
+        return addedBy;
     }
 
-    public String getSecondQtr() {
-        return second_qtr;
+    public void setAddedBy(User addedBy) {
+        this.addedBy = addedBy;
     }
 
-    public void setSecondQtr(String second_qtr) {
-        this.second_qtr = second_qtr;
+    public int getValue() {
+        return value;
     }
 
-    public String getThirdQtr() {
-        return third_qtr;
+    public void setValue(int value) {
+        this.value = value;
+    }
+   
+   
+
+    public Date getDateSubmitted() {
+        return dateSubmitted;
     }
 
-    public void setThirdQtr(String third_qtr) {
-        this.third_qtr = third_qtr;
+    public void setDateSubmitted(Date dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
     }
 
-    public String getFourthQtr() {
-        return fourth_qtr;
+    public int getGradeId() {
+        return gradeId;
     }
 
-    public void setFourthQtr(String fourth_qtr) {
-        this.fourth_qtr = fourth_qtr;
+    public void setGradeId(int gradeId) {
+        this.gradeId = gradeId;
     }
 
-    public double getFinalGrade() {
-        return finalGrade;
+    public int getGradingPeriod() {
+        return gradingPeriod;
     }
 
-    public void setFinalGrade(double finalGrade) {
-        this.finalGrade = finalGrade;
+    public void setGradingPeriod(int gradingPeriod) {
+        this.gradingPeriod = gradingPeriod;
     }
 
-    public double getGwa() {
-        return gwa;
+    public String getGradeType() {
+        return gradeType;
     }
 
-    public void setGwa(double gwa) {
-        this.gwa = gwa;
+    public void setGradeType(String gradeType) {
+        this.gradeType = gradeType;
+    }
+
+    public SchoolYear getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(SchoolYear schoolYear) {
+        this.schoolYear = schoolYear;
     }
     
-    public void setIsPassed(boolean isPassed)
-    {
-        this.isPassed = isPassed;
-    }
-    
-    public boolean getIsPassed()
-    {
-        return isPassed;
-    }
-    
-    public void setIsActive(boolean isActive)
-    {
-        this.isActive = isActive;
-    }
-    
-    public boolean getIsActive()
-    {
-        return isActive;
-    }
-    
-    public void setGrade(String grade)
-    {
-        this.grade = grade;
-    }
-    
-    public String getGrade()
-    {
-        return grade;
-    }
-    
-    public void setPeriodId(int periodId)
-    {
-        this.periodId = periodId;
-    }
-    
-    public int getPeriodId()
-    {
-        return periodId;
-    }
-    
-    public void setIsSubmitted(boolean isSubmitted)
-    {
-        this.isSubmitted = isSubmitted;
-    }
-    
-    public boolean getIsSubmitted()
-    {
-        return isSubmitted;
-    }
-
-    public String getCoreValues() {
-        return coreValues;
-    }
-
-    public void setCoreValues(String coreValues) {
-        this.coreValues = coreValues;
-    }
-
-    public String getBehavior() {
-        return behavior;
-    }
-
-    public void setBehavior(String behavior) {
-        this.behavior = behavior;
-    }
+   
 }

@@ -3,10 +3,10 @@ package dao;
 
 import java.util.List;
 import model.curriculum.Curriculum;
+import model.faculty.Faculty;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
-import model.student.Student;
 import model.subject.Subject;
 
 /**
@@ -22,6 +22,7 @@ public interface ISubject {
     List<Subject> getSubjectsBySchoolYear(SchoolYear aSchoolYear);
     List<Subject> getEachSubjectByGradeLevelId(GradeLevel aGradeLevel);
     List<Subject> getAllActiveSubjectsByStatusAndGradeLevelId(boolean isActive, int gradeLevelId);
+    List<Subject> getSubjectsHandledByFacultyUsingFacultySectionAndSchoolYear(Faculty f, Section s, SchoolYear sy);
     
     boolean updateSubjectAndGradeLevel(Subject aSubject, GradeLevel aGradeLevel);
     boolean createSubject(Subject aSubject);

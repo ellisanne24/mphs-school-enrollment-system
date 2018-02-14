@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.user;
 
-import component_model_loader.RolesJCompModelLoader;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.DefaultComboBoxModel;
-import view.user.UserInfo;
+import view.user.Dialog_User_Crud;
 
 /**
  *
@@ -18,12 +11,10 @@ import view.user.UserInfo;
  */
 public class DisplayEditUser implements ActionListener {
 
-    RolesJCompModelLoader rolesML = new RolesJCompModelLoader();
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DefaultComboBoxModel rolesComboModel = rolesML.getAllRoleNames();
-        UserInfo userInfo = new UserInfo(null, true, rolesComboModel);
+        Dialog_User_Crud userInfo = new Dialog_User_Crud(null, true);
         userInfo.setTitle("Edit User");
         userInfo.setPreferredSize(new Dimension(500, 500));
         userInfo.pack();

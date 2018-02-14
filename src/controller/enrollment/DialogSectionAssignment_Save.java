@@ -26,7 +26,7 @@ public class DialogSectionAssignment_Save implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();
-        int sectionId = Integer.parseInt(view.getJcmbSection().getSelectedItem().toString().trim());
+        int sectionId = ((Section)view.getJcmbSection().getSelectedItem()).getSectionId();
         JTable table = view.getJtblSectionStudents();
         List<Student> studentList = new ArrayList<>();
         for (int i = 0; i < table.getRowCount(); i++) {

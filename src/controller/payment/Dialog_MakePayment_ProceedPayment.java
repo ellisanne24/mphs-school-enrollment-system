@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.particulars.Particular;
 import model.payment.Payment;
 import model.tuitionfee.Tuition;

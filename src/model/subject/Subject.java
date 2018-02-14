@@ -2,10 +2,13 @@
 package model.subject;
 
 import java.util.Date;
+import java.util.List;
+import model.grade.Grade;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 
 public class Subject {
+    private List<Grade> grade;
     private int subjectId;
     private String subjectTitle;
     private String subjectCode;
@@ -18,6 +21,14 @@ public class Subject {
     private SchoolYear schoolYearCreated;
     private boolean isActive;
     private GradeLevel gradeLevel;
+
+    public List<Grade> getGrades() {
+        return grade;
+    }
+
+    public void setGrades(List<Grade> grade) {
+        this.grade = grade;
+    }
 
     public SchoolYear getSchoolYearCreated() {
         return schoolYearCreated;

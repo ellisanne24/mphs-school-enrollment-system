@@ -10,7 +10,6 @@ import controller.enrollment.DialogSectionAssignment_CapacityDenominatorDocument
 import controller.enrollment.DialogSectionAssignment_Clear;
 import controller.enrollment.DialogSectionAssignment_MoveStudentToSection;
 import controller.enrollment.DialogSectionAssignment_OnGradeLevelItemStateChange;
-import controller.enrollment.DialogSectionAssignment_OnSectionItemStateChange;
 import controller.enrollment.DialogSectionAssignment_RemoveStudentFromSection;
 import controller.enrollment.DialogSectionAssignment_Save;
 import controller.global.ExitJDialog;
@@ -71,8 +70,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
     @Override
     public void initViewComponents() {
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
-        jcmbSection.setModel(sectionJCompModelLoader.getAllSectionsByStatusAndSchoolYearId(true, schoolYearDaoImpl.getCurrentSchoolYearId()));
-        jcmbSection.setSelectedIndex(-1);
+        jcmbSection.setModel(sectionJCompModelLoader.getAllSectionByStatusAndSchoolYearId(true, schoolYearDaoImpl.getCurrentSchoolYearId()));
         jcmbAdviser.setModel(facultyJCompModelLoader.getAllFaculty());
         jcmbAdviser.setSelectedIndex(-1);
     }
@@ -287,7 +285,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jpnlSectionDetails.add(jtfCapacityDenominator, gridBagConstraints);
 
         jcmbSession.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jcmbSession.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AM", "PM" }));
+        jcmbSession.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AM", "PM", "WD" }));
         jcmbSession.setSelectedIndex(-1);
         jcmbSession.setActionCommand("session");
         jcmbSession.setEnabled(false);
@@ -337,11 +335,11 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
 
             },
             new String [] {
-                "ID", "Student No", "Last Name", "First Name", "Middle Name", "Type", "Grade Level"
+                "ID", "Student No", "Student Name", "Type", "Grade Level"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

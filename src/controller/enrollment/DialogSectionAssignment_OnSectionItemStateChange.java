@@ -33,10 +33,10 @@ public class DialogSectionAssignment_OnSectionItemStateChange implements ActionL
     @Override
     public void actionPerformed(ActionEvent e) {
         if (view.getJcmbSection().getSelectedIndex() > -1) {
-            int sectionId = Integer.parseInt(view.getJcmbSection().getSelectedItem().toString().trim());
-            loadAdviser(sectionId);
-            loadCapacity(sectionId);
-            loadSession(sectionId);
+            Section section = (Section)view.getJcmbSection().getSelectedItem();
+            loadAdviser(section.getSectionId());
+            loadCapacity(section.getSectionId());
+            loadSession(section.getSectionId());
             loadSectionStudents();
             view.getJbtnMoveStudentToSection().setEnabled(true);
             view.getJbtnRemoveStudentFromSection().setEnabled(true);

@@ -276,11 +276,11 @@ public class Panel_Faculty extends javax.swing.JPanel{
 
             },
             new String [] {
-                "Faculty ID", "Last Name", "First Name", "Middle Name", "Contact No", "Email Address", "Status"
+                "Faculty ID", "Last Name", "First Name", "Middle Name", "Contact No", "Email Address", "Status", "Username"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

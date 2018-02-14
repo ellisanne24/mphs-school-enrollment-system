@@ -9,6 +9,14 @@ import java.sql.SQLException;
 import model.registration.Registration;
 import model.student.Student;
 import dao.IStudent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import model.faculty.Faculty;
+import model.grade.Grade;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
 
 public class StudentDaoImpl implements IStudent {
 
@@ -45,11 +53,11 @@ public class StudentDaoImpl implements IStudent {
         boolean hasTuitionRecord = false;
         String SQL = "{CALL hasTuitionRecord(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,studentNo);
-            cs.setInt(2,schoolyearId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, studentNo);
+            cs.setInt(2, schoolyearId);
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     hasTuitionRecord = rs.getBoolean("hasTuition");
                 }
             }
@@ -58,7 +66,6 @@ public class StudentDaoImpl implements IStudent {
         }
         return hasTuitionRecord;
     }
-    
 
     @Override
     public Student getStudentByStudentId(int studentId) {
@@ -132,9 +139,7 @@ public class StudentDaoImpl implements IStudent {
         }
         return student;
     }
-    
 
-    
     @Override
     public Student getStudentByStudentNo(int studentNo) {
         String SQLa = "{CALL getStudentByStudentNo(?)}";
@@ -190,7 +195,7 @@ public class StudentDaoImpl implements IStudent {
 
                         String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
                         r.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes") ? true : false);
-                        
+
                         student.setStudentId(rs.getInt("student_id"));
                         student.setStudentNo(rs.getInt("student_no"));
                         student.setIsActive(rs.getBoolean("isStudentActive"));
@@ -199,7 +204,7 @@ public class StudentDaoImpl implements IStudent {
                         student.setRegistration(r);
                     }
                 }
-                
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -208,5 +213,70 @@ public class StudentDaoImpl implements IStudent {
         }
         return student;
     }
+
+    @Override
+    public List<Student> getStudentsBySectionAndSchoolYear(Section section, SchoolYear schoolYear) {
+        String SQLa = "{CALL getStudentsBySectionIdAndSchoolYearId(?,?)}";
+        List<Student> studentList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQLa);){
+            cs.setInt(1,section.getSectionId());
+            cs.setInt(2, schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Registration r = new Registration();
+                    r.setLastName(rs.getString("lastname"));
+                    r.setFirstName(rs.getString("firstname"));
+                    r.setMiddleName(rs.getString("middlename"));
+                    Student s = new Student();
+                    s.setStudentId(rs.getInt("student_id"));
+                    s.setStudentNo(rs.getInt("student_no"));
+                    s.setRegistration(r);
+                    
+                    studentList.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return studentList;
+    }
+
+    @Override
+    public List<Student> getStudentsOfAdviser(Faculty faculty, SchoolYear schoolYear) {
+        List<Student> studentList = new ArrayList<>();
+        String SQL = "{CALL getStudentsOfAdviser(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,faculty.getFacultyID());
+            cs.setInt(2,schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Registration r = new Registration();
+                    r.setLastName(rs.getString("lastname"));
+                    r.setFirstName(rs.getString("firstname"));
+                    r.setMiddleName(rs.getString("middlename"));
+                    
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    
+                    Student student = new Student();
+                    student.setRegistration(r);
+                    student.setSection(section);
+                    student.setStudentId(rs.getInt("student_id"));
+                    student.setGradeLevelNo(rs.getInt("grade_level"));
+                    studentList.add(student);
+                    student.setStudentNo(rs.getInt("student_no"));
+                    
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return studentList;
+    }
+    
+    
 
 }//end of class

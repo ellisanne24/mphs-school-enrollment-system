@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import dao.ISubject;
 import model.curriculum.Curriculum;
+import model.faculty.Faculty;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
@@ -436,6 +437,31 @@ public class SubjectDaoImpl implements ISubject {
         }
 
         return listSubject;
+    }
+
+    @Override
+    public List<Subject> getSubjectsHandledByFacultyUsingFacultySectionAndSchoolYear(Faculty f, Section s, SchoolYear sy) {
+        String SQL = "{CALL getSubjectsHandledByFacultyUsingFacultyIdSectionIdAndSyId(?,?,?)}";
+        List<Subject> subjectList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,f.getFacultyID());
+            cs.setInt(2,s.getSectionId());
+            cs.setInt(3,sy.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Subject subject = new Subject();
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectCode(rs.getString("code"));
+                    subject.setSubjectTitle(rs.getString("title"));
+                    subject.setSubjectDescription(rs.getString("description"));
+                    subjectList.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subjectList;
     }
 
 }

@@ -514,8 +514,8 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
         panel_masterrecord.setLayout(new java.awt.GridBagLayout());
 
         jScrollPane1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 530));
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 1500));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 1500));
 
         jtblRegisteredMasterList.setAutoCreateRowSorter(true);
         jtblRegisteredMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -535,9 +535,9 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
                 return canEdit [columnIndex];
             }
         });
-        jtblRegisteredMasterList.setMinimumSize(new java.awt.Dimension(1185, 530));
-        jtblRegisteredMasterList.setPreferredSize(new java.awt.Dimension(1185, 530));
-        jtblRegisteredMasterList.setRowHeight(20);
+        jtblRegisteredMasterList.setMinimumSize(new java.awt.Dimension(1185, 3000));
+        jtblRegisteredMasterList.setPreferredSize(new java.awt.Dimension(1185, 3000));
+        jtblRegisteredMasterList.setRowHeight(35);
         jtblRegisteredMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblRegisteredMasterList);
 
@@ -686,8 +686,8 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
         panel_masterrecord1.setLayout(new java.awt.GridBagLayout());
 
         jScrollPane2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(1185, 530));
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(1185, 530));
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(1185, 800));
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(1185, 800));
 
         jtblEnrolledMasterList.setAutoCreateRowSorter(true);
         jtblEnrolledMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -696,20 +696,20 @@ public class EnrollmentPanel extends javax.swing.JPanel implements Initializer{
 
             },
             new String [] {
-                "Student ID", "Student No", "Last Name", "First Name", "Middle Name", "Student Type", "Grade Level", "Section", "Adviser", "Status", "Date Enrolled", "Enrollment Type"
+                "Student ID", "Student No", "Student Name", "Student Type", "Grade Level", "Section", "Adviser", "Status", "Date Enrolled", "Enrollment Type"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jtblEnrolledMasterList.setMinimumSize(new java.awt.Dimension(1185, 530));
-        jtblEnrolledMasterList.setPreferredSize(new java.awt.Dimension(1185, 530));
-        jtblEnrolledMasterList.setRowHeight(20);
+        jtblEnrolledMasterList.setMinimumSize(new java.awt.Dimension(1185, 1500));
+        jtblEnrolledMasterList.setPreferredSize(new java.awt.Dimension(1185, 1500));
+        jtblEnrolledMasterList.setRowHeight(35);
         jtblEnrolledMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jtblEnrolledMasterList);
 

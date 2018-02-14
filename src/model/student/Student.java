@@ -3,17 +3,21 @@ package model.student;
 
 import model.tuitionfee.Tuition;
 import java.util.Date;
+import java.util.List;
 import model.admission.Admission;
 import model.enrollment.Enrollment;
+import model.grade.Grade;
 import model.paymentterm.PaymentTerm;
 import model.registration.Registration;
 import model.section.Section;
+import model.subject.Subject;
 
 
 public class Student {
     private int studentId;
     private int studentNo;
-    private int studentType; 
+    private int studentType;
+    private List<Subject> subjects;
     private Registration registration;
     private Admission admission;
     private PaymentTerm paymentTerm;
@@ -28,6 +32,14 @@ public class Student {
 
     public int gradeLevelNo; //current gradelevelNo
 
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
+    }
+    
     public Section getSection() {
         return section;
     }

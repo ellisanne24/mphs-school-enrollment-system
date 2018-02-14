@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.faculty.Faculty;
 import model.subjectcategory.SubjectCategory;
+import model.user.User;
 import utility.database.DBType;
 import utility.database.DBUtil;
 
@@ -390,4 +391,28 @@ public class FacultyDaoImpl implements IFaculty {
         return faculty;
     }
 
+    @Override
+    public Faculty getFacultyByUser(User user) {
+        String SQL = "{CALL getFacultyByUserId(?)}";
+        Faculty faculty = new Faculty();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, user.getUserId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
+                    faculty.setLastName(rs.getString("lastName"));
+                    faculty.setFirstName(rs.getString("firstName"));
+                    faculty.setMiddleName(rs.getString("middleName"));
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+                    faculty.setStatus(rs.getBoolean("status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return faculty;
+    }
+    
 }

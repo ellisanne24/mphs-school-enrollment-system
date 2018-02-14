@@ -2,9 +2,14 @@
 package component_model_loader;
 
 import daoimpl.SubjectDaoImpl;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import model.faculty.Faculty;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
 import model.subject.Subject;
 
 /**
@@ -49,5 +54,15 @@ public class SubjectJCompModelLoader {
            tableModel.addRow(rowData);
        }
        return tableModel;
+   }
+   
+   public DefaultComboBoxModel getSubjectsHandledByFacultyPerSection(Faculty faculty, Section section, SchoolYear schoolYear){
+       DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+       List<Subject> subjectList = subjectDaoImpl.getSubjectsHandledByFacultyUsingFacultySectionAndSchoolYear(faculty, section, schoolYear);
+       for(Subject subject : subjectList){
+           comboModel.addElement(subject);
+       }
+       comboModel.setSelectedItem(null);
+       return comboModel;
    }
 }

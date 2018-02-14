@@ -11,6 +11,7 @@ public class Section {
     private int sectionId;
     private String sectionName;
     private String sectionSession;
+    private String sectionType;
     private SchoolYear schoolYear;
     private GradeLevel gradeLevel;
     private Faculty adviser;
@@ -22,6 +23,14 @@ public class Section {
     private String requiredAverage;
     private String category;
     private int capacity;
+
+    public String getSectionType() {
+        return sectionType;
+    }
+
+    public void setSectionType(String sectionType) {
+        this.sectionType = sectionType;
+    }
 
     public int getCapacity() {
         return capacity;

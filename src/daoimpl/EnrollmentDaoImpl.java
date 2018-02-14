@@ -134,9 +134,10 @@ public class EnrollmentDaoImpl implements IEnrollment {
                     enrollment.setEnrollmentType(rs.getString("enrollment_type"));
                     
                     Faculty adviser = new Faculty();
-                    adviser.setLastName(rs.getString("lastName"));
-                    adviser.setFirstName(rs.getString("firstName"));
-                    adviser.setMiddleName(rs.getString("middleName"));
+                    adviser.setFacultyID(rs.getInt("adviser_id"));
+                    adviser.setLastName(rs.getString("facultyLastName"));
+                    adviser.setFirstName(rs.getString("facultyFirstName"));
+                    adviser.setMiddleName(rs.getString("facultyMiddleName"));
                     
                     Section section = new Section();
                     section.setSectionName(rs.getString("sectionname"));

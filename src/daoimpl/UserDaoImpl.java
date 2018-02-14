@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import model.faculty.Faculty;
 import model.role.Role;
 import model.user.User;
 import utility.database.DBType;
@@ -15,26 +16,6 @@ import utility.database.DBUtil;
 
 public class UserDaoImpl implements IUser{
 
-    @Override
-    public Integer getAdviserIdByUserId(int userId) {
-        Integer adviser_id = null;
-        String SQL = "{CALL getAdviserIdByUserId(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, userId);
-            try (ResultSet rs = cs.executeQuery();) {
-                while (rs.next()) {
-                    adviser_id = rs.getInt("user_id");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return adviser_id;
-    }
-
-    
-    
     @Override
     public Integer getIdByUsername(String username) {
         Integer userId = null;
@@ -121,8 +102,6 @@ public class UserDaoImpl implements IUser{
         return userList;
     }
 
-    
-    
     @Override
     public boolean add(User user) {
         boolean isAdded = false;
@@ -159,12 +138,54 @@ public class UserDaoImpl implements IUser{
     }
 
     @Override
+    public boolean addFacultyAsUser(Faculty faculty) {
+        boolean isAdded = false;
+        String SQLa = "{CALL addUser(?,?,?,?,?,?)}";
+        String SQLb = "{CALL addUserRole(?,?)}";
+        String SQLc = "{CALL addFacultyAsUser(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+            con.setAutoCommit(false);
+            try(CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);
+                    CallableStatement csc = con.prepareCall(SQLc);){
+            csa.setString(1, faculty.getUsername());
+            csa.setString(2, faculty.getPassword());
+            csa.setString(3, faculty.getLastName().trim());
+            csa.setString(4, faculty.getFirstName().trim());
+            csa.setString(5, faculty.getMiddleName().trim());
+            csa.registerOutParameter(6, Types.INTEGER);
+            csa.executeUpdate();
+            int userId = csa.getInt(6);
+            
+            csb.setInt(1,userId);
+            csb.setInt(2, faculty.getRole().getId());
+            csb.executeUpdate();
+            
+            csc.setInt(1, userId);
+            csc.setInt(2, faculty.getFacultyID());
+            csc.executeUpdate();
+            
+            con.commit();
+            isAdded = true;
+            }catch(SQLException e ){
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isAdded;
+    }
+    
+    
+    @Override
     public boolean update(User user) {
         boolean isUpdated = false;
         String SQL = "{CALL updateUser(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,user.getId());
+            cs.setInt(1,user.getUserId());
             cs.setString(2, user.getUsername());
             cs.setString(3, user.getPassword());
             cs.executeUpdate();

@@ -12,14 +12,26 @@ import model.role.Role;
  */
 public class RolesJCompModelLoader {
 
-    RoleDaoImpl rdi = new RoleDaoImpl();
+    private final RoleDaoImpl roleDaoImpl;
 
+    public RolesJCompModelLoader(){
+        roleDaoImpl = new RoleDaoImpl();
+    }
+    
     public DefaultComboBoxModel getAllRoleNames() {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        List<Role> roleList = rdi.getAll();
-        for (Role r : roleList) {
-            model.addElement(r.getRoleName());
-            System.out.println("Role : "+r.getRoleName());
+        List<Role> roleList = roleDaoImpl.getAll();
+        for (Role role : roleList) {
+            model.addElement(role.getRoleName());
+        }
+        return model;
+    }
+    
+    public DefaultComboBoxModel getAllRoles(){
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        List<Role> roleList = roleDaoImpl.getAll();
+        for (Role role : roleList) {
+            model.addElement(role);
         }
         return model;
     }

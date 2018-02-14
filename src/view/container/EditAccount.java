@@ -16,7 +16,7 @@ public class EditAccount extends javax.swing.JDialog {
     public EditAccount(java.awt.Frame parent, boolean modal, User user) {
         super(parent, modal);
         initComponents();
-        this.userId = user.getId();
+        this.userId = user.getUserId();
         jtfUsername.setText(user.getUsername());
     }
     @SuppressWarnings("unchecked")

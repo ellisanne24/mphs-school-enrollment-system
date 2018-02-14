@@ -4,6 +4,7 @@ package dao;
 import java.util.List;
 import model.faculty.Faculty;
 import model.subjectcategory.SubjectCategory;
+import model.user.User;
 
 public interface IFaculty {
     boolean createFaculty(Faculty faculty);
@@ -23,4 +24,5 @@ public interface IFaculty {
     List<Faculty> getAllFacultyHandlingSubjectBySubjectCode(String subjectCode, int schoolyearId);
     int getFacultyIdByName(String lastName, String firstName, String middleName);
     Faculty getFacultyById(int facultyId);
+    Faculty getFacultyByUser(User user);
 }

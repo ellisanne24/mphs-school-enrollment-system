@@ -42,7 +42,7 @@ public class DialogSectionAssignment_OnGradeLevelItemStateChange implements Item
 
     private void loadSectionsByGradeLevelSelected() {
         SectionJCompModelLoader sectionJCompModelLoader = new SectionJCompModelLoader();
-        view.getJcmbSection().setModel(sectionJCompModelLoader.getSectionsOfCurrentSchoolYearByGradeLevelNo(view.getJcmbGradeLevel()));
+        view.getJcmbSection().setModel(sectionJCompModelLoader.getSectionOfCurrentSchoolYearByGradeLevelNo(view.getJcmbGradeLevel()));
         view.getJcmbSection().setSelectedIndex(-1);
     }
 

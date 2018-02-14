@@ -26,7 +26,7 @@ public class UserJCompModelLoader {
         model.setRowCount(0);
         List<User> list = udi.getAll();
         for (User u : list) {
-            model.addRow(new Object[]{u.getId(), u.getUsername(), u.getRole().getRoleName(),
+            model.addRow(new Object[]{u.getUserId(), u.getUsername(), u.getRole().getRoleName(),
                 u.getLastName() + ", " + u.getFirstName() + " " + u.getMiddleName()
             });
             TableUtility.setTableColumnWidth(table);

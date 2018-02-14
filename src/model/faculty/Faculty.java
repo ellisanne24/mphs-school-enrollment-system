@@ -2,8 +2,9 @@ package model.faculty;
 
 import java.util.List;
 import model.subjectcategory.SubjectCategory;
+import model.user.User;
 
-public class Faculty {
+public class Faculty extends User{
 
     private int facultyID;
     private String firstName;

@@ -439,4 +439,84 @@ public class SectionDaoImpl implements ISection {
         }
         return exists;
     }
+
+    @Override
+    public List<Section> getSectionsHandledByFacultyByFacultyAndSchoolYear(Faculty faculty, SchoolYear schoolYear) {
+        String SQL = "{CALL getSectionsHandledByFacultyUsingFacultyIdAndSyId(?,?)}";
+        List<Section> sectionList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1,faculty.getFacultyID());
+            cs.setInt(2,schoolYear.getSchoolYearId());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    
+                    GradeLevel gradeLevel = new GradeLevel();
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
+                    
+                    Faculty adviser = new Faculty();
+                    adviser.setFacultyID(rs.getInt("faculty_id"));
+                    adviser.setLastName(rs.getString("lastName"));
+                    adviser.setFirstName(rs.getString("firstName"));
+                    adviser.setMiddleName(rs.getString("middleName"));
+                    
+                    section.setGradeLevel(gradeLevel);
+                    section.setSectionSession(rs.getString("session"));
+                    section.setAdviser(adviser);
+                    section.setCapacity(rs.getInt("capacity"));
+                    
+                    sectionList.add(section);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sectionList;
+    }
+
+    @Override
+    public Section getSectionByStudentAndSchoolYear(Student student, SchoolYear schoolYear) {
+        String SQL ="{CALL getSectionByStudentIdAndSchoolYear(?,?)}";
+        Section section = new Section();
+        try(Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,student.getStudentId());
+            cs.setInt(2,schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    
+                    GradeLevel gradeLevel = new GradeLevel();
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
+                    
+                    Faculty adviser = new Faculty();
+                    adviser.setFacultyID(rs.getInt("faculty_id"));
+                    adviser.setLastName(rs.getString("lastName"));
+                    adviser.setFirstName(rs.getString("firstName"));
+                    adviser.setMiddleName(rs.getString("middleName"));
+                    
+                    section.setGradeLevel(gradeLevel);
+                    section.setSectionSession(rs.getString("session"));
+                    section.setAdviser(adviser);
+                    section.setCapacity(rs.getInt("capacity"));
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return section;
+    }
+
+    
+    
+    
 }
