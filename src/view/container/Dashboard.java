@@ -4,7 +4,7 @@ import controller.admintools.DisplayRecordGeneratorController;
 import daoimpl.FacultyDaoImpl;
 import daoimpl.PermissionDaoImpl;
 import daoimpl.UserDaoImpl;
-import view.enrollment.EnrollmentPanel;
+import view.enrollment.Panel_Enrollment;
 import view.user.AllUsersRecord;
 import utility.calendar.CalendarUtil;
 import utility.layout.CardLayoutUtil;
@@ -29,9 +29,9 @@ import model.role.Role;
 import model.testdata.SubjectTestDataModel;
 import model.user.User;
 import threads.SchoolYearLoaderThread;
-import view.grades.Panel_GradingSystem;
+import view.grades.View_Panel_GradingSystem;
 import view.payment.Panel_Payment;
-import view.registration.Panel_Registration;
+import view.registration.View_Panel_Registration;
 
 public class Dashboard extends javax.swing.JFrame {
 
@@ -1168,7 +1168,7 @@ public class Dashboard extends javax.swing.JFrame {
             initDashboardPermissions();
             if (hasRegistrationAccess) {
                 if (REGISTRATION_INSTANCE <= 0) {
-                    Panel_Registration panelRegistration = new Panel_Registration("register");
+                    View_Panel_Registration panelRegistration = new View_Panel_Registration("register");
                     jtpTopTabbedPane.addTab("Registration", panelRegistration);
                     jtpTopTabbedPane.setSelectedComponent(panelRegistration);
                     setREGISTRATION_INSTANCE(1);
@@ -1190,7 +1190,7 @@ public class Dashboard extends javax.swing.JFrame {
             initDashboardPermissions();
             if (hasEnrollmentAccess) {
                 if (ENROLLMENT_INSTANCE <= 0) {
-                    EnrollmentPanel enrollmentPanel = new EnrollmentPanel(user);
+                    Panel_Enrollment enrollmentPanel = new Panel_Enrollment(user);
                     jtpTopTabbedPane.addTab("Enrollment", enrollmentPanel);
                     jtpTopTabbedPane.setSelectedComponent(enrollmentPanel);
                     setENROLLMENT_INSTANCE(1);
@@ -1211,7 +1211,7 @@ public class Dashboard extends javax.swing.JFrame {
             initDashboardPermissions();
             if (hasGradesAccess) {
                 if (GRADES_INSTANCE <= 0) {
-                    Panel_GradingSystem panel_GradingSystem = new Panel_GradingSystem(user);
+                    View_Panel_GradingSystem panel_GradingSystem = new View_Panel_GradingSystem(user);
                     jtpTopTabbedPane.add("Grades", panel_GradingSystem);
                     jtpTopTabbedPane.setSelectedComponent(panel_GradingSystem);
                     setGRADES_INSTANCE(1);

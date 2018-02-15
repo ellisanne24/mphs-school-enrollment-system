@@ -10,7 +10,7 @@ import javax.swing.table.TableModel;
 import model.grade.Grade;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
-import view.grades.Panel_GradingSystem;
+import view.grades.View_Panel_GradingSystem;
 
 /**
  *
@@ -18,12 +18,12 @@ import view.grades.Panel_GradingSystem;
  */
 public class TableModelListener_Panel_GradingSystem_MyAdvisoryGradesList_JTable implements TableModelListener {
 
-    private final Panel_GradingSystem view;
+    private final View_Panel_GradingSystem view;
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private StudentDaoImpl studentDaoImpl;
     private GradeDaoImpl gradeDaoImpl;
 
-    public TableModelListener_Panel_GradingSystem_MyAdvisoryGradesList_JTable(Panel_GradingSystem view) {
+    public TableModelListener_Panel_GradingSystem_MyAdvisoryGradesList_JTable(View_Panel_GradingSystem view) {
         this.view = view;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         studentDaoImpl = new StudentDaoImpl();

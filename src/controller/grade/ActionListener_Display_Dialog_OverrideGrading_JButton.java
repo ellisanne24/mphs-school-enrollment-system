@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JDialog;
 import model.user.User;
-import view.grades.Dialog_OverrideGrading;
+import view.grades.View_Dialog_OverrideGrading;
 
 /**
  *
@@ -21,7 +21,7 @@ public class ActionListener_Display_Dialog_OverrideGrading_JButton implements Ac
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Dialog_OverrideGrading dialog_OverrideGrading = new Dialog_OverrideGrading(null, true, user);
+        View_Dialog_OverrideGrading dialog_OverrideGrading = new View_Dialog_OverrideGrading(null, true, user);
         dialog_OverrideGrading.pack();
         dialog_OverrideGrading.setLocationRelativeTo(null);
         dialog_OverrideGrading.setVisible(true);

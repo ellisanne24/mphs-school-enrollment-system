@@ -17,7 +17,7 @@ import model.grade.Grade;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.subject.Subject;
-import view.grades.Dialog_OverrideGrading;
+import view.grades.View_Dialog_OverrideGrading;
 
 /**
  *
@@ -25,11 +25,11 @@ import view.grades.Dialog_OverrideGrading;
  */
 public class ItemListener_Dialog_OverrideGrading_SubjectCode_JComboBox implements ItemListener{
     
-    private final Dialog_OverrideGrading view;
+    private final View_Dialog_OverrideGrading view;
     private final GradeDaoImpl gradeDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
     
-    public ItemListener_Dialog_OverrideGrading_SubjectCode_JComboBox(Dialog_OverrideGrading view) {
+    public ItemListener_Dialog_OverrideGrading_SubjectCode_JComboBox(View_Dialog_OverrideGrading view) {
         this.view = view;
         gradeDaoImpl = new GradeDaoImpl();
         schoolYearDaoImpl = new SchoolYearDaoImpl();

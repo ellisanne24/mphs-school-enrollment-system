@@ -16,7 +16,7 @@ import model.faculty.Faculty;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import model.user.User;
-import view.grades.Dialog_OverrideGrading;
+import view.grades.View_Dialog_OverrideGrading;
 
 /**
  *
@@ -29,10 +29,10 @@ public class ItemListener_Dialog_OverrideGrading_Section_JComboBox implements It
     private final SchoolYearDaoImpl schoolYearDaoImpl;
     private final StudentDaoImpl studentDaoImpl;
     private final StudentJCompModelLoader studentJCompModelLoader;
-    private final Dialog_OverrideGrading view;
+    private final View_Dialog_OverrideGrading view;
     private final User user;
 
-    public ItemListener_Dialog_OverrideGrading_Section_JComboBox(Dialog_OverrideGrading view, User user) {
+    public ItemListener_Dialog_OverrideGrading_Section_JComboBox(View_Dialog_OverrideGrading view, User user) {
         facultyDaoImpl = new FacultyDaoImpl();
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         studentDaoImpl = new StudentDaoImpl();

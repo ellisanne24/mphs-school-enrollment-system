@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import view.grades.Dialog_OverrideGrading;
+import view.grades.View_Dialog_OverrideGrading;
 
 /**
  *
@@ -16,9 +16,9 @@ import view.grades.Dialog_OverrideGrading;
  */
 public class TableModelListener_Dialog_OverrideGrading_GradingSheet_JTable implements TableModelListener {
 
-    private final Dialog_OverrideGrading view;
+    private final View_Dialog_OverrideGrading view;
 
-    public TableModelListener_Dialog_OverrideGrading_GradingSheet_JTable(Dialog_OverrideGrading view) {
+    public TableModelListener_Dialog_OverrideGrading_GradingSheet_JTable(View_Dialog_OverrideGrading view) {
         this.view = view;
     }
 

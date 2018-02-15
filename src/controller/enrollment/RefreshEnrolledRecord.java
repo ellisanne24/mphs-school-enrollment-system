@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import view.enrollment.EnrollmentPanel;
+import view.enrollment.Panel_Enrollment;
 
 /**
  *
@@ -15,12 +15,12 @@ import view.enrollment.EnrollmentPanel;
  */
 public class RefreshEnrolledRecord implements ActionListener {
 
-    private EnrollmentPanel view;
+    private Panel_Enrollment view;
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private EnrollmentDaoImpl enrollmentDaoImpl;
     private EnrollmentJCompModelLoader enrollmentJCompModelLoader;
 
-    public RefreshEnrolledRecord(EnrollmentPanel view) {
+    public RefreshEnrolledRecord(Panel_Enrollment view) {
         this.view = view;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);

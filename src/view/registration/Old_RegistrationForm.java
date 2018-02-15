@@ -30,7 +30,7 @@ import component_renderers.Renderer_Master_JComboBox;
 import component_renderers.Renderer_Month_JComboBox;
 import controller.global.DateScheduleController;
 import java.util.Calendar;
-import view.enrollment.EnrollmentPanel;
+import view.enrollment.Panel_Enrollment;
 import view.container.Dashboard;
 
 /**

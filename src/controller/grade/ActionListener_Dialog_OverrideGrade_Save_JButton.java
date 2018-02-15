@@ -13,7 +13,7 @@ import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.subject.Subject;
 import model.user.User;
-import view.grades.Dialog_OverrideGrading;
+import view.grades.View_Dialog_OverrideGrading;
 
 /**
  *
@@ -21,12 +21,12 @@ import view.grades.Dialog_OverrideGrading;
  */
 public class ActionListener_Dialog_OverrideGrade_Save_JButton implements ActionListener {
 
-    private final Dialog_OverrideGrading view;
+    private final View_Dialog_OverrideGrading view;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
     private final GradeDaoImpl gradeDaoImpl;
     private final User user;
 
-    public ActionListener_Dialog_OverrideGrade_Save_JButton(Dialog_OverrideGrading view, User user) {
+    public ActionListener_Dialog_OverrideGrade_Save_JButton(View_Dialog_OverrideGrading view, User user) {
         this.view = view;
         this.user = user;
         schoolYearDaoImpl = new SchoolYearDaoImpl();

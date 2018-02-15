@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
 import model.schoolyear.SchoolYear;
 import model.user.User;
-import view.grades.Dialog_OverrideGrading;
+import view.grades.View_Dialog_OverrideGrading;
 
 /**
  *
@@ -22,12 +22,12 @@ import view.grades.Dialog_OverrideGrading;
 public class ItemListener_Dialog_OverrideGrading_Type_JComboBox implements ItemListener{
 
     private final User user;
-    private final Dialog_OverrideGrading view;
+    private final View_Dialog_OverrideGrading view;
     private final FacultyDaoImpl facultyDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
     private final SectionJCompModelLoader sectionJCompModelLoader;
     
-    public ItemListener_Dialog_OverrideGrading_Type_JComboBox(Dialog_OverrideGrading view, User user) {
+    public ItemListener_Dialog_OverrideGrading_Type_JComboBox(View_Dialog_OverrideGrading view, User user) {
         this.view = view;
         this.user = user;
         this.facultyDaoImpl = new FacultyDaoImpl();

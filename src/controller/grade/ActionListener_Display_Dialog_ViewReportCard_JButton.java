@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import model.student.Student;
-import view.grades.Dialog_ViewReportCard;
-import view.grades.Panel_GradingSystem;
+import view.grades.View_Dialog_ViewReportCard;
+import view.grades.View_Panel_GradingSystem;
 
 /**
  *
@@ -16,10 +16,10 @@ import view.grades.Panel_GradingSystem;
  */
 public class ActionListener_Display_Dialog_ViewReportCard_JButton implements ActionListener {
 
-    private final Panel_GradingSystem view;
+    private final View_Panel_GradingSystem view;
     private final StudentDaoImpl studentDaoImpl;
 
-    public ActionListener_Display_Dialog_ViewReportCard_JButton(Panel_GradingSystem view) {
+    public ActionListener_Display_Dialog_ViewReportCard_JButton(View_Panel_GradingSystem view) {
         this.view = view;
         studentDaoImpl = new StudentDaoImpl();
     }
@@ -36,7 +36,7 @@ public class ActionListener_Display_Dialog_ViewReportCard_JButton implements Act
     private void displayDialog() {
         Student student = getStudent();
 
-        Dialog_ViewReportCard dialog = new Dialog_ViewReportCard(null, true, student);
+        View_Dialog_ViewReportCard dialog = new View_Dialog_ViewReportCard(null, true, student);
         dialog.pack();
         dialog.setTitle("Report Card");
         dialog.setPreferredSize(new Dimension(600, 500));
