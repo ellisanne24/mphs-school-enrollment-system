@@ -3,6 +3,7 @@ package controller.settings;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import view.curriculum.Panel_Curriculum;
@@ -101,7 +102,8 @@ public class AddSettingsPanelToTabbedPaneOnMouseClick implements MouseListener {
                     addPanelToTabbedPane(jpnlPaymentSchedulesMgmt, new PaymentScheduleSettings());
                     break;
                 case 10:
-                    addPanelToTabbedPane(jpnlDiscountsMgmt, null);
+//                    addPanelToTabbedPane(jpnlDiscountsMgmt, null);
+                    JOptionPane.showMessageDialog(null,"Settings for Discounts is still under development.");
                     break;
                 case 11:
                     addPanelToTabbedPane(jpnlLanMgmt, null);
