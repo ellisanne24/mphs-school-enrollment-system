@@ -6,6 +6,7 @@ import controller.feesetting.DisplayFeeGradeLevelAssignmentOnKeyPress;
 import controller.feesetting.DisplayFeeGradeLevelAssignmentOnMouseClick;
 import controller.feesetting.FeeDisplayDialog;
 import controller.feesetting.SearchFeeOnFeeMasterTable;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import javax.swing.table.DefaultTableModel;
 import utility.initializer.Initializer;
 
@@ -54,6 +55,7 @@ public class JpnlFeeRecord extends javax.swing.JPanel implements Initializer {
 
     @Override
     public final void initControllers() {
+        jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         btn_Search.addActionListener(new SearchFeeOnFeeMasterTable(jtfSearchBox, jtblFeeRecord));
         jtblFeeRecord.addKeyListener(new DisplayFeeGradeLevelAssignmentOnKeyPress(jtblFeeRecord, jtblFeeGradeLevelAssignment));
         jtblFeeRecord.addMouseListener(new DisplayFeeGradeLevelAssignmentOnMouseClick(jtblFeeRecord, jtblFeeGradeLevelAssignment));

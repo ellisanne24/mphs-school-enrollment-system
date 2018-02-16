@@ -2,6 +2,7 @@
 package view.rooms;
 
 import component_model_loader.RoomJCompModelLoader;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.room.DisplayCreateRoomDialog;
 import controller.room.LoadData;
 import utility.initializer.Initializer;
@@ -51,6 +52,7 @@ public class Panel_Rooms extends javax.swing.JPanel implements Initializer {
 
     @Override
     public void initControllers() {
+        jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnSearch.addActionListener(new LoadData(jtblRoomMasterList,jtfSearchBox));
         jbtnCreateRoom.addActionListener(new DisplayCreateRoomDialog(jtblRoomMasterList,jbtnCreateRoom.getActionCommand()));
         jbtnEdit.addActionListener(new DisplayCreateRoomDialog(jtblRoomMasterList, jbtnEdit.getActionCommand()));

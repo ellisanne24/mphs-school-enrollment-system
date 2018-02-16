@@ -2,7 +2,7 @@ package view.subjectcategory;
 
 import component_model_loader.SubjectCategoryJCompModelLoader;
 import component_model_loader.SubjectJCompModelLoader;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import controller.subjectcategory.CreateSubjectCategory;
 import controller.subjectcategory.EditSubjectCategory;
 import controller.subjectcategory.MoveSelectedSubjectsToAssigned;
@@ -111,7 +111,7 @@ public class DialogSubjectCategoryCrud extends javax.swing.JDialog implements In
 
     @Override
     public void initControllers() {
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jbtnAddSubject.addActionListener(new MoveSelectedSubjectsToAssigned(jtblSubjectMasterList, jtblAssignedSubjects));
         jbtnRemove.addActionListener(new RemoveSelectedSubjectsFromAssigned(jtblAssignedSubjects));
         if (action.equalsIgnoreCase("create")) {

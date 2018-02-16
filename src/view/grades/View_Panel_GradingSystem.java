@@ -1,9 +1,11 @@
 package view.grades;
 
 import component_model_loader.StudentJCompModelLoader;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.grade.ActionListener_Display_Dialog_OverrideGrading_JButton;
 import controller.grade.ActionListener_Display_Dialog_ViewReportCard_JButton;
-import controller.grade.TableModelListener_Panel_GradingSystem_MyAdvisoryGradesList_JTable;
+import controller.grade.Controller_JButton_DisplayDialogPromotion;
+import controller.grade.Controller_TableModel_GradingSystem_MyAdvisoryGradesList;
 import daoimpl.FacultyDaoImpl;
 import daoimpl.GradeDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
@@ -107,20 +109,22 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     
     @Override
     public void initControllers() {
+        jbtnPromotion.addActionListener(new Controller_JButton_DisplayDialogPromotion());
+        jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnViewReportCard.addActionListener(new ActionListener_Display_Dialog_ViewReportCard_JButton(this));
         jbtnInputGrades.addActionListener(new ActionListener_Display_Dialog_OverrideGrading_JButton(user));
-        jtblAdvisoryGradesList.getModel().addTableModelListener(new TableModelListener_Panel_GradingSystem_MyAdvisoryGradesList_JTable(this));
+        jtblAdvisoryGradesList.getModel().addTableModelListener(new Controller_TableModel_GradingSystem_MyAdvisoryGradesList(this));
     }
 
     @Override
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         studentDaoImpl = new StudentDaoImpl();
-        facultyDaoImpl = new FacultyDaoImpl();
+        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
     }
 
     public JButton getjButton1() {
-        return jButton1;
+        return jbtnPromotion;
     }
 
     public JButton getjButton2() {
@@ -217,7 +221,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         lbl_show = new javax.swing.JLabel();
         jcmbSearchBy = new javax.swing.JComboBox<>();
         jbtnOpen = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jbtnPromotion = new javax.swing.JButton();
         jbtnViewReportCard = new javax.swing.JButton();
         jpnlMyAdvisory = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -307,12 +311,12 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         gridBagConstraints.gridy = 0;
         panel_control.add(jbtnOpen, gridBagConstraints);
 
-        jButton1.setText("Promotion");
+        jbtnPromotion.setText("Promotion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        panel_control.add(jButton1, gridBagConstraints);
+        panel_control.add(jbtnPromotion, gridBagConstraints);
 
         jbtnViewReportCard.setText("View Report Card");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -427,12 +431,12 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtnInputGrades;
     private javax.swing.JButton jbtnOpen;
     private javax.swing.JButton jbtnPrint;
+    private javax.swing.JButton jbtnPromotion;
     private javax.swing.JButton jbtnSearch;
     private javax.swing.JButton jbtnViewAll;
     private javax.swing.JButton jbtnViewReportCard;

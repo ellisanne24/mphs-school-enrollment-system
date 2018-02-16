@@ -5,6 +5,7 @@ import component_model_loader.SubjectCategoryJCompModelLoader;
 import controller.faculty.EditFacultyDialogListener;
 import controller.faculty.Panel_FacultyListener;
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -23,7 +24,7 @@ public class Dialog_FacultyEdit extends javax.swing.JDialog {
      */
     private Faculty faculty;
     private SubjectCategory subjectCategory;
-    private FacultyDaoImpl fdi = new FacultyDaoImpl();
+    private FacultyDaoImpl fdi = new FacultyDaoImpl(new SchoolYearDaoImpl());
     private SubjectCategoryJCompModelLoader specializationLoader = new SubjectCategoryJCompModelLoader();
     private FacultyJCompModelLoader facultyLoader = new FacultyJCompModelLoader();
     

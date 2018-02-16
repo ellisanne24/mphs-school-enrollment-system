@@ -18,7 +18,7 @@ public class ActionListener_Schedule_Display_Create_Dialog_JButton implements Ac
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Dialog_CreateSchedule c = new Dialog_CreateSchedule(null,true);
+        Dialog_CreateSchedule c = new Dialog_CreateSchedule(null,false);
         c.setPreferredSize(new Dimension(1250,700));
         c.pack();
         c.setLocationRelativeTo(null);

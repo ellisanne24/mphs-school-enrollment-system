@@ -9,12 +9,14 @@ import component_renderers.Renderer_Schedule_Conflict_JTableCell;
 import component_renderers.Renderer_Schedule_GradeLevel_JComboBox;
 import component_renderers.Renderer_Schedule_Summary_JTable;
 import component_renderers.Renderer_SchoolYear_JComboBox;
+import component_renderers.Renderer_SectionType_JComboBox;
 import component_renderers.Renderer_Section_JComboBox;
 import controller.schedule.ActionListener_Create_Schedule_JButton;
 import controller.schedule.ActionListener_Day_JCheckBox;
 import controller.schedule.ItemListener_GradeLevel_JComboBox;
 import controller.schedule.ActionListener_Schedule_LoadToSummary_JButton;
 import controller.schedule.ItemListener_Room_JComboBox;
+import controller.schedule.ItemListener_SectionType_JComboBox;
 import controller.schedule.KeyListener_LoadSubjectFacultyOnClick_JTable;
 import controller.schedule.ItemListener_Section_JComboBox;
 import controller.schedule.TableModelListener_ScheduleSheet_JTable;
@@ -62,53 +64,25 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         initModels();
         initControllers();
         
-//        applyKeyBindings();
-//        applyCellEditorListener();
+        applyCellEditorListener();
         
     }
 
-    private void initializeControllers() {
-//        CreateScheduleController2 createController = new CreateScheduleController2(this);
-//        jbtnCreate.addActionListener(createController);
-//        jcmbRoom.addItemListener(new RoomStateChange(this));
-//        jbtnClearSchedule.addActionListener(new ClearScheduleFormController(this));
-//        jcmbSection.addItemListener(new SectionStateChange(this));
-//        jbtnLoadToSummary.addActionListener(new LoadToSummary(this));
-    }
-    
-    private void applyKeyBindings() {
-        InputMap im = jtblSchedule.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        ActionMap am = jtblSchedule.getActionMap();
-
-        KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-
-        im.put(enterKey, "Action.enter");
-        am.put("Action.enter", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                int columnSelected = jtblSchedule.getSelectedColumn();
-                jtblSchedule.changeSelection(jtblSchedule.getSelectedRow(), columnSelected+1, false, false);
-                jtblSchedule.repaint();
-                if (!jtblSchedule.editCellAt(jtblSchedule.getSelectedRow(), 2)) {
-                    JOptionPane.showMessageDialog(jtblSchedule, "Failed to start cell editing");
-                }
-            }
-        });
-    }
+   
     
     private void applyCellEditorListener() {
         jtblSchedule.getDefaultEditor(Object.class).addCellEditorListener(
                 new CellEditorListener() {
             @Override
             public void editingCanceled(ChangeEvent e) {
-                System.out.println("editingCanceled");
+                JOptionPane.showMessageDialog(null,"Editing Cancelled");
                 int columnSelected = jtblSchedule.getSelectedColumn();
                 jtblSchedule.changeSelection(jtblSchedule.getSelectedRow(), columnSelected + 1, false, false);
             }
 
             @Override
             public void editingStopped(ChangeEvent e) {
-                System.out.println("editingStopped: apply additional action");
+                JOptionPane.showMessageDialog(null,"Editing Cancelled");
                  int columnSelected = jtblSchedule.getSelectedColumn();
                 jtblSchedule.changeSelection(jtblSchedule.getSelectedRow(), columnSelected + 1, false, false);
             }
@@ -131,6 +105,8 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jlblSchoolYear = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jcmbRoom = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jcmbSectionType = new javax.swing.JComboBox<>();
         jpnlDaysControl = new javax.swing.JPanel();
         jlblConflictInfo = new javax.swing.JLabel();
         jcbMonday = new javax.swing.JCheckBox();
@@ -180,17 +156,20 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jlblGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jlblGradeLevel.setText("Grade Level");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jlblGradeLevel, gridBagConstraints);
 
         jcmbGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcmbGradeLevel.setMinimumSize(new java.awt.Dimension(80, 27));
         jcmbGradeLevel.setPreferredSize(new java.awt.Dimension(150, 25));
         jcmbGradeLevel.setRenderer(new component_renderers.Renderer_GradeLevel_JComboBox());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jcmbGradeLevel, gridBagConstraints);
 
@@ -208,7 +187,8 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jcmbSection, gridBagConstraints);
 
@@ -218,6 +198,8 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jcmbSchoolYearFrom, gridBagConstraints);
 
@@ -242,16 +224,39 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel5.add(jcmbRoom, gridBagConstraints);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("Section Type :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jLabel2, gridBagConstraints);
+
+        jcmbSectionType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcmbSectionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "R" }));
+        jcmbSectionType.setSelectedIndex(-1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jPanel5.add(jcmbSectionType, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlCreateSchedule.add(jPanel5, gridBagConstraints);
 
+        jpnlDaysControl.setPreferredSize(new java.awt.Dimension(300, 68));
         jpnlDaysControl.setLayout(new java.awt.GridBagLayout());
 
         jlblConflictInfo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -348,8 +353,6 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jpnlDaysControl.add(jcbDayTueThur, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlCreateSchedule.add(jpnlDaysControl, gridBagConstraints);
 
@@ -591,12 +594,12 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jScrollPane3.setBackground(new java.awt.Color(0, 0, 0));
         jScrollPane3.setForeground(new java.awt.Color(204, 255, 51));
 
-        jTextArea1.setBackground(new java.awt.Color(102, 102, 102));
+        jTextArea1.setBackground(new java.awt.Color(0, 0, 0));
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jTextArea1.setForeground(new java.awt.Color(255, 153, 0));
+        jTextArea1.setForeground(new java.awt.Color(204, 255, 0));
         jTextArea1.setRows(5);
-        jTextArea1.setDisabledTextColor(new java.awt.Color(255, 153, 51));
+        jTextArea1.setDisabledTextColor(new java.awt.Color(204, 255, 0));
         jTextArea1.setEnabled(false);
         jScrollPane3.setViewportView(jTextArea1);
 
@@ -705,6 +708,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
 
     @Override
     public void initRenderers() {
+        jcmbSectionType.setRenderer(new Renderer_SectionType_JComboBox());
         jcmbSection.setRenderer(new Renderer_Section_JComboBox());
         jcmbGradeLevel.setRenderer(new Renderer_Schedule_GradeLevel_JComboBox());
         jcmbSchoolYearFrom.setRenderer(new Renderer_SchoolYear_JComboBox());
@@ -737,6 +741,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jtblSchedule.addMouseListener(new KeyListener_LoadSubjectFacultyOnClick_JTable());
         jcmbGradeLevel.addItemListener(new ItemListener_GradeLevel_JComboBox(this));
         jcmbSection.addItemListener(new ItemListener_Section_JComboBox(this));
+        jcmbSectionType.addItemListener(new ItemListener_SectionType_JComboBox(this));
         jcmbRoom.addItemListener(new ItemListener_Room_JComboBox(this));
         jcbMonday.addActionListener(new ActionListener_Day_JCheckBox(this));
         jcbTuesday.addActionListener(new ActionListener_Day_JCheckBox(this));
@@ -758,6 +763,10 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jtfGradeLevel.setText("");
         jtfSchoolYear.setText("");
         jtfSectionName.setText("");
+    }
+
+    public JComboBox<String> getJcmbSectionType() {
+        return jcmbSectionType;
     }
     
     public JLabel getjLabel1() {
@@ -1020,6 +1029,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
@@ -1045,6 +1055,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
     private javax.swing.JComboBox<String> jcmbRoom;
     private javax.swing.JComboBox<String> jcmbSchoolYearFrom;
     public static javax.swing.JComboBox<String> jcmbSection;
+    private javax.swing.JComboBox<String> jcmbSectionType;
     private javax.swing.JLabel jlblConflictInfo;
     private javax.swing.JLabel jlblGradeLevel;
     private javax.swing.JLabel jlblSchoolYear;

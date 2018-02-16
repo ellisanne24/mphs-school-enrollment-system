@@ -4,6 +4,7 @@ import component_model_loader.FacultyJCompModelLoader;
 import component_model_loader.SchoolYearJCompModelLoader;
 import component_renderers.Renderer_Faculty_JComboBox;
 import component_renderers.Renderer_SchoolYear_JComboBox;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.schedule.ActionListener_Schedule_Display_Create_Dialog_JButton;
 import controller.schedule.ItemListener_ScheduleMasterList_Day_JComboBox;
 import controller.schedule.ItemListener_ScheduleMasterRecord_Faculty_JComboBox;
@@ -64,6 +65,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
 
     @Override
     public void initControllers() {
+        jtfSearch.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnCreate.addActionListener(new ActionListener_Schedule_Display_Create_Dialog_JButton());
         jcmbFaculty.addItemListener(new ItemListener_ScheduleMasterRecord_Faculty_JComboBox(this));
         jcmbDay.addItemListener(new ItemListener_ScheduleMasterList_Day_JComboBox(this));

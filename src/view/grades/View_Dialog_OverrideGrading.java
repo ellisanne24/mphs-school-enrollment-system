@@ -5,7 +5,7 @@ import component_renderers.Renderer_GradeLevel_JComboBox;
 import component_renderers.Renderer_Grade_Dialog_OverrideGrading_GradingSheet_JTable;
 import component_renderers.Renderer_Grade_Dialog_OverrideGrading_SubjectCode_JComboBox;
 import component_renderers.Renderer_Section_JComboBox;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import controller.grade.ActionListener_Dialog_OverrideGrade_Save_JButton;
 import controller.grade.ItemListener_Dialog_OverrideGrading_Section_JComboBox;
 import controller.grade.ItemListener_Dialog_OverrideGrading_SubjectCode_JComboBox;
@@ -66,7 +66,7 @@ public class View_Dialog_OverrideGrading extends javax.swing.JDialog implements 
 
     @Override
     public void initControllers() {
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jcmbSubjectCode.addItemListener(new ItemListener_Dialog_OverrideGrading_SubjectCode_JComboBox(this));
         jbtnSaveAndClose.addActionListener(new ActionListener_Dialog_OverrideGrade_Save_JButton(this, user));
         jcmbType.addItemListener(new ItemListener_Dialog_OverrideGrading_Type_JComboBox(this, user));
@@ -185,8 +185,9 @@ public class View_Dialog_OverrideGrading extends javax.swing.JDialog implements 
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Override Grading");
-        setMinimumSize(new java.awt.Dimension(1000, 600));
+        setMinimumSize(new java.awt.Dimension(900, 600));
         setModal(true);
+        setPreferredSize(new java.awt.Dimension(900, 600));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -210,7 +211,7 @@ public class View_Dialog_OverrideGrading extends javax.swing.JDialog implements 
         jpnlControl.add(jbtnReset, gridBagConstraints);
 
         jlblType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jlblType.setText("Type :");
+        jlblType.setText("Class Handled :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -296,6 +297,7 @@ public class View_Dialog_OverrideGrading extends javax.swing.JDialog implements 
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlTopPanel.add(jpnlControl, gridBagConstraints);
 
@@ -331,12 +333,19 @@ public class View_Dialog_OverrideGrading extends javax.swing.JDialog implements 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentsList.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlTopPanel.add(jpnlStudentsList, gridBagConstraints);
 
         jScrollPane2.setViewportView(jpnlTopPanel);

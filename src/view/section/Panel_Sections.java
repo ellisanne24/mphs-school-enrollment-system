@@ -4,6 +4,7 @@ import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SectionJCompModelLoader;
 import component_renderers.Renderer_GradeLevel_JComboBox;
 import component_renderers.Renderer_Master_GradeLevel_JTableCell;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.section.DisplaySectionCrudDialog;
 import controller.section.DisplaySectionsByGradeLevelStateChange;
 import controller.section.DisplaySectionsByWildCardOnKeyPress;
@@ -57,6 +58,7 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initControllers() {
+        tf_searchbox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         tf_searchbox.addKeyListener(new DisplaySectionsByWildCardOnKeyPress(tf_searchbox, jtblSectionMasterList));
         btn_Search.addActionListener(new DisplaySectionsByWildCardOnSearch(tf_searchbox, jtblSectionMasterList));
         jcmbFilterByGradeLevel.addItemListener(new DisplaySectionsByGradeLevelStateChange(jcmbFilterByGradeLevel, jtblSectionMasterList));

@@ -208,7 +208,7 @@
                             </Constraint>
                           </Constraints>
                         </Component>
-                        <Component class="javax.swing.JButton" name="jButton1">
+                        <Component class="javax.swing.JButton" name="jbtnPromotion">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Promotion"/>
                           </Properties>

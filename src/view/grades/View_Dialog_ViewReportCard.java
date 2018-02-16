@@ -6,7 +6,7 @@ import component_renderers.Renderer_Grade_ReportCard_JTableCell;
 import component_renderers.Renderer_ReportCard_StudentName_JComboBox;
 import component_renderers.Renderer_Section_JComboBox;
 import component_renderers.Renderer_Student_JComboBox;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import daoimpl.GradeDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
@@ -78,7 +78,7 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
 
     @Override
     public void initControllers() {
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jtblReportCard.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -180,9 +180,6 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
 
         jScrollPane1 = new javax.swing.JScrollPane();
         panel_toppanel = new javax.swing.JPanel();
-        panel_details = new javax.swing.JPanel();
-        jbtnRefresh = new javax.swing.JButton();
-        jbtnPrint = new javax.swing.JButton();
         panel_details1 = new javax.swing.JPanel();
         lbl_name2 = new javax.swing.JLabel();
         jcmbStudentId = new javax.swing.JComboBox<>();
@@ -199,6 +196,8 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
         panel_footer = new javax.swing.JPanel();
         jbtnCancel = new javax.swing.JButton();
         jbtnSave = new javax.swing.JButton();
+        jbtnRefresh = new javax.swing.JButton();
+        jbtnPrint = new javax.swing.JButton();
         panel_gradingTable = new javax.swing.JPanel();
         panel_gradingtop = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -206,40 +205,13 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Student Report Card");
-        setMinimumSize(new java.awt.Dimension(800, 500));
+        setMinimumSize(new java.awt.Dimension(800, 600));
         setModal(true);
-        setResizable(false);
+        setPreferredSize(new java.awt.Dimension(804, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         panel_toppanel.setMinimumSize(new java.awt.Dimension(800, 700));
         panel_toppanel.setLayout(new java.awt.GridBagLayout());
-
-        panel_details.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Control", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        panel_details.setMinimumSize(new java.awt.Dimension(795, 50));
-        panel_details.setPreferredSize(new java.awt.Dimension(795, 50));
-        panel_details.setLayout(new java.awt.GridBagLayout());
-
-        jbtnRefresh.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnRefresh.setText("Refresh");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        panel_details.add(jbtnRefresh, gridBagConstraints);
-
-        jbtnPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnPrint.setText("Print");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 600);
-        panel_details.add(jbtnPrint, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panel_toppanel.add(panel_details, gridBagConstraints);
 
         panel_details1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Student Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
         panel_details1.setMinimumSize(new java.awt.Dimension(795, 90));
@@ -377,38 +349,60 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         panel_toppanel.add(panel_details1, gridBagConstraints);
 
-        panel_footer.setMinimumSize(new java.awt.Dimension(795, 50));
-        panel_footer.setPreferredSize(new java.awt.Dimension(795, 50));
+        panel_footer.setMinimumSize(new java.awt.Dimension(795, 30));
+        panel_footer.setPreferredSize(new java.awt.Dimension(795, 30));
         panel_footer.setLayout(new java.awt.GridBagLayout());
 
         jbtnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnCancel.setText("Cancel");
         jbtnCancel.setMaximumSize(new java.awt.Dimension(69, 40));
-        jbtnCancel.setMinimumSize(new java.awt.Dimension(69, 40));
-        jbtnCancel.setPreferredSize(new java.awt.Dimension(69, 40));
+        jbtnCancel.setMinimumSize(new java.awt.Dimension(100, 30));
+        jbtnCancel.setPreferredSize(new java.awt.Dimension(100, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_footer.add(jbtnCancel, gridBagConstraints);
 
         jbtnSave.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnSave.setText("Save");
         jbtnSave.setMaximumSize(new java.awt.Dimension(59, 40));
-        jbtnSave.setMinimumSize(new java.awt.Dimension(59, 40));
-        jbtnSave.setPreferredSize(new java.awt.Dimension(59, 40));
+        jbtnSave.setMinimumSize(new java.awt.Dimension(100, 30));
+        jbtnSave.setPreferredSize(new java.awt.Dimension(100, 30));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_footer.add(jbtnSave, gridBagConstraints);
+
+        jbtnRefresh.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnRefresh.setText("Refresh");
+        jbtnRefresh.setMinimumSize(new java.awt.Dimension(100, 30));
+        jbtnRefresh.setPreferredSize(new java.awt.Dimension(100, 30));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_footer.add(jbtnRefresh, gridBagConstraints);
+
+        jbtnPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnPrint.setText("Print");
+        jbtnPrint.setMinimumSize(new java.awt.Dimension(100, 30));
+        jbtnPrint.setPreferredSize(new java.awt.Dimension(100, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 30);
-        panel_footer.add(jbtnSave, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_footer.add(jbtnPrint, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 30, 0);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_footer, gridBagConstraints);
 
         panel_gradingTable.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Grading Table", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
@@ -420,7 +414,7 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
         panel_gradingtop.setPreferredSize(new java.awt.Dimension(780, 455));
         panel_gradingtop.setLayout(new java.awt.GridBagLayout());
 
-        jtblReportCard.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtblReportCard.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblReportCard.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -448,11 +442,16 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_gradingtop.add(jScrollPane2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_gradingTable.add(panel_gradingtop, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -495,7 +494,6 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
     private javax.swing.JLabel lbl_name17;
     private javax.swing.JLabel lbl_name2;
     private javax.swing.JLabel lbl_name9;
-    private javax.swing.JPanel panel_details;
     private javax.swing.JPanel panel_details1;
     private javax.swing.JPanel panel_footer;
     private javax.swing.JPanel panel_gradingTable;

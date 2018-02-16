@@ -4,6 +4,7 @@ import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SubjectJCompModelLoader;
 import component_renderers.Renderer_GradeLevel_JComboBox;
 import component_renderers.Renderer_Master_GradeLevel_JTableCell;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.subject.DisplaySubjectCrudDialog;
 import controller.subject.SearchSubjectByWildCard;
 import utility.initializer.Initializer;
@@ -55,6 +56,7 @@ public class Panel_Subjects extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initControllers() {
+        jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnSearch.addActionListener(new SearchSubjectByWildCard(jtblSubjectMasterList, jtfSearchBox));
         jbtnCreateSubject.addActionListener(new DisplaySubjectCrudDialog(jtblSubjectMasterList, jbtnCreateSubject.getActionCommand()));
         jbtnEditSubject.addActionListener(new DisplaySubjectCrudDialog(jtblSubjectMasterList, jbtnEditSubject.getActionCommand()));

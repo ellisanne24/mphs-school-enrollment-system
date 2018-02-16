@@ -6,7 +6,7 @@ import controller.feesetting.AddFee;
 import controller.feesetting.ClearAllGradeLevelCheckBoxes;
 import controller.feesetting.ClearFeeAmountOnUncheck;
 import controller.feesetting.EditFee;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import daoimpl.FeeDaoImpl;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -163,8 +163,8 @@ public class JdlgFeeCrud extends javax.swing.JDialog implements Initializer{
                     jcmbStatus, this));
         }
         
-        jbtnCancel.addActionListener(new ExitJDialog(this));
-        jbtnOk.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
+        jbtnOk.addActionListener(new Controller_JButton_ExitJDialog(this));
         
         jbtnApplyToAll.addActionListener(new ActionListener() {
             @Override

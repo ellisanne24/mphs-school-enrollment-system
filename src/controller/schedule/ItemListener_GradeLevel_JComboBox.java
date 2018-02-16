@@ -49,17 +49,9 @@ public class ItemListener_GradeLevel_JComboBox implements ItemListener {
     public void itemStateChanged(ItemEvent e) {
         if (jcmbGradeLevel.getSelectedIndex() > -1) {
             resetForm();
-            loadSectionsByGradeLevel();
             loadSubjectsByGradeLevel();
             loadGradeLevelToScheduleHeader();
         }
-    }
-
-    private void loadSectionsByGradeLevel() {
-        GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
-        int gradeLevelId = gradeLevel.getGradeLevelId();
-        int schoolYearId = Integer.parseInt(jcmbSchoolYear.getSelectedItem().toString().trim());
-        jcmbSections.setModel(sectionJCompModelLoader.getSectionsWithoutSchedule(true, schoolYearId, gradeLevelId));
     }
     
     private void loadSubjectsByGradeLevel() {

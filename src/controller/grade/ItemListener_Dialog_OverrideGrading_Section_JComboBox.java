@@ -33,8 +33,8 @@ public class ItemListener_Dialog_OverrideGrading_Section_JComboBox implements It
     private final User user;
 
     public ItemListener_Dialog_OverrideGrading_Section_JComboBox(View_Dialog_OverrideGrading view, User user) {
-        facultyDaoImpl = new FacultyDaoImpl();
         schoolYearDaoImpl = new SchoolYearDaoImpl();
+        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
         studentDaoImpl = new StudentDaoImpl();
         subjectJCompModelLoader = new SubjectJCompModelLoader();
         studentJCompModelLoader = new StudentJCompModelLoader(studentDaoImpl);

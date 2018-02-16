@@ -1,6 +1,7 @@
 package view.subjectcategory;
 
 import component_model_loader.SubjectCategoryJCompModelLoader;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.subjectcategory.DisplaySubjectCategoryAssignedSubjectsOnKeyPress;
 import controller.subjectcategory.DisplaySubjectCategoryAssignedSubjectsOnMouseClick;
 import controller.subjectcategory.DisplaySubjectCategoryCrudDialog;
@@ -51,6 +52,7 @@ public class Panel_SubjectCategory extends javax.swing.JPanel implements Initial
 
     @Override
     public void initControllers() {
+        jtfSearch.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnSearch.addActionListener(new SearchSubjectCategoryByWildCard(jtfSearch, jtblSubjectCategoryMasterList));
         jbtnCreate.addActionListener(new DisplaySubjectCategoryCrudDialog(jtblSubjectCategoryMasterList));
         jbtnEdit.addActionListener(new DisplaySubjectCategoryCrudDialog(jtblSubjectCategoryMasterList));

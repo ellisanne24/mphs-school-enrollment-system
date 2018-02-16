@@ -1,6 +1,7 @@
 package controller.faculty;
 
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -21,11 +22,13 @@ public class EditFacultyDialogListener implements ActionListener {
     private ArrayList<String> rejectedData;
     private Faculty faculty;
     private SubjectCategory subjectCategory = new SubjectCategory();
-
-    private FacultyDaoImpl fdi = new FacultyDaoImpl();
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
+    private FacultyDaoImpl fdi;
 
     public EditFacultyDialogListener(Dialog_FacultyEdit facultyEdit, Faculty faculty) {
         this.facultyEdit = facultyEdit;
+        this.schoolYearDaoImpl = new SchoolYearDaoImpl();
+        fdi = new FacultyDaoImpl(schoolYearDaoImpl);
         rejectedData = new ArrayList<>();
         this.faculty = faculty;
     }

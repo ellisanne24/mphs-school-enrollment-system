@@ -1,3 +1,0 @@
-moph_ui.dialog_discountcreate$1
-moph_ui.dialog_discountcreate$1$1
-moph_ui.dialog_discountcreate

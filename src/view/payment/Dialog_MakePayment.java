@@ -1,6 +1,6 @@
 package view.payment;
 
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import controller.payment.Dialog_MakePayment_AddItemToPay;
 import controller.payment.Dialog_MakePayment_PaymentBreakDown_TableModelListener;
 import controller.payment.Dialog_MakePayment_ProceedPayment;
@@ -120,7 +120,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
                 jcmbOthers.setEnabled(jcbOthers.isSelected());
             }
         });
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jbtnRemove.addActionListener(new Dialog_MakePayment_RemoveItemToPay(this));
         jtblPaymentBreakDown.getModel().addTableModelListener(new Dialog_MakePayment_PaymentBreakDown_TableModelListener(this));
         jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(hasTuitionRecord,this,tuition, tuitionFeeDaoImpl));

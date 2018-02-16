@@ -3,7 +3,7 @@ package view.subject;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SubjectJCompModelLoader;
 import component_renderers.Renderer_GradeLevel_JComboBox;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import controller.subject.CreateSubject;
 import controller.subject.EditSubject;
 import daoimpl.GradeLevelDaoImpl;
@@ -113,7 +113,7 @@ public class DialogSubjectCrud extends javax.swing.JDialog implements Initialize
 
     @Override
     public void initControllers() {
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         if (action.equalsIgnoreCase("create")) {
             jbtnSave.addActionListener(new CreateSubject(this));
         } else if (action.equalsIgnoreCase("edit")) {

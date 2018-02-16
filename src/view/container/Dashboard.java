@@ -84,12 +84,6 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         
         this.user = user;
-        loadFacultyId();
-        loadUserAdviserId();
-
-        System.out.println("User Id :" + user.getUserId());
-        System.out.println("Faculty Id :" + facultyId);
-        System.out.println("Adviser Id :" + adviserId);
 
         setUILookAndFeel();
         initDashboardPermissions();
@@ -105,26 +99,6 @@ public class Dashboard extends javax.swing.JFrame {
         //
         SubjectTestDataModel stdm = new SubjectTestDataModel();
         stdm.getDescription();
-    }
-
-    private void loadUserAdviserId() {
-        Role role = user.getRole();
-        String roleName = role.getRoleName();
-        if (roleName.toLowerCase().equals("faculty")) {
-            UserDaoImpl udi = new UserDaoImpl();
-            //adviserId = udi.getAdviserIdByUserId(user.getId());
-            adviserId = facultyId;
-            System.out.println("Adviser Id: " + adviserId);
-        }
-    }
-
-    private void loadFacultyId() {
-        Role role = user.getRole();
-        String roleName = role.getRoleName();
-        if (roleName.toLowerCase().equals("faculty")) {
-            FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
-            
-        }
     }
 
     private void setUILookAndFeel() {

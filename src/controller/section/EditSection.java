@@ -60,12 +60,12 @@ public class EditSection implements ActionListener, FormValidator{
         boolean isValid = true;
         int adviserId = Integer.parseInt(view.getJcmbAdviser().getSelectedItem().toString().trim());
         int currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
-        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
+        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
 
-        if (facultyDaoImpl.facultyHasAdvisory(adviserId, currentSchoolYearId)) {
-            isValid = false;
-            JOptionPane.showMessageDialog(null, "Faculty already has an advisory class.");
-        }
+            if (facultyDaoImpl.facultyHasAdvisory(adviserId, currentSchoolYearId)) {
+                isValid = false;
+                JOptionPane.showMessageDialog(null, "Faculty already has an advisory class.");
+            }
 
         if (sectionNameExists()) {
             isValid = false;
@@ -102,6 +102,7 @@ public class EditSection implements ActionListener, FormValidator{
         section.setSectionSession(view.getJcmbSession().getSelectedItem().toString().trim());
         section.setAdviser(adviser);
         section.setCapacity(Integer.parseInt(view.getJtfCapacity().getText().trim()));
+        section.setSectionType(view.getJcmbSectionType().getSelectedItem().toString().trim());
         isUpdated = sectionDaoImpl.updateSection(section);
         
         return isUpdated;

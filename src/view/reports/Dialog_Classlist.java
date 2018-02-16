@@ -8,7 +8,6 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         initComponents();
     }
 
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -31,11 +30,17 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         lbl_sydisplay = new javax.swing.JLabel();
         panel_control1 = new javax.swing.JPanel();
         lbl_gradelevel = new javax.swing.JLabel();
-        lbl_leveldisplay = new javax.swing.JLabel();
-        lbl_section = new javax.swing.JLabel();
-        lbl_sectiondisplay = new javax.swing.JLabel();
-        lbl_adviser = new javax.swing.JLabel();
-        lbl_adviserdisplay = new javax.swing.JLabel();
+        lbl_gradelevel1 = new javax.swing.JLabel();
+        lbl_gradelevel2 = new javax.swing.JLabel();
+        lbl_gradelevel3 = new javax.swing.JLabel();
+        lbl_gradelevel4 = new javax.swing.JLabel();
+        lbl_gradelevel5 = new javax.swing.JLabel();
+        lbl_gradelevel6 = new javax.swing.JLabel();
+        lbl_gradelevel7 = new javax.swing.JLabel();
+        lbl_gradelevel8 = new javax.swing.JLabel();
+        lbl_gradelevel9 = new javax.swing.JLabel();
+        lbl_gradelevel10 = new javax.swing.JLabel();
+        lbl_gradelevel11 = new javax.swing.JLabel();
         panel_tablecontainer = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -44,7 +49,6 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         setTitle("MOPH Official Class List");
         setMinimumSize(new java.awt.Dimension(600, 750));
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(600, 750));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -57,7 +61,7 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         panel_control.setPreferredSize(new java.awt.Dimension(495, 65));
         panel_control.setLayout(new java.awt.GridBagLayout());
 
-        btn_savennew.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btn_savennew.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btn_savennew.setText("Print");
         btn_savennew.setMaximumSize(new java.awt.Dimension(102, 40));
         btn_savennew.setMinimumSize(new java.awt.Dimension(102, 40));
@@ -68,7 +72,7 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 0);
         panel_control.add(btn_savennew, gridBagConstraints);
 
-        btn_savennew1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btn_savennew1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btn_savennew1.setText("Save as PDF");
         btn_savennew1.setMaximumSize(new java.awt.Dimension(115, 40));
         btn_savennew1.setMinimumSize(new java.awt.Dimension(115, 40));
@@ -137,6 +141,7 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         panel_toppanel.add(panel_logocontainer, gridBagConstraints);
 
         panel_lineabove.setBackground(new java.awt.Color(51, 51, 51));
@@ -189,7 +194,7 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         panel_officialcontainer.setLayout(new java.awt.GridBagLayout());
 
         lbl_officialclasslst.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        lbl_officialclasslst.setText("OFFICIAL CLASS LIST");
+        lbl_officialclasslst.setText("OFFICIAL CLASS LIST (Regular)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -219,64 +224,113 @@ public class Dialog_Classlist extends javax.swing.JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         panel_toppanel.add(panel_officialcontainer, gridBagConstraints);
 
-        panel_control1.setMinimumSize(new java.awt.Dimension(495, 45));
-        panel_control1.setPreferredSize(new java.awt.Dimension(495, 45));
+        panel_control1.setMinimumSize(new java.awt.Dimension(495, 55));
+        panel_control1.setPreferredSize(new java.awt.Dimension(495, 55));
         panel_control1.setLayout(new java.awt.GridBagLayout());
 
         lbl_gradelevel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lbl_gradelevel.setText("Grade Level :");
+        lbl_gradelevel.setText("Subject Name :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
         panel_control1.add(lbl_gradelevel, gridBagConstraints);
 
-        lbl_leveldisplay.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_leveldisplay.setText("1");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_control1.add(lbl_leveldisplay, gridBagConstraints);
-
-        lbl_section.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lbl_section.setText("Section :");
+        lbl_gradelevel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbl_gradelevel1.setText("Subject Code :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 120, 0, 0);
-        panel_control1.add(lbl_section, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 40, 0, 0);
+        panel_control1.add(lbl_gradelevel1, gridBagConstraints);
 
-        lbl_sectiondisplay.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_sectiondisplay.setText("Mars");
+        lbl_gradelevel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_gradelevel2.setText("English");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        panel_control1.add(lbl_gradelevel2, gridBagConstraints);
+
+        lbl_gradelevel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_gradelevel3.setText("G1English");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_control1.add(lbl_sectiondisplay, gridBagConstraints);
+        panel_control1.add(lbl_gradelevel3, gridBagConstraints);
 
-        lbl_adviser.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lbl_adviser.setText("Adviser :");
+        lbl_gradelevel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbl_gradelevel4.setText("Teacher :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-        panel_control1.add(lbl_adviser, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 40, 0, 0);
+        panel_control1.add(lbl_gradelevel4, gridBagConstraints);
 
-        lbl_adviserdisplay.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_adviserdisplay.setText("Mr. Antonio");
+        lbl_gradelevel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_gradelevel5.setText("Mrs. Tan");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        panel_control1.add(lbl_gradelevel5, gridBagConstraints);
+
+        lbl_gradelevel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbl_gradelevel6.setText("Section :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 20);
-        panel_control1.add(lbl_adviserdisplay, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        panel_control1.add(lbl_gradelevel6, gridBagConstraints);
+
+        lbl_gradelevel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_gradelevel7.setText("Mars");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 0);
+        panel_control1.add(lbl_gradelevel7, gridBagConstraints);
+
+        lbl_gradelevel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbl_gradelevel8.setText("Session :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        panel_control1.add(lbl_gradelevel8, gridBagConstraints);
+
+        lbl_gradelevel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_gradelevel9.setText("AM");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 0);
+        panel_control1.add(lbl_gradelevel9, gridBagConstraints);
+
+        lbl_gradelevel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbl_gradelevel10.setText("Session :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        panel_control1.add(lbl_gradelevel10, gridBagConstraints);
+
+        lbl_gradelevel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_gradelevel11.setText("Mrs. Chuan");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 0);
+        panel_control1.add(lbl_gradelevel11, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -333,21 +387,26 @@ public class Dialog_Classlist extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_savennew;
     private javax.swing.JButton btn_savennew1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel lbl_adviser;
-    private javax.swing.JLabel lbl_adviserdisplay;
     private javax.swing.JLabel lbl_gradelevel;
-    private javax.swing.JLabel lbl_leveldisplay;
+    private javax.swing.JLabel lbl_gradelevel1;
+    private javax.swing.JLabel lbl_gradelevel10;
+    private javax.swing.JLabel lbl_gradelevel11;
+    private javax.swing.JLabel lbl_gradelevel2;
+    private javax.swing.JLabel lbl_gradelevel3;
+    private javax.swing.JLabel lbl_gradelevel4;
+    private javax.swing.JLabel lbl_gradelevel5;
+    private javax.swing.JLabel lbl_gradelevel6;
+    private javax.swing.JLabel lbl_gradelevel7;
+    private javax.swing.JLabel lbl_gradelevel8;
+    private javax.swing.JLabel lbl_gradelevel9;
     private javax.swing.JLabel lbl_logo;
     private javax.swing.JLabel lbl_officialclasslst;
-    private javax.swing.JLabel lbl_section;
-    private javax.swing.JLabel lbl_sectiondisplay;
     private javax.swing.JLabel lbl_skuladdress;
     private javax.swing.JLabel lbl_skulname;
     private javax.swing.JLabel lbl_sy;

@@ -4,6 +4,7 @@ package dao;
 
 import java.util.List;
 import model.faculty.Faculty;
+import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import model.student.Student;
@@ -29,6 +30,8 @@ public interface ISection{
     List<Section> getSectionsByGradeLevelNoAndSchoolYearId(int gradeLevelNo, int schoolYearId);
     List<Student> getSectionStudentsBySectionIdAndSchoolYearId(Section section);
     List<Section> getSectionsHandledByFacultyByFacultyAndSchoolYear(Faculty faculty, SchoolYear schoolYear);
+    List<Section> getSectionsByGradeLevelNoSectionTypeAndSchoolYear(GradeLevel gradeLevel, String sectionType, SchoolYear schoolYear);
+    List<Section> getSectionsWithNoAssignedSchedBySchoolYearGradeLevelAndSectionType(SchoolYear sy, GradeLevel g, String sectionType);
     Section getSectionByStudentAndSchoolYear(Student student, SchoolYear schoolYear);
     /*
     End 

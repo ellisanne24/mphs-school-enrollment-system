@@ -106,7 +106,8 @@ public class AddSettingsPanelToTabbedPaneOnMouseClick implements MouseListener {
                     JOptionPane.showMessageDialog(null,"Settings for Discounts is still under development.");
                     break;
                 case 11:
-                    addPanelToTabbedPane(jpnlLanMgmt, null);
+//                    addPanelToTabbedPane(jpnlLanMgmt, null);
+                    JOptionPane.showMessageDialog(null,"Settings for LAN Management is still under development.");
                     break;
                 case 12:
                     addPanelToTabbedPane(jpnlSchoolYearManagement, new Panel_SchoolYear());

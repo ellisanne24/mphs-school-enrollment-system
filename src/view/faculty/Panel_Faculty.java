@@ -3,6 +3,7 @@ package view.faculty;
 import component_model_loader.FacultyJCompModelLoader;
 import controller.faculty.Panel_FacultyListener;
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -15,7 +16,7 @@ public class Panel_Faculty extends javax.swing.JPanel{
     
     private Faculty faculty = new Faculty();    
     private FacultyJCompModelLoader facultyLoader = new FacultyJCompModelLoader();
-    private FacultyDaoImpl fdi = new FacultyDaoImpl();
+    private FacultyDaoImpl fdi = new FacultyDaoImpl(new SchoolYearDaoImpl());
     
     public Panel_Faculty() {
         initComponents();

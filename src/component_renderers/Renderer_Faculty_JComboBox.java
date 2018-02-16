@@ -6,6 +6,7 @@
 package component_renderers;
 
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
@@ -50,7 +51,8 @@ public class Renderer_Faculty_JComboBox extends JLabel implements ListCellRender
     }
     
     private String getFacultyCompleteName(int facultyId) {
-        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
+        SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
+        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
         Faculty f = facultyDaoImpl.getFacultyById(facultyId);
         StringBuilder sb = new StringBuilder();
         sb.append(f.getLastName());

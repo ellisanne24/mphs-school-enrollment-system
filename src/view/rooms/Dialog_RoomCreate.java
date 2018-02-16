@@ -1,7 +1,7 @@
 package view.rooms;
 
 import component_model_loader.RoomJCompModelLoader;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import controller.room.CreateRoom;
 import controller.room.EditRoom;
 import daoimpl.RoomDaoImpl;
@@ -87,7 +87,7 @@ public class Dialog_RoomCreate extends javax.swing.JDialog implements Initialize
     @Override
     public void initControllers() {
         
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
             if(action.equalsIgnoreCase("create")){
                jbtnSave.addActionListener(new CreateRoom(this, jtfRoomName, 
                        jtfBldgName, jtfCapacity, 

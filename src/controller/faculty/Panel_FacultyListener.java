@@ -4,6 +4,7 @@ package controller.faculty;
 import component_model_loader.FacultyJCompModelLoader;
 import component_model_loader.SubjectCategoryJCompModelLoader;
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -28,7 +29,7 @@ public class Panel_FacultyListener implements ActionListener, MouseListener{
     private Faculty faculty = new Faculty();
     private SubjectCategory subjectCategory = new SubjectCategory();
     
-    private FacultyDaoImpl fdi = new FacultyDaoImpl();
+    private FacultyDaoImpl fdi = new FacultyDaoImpl(new SchoolYearDaoImpl());
     
     private FacultyJCompModelLoader tblFacultyLoader = new FacultyJCompModelLoader();
     private SubjectCategoryJCompModelLoader subjectCategoryJCompModelLoader = new SubjectCategoryJCompModelLoader();

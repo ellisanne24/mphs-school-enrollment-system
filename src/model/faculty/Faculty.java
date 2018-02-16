@@ -16,6 +16,25 @@ public class Faculty extends User{
     private boolean isAdviser;
     private boolean hasAmAdvisory;
     private boolean hasPmAdvisory;
+    private boolean hasAMSchedule;
+    private boolean hasPMSchedule;
+
+    public boolean isHasAMSchedule() {
+        return hasAMSchedule;
+    }
+
+    public void setHasAMSchedule(boolean hasAMSchedule) {
+        this.hasAMSchedule = hasAMSchedule;
+    }
+
+    public boolean isHasPMSchedule() {
+        return hasPMSchedule;
+    }
+
+    public void setHasPMSchedule(boolean hasPMSchedule) {
+        this.hasPMSchedule = hasPMSchedule;
+    }
+    
     private List<SubjectCategory> subjectCategories;
 
     public boolean isIsAdviser() {

@@ -271,5 +271,30 @@ public class ScheduleDaoImpl implements ISchedule {
         }
         return scheduleList;
     }
+
+    @Override
+    public boolean facultyhasScheduleAt(Schedule schedule) {
+        boolean hasSchedule = false;
+        String SQL = "{CALL facultyHasScheduleAt(?,?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,schedule.getStartTime());
+            cs.setInt(2,schedule.getEndTime());
+            cs.setString(3, schedule.getDay());
+            cs.setInt(4, schedule.getSchoolYear().getSchoolYearId());
+            cs.setInt(5, schedule.getFaculty().getFacultyID());
+            try(ResultSet rs = cs.executeQuery()){
+                while(rs.next()){
+                    hasSchedule = rs.getBoolean("hasSchedule");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return hasSchedule;
+    }
+ 
+    
     
 }

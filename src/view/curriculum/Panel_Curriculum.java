@@ -3,6 +3,7 @@ package view.curriculum;
 import component_model_loader.CurriculumJCompModelLoader;
 import controller.curriculum.DisplayCurriculumCrudDialog;
 import controller.curriculum.SearchCurriculumByWildCard;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import utility.initializer.Initializer;
 
 public class Panel_Curriculum extends javax.swing.JPanel implements Initializer{
@@ -45,6 +46,7 @@ public class Panel_Curriculum extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initControllers() {
+        jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnCreate.addActionListener(new DisplayCurriculumCrudDialog(jtblCurriculumMasterRecord));
         jbtnEdit.addActionListener(new DisplayCurriculumCrudDialog(jtblCurriculumMasterRecord));
         jbtnView.addActionListener(new DisplayCurriculumCrudDialog(jtblCurriculumMasterRecord));

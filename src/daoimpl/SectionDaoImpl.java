@@ -32,7 +32,7 @@ public class SectionDaoImpl implements ISection {
     public boolean addSection(Section section) {
         boolean isAdded = false;
         String SQLa = "{CALL addSection(?,?)}";
-        String SQLb = "{CALL addSectionSetting(?,?,?,?,?,?)}"; //add a 5th parameter to store faculty/adviser id when faculty module is finished
+        String SQLb = "{CALL addSectionSetting(?,?,?,?,?,?,?)}"; //add a 5th parameter to store faculty/adviser id when faculty module is finished
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
             try (CallableStatement csa = con.prepareCall(SQLa);
@@ -48,6 +48,7 @@ public class SectionDaoImpl implements ISection {
                 csb.setString(4, section.getSectionSession());
                 csb.setInt(5, section.getAdviser().getFacultyID());
                 csb.setInt(6, section.getCapacity());
+                csb.setString(7, section.getSectionType());
                 
                 csb.executeUpdate();
                 con.commit();
@@ -98,7 +99,7 @@ public class SectionDaoImpl implements ISection {
     public boolean updateSection(Section section) {
         boolean isUpdated = false;
         String SQLa = "{CALL updateSection(?,?,?)}";
-        String SQLb = "{CALL updateSectionSettings(?,?,?,?,?,?)}";
+        String SQLb = "{CALL updateSectionSettings(?,?,?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
             try (CallableStatement csa = con.prepareCall(SQLa);
@@ -115,6 +116,7 @@ public class SectionDaoImpl implements ISection {
                 csb.setString(4, section.getSectionSession().trim());
                 csb.setInt(5,section.getAdviser().getFacultyID());
                 csb.setInt(6, section.getCapacity());
+                csb.setString(7, section.getSectionType());
                 csb.executeUpdate();
                 
                 con.commit();
@@ -244,6 +246,7 @@ public class SectionDaoImpl implements ISection {
                     section.setIsActive(rs.getBoolean("isActive"));
                     section.setDateCreated(rs.getString("date_created"));
                     section.setSectionSession(rs.getString("session"));
+                    section.setSectionType(rs.getString("section_type"));
                     sectionList.add(section);
                 }
             }
@@ -369,6 +372,7 @@ public class SectionDaoImpl implements ISection {
                     s.setSectionSession(rs.getString("session"));
                     s.setAdviser(adviser);
                     s.setCapacity(rs.getInt("capacity"));
+                    s.setSectionType(rs.getString("section_type"));
                     
                     sectionList.add(s);
                 }
@@ -410,6 +414,7 @@ public class SectionDaoImpl implements ISection {
                     section.setAdviser(adviser);
                     section.setSectionSession(rs.getString("session"));
                     section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
                 }
             }
         } catch (SQLException e) {
@@ -508,6 +513,7 @@ public class SectionDaoImpl implements ISection {
                     section.setSectionSession(rs.getString("session"));
                     section.setAdviser(adviser);
                     section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
                 }
             }
         }catch(SQLException e){
@@ -516,7 +522,79 @@ public class SectionDaoImpl implements ISection {
         return section;
     }
 
-    
-    
+    @Override
+    public List<Section> getSectionsByGradeLevelNoSectionTypeAndSchoolYear(GradeLevel gradeLevel, String sectionType, SchoolYear schoolYear) {
+        String SQL = "{CALL getSectionsByGradeLevelNoSectionTypeAndSchoolYear(?,?,?)}";
+        List<Section> sectionList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1,gradeLevel.getLevelNo());
+            cs.setString(2,sectionType);
+            cs.setInt(3, schoolYear.getSchoolYearId());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    SchoolYear sy = new SchoolYear();
+                    sy.setYearFrom(rs.getInt("yearFrom"));
+                    section.setSchoolYear(sy);
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    
+                    GradeLevel g = new GradeLevel();
+                    g.setLevelNo(rs.getInt("grade_level"));
+                    
+                    Faculty adviser = new Faculty();
+                    adviser.setFacultyID(rs.getInt("faculty_id"));
+                    adviser.setLastName(rs.getString("lastName"));
+                    adviser.setFirstName(rs.getString("firstName"));
+                    adviser.setMiddleName(rs.getString("middleName"));
+                    
+                    section.setGradeLevel(g);
+                    section.setSectionSession(rs.getString("session"));
+                    section.setAdviser(adviser);
+                    section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
+                    
+                    sectionList.add(section);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sectionList;
+    }
+
+    @Override
+    public List<Section> getSectionsWithNoAssignedSchedBySchoolYearGradeLevelAndSectionType(SchoolYear sy, GradeLevel g, String sectionType) {
+        List<Section> sectionList = new ArrayList<>();
+        String SQL = "{CALL getSectionsWithNoAssignedSchedBySYIdGradeLevelAndSectionType(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,sy.getSchoolYearId());
+            cs.setInt(2,g.getGradeLevelId());
+            cs.setString(3, sectionType);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    section.setSectionSession(rs.getString("session"));
+                    section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
+                    section.setGradeLevel(g);
+                    section.setSchoolYear(sy);
+                    
+                    sectionList.add(section);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sectionList;
+    }
     
 }

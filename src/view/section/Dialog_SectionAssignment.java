@@ -12,7 +12,7 @@ import controller.enrollment.DialogSectionAssignment_MoveStudentToSection;
 import controller.enrollment.DialogSectionAssignment_OnGradeLevelItemStateChange;
 import controller.enrollment.DialogSectionAssignment_RemoveStudentFromSection;
 import controller.enrollment.DialogSectionAssignment_Save;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import controller.section.DialogSectionAssignment_SectionStudentTableModelListener;
 import daoimpl.SchoolYearDaoImpl;
 import javax.swing.JButton;
@@ -83,7 +83,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jtblSectionStudents.getModel().addTableModelListener(new DialogSectionAssignment_SectionStudentTableModelListener(this));
         jtfCapacityDenominator.getDocument().addDocumentListener(new DialogSectionAssignment_CapacityDenominatorDocumentPropertyListener(this));
         jbtnClear.addActionListener(new DialogSectionAssignment_Clear(this));
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jbtnSave.addActionListener(new DialogSectionAssignment_Save(this));
     }
 

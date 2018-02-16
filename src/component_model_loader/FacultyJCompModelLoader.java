@@ -1,6 +1,7 @@
 package component_model_loader;
 
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -18,7 +19,7 @@ public class FacultyJCompModelLoader {
     private final FacultyDaoImpl facultyDaoImpl;
     
     public FacultyJCompModelLoader(){
-        facultyDaoImpl = new FacultyDaoImpl();
+        facultyDaoImpl = new FacultyDaoImpl(new SchoolYearDaoImpl());
     }
     
     private Object[] columnNames() {

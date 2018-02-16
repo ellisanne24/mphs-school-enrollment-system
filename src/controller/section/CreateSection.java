@@ -30,9 +30,8 @@ public class CreateSection implements ActionListener, FormValidator{
     
     public CreateSection(DialogSectionCrud view){
         this.view = view;
-        
-        facultyDaoImpl = new FacultyDaoImpl();
         schoolYearDaoImpl = new SchoolYearDaoImpl();
+        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
         gradeLevelDaoImpl = new GradeLevelDaoImpl();
         sectionDaoImpl = new SectionDaoImpl();
     }
@@ -68,6 +67,7 @@ public class CreateSection implements ActionListener, FormValidator{
         section.setAdviser(getFacultyAdviser());
         section.setSectionSession(view.getJcmbSession().getSelectedItem().toString().trim());
         section.setCapacity(Integer.parseInt(view.getJtfCapacity().getText().trim()));
+        section.setSectionType(view.getJcmbSectionType().getSelectedItem().toString().equalsIgnoreCase("Regular")? "R":"S");
         isAdded = sectionDaoImpl.addSection(section);
 
         return isAdded;
@@ -87,7 +87,6 @@ public class CreateSection implements ActionListener, FormValidator{
         String selectedAdviser = view.getJcmbAdviser().getSelectedItem().toString().trim();
         int adviserId = Integer.parseInt(selectedAdviser);
         int currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
-        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
         if(facultyDaoImpl.facultyHasAdvisory(adviserId, currentSchoolYearId)){
             isValid = false;
             JOptionPane.showMessageDialog(null, "Faculty already has an advisory class.");

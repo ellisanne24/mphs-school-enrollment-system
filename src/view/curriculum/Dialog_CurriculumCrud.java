@@ -9,7 +9,7 @@ import controller.curriculum.EditCurriculum;
 import controller.curriculum.LoadSubjectsToTableByGradeLevelStateChange;
 import controller.curriculum.MoveSelectedSubjectsToCurrentCurriculumSubjects;
 import controller.curriculum.RemoveSelectedSubjectsFromCurrent;
-import controller.global.ExitJDialog;
+import controller.global.Controller_JButton_ExitJDialog;
 import daoimpl.CurriculumDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import javax.swing.table.TableColumn;
@@ -122,7 +122,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         jbtnRemoveSubjects.addActionListener(new RemoveSelectedSubjectsFromCurrent(jtblCurrentSubjects, jtblSubjectList));
         jbtnMoveSubjects.addActionListener(new MoveSelectedSubjectsToCurrentCurriculumSubjects(jtblSubjectList, jtblCurrentSubjects));
         jcmbGradeLevel.addItemListener(new LoadSubjectsToTableByGradeLevelStateChange(jcmbGradeLevel, jtblSubjectList, jtblCurrentSubjects));
-        jbtnCancel.addActionListener(new ExitJDialog(this));
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         if (action.equalsIgnoreCase("create")) {
             jbtnSave.addActionListener(new CreateCurriculum(jtfCurriculumName, jtaCurriculumDescription, jtblCurrentSubjects));
         }

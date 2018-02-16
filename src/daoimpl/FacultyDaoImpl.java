@@ -20,6 +20,12 @@ import utility.database.DBUtil;
  */
 public class FacultyDaoImpl implements IFaculty {
 
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
+
+    public FacultyDaoImpl(SchoolYearDaoImpl schoolYearDaoImpl) {
+        this.schoolYearDaoImpl = schoolYearDaoImpl;
+    }
+    
     @Override
     public boolean createFaculty(Faculty faculty) {
         boolean isCreated = false;
@@ -45,7 +51,6 @@ public class FacultyDaoImpl implements IFaculty {
                     cs1.setString(4, faculty.getEmail());
                     cs1.setString(5, faculty.getContactNo());
                     cs1.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Successful!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Faculty already exist!");
                 }
@@ -65,20 +70,37 @@ public class FacultyDaoImpl implements IFaculty {
     public List<Faculty> getFacultyByName(Faculty faculty) {
         List<Faculty> list = new ArrayList<Faculty>();
         String select = "{call getFacultyByName(?)}";
+        String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
+        String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
 
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
-            CallableStatement cs = con.prepareCall(select);
-            cs.setString(1, faculty.getLastName());
-            try (ResultSet rs = cs.executeQuery()) {
-                while (rs.next()) {
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement csa = con.prepareCall(select);
+                CallableStatement csb = con.prepareCall(SQLb);
+                CallableStatement csc = con.prepareCall(SQLc);) {
+            csa.setString(1, faculty.getLastName());
+            try (ResultSet rsa = csa.executeQuery()) {
+                while (rsa.next()) {
                     faculty = new Faculty();
-                    faculty.setFacultyID(rs.getInt(1));
-                    faculty.setLastName(rs.getString(2));
-                    faculty.setFirstName(rs.getString(3));
-                    faculty.setMiddleName(rs.getString(4));
-                    faculty.setContactNo(rs.getString(5));
-                    faculty.setEmail(rs.getString(6));
-                    faculty.setStatus(rs.getBoolean(7));
+                    faculty.setFacultyID(rsa.getInt(1));
+                    faculty.setLastName(rsa.getString(2));
+                    faculty.setFirstName(rsa.getString(3));
+                    faculty.setMiddleName(rsa.getString(4));
+                    faculty.setContactNo(rsa.getString(5));
+                    faculty.setEmail(rsa.getString(6));
+                    faculty.setStatus(rsa.getBoolean(7));
+                    
+                    csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csb.setInt(2, rsa.getInt(1));
+                    ResultSet rsb = csb.executeQuery();
+                    rsb.next();
+                    faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
+                    
+                    csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csc.setInt(2, rsa.getInt(1));
+                    ResultSet rsc = csc.executeQuery();
+                    rsc.next();
+                    faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
+                    
                     list.add(faculty);
                 }
             }
@@ -92,8 +114,12 @@ public class FacultyDaoImpl implements IFaculty {
     public List<Faculty> getFacultyInfoById(Faculty faculty) {
         List<Faculty> list = new ArrayList<Faculty>();
         String select = "{call getFacultyInfoById(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
-            CallableStatement cs = con.prepareCall(select);
+        String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
+        String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(select);
+                CallableStatement csb = con.prepareCall(SQLb);
+                CallableStatement csc = con.prepareCall(SQLc);) {
             cs.setInt(1, faculty.getFacultyID());
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
@@ -104,6 +130,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString(4));
                     faculty.setEmail(rs.getString(5));
                     faculty.setStatus(rs.getBoolean(6));
+                    
+                    csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csb.setInt(2, faculty.getFacultyID());
+                    ResultSet rsb = csb.executeQuery();
+                    rsb.next();
+                    faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
+                    
+                    csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csc.setInt(2, faculty.getFacultyID());
+                    ResultSet rsc = csc.executeQuery();
+                    rsc.next();
+                    faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
+                    
                     list.add(faculty);
                 }
             }
@@ -207,9 +246,14 @@ public class FacultyDaoImpl implements IFaculty {
     @Override
     public List<Faculty> getAllFaculty(Faculty faculty) {
         String select = "{call getAllFaculty()}";
+        String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
+        String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
         List<Faculty> list = new ArrayList<Faculty>();
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
-            CallableStatement cs = con.prepareCall(select);
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(select);
+                CallableStatement csb = con.prepareCall(SQLb);
+                CallableStatement csc = con.prepareCall(SQLc);) {
+            
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     faculty = new Faculty();
@@ -220,6 +264,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString(5));
                     faculty.setEmail(rs.getString(6));
                     faculty.setStatus(rs.getBoolean(7));
+                    
+                    csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csb.setInt(2, faculty.getFacultyID());
+                    ResultSet rsb = csb.executeQuery();
+                    rsb.next();
+                    faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
+                    
+                    csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csc.setInt(2, faculty.getFacultyID());
+                    ResultSet rsc = csc.executeQuery();
+                    rsc.next();
+                    faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
+                    
                     list.add(faculty);
                 }
             }
@@ -231,10 +288,15 @@ public class FacultyDaoImpl implements IFaculty {
 
     @Override
     public List<Faculty> getAllFacultyByStatus(boolean isActive) {
-        String SQL = "{CALL getAllFacultyByStatus(?)}";
+        String SQLa = "{CALL getAllFacultyByStatus(?)}";
+        String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
+        String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
+        
         List<Faculty> facultyList = new ArrayList<Faculty>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);) {
+                CallableStatement cs = con.prepareCall(SQLa);
+                CallableStatement csb = con.prepareCall(SQLb);
+                CallableStatement csc = con.prepareCall(SQLc);) {
             cs.setInt(1, isActive == true ? 1 : 0);
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
@@ -246,6 +308,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString("contactNo"));
                     faculty.setEmail(rs.getString("email"));
                     faculty.setStatus(rs.getBoolean("status"));
+                    
+                    csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csb.setInt(2, faculty.getFacultyID());
+                    ResultSet rsb = csb.executeQuery();
+                    rsb.next();
+                    faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
+                    
+                    csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csc.setInt(2, faculty.getFacultyID());
+                    ResultSet rsc = csc.executeQuery();
+                    rsc.next();
+                    faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
+                    
                     facultyList.add(faculty);
                 }
             }
@@ -257,10 +332,16 @@ public class FacultyDaoImpl implements IFaculty {
 
     @Override
     public List<Faculty> getAllFacultyWithNoAdvisory() {
-        String SQL = "{CALL getAllFacultyWithNoAdvisory()}";
+        String SQLa = "{CALL getAllFacultyWithNoAdvisory()}";
+        String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
+        String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
+        
         List<Faculty> list = new ArrayList<>();
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
-            CallableStatement cs = con.prepareCall(SQL);
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQLa);
+                CallableStatement csb = con.prepareCall(SQLb);
+                CallableStatement csc = con.prepareCall(SQLc);) {
+            
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Faculty faculty = new Faculty();
@@ -271,6 +352,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString(5));
                     faculty.setEmail(rs.getString(6));
                     faculty.setStatus(rs.getBoolean(7));
+                    
+                    csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csb.setInt(2, faculty.getFacultyID());
+                    ResultSet rsb = csb.executeQuery();
+                    rsb.next();
+                    faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
+                    
+                    csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
+                    csc.setInt(2, faculty.getFacultyID());
+                    ResultSet rsc = csc.executeQuery();
+                    rsc.next();
+                    faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
+                    
                     list.add(faculty);
                 }
             }
@@ -414,5 +508,7 @@ public class FacultyDaoImpl implements IFaculty {
         }
         return faculty;
     }
+
+    
     
 }

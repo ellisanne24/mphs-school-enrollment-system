@@ -30,8 +30,8 @@ public class ItemListener_Dialog_OverrideGrading_Type_JComboBox implements ItemL
     public ItemListener_Dialog_OverrideGrading_Type_JComboBox(View_Dialog_OverrideGrading view, User user) {
         this.view = view;
         this.user = user;
-        this.facultyDaoImpl = new FacultyDaoImpl();
         this.schoolYearDaoImpl = new SchoolYearDaoImpl();
+        this.facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
         this.sectionJCompModelLoader = new SectionJCompModelLoader();
     }
 

@@ -1,6 +1,7 @@
 package controller.faculty;
 
 import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,10 +19,13 @@ public class AddFacultyDialogListener implements ActionListener, FormValidator {
 
     private Dialog_FacultyAdd view;
     private Faculty faculty = new Faculty();
-    private FacultyDaoImpl fdi = new FacultyDaoImpl();
-
+    private FacultyDaoImpl facultyDaoImpl;
+    private SchoolYearDaoImpl schoolYearDaoImpl;
+    
     public AddFacultyDialogListener(Dialog_FacultyAdd view) {
         this.view = view;
+        this.schoolYearDaoImpl = new SchoolYearDaoImpl();
+        this.facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
     }
 
     @Override
@@ -45,7 +49,7 @@ public class AddFacultyDialogListener implements ActionListener, FormValidator {
         faculty.setMiddleName(view.getTfMiddlename().getText().trim());
         faculty.setEmail(view.getTfEmail().getText().trim());
         faculty.setContactNo(view.getTfContact().getText().trim());
-        isCreated = fdi.createFaculty(faculty);
+        isCreated = facultyDaoImpl.createFaculty(faculty);
         return isCreated;
     }
 

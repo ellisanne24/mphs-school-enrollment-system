@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
+import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import model.student.Student;
@@ -174,6 +175,16 @@ public class SectionJCompModelLoader {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<Section> sectionList = sectionDaoImpl.getSectionsWithNoAssignedScheduleBy_Status_SchoolYearId_GradeLevelId(isActive, schoolyearId, gradeLevelId);
         for (Section section : sectionList) {
+            comboModel.addElement(section);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
+    
+    public DefaultComboBoxModel getSectionsWithoutScheduleBySectionType(SchoolYear sy, GradeLevel g, String sectionType){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Section> sectionList = sectionDaoImpl.getSectionsWithNoAssignedSchedBySchoolYearGradeLevelAndSectionType(sy, g, sectionType);
+        for(Section section : sectionList){
             comboModel.addElement(section);
         }
         comboModel.setSelectedItem(null);
