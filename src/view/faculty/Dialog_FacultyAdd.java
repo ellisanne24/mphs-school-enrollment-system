@@ -61,8 +61,6 @@ public class Dialog_FacultyAdd extends javax.swing.JDialog {
         tf_email = new javax.swing.JTextField();
         lbl_mobile = new javax.swing.JLabel();
         tf_mobile = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         panel_footer = new javax.swing.JPanel();
         btn_cancel = new javax.swing.JButton();
         btn_clear = new javax.swing.JButton();
@@ -179,25 +177,6 @@ public class Dialog_FacultyAdd extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
         panel_facultydetails.add(tf_mobile, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setText("Class Handled :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        panel_facultydetails.add(jLabel1, gridBagConstraints);
-
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Advisory", "Non-Advisory", "Advisory & Non-Advisory", "Summer" }));
-        jComboBox1.setSelectedIndex(-1);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        panel_facultydetails.add(jComboBox1, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -290,8 +269,6 @@ public class Dialog_FacultyAdd extends javax.swing.JDialog {
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_savennew;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbl_email;
     private javax.swing.JLabel lbl_firstname;
     private javax.swing.JLabel lbl_lastname;

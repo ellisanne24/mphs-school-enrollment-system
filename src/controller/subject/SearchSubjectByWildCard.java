@@ -35,7 +35,7 @@ public class SearchSubjectByWildCard implements ActionListener{
             DefaultTableModel tableModel = subjectJCompModelLoader.getAllSubjectsInfo(jtblSubjectMasterList);
             jtblSubjectMasterList.setModel(tableModel);
         }else{
-            DefaultTableModel tableModel = subjectJCompModelLoader.getSubjectInfoByWildCard(jtblSubjectMasterList, jtfSearchBox);
+            DefaultTableModel tableModel = subjectJCompModelLoader.getSubjectBySearchKeyword(jtblSubjectMasterList, jtfSearchBox);
             jtblSubjectMasterList.setModel(tableModel);
         }
         

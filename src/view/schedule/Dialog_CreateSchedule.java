@@ -738,7 +738,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
     @Override
     public void initControllers() {
         jtblSchedule.getModel().addTableModelListener(new TableModelListener_ScheduleSheet_JTable(this));
-        jtblSchedule.addMouseListener(new KeyListener_LoadSubjectFacultyOnClick_JTable());
+        jtblSchedule.addMouseListener(new KeyListener_LoadSubjectFacultyOnClick_JTable(this));
         jcmbGradeLevel.addItemListener(new ItemListener_GradeLevel_JComboBox(this));
         jcmbSection.addItemListener(new ItemListener_Section_JComboBox(this));
         jcmbSectionType.addItemListener(new ItemListener_SectionType_JComboBox(this));

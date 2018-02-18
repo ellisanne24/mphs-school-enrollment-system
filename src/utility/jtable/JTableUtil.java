@@ -1,9 +1,11 @@
 
 package utility.jtable;
 
+import component_renderers.Renderer_Master_JTableHeader;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -52,4 +54,12 @@ public class JTableUtil {
         return exists;
     }
     
+    
+    public static void applyCustomHeaderRenderer(JTable table){
+        Renderer_Master_JTableHeader customerHeader = new Renderer_Master_JTableHeader(table.getTableHeader().getDefaultRenderer());
+        TableColumnModel columnModel = table.getColumnModel();
+        for(int col = 0; col < columnModel.getColumnCount(); col++ ){
+            columnModel.getColumn(col).setHeaderRenderer(customerHeader);
+        }
+    }
 }

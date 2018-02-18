@@ -14,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import model.faculty.Faculty;
 import model.subject.Subject;
+import view.schedule.Dialog_CreateSchedule;
 
 /**
  *
@@ -21,15 +22,17 @@ import model.subject.Subject;
  */
 public class ScheduleFacultyCellEditor extends DefaultCellEditor {
 
+    private final Dialog_CreateSchedule createScheduleDialog;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
     private final FacultyDaoImpl facultyDaoImpl;
     private final JComboBox jcmbFaculty;
     private final DefaultComboBoxModel facultyModel;
     private final JTable jtblSchedule;
 
-    public ScheduleFacultyCellEditor(JTable jtblSchedule) {
+    public ScheduleFacultyCellEditor(JTable jtblSchedule, Dialog_CreateSchedule createScheduleDialog) {
         super(new JComboBox());
         this.jtblSchedule = jtblSchedule;
+        this.createScheduleDialog = createScheduleDialog;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
         jcmbFaculty = new JComboBox();
@@ -54,11 +57,18 @@ public class ScheduleFacultyCellEditor extends DefaultCellEditor {
         int rowSelected = jtblSchedule.getSelectedRow();
         int currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
         Subject subject = (Subject) jtblSchedule.getValueAt(rowSelected, 3);
-        List<Faculty> list = facultyDaoImpl.getAllFacultyHandlingSubjectBySubjectCode(subject.getSubjectCode(), currentSchoolYearId);
+        String sectionType = createScheduleDialog.getJcmbSectionType().toString().trim();
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        for (Faculty f : list) {
-            model.addElement(f);
+        if (!sectionType.equalsIgnoreCase("S")) {
+            List<Faculty> list = facultyDaoImpl.getAllFacultyHandlingSubjectBySubjectCode(subject.getSubjectCode(), currentSchoolYearId);
+
+            for (Faculty f : list) {
+                model.addElement(f);
+            }
+        } else {
+            //load faculty of subject whose class type is Summer
         }
+
         return model;
     }
 

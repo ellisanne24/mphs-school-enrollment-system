@@ -135,4 +135,27 @@ public class GradeDaoImpl implements IGrade {
         }
         return grade;
     }
+
+    @Override
+    public Grade getStudentFinalGradeForSchoolYear(Student student, SchoolYear schoolYear) {
+        Grade grade = new Grade();
+        String SQL = "{CALL getStudentFinalGradeForSchoolYear(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1,student.getStudentId());
+            cs.setInt(2, schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    grade.setValue(rs.getInt("schoolYearAverage"));
+                    grade.setSchoolYear(schoolYear);
+                    grade.setStudentId(rs.getInt("student_id"));
+                }
+            }    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return grade;
+    }
+    
 }

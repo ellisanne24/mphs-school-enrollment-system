@@ -38,6 +38,7 @@ public class Panel_Faculty extends javax.swing.JPanel{
         jtblFacultyMasterList.addMouseListener(new Panel_FacultyListener(this));
         jtblSpecialization.addMouseListener(new Panel_FacultyListener(this));
         jtfSearchBox.addMouseListener(new Panel_FacultyListener(this));
+        jtblFacultyMasterList.addKeyListener(new Panel_FacultyListener(this));
     }
 
     public JButton getBtnNewFaculty(){
@@ -56,15 +57,15 @@ public class Panel_Faculty extends javax.swing.JPanel{
         return jtfSearchBox;
     }
     
-    public JTable getTblFaculty(){
+    public JTable getJtblFacultyMasterList(){
         return jtblFacultyMasterList;
     }
     
-    public JTable getTblSpecialization(){
+    public JTable getJtblSpecialization(){
         return jtblSpecialization;
     }
     
-    public JTable getTblSpecializationSubjects(){
+    public JTable getJtblSpecializationSubjects(){
         return jtblSpecializationSubjects;
     }
     
@@ -288,8 +289,10 @@ public class Panel_Faculty extends javax.swing.JPanel{
                 return canEdit [columnIndex];
             }
         });
-        jtblFacultyMasterList.setMinimumSize(new java.awt.Dimension(1185, 265));
-        jtblFacultyMasterList.setPreferredSize(new java.awt.Dimension(1185, 265));
+        jtblFacultyMasterList.setFillsViewportHeight(true);
+        jtblFacultyMasterList.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        jtblFacultyMasterList.setMinimumSize(new java.awt.Dimension(1185, 1000));
+        jtblFacultyMasterList.setPreferredSize(new java.awt.Dimension(1185, 1000));
         jtblFacultyMasterList.setRowHeight(20);
         jtblFacultyMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblFacultyMasterList);

@@ -2,7 +2,7 @@ package view.grades;
 
 import component_model_loader.StudentJCompModelLoader;
 import controller.global.Controller_JTextField_ClearDefaultSearchText;
-import controller.grade.ActionListener_Display_Dialog_OverrideGrading_JButton;
+import controller.grade.ActionListener_Display_Dialog_InputGrade_JButton;
 import controller.grade.ActionListener_Display_Dialog_ViewReportCard_JButton;
 import controller.grade.Controller_JButton_DisplayDialogPromotion;
 import controller.grade.Controller_TableModel_GradingSystem_MyAdvisoryGradesList;
@@ -26,6 +26,7 @@ import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.user.User;
 import utility.initializer.Initializer;
+import utility.jtable.JTableUtil;
 
 /**
  *
@@ -69,6 +70,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
     @Override
     public void initViewComponents() {
+        JTableUtil.applyCustomHeaderRenderer(jtblAdvisoryGradesList);
         if(user.getRole().getRoleName().trim().equalsIgnoreCase("Faculty")){
             jtpTop.remove(jpnlADMIN);
             loadFacultyStudents();
@@ -109,10 +111,10 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     
     @Override
     public void initControllers() {
-        jbtnPromotion.addActionListener(new Controller_JButton_DisplayDialogPromotion());
+        jbtnPromotion.addActionListener(new Controller_JButton_DisplayDialogPromotion(user));
         jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnViewReportCard.addActionListener(new ActionListener_Display_Dialog_ViewReportCard_JButton(this));
-        jbtnInputGrades.addActionListener(new ActionListener_Display_Dialog_OverrideGrading_JButton(user));
+        jbtnInputGrades.addActionListener(new ActionListener_Display_Dialog_InputGrade_JButton(user));
         jtblAdvisoryGradesList.getModel().addTableModelListener(new Controller_TableModel_GradingSystem_MyAdvisoryGradesList(this));
     }
 

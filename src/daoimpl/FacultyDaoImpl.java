@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import model.classtype.ClassType;
 import model.faculty.Faculty;
 import model.subjectcategory.SubjectCategory;
 import model.user.User;
@@ -113,7 +114,7 @@ public class FacultyDaoImpl implements IFaculty {
     @Override
     public List<Faculty> getFacultyInfoById(Faculty faculty) {
         List<Faculty> list = new ArrayList<Faculty>();
-        String select = "{call getFacultyInfoById(?)}";
+        String select = "{call getFacultyInfoById(?,?)}";
         String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
         String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
@@ -121,15 +122,24 @@ public class FacultyDaoImpl implements IFaculty {
                 CallableStatement csb = con.prepareCall(SQLb);
                 CallableStatement csc = con.prepareCall(SQLc);) {
             cs.setInt(1, faculty.getFacultyID());
+            cs.setInt(2, schoolYearDaoImpl.getCurrentSchoolYearId());
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     faculty = new Faculty();
-                    faculty.setLastName(rs.getString(1));
-                    faculty.setFirstName(rs.getString(2));
-                    faculty.setMiddleName(rs.getString(3));
-                    faculty.setContactNo(rs.getString(4));
-                    faculty.setEmail(rs.getString(5));
-                    faculty.setStatus(rs.getBoolean(6));
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
+                    faculty.setLastName(rs.getString("lastName"));
+                    faculty.setFirstName(rs.getString("firstName"));
+                    faculty.setMiddleName(rs.getString("middleName"));
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+                    faculty.setStatus(rs.getBoolean("status"));
+                    
+                    ClassType classType = new ClassType();
+                    classType.setClassTypeID(rs.getInt("classtype_id"));
+                    classType.setClassTypeName(rs.getString("classtype"));
+                    classType.setIsActive(rs.getBoolean("is_classtype_active"));
+                    classType.setDateAdded(rs.getDate("date_added"));
+                    faculty.setClassType(classType);
                     
                     csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csb.setInt(2, faculty.getFacultyID());
@@ -226,21 +236,45 @@ public class FacultyDaoImpl implements IFaculty {
     }
 
     @Override
-    public void updateFaculty(Faculty faculty) {
+    public boolean updateFaculty(Faculty faculty) {
+        boolean isUpdated = false;
         String update = "{call updateFaculty(?,?,?,?,?,?,?)}";
+        String deleteFacultyClassHandled = "{CALL deleteFacultyClassHandledByFacultyIdSchoolYearId(?,?)}";//facultyid schoolyearid
+        String addFacultyClassHandled = "{CALL addFacultyClassHandled(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
-            CallableStatement cs = con.prepareCall(update);
-            cs.setInt(1, faculty.getFacultyID());
-            cs.setString(2, faculty.getLastName());
-            cs.setString(3, faculty.getFirstName());
-            cs.setString(4, faculty.getMiddleName());
-            cs.setString(5, faculty.getContactNo());
-            cs.setString(6, faculty.getEmail());
-            cs.setBoolean(7, faculty.isStatus());
-            cs.executeUpdate();
+            con.setAutoCommit(false);
+            try (CallableStatement csa = con.prepareCall(update);
+                    CallableStatement csb = con.prepareCall(deleteFacultyClassHandled);
+                    CallableStatement csc = con.prepareCall(addFacultyClassHandled)) {
+                csa.setInt(1, faculty.getFacultyID());
+                csa.setString(2, faculty.getLastName());
+                csa.setString(3, faculty.getFirstName());
+                csa.setString(4, faculty.getMiddleName());
+                csa.setString(5, faculty.getContactNo());
+                csa.setString(6, faculty.getEmail());
+                csa.setBoolean(7, faculty.getStatus());
+                csa.executeUpdate();
+                
+                csb.setInt(1,faculty.getFacultyID());
+                csb.setInt(2, schoolYearDaoImpl.getCurrentSchoolYearId());
+                csb.executeUpdate();
+                
+                csc.setInt(1,faculty.getFacultyID());
+                csc.setInt(2,faculty.getClassType().getClassTypeID());
+                csc.setInt(3,schoolYearDaoImpl.getCurrentSchoolYearId());
+                csc.executeUpdate();
+                
+                con.commit();
+                isUpdated = true;
+            } catch (SQLException e) {
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return isUpdated;
     }
 
     @Override
@@ -464,12 +498,20 @@ public class FacultyDaoImpl implements IFaculty {
     @Override
     public Faculty getFacultyById(int facultyId) {
         Faculty faculty = new Faculty();
-        String SQL = "{CALL getFacultyById(?)}";
+        String SQL = "{CALL getFacultyById(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
             cs.setInt(1, facultyId);
+            cs.setInt(2, schoolYearDaoImpl.getCurrentSchoolYearId());
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
+                    ClassType classType = new ClassType();
+                    classType.setClassTypeID(rs.getInt("classtype_id"));
+                    classType.setClassTypeName(rs.getString("classtype"));
+                    classType.setIsActive(rs.getBoolean("is_classtype_active"));
+                    classType.setDateAdded(rs.getDate("date_added"));
+                    faculty.setClassType(classType);
+                    
                     faculty.setFacultyID(rs.getInt("faculty_id"));
                     faculty.setLastName(rs.getString("lastName"));
                     faculty.setFirstName(rs.getString("firstName"));

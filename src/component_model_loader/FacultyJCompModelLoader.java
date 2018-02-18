@@ -70,7 +70,7 @@ public class FacultyJCompModelLoader {
             newList.add(faculty.getMiddleName());
             newList.add(faculty.getContactNo());
             newList.add(faculty.getEmail());
-            if (faculty.isStatus()) {
+            if (faculty.getStatus()) {
                 newList.add("Active");
             } else {
                 newList.add("Inactive");
@@ -153,7 +153,7 @@ public class FacultyJCompModelLoader {
             newList.add(faculty.getMiddleName());
             newList.add(faculty.getContactNo());
             newList.add(faculty.getEmail());
-            if (faculty.isStatus()) {
+            if (faculty.getStatus()) {
                 newList.add("Active");
             } else {
                 newList.add("Inactive");

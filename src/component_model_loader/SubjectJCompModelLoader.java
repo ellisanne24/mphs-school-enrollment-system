@@ -40,7 +40,7 @@ public class SubjectJCompModelLoader {
        return tableModel;
    }
    
-   public DefaultTableModel getSubjectInfoByWildCard(JTable jTable, JTextField jtfSearchBox){
+   public DefaultTableModel getSubjectBySearchKeyword(JTable jTable, JTextField jtfSearchBox){
        DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
        tableModel.setRowCount(0);
        Object[] subjectList = subjectDaoImpl.getSubjectInfoByWildCard(jtfSearchBox.getText()).toArray();

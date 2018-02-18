@@ -14,7 +14,7 @@ public interface IFaculty {
     void createFacultySpecialization(Faculty faculty, SubjectCategory subjectCategory);
     void deleteFacultySpecialization(Faculty faculty);
     List <SubjectCategory> loadFacultySpecialization(Faculty faculty, SubjectCategory subjectCategory);
-    void updateFaculty(Faculty faculty);
+    boolean updateFaculty(Faculty faculty);
     List getAllFaculty(Faculty faculty);
     
     // Jordan

@@ -1,17 +1,38 @@
 package view.promotion;
 
+import component_model_loader.SectionJCompModelLoader;
+import component_renderers.Renderer_Promotion_Students_JTable;
+import component_renderers.Renderer_Section_JComboBox;
 import controller.global.Controller_JTextField_ClearDefaultSearchText;
+import controller.promotion.Controller_ItemListener_Section_JComboBox;
+import controller.promotion.Controller_Promotion_Students_JTable_TableModel;
+import daoimpl.FacultyDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import model.faculty.Faculty;
+import model.schoolyear.SchoolYear;
+import model.user.User;
 import utility.initializer.Initializer;
+import utility.jtable.JTableUtil;
 
 
 public class Dialog_Promotion extends javax.swing.JDialog implements Initializer{
 
-    /**
-     * Creates new form dialog_promotion
-     */
-    public Dialog_Promotion(java.awt.Frame parent, boolean modal) {
+    private SectionJCompModelLoader sectionJCompModelLoader;
+    private SchoolYearDaoImpl schoolYearDaoImpl;
+    private FacultyDaoImpl facultyDaoImpl;
+    private User user;
+    
+    public Dialog_Promotion(java.awt.Frame parent, boolean modal, User user) {
         super(parent, modal);
         initComponents();
+        
+        this.user = user;
         
         initDaoImpl();
         initJCompModelLoaders();
@@ -26,10 +47,13 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
 
     @Override
     public void initJCompModelLoaders() {
+        sectionJCompModelLoader = new SectionJCompModelLoader();
     }
 
     @Override
     public void initRenderers() {
+        jcmbSections.setRenderer(new Renderer_Section_JComboBox());
+        jtblStudents.setDefaultRenderer(Object.class, new Renderer_Promotion_Students_JTable());
     }
 
     @Override
@@ -38,47 +62,101 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
 
     @Override
     public void initViewComponents() {
+        JTableUtil.applyCustomHeaderRenderer(jtblStudents);
+        SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+        Faculty faculty = facultyDaoImpl.getFacultyByUser(user);
+        jcmbSections.setModel(sectionJCompModelLoader.getAdvisorySectionsOfFaculty(faculty, schoolYear));
     }
 
     @Override
     public void initControllers() {
+        jtblStudents.getModel().addTableModelListener(new Controller_Promotion_Students_JTable_TableModel());
         jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
+        jcmbSections.addItemListener(new Controller_ItemListener_Section_JComboBox(this));
     }
 
     @Override
     public void initDaoImpl() {
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+    }
+
+    public JComboBox<String> getJcmbSections() {
+        return jcmbSections;
+    }
+
+    public JTextField getJtfSearchBox() {
+        return jtfSearchBox;
+    }
+
+    public JButton getJbtnCancel() {
+        return jbtnCancel;
+    }
+
+    public JButton getJbtnPromote() {
+        return jbtnPromote;
+    }
+
+    public JButton getJbtnPromoteAll() {
+        return jbtnPromoteAll;
+    }
+
+    public JButton getJbtnRetain() {
+        return jbtnRetain;
+    }
+
+    public JButton getJbtnSaveAndClose() {
+        return jbtnSaveAndClose;
+    }
+
+    public JButton getJbtnSearch() {
+        return jbtnSearch;
+    }
+
+    public JLabel getJlblSection() {
+        return jlblSection;
+    }
+
+    public JPanel getJpnlControl() {
+        return jpnlControl;
+    }
+
+    public JPanel getJpnlStudents() {
+        return jpnlStudents;
+    }
+
+    public JTable getJtblStudents() {
+        return jtblStudents;
     }
     
     
     
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         panel_toppanel = new javax.swing.JPanel();
-        panel_control = new javax.swing.JPanel();
-        lbl_show = new javax.swing.JLabel();
-        combo_filter = new javax.swing.JComboBox<>();
-        lbl_show1 = new javax.swing.JLabel();
-        combo_filter1 = new javax.swing.JComboBox<>();
+        jpnlControl = new javax.swing.JPanel();
+        jlblSection = new javax.swing.JLabel();
+        jcmbSections = new javax.swing.JComboBox<>();
         jtfSearchBox = new javax.swing.JTextField();
-        btn_Search = new javax.swing.JButton();
-        btn_Search1 = new javax.swing.JButton();
-        btn_Search2 = new javax.swing.JButton();
-        btn_Search3 = new javax.swing.JButton();
-        panel_masterrecord = new javax.swing.JPanel();
+        jbtnSearch = new javax.swing.JButton();
+        jbtnPromote = new javax.swing.JButton();
+        jbtnRetain = new javax.swing.JButton();
+        jbtnPromoteAll = new javax.swing.JButton();
+        jpnlStudents = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtblStudents = new javax.swing.JTable();
         panel_footer = new javax.swing.JPanel();
-        btn_cancel = new javax.swing.JButton();
-        btn_savennew = new javax.swing.JButton();
+        jbtnCancel = new javax.swing.JButton();
+        jbtnSaveAndClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Student Promotion");
-        setMinimumSize(new java.awt.Dimension(1000, 700));
+        setMinimumSize(new java.awt.Dimension(1000, 600));
         setModal(true);
+        setPreferredSize(new java.awt.Dimension(1000, 600));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -86,48 +164,28 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         panel_toppanel.setPreferredSize(new java.awt.Dimension(1000, 700));
         panel_toppanel.setLayout(new java.awt.GridBagLayout());
 
-        panel_control.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Control", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        panel_control.setMinimumSize(new java.awt.Dimension(1000, 100));
-        panel_control.setPreferredSize(new java.awt.Dimension(1000, 100));
-        panel_control.setLayout(new java.awt.GridBagLayout());
+        jpnlControl.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Control", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        jpnlControl.setMinimumSize(new java.awt.Dimension(1000, 70));
+        jpnlControl.setPreferredSize(new java.awt.Dimension(1000, 70));
+        jpnlControl.setLayout(new java.awt.GridBagLayout());
 
-        lbl_show.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_show.setText("Advisory :");
+        jlblSection.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jlblSection.setText("Section :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-        panel_control.add(lbl_show, gridBagConstraints);
+        jpnlControl.add(jlblSection, gridBagConstraints);
 
-        combo_filter.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        combo_filter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Grade Level", "Sebject Code", "Section" }));
-        combo_filter.setMinimumSize(new java.awt.Dimension(100, 25));
-        combo_filter.setPreferredSize(new java.awt.Dimension(100, 25));
+        jcmbSections.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcmbSections.setMinimumSize(new java.awt.Dimension(100, 25));
+        jcmbSections.setPreferredSize(new java.awt.Dimension(100, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_control.add(combo_filter, gridBagConstraints);
-
-        lbl_show1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_show1.setText("Grade Level :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-        panel_control.add(lbl_show1, gridBagConstraints);
-
-        combo_filter1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        combo_filter1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--" }));
-        combo_filter1.setMinimumSize(new java.awt.Dimension(80, 25));
-        combo_filter1.setPreferredSize(new java.awt.Dimension(80, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_control.add(combo_filter1, gridBagConstraints);
+        jpnlControl.add(jcmbSections, gridBagConstraints);
 
         jtfSearchBox.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         jtfSearchBox.setText("Search here");
@@ -137,72 +195,73 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        panel_control.add(jtfSearchBox, gridBagConstraints);
+        jpnlControl.add(jtfSearchBox, gridBagConstraints);
 
-        btn_Search.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_Search.setText("Search");
+        jbtnSearch.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnSearch.setText("Search");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 20);
-        panel_control.add(btn_Search, gridBagConstraints);
+        jpnlControl.add(jbtnSearch, gridBagConstraints);
 
-        btn_Search1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_Search1.setText("Promote");
+        jbtnPromote.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnPromote.setText("Promote");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-        panel_control.add(btn_Search1, gridBagConstraints);
+        jpnlControl.add(jbtnPromote, gridBagConstraints);
 
-        btn_Search2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_Search2.setText("Retain");
+        jbtnRetain.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnRetain.setText("Retain");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
-        panel_control.add(btn_Search2, gridBagConstraints);
+        jpnlControl.add(jbtnRetain, gridBagConstraints);
 
-        btn_Search3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_Search3.setText("Promote All");
+        jbtnPromoteAll.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnPromoteAll.setText("Promote All");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.5;
-        panel_control.add(btn_Search3, gridBagConstraints);
+        jpnlControl.add(jbtnPromoteAll, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weighty = 0.5;
-        panel_toppanel.add(panel_control, gridBagConstraints);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_toppanel.add(jpnlControl, gridBagConstraints);
 
-        panel_masterrecord.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Students", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        panel_masterrecord.setMinimumSize(new java.awt.Dimension(1000, 555));
-        panel_masterrecord.setPreferredSize(new java.awt.Dimension(1000, 555));
-        panel_masterrecord.setLayout(new java.awt.GridBagLayout());
+        jpnlStudents.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Students", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        jpnlStudents.setMinimumSize(new java.awt.Dimension(1000, 555));
+        jpnlStudents.setPreferredSize(new java.awt.Dimension(1000, 555));
+        jpnlStudents.setLayout(new java.awt.GridBagLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtblStudents.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtblStudents.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Student Name", "Student Number", "Average", "Remarks", "Promoted", "Recommended For"
+                "Student Name", "Student Number", "Grade Level", "Average", "Remarks", "Promoted", "Recommended For"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setRowHeight(20);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        jtblStudents.setRowHeight(30);
+        jtblStudents.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jtblStudents);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -210,76 +269,81 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
-        panel_masterrecord.add(jScrollPane1, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudents.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        panel_toppanel.add(panel_masterrecord, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_toppanel.add(jpnlStudents, gridBagConstraints);
 
-        panel_footer.setMinimumSize(new java.awt.Dimension(550, 50));
-        panel_footer.setPreferredSize(new java.awt.Dimension(550, 50));
+        panel_footer.setMinimumSize(new java.awt.Dimension(550, 40));
+        panel_footer.setPreferredSize(new java.awt.Dimension(550, 40));
         panel_footer.setLayout(new java.awt.GridBagLayout());
 
-        btn_cancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_cancel.setText("Cancel");
-        btn_cancel.setMaximumSize(new java.awt.Dimension(69, 40));
-        btn_cancel.setMinimumSize(new java.awt.Dimension(69, 40));
-        btn_cancel.setPreferredSize(new java.awt.Dimension(69, 40));
+        jbtnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnCancel.setText("Cancel");
+        jbtnCancel.setMaximumSize(new java.awt.Dimension(69, 40));
+        jbtnCancel.setMinimumSize(new java.awt.Dimension(69, 40));
+        jbtnCancel.setPreferredSize(new java.awt.Dimension(120, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 0.5;
-        panel_footer.add(btn_cancel, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_footer.add(jbtnCancel, gridBagConstraints);
 
-        btn_savennew.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_savennew.setText("Save & Close");
-        btn_savennew.setMaximumSize(new java.awt.Dimension(110, 40));
-        btn_savennew.setMinimumSize(new java.awt.Dimension(110, 40));
-        btn_savennew.setPreferredSize(new java.awt.Dimension(110, 40));
+        jbtnSaveAndClose.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnSaveAndClose.setText("Save & Close");
+        jbtnSaveAndClose.setMaximumSize(new java.awt.Dimension(110, 40));
+        jbtnSaveAndClose.setMinimumSize(new java.awt.Dimension(110, 40));
+        jbtnSaveAndClose.setPreferredSize(new java.awt.Dimension(120, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 30);
-        panel_footer.add(btn_savennew, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_footer.add(jbtnSaveAndClose, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 40, 0);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_footer, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(panel_toppanel, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_Search;
-    private javax.swing.JButton btn_Search1;
-    private javax.swing.JButton btn_Search2;
-    private javax.swing.JButton btn_Search3;
-    private javax.swing.JButton btn_cancel;
-    private javax.swing.JButton btn_savennew;
-    private javax.swing.JComboBox<String> combo_filter;
-    private javax.swing.JComboBox<String> combo_filter1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JButton jbtnCancel;
+    private javax.swing.JButton jbtnPromote;
+    private javax.swing.JButton jbtnPromoteAll;
+    private javax.swing.JButton jbtnRetain;
+    private javax.swing.JButton jbtnSaveAndClose;
+    private javax.swing.JButton jbtnSearch;
+    private javax.swing.JComboBox<String> jcmbSections;
+    private javax.swing.JLabel jlblSection;
+    private javax.swing.JPanel jpnlControl;
+    private javax.swing.JPanel jpnlStudents;
+    private javax.swing.JTable jtblStudents;
     private javax.swing.JTextField jtfSearchBox;
-    private javax.swing.JLabel lbl_show;
-    private javax.swing.JLabel lbl_show1;
-    private javax.swing.JPanel panel_control;
     private javax.swing.JPanel panel_footer;
-    private javax.swing.JPanel panel_masterrecord;
     private javax.swing.JPanel panel_toppanel;
     // End of variables declaration//GEN-END:variables
 }

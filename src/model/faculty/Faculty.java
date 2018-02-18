@@ -1,6 +1,7 @@
 package model.faculty;
 
 import java.util.List;
+import model.classtype.ClassType;
 import model.subjectcategory.SubjectCategory;
 import model.user.User;
 
@@ -12,12 +13,21 @@ public class Faculty extends User{
     private String middleName;
     private String contactNo;
     private String email;
+    private ClassType classType;
     private boolean status;
     private boolean isAdviser;
     private boolean hasAmAdvisory;
     private boolean hasPmAdvisory;
     private boolean hasAMSchedule;
     private boolean hasPMSchedule;
+
+    public ClassType getClassType() {
+        return classType;
+    }
+
+    public void setClassType(ClassType classType) {
+        this.classType = classType;
+    }
 
     public boolean isHasAMSchedule() {
         return hasAMSchedule;
@@ -37,7 +47,7 @@ public class Faculty extends User{
     
     private List<SubjectCategory> subjectCategories;
 
-    public boolean isIsAdviser() {
+    public boolean getIsAdviser() {
         return isAdviser;
     }
 
@@ -45,7 +55,7 @@ public class Faculty extends User{
         this.isAdviser = isAdviser;
     }
 
-    public boolean isHasAmAdvisory() {
+    public boolean getHasAmAdvisory() {
         return hasAmAdvisory;
     }
 
@@ -53,7 +63,7 @@ public class Faculty extends User{
         this.hasAmAdvisory = hasAmAdvisory;
     }
 
-    public boolean isHasPmAdvisory() {
+    public boolean getHasPmAdvisory() {
         return hasPmAdvisory;
     }
 
@@ -109,7 +119,7 @@ public class Faculty extends User{
         this.email = email;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 

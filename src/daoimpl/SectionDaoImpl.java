@@ -16,6 +16,7 @@ import model.section.Section;
 import model.student.Student;
 import utility.database.DBType;
 import utility.database.DBUtil;
+import utility.date.DateUtil;
 
 
 public class SectionDaoImpl implements ISection {
@@ -446,7 +447,7 @@ public class SectionDaoImpl implements ISection {
     }
 
     @Override
-    public List<Section> getSectionsHandledByFacultyByFacultyAndSchoolYear(Faculty faculty, SchoolYear schoolYear) {
+    public List<Section> getNonAdvisorySectionsOfFaculty(Faculty faculty, SchoolYear schoolYear) {
         String SQL = "{CALL getSectionsHandledByFacultyUsingFacultyIdAndSyId(?,?)}";
         List<Section> sectionList = new ArrayList<>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
@@ -484,6 +485,35 @@ public class SectionDaoImpl implements ISection {
         return sectionList;
     }
 
+    @Override
+    public List<Section> getAdvisorySectionsOfFaculty(Faculty faculty, SchoolYear schoolYear) {
+        String SQL = "{CALL getAdvisorySectionsOfFaculty(?,?)}";
+        List<Section> sectionList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, schoolYear.getSchoolYearId());
+            cs.setInt(2, faculty.getFacultyID());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    section.setSectionSession(rs.getString("session"));
+                    section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
+                    section.setSchoolYear(schoolYear);
+                    sectionList.add(section);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sectionList;
+    }
+    
+    
     @Override
     public Section getSectionByStudentAndSchoolYear(Student student, SchoolYear schoolYear) {
         String SQL ="{CALL getSectionByStudentIdAndSchoolYear(?,?)}";

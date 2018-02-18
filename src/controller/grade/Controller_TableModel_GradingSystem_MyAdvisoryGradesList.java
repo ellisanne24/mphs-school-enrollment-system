@@ -33,7 +33,6 @@ public class Controller_TableModel_GradingSystem_MyAdvisoryGradesList implements
     @Override
     public void tableChanged(TableModelEvent e) {
         if (e.getColumn() == 0) {
-            JOptionPane.showMessageDialog(null,"test");
             TableModel tableModel = (TableModel) e.getSource();
             SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
             if (view.getJtblAdvisoryGradesList().getRowCount() > 0) {

@@ -191,9 +191,19 @@ public class SectionJCompModelLoader {
         return comboModel;
     }
     
-    public DefaultComboBoxModel getSectionsHandledByFacultyByFacultyAndSchoolYear(Faculty faculty, SchoolYear schoolYear){
+    public DefaultComboBoxModel getNonAdvisorySectionsOfFaculty(Faculty faculty, SchoolYear schoolYear){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        List<Section> sectionList = sectionDaoImpl.getSectionsHandledByFacultyByFacultyAndSchoolYear(faculty,schoolYear);
+        List<Section> sectionList = sectionDaoImpl.getNonAdvisorySectionsOfFaculty(faculty,schoolYear);
+        for (Section section : sectionList) {
+            comboModel.addElement(section);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
+    
+    public DefaultComboBoxModel getAdvisorySectionsOfFaculty(Faculty faculty, SchoolYear schoolYear){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Section> sectionList = sectionDaoImpl.getAdvisorySectionsOfFaculty(faculty,schoolYear);
         for (Section section : sectionList) {
             comboModel.addElement(section);
         }

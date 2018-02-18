@@ -7,6 +7,8 @@ import daoimpl.FacultyDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
@@ -21,10 +23,10 @@ import view.faculty.Panel_Faculty;
  *
  * @author franc
  */
-public class Panel_FacultyListener implements ActionListener, MouseListener{
+public class Panel_FacultyListener implements ActionListener, MouseListener, KeyListener{
     
     private Panel_Faculty panelFaculty;
-    private Dialog_FacultyEdit dialog_FacultyEdit;
+    private Dialog_FacultyEdit dialogFacultyEdit;
     
     private Faculty faculty = new Faculty();
     private SubjectCategory subjectCategory = new SubjectCategory();
@@ -39,8 +41,8 @@ public class Panel_FacultyListener implements ActionListener, MouseListener{
         this.panelFaculty = panelFaculty;
     }
     
-    public Panel_FacultyListener(Dialog_FacultyEdit dialog_FacultyEdit){
-        this.dialog_FacultyEdit = dialog_FacultyEdit;
+    public Panel_FacultyListener(Dialog_FacultyEdit dialogFacultyEdit){
+        this.dialogFacultyEdit = dialogFacultyEdit;
     }
     
     @Override
@@ -50,13 +52,13 @@ public class Panel_FacultyListener implements ActionListener, MouseListener{
         } else if (e.getSource().equals(panelFaculty.getBtnSearch())) {
             faculty.setLastName(panelFaculty.getTfSearch().getText());
 
-            panelFaculty.getTblFaculty().setModel(tblFacultyLoader.facultyInfo(fdi.getFacultyByName(faculty)));
-            panelFaculty.getTblFaculty().getColumnModel().getColumn(0).setMinWidth(0);
-            panelFaculty.getTblFaculty().getColumnModel().getColumn(0).setMaxWidth(0);
+            panelFaculty.getJtblFacultyMasterList().setModel(tblFacultyLoader.facultyInfo(fdi.getFacultyByName(faculty)));
+            panelFaculty.getJtblFacultyMasterList().getColumnModel().getColumn(0).setMinWidth(0);
+            panelFaculty.getJtblFacultyMasterList().getColumnModel().getColumn(0).setMaxWidth(0);
         } else if (e.getSource().equals(panelFaculty.getBtnEditFaculty())) {
-            if (panelFaculty.getTblFaculty().getSelectedRow() >= 0) {
-                faculty.setFacultyID((int) panelFaculty.getTblFaculty().getValueAt(panelFaculty.getTblFaculty().getSelectedRow(), 0));
-                dialog_FacultyEdit = new Dialog_FacultyEdit(null, true, faculty, subjectCategory);
+            if (panelFaculty.getJtblFacultyMasterList().getSelectedRow() >= 0) {
+                faculty.setFacultyID((int) panelFaculty.getJtblFacultyMasterList().getValueAt(panelFaculty.getJtblFacultyMasterList().getSelectedRow(), 0));
+                dialogFacultyEdit = new Dialog_FacultyEdit(null, true, faculty, subjectCategory);
             }
         }
     }
@@ -64,16 +66,19 @@ public class Panel_FacultyListener implements ActionListener, MouseListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount() == 1){
-            if(e.getSource().equals(panelFaculty.getTblFaculty())){
-                faculty.setFacultyID((int) panelFaculty.getTblFaculty().getValueAt(panelFaculty.getTblFaculty().getSelectedRow(), 0));
-                panelFaculty.getTblSpecialization().setModel(tblFacultyLoader.loadFacultySpecialization(fdi.loadFacultySpecialization(faculty, subjectCategory),"select"));
-                panelFaculty.getTblSpecialization().getColumnModel().getColumn(0).setMinWidth(0);
-                panelFaculty.getTblSpecialization().getColumnModel().getColumn(0).setMaxWidth(1);
+            if(e.getSource().equals(panelFaculty.getJtblFacultyMasterList())){
+                 if(((DefaultTableModel)panelFaculty.getJtblSpecializationSubjects().getModel()).getRowCount() > 0){
+                   ((DefaultTableModel)panelFaculty.getJtblSpecializationSubjects().getModel()).setRowCount(0); 
+                }
+                faculty.setFacultyID((int) panelFaculty.getJtblFacultyMasterList().getValueAt(panelFaculty.getJtblFacultyMasterList().getSelectedRow(), 0));
+                panelFaculty.getJtblSpecialization().setModel(tblFacultyLoader.loadFacultySpecialization(fdi.loadFacultySpecialization(faculty, subjectCategory),"select"));
+                panelFaculty.getJtblSpecialization().getColumnModel().getColumn(0).setMinWidth(0);
+                panelFaculty.getJtblSpecialization().getColumnModel().getColumn(0).setMaxWidth(1);
             }
-            else if(e.getSource().equals(panelFaculty.getTblSpecialization())){
+            else if(e.getSource().equals(panelFaculty.getJtblSpecialization())){
                 DefaultTableModel tableModel = 
-                    subjectCategoryJCompModelLoader.getSubjectCategoryAssignedSubjectsById(panelFaculty.getTblSpecialization(),panelFaculty.getTblSpecializationSubjects());
-                panelFaculty.getTblSpecializationSubjects().setModel(tableModel);
+                    subjectCategoryJCompModelLoader.getSubjectCategoryAssignedSubjectsById(panelFaculty.getJtblSpecialization(),panelFaculty.getJtblSpecializationSubjects());
+                panelFaculty.getJtblSpecializationSubjects().setModel(tableModel);
             }
             else if(e.getSource().equals(panelFaculty.getTfSearch())){
                 panelFaculty.getTfSearch().setText("");
@@ -94,6 +99,7 @@ public class Panel_FacultyListener implements ActionListener, MouseListener{
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        
     }
 
     @Override
@@ -104,5 +110,31 @@ public class Panel_FacultyListener implements ActionListener, MouseListener{
     public void mouseExited(MouseEvent e) {
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
+            if (e.getSource().equals(panelFaculty.getJtblFacultyMasterList())) {
+                if(((DefaultTableModel)panelFaculty.getJtblSpecializationSubjects().getModel()).getRowCount() > 0){
+                   ((DefaultTableModel)panelFaculty.getJtblSpecializationSubjects().getModel()).setRowCount(0); 
+                }
+                faculty.setFacultyID((int) panelFaculty.getJtblFacultyMasterList().getValueAt(panelFaculty.getJtblFacultyMasterList().getSelectedRow(), 0));
+                panelFaculty.getJtblSpecialization().setModel(tblFacultyLoader.loadFacultySpecialization(fdi.loadFacultySpecialization(faculty, subjectCategory), "select"));
+                panelFaculty.getJtblSpecialization().getColumnModel().getColumn(0).setMinWidth(0);
+                panelFaculty.getJtblSpecialization().getColumnModel().getColumn(0).setMaxWidth(1);
+            }
+        }
+
+    }
+
+    
+    
     
 }
