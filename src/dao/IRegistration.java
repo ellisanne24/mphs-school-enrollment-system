@@ -10,9 +10,9 @@ import model.registration.Registration;
 public interface IRegistration {
     
     List<Registration> getAllRegistrationInfo();
-    List<Registration> getAllRegistrationInfoByWildCard(String wildCardChar);
+    List<Registration> getAllRegistrationInfoByWildCard(String wildCardChar,int schoolYearFrom);
     List<Registration> getAllRegistrationInfoBySyYearFrom(int aSchoolYearYearFrom);
-    List<Registration> getAllRegistrationInfoByAdmissionStatus(int admissionStatus);
+    List<Registration> getAllRegistrationInfoByAdmissionStatus(int admissionStatus, int schoolYearFrom);
     
     Registration getRegistrationInfoById(int registrationId);
     

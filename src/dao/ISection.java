@@ -34,6 +34,7 @@ public interface ISection{
     List<Section> getSectionsByGradeLevelNoSectionTypeAndSchoolYear(GradeLevel gradeLevel, String sectionType, SchoolYear schoolYear);
     List<Section> getSectionsWithNoAssignedSchedBySchoolYearGradeLevelAndSectionType(SchoolYear sy, GradeLevel g, String sectionType);
     Section getSectionByStudentAndSchoolYear(Student student, SchoolYear schoolYear);
+    List<Section> getSectionsByGradeLevelNo(int gradeLevelNo);
     /*
     End 
     */

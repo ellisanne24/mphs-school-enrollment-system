@@ -105,12 +105,13 @@ public class RegistrationDaoImpl implements IRegistration{
     }
 
     @Override
-    public List<Registration> getAllRegistrationInfoByWildCard(String wildCardChar) {
+    public List<Registration> getAllRegistrationInfoByWildCard(String wildCardChar, int schoolYearFrom) {
         List<Registration> registrationList = new ArrayList<>();
-        String SQL = "{CALL getAllRegistrationInfoByWildCard(?)}";
+        String SQL = "{CALL getAllRegistrationInfoByWildCard(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             cs.setString(1,wildCardChar);
+            cs.setInt(2,schoolYearFrom);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     Registration reg = new Registration();
@@ -169,12 +170,13 @@ public class RegistrationDaoImpl implements IRegistration{
     }
 
     @Override
-    public List<Registration> getAllRegistrationInfoByAdmissionStatus(int admissionStatus) {
+    public List<Registration> getAllRegistrationInfoByAdmissionStatus(int admissionStatus, int schoolYearFrom) {
         List<Registration> registrationList = new ArrayList<>();
-        String SQL = "{CALL getAllRegistrationInfoByAdmissionStatus(?)}";
+        String SQL = "{CALL getAllRegistrationInfoByAdmissionStatus(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
             cs.setInt(1,admissionStatus);
+            cs.setInt(2,schoolYearFrom);
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
                     Registration reg = new Registration();

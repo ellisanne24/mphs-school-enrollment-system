@@ -2,7 +2,12 @@ package view.schoolyear;
 
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SchoolYearJCompModelLoader;
+import controller.global.Controller_JTextField_ClearDefaultSearchText;
+import controller.schoolyear.Controller_Open_Close_SchoolYear_JButton;
 import controller.schoolyear.DisplaySchoolYearCrudDialog;
+import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import utility.initializer.Initializer;
 
 public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
@@ -46,6 +51,9 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initControllers() {
+        jbtnOpenSchoolYear.addActionListener(new Controller_Open_Close_SchoolYear_JButton(this));
+        jbtnCloseSchoolYear.addActionListener(new Controller_Open_Close_SchoolYear_JButton(this));
+        jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnCreate.addActionListener(new DisplaySchoolYearCrudDialog(jtblSchoolYearMasterList));
         jbtnEdit.addActionListener(new DisplaySchoolYearCrudDialog(jtblSchoolYearMasterList));
         jbtnView.addActionListener(new DisplaySchoolYearCrudDialog(jtblSchoolYearMasterList));
@@ -55,6 +63,40 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
     public void initDaoImpl() {
         
     }
+
+    public JButton getJbtnCloseSchoolYear() {
+        return jbtnCloseSchoolYear;
+    }
+
+    public JButton getJbtnCreate() {
+        return jbtnCreate;
+    }
+
+    public JButton getJbtnEdit() {
+        return jbtnEdit;
+    }
+
+    public JButton getJbtnOpenSchoolYear() {
+        return jbtnOpenSchoolYear;
+    }
+
+    public JButton getJbtnSearch() {
+        return jbtnSearch;
+    }
+
+    public JButton getJbtnView() {
+        return jbtnView;
+    }
+
+    public JTable getJtblSchoolYearMasterList() {
+        return jtblSchoolYearMasterList;
+    }
+
+    public JTextField getJtfSearchBox() {
+        return jtfSearchBox;
+    }
+    
+    
     
     
     @SuppressWarnings("unchecked")
@@ -69,6 +111,8 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
         jbtnView = new javax.swing.JButton();
         jtfSearchBox = new javax.swing.JTextField();
         jbtnSearch = new javax.swing.JButton();
+        jbtnOpenSchoolYear = new javax.swing.JButton();
+        jbtnCloseSchoolYear = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         panel_masterrecord = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -110,8 +154,6 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_control.add(jbtnView, gridBagConstraints);
 
@@ -120,7 +162,7 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
         jtfSearchBox.setMinimumSize(new java.awt.Dimension(150, 25));
         jtfSearchBox.setPreferredSize(new java.awt.Dimension(150, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 360, 0, 0);
         panel_control.add(jtfSearchBox, gridBagConstraints);
@@ -128,9 +170,19 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
         jbtnSearch.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnSearch.setText("Search");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
         panel_control.add(jbtnSearch, gridBagConstraints);
+
+        jbtnOpenSchoolYear.setText("Open School Year");
+        jbtnOpenSchoolYear.setActionCommand("open");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        panel_control.add(jbtnOpenSchoolYear, gridBagConstraints);
+
+        jbtnCloseSchoolYear.setText("Close School Year");
+        jbtnCloseSchoolYear.setActionCommand("close");
+        panel_control.add(jbtnCloseSchoolYear, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -206,8 +258,10 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton jbtnCloseSchoolYear;
     private javax.swing.JButton jbtnCreate;
     private javax.swing.JButton jbtnEdit;
+    private javax.swing.JButton jbtnOpenSchoolYear;
     private javax.swing.JButton jbtnSearch;
     private javax.swing.JButton jbtnView;
     private javax.swing.JTable jtblSchoolYearMasterList;

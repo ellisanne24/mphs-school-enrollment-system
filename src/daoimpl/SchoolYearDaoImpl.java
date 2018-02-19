@@ -338,6 +338,49 @@ public class SchoolYearDaoImpl implements ISchoolYear{
         return isAdded;
     }
 
+    @Override
+    public boolean open(SchoolYear schoolYear) {
+        boolean isOpened = false;
+        String SQL = "{CALL openSchoolYear(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, schoolYear.getSchoolYearId());
+            cs.executeUpdate();
+            isOpened = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isOpened;
+    }
+
+    @Override
+    public boolean close(SchoolYear schoolYear) {
+        boolean isClosed = false;
+        String SQLa = "{CALL closeSchoolYear(?)}";
+        String SQLb = "{CALL deactivateAllStudents()}";
+        String SQLc = "{CALL markAllNewStudentsToOld()}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            con.setAutoCommit(false);
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);
+                    CallableStatement csc = con.prepareCall(SQLc);) {
+                csa.setInt(1, schoolYear.getSchoolYearId());
+                csa.executeUpdate();
+                csb.executeUpdate();
+                csc.executeUpdate();
+                con.commit();
+                isClosed = true;
+            } catch (SQLException e) {
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isClosed;
+    }
+
     
 
     

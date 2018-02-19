@@ -31,7 +31,8 @@ public class EnrollmentDaoImpl implements IEnrollment {
     @Override
     public boolean enroll(Student student) {
         boolean isEnrolled = false;
-        String SQLa = "{CALL addEnrollment(?,?,?,?)}";
+        GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
+        String SQLa = "{CALL addEnrollment(?,?,?,?,?)}";
         String SQLb = "{CALL activateStudent(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             try (CallableStatement csa = con.prepareCall(SQLa);
@@ -40,9 +41,10 @@ public class EnrollmentDaoImpl implements IEnrollment {
                 csa.setInt(1, student.getEnrollment().getSchoolYearId());
                 csa.setInt(2, student.getStudentId());
                 csa.setString(3, student.getEnrollment().getEnrollmentType().trim());
-                csa.registerOutParameter(4, Types.INTEGER);
+                csa.setInt(4, gradeLevelDaoImpl.getId(student.getGradeLevelNo()));
+                csa.registerOutParameter(5, Types.INTEGER);
                 csa.executeUpdate();
-                int enrollmentId = csa.getInt(4);
+                int enrollmentId = csa.getInt(5);
 
                 csb.setInt(1, student.getStudentId());
                 csb.executeUpdate();

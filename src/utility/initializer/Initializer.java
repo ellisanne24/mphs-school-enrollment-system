@@ -5,7 +5,7 @@ package utility.initializer;
  * @author Jordan
  */
 public interface Initializer {
-    void initGridBagConstraints();
+    public void initGridBagConstraints();
     void initJCompModelLoaders();
     void initRenderers();
     void initModels();

@@ -65,6 +65,7 @@ public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionList
             if (isFormValid()) {
                 if (isSuccessful) {
                     JOptionPane.showMessageDialog(null, "Successfully saved grades.");
+                    view.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Encountered problems while adding grades. Please contact your support.");
                 }

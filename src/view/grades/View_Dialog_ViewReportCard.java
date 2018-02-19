@@ -14,6 +14,7 @@ import daoimpl.SubjectDaoImpl;
 import java.awt.Color;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -84,19 +85,23 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
             public void tableChanged(TableModelEvent e) {
                 if (e.getColumn() == 1 || e.getColumn() == 2 || e.getColumn() == 3 || e.getColumn() == 4) {
                     DefaultTableModel tableModel = (DefaultTableModel) jtblReportCard.getModel();
-                    int sum = 0;
-                    int divisor = 0;
-                    for (int row = 0; row < tableModel.getRowCount(); row++) {
-                        for (int col = 0; col < tableModel.getColumnCount(); col++) {
-                            if (col == 1 || col == 2 || col == 3 || col == 4) {
-                                if (tableModel.getValueAt(row, col) != null) {
-                                    sum += Integer.parseInt(tableModel.getValueAt(row, col).toString().trim());
-                                    divisor++;
+                    if (tableModel.getRowCount() > 0) {
+                        for (int row = 0; row < tableModel.getRowCount(); row++) {
+                            int sum = 0;
+                            int divisor = 0;
+                            for (int col = 0; col < tableModel.getColumnCount(); col++) {
+                                if (col == 1 || col == 2 || col == 3 || col == 4) {
+                                    if (tableModel.getValueAt(row, col) != null) {
+                                        sum += Integer.parseInt(tableModel.getValueAt(row, col).toString().trim());
+                                        divisor++;
+                                    }
                                 }
                             }
-
+                            if (divisor != 0) {
+                                int finalGrade = sum / divisor;
+                                tableModel.setValueAt(finalGrade, row, 5);
+                            }
                         }
-                        tableModel.setValueAt(sum / divisor, row, 5);
                     }
                 }
             }

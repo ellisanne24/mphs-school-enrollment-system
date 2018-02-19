@@ -3,6 +3,7 @@ package dao;
 
 import java.util.List;
 import model.faculty.Faculty;
+import model.schoolyear.SchoolYear;
 import model.subjectcategory.SubjectCategory;
 import model.user.User;
 
@@ -18,6 +19,7 @@ public interface IFaculty {
     List getAllFaculty(Faculty faculty);
     
     // Jordan
+    List<Faculty> getAllFacultyHandlingAdvisory(SchoolYear schoolYear);
     List<Faculty> getAllFacultyWithNoAdvisory();
     List<Faculty> getAllFaculty();
     List<Faculty> getAllFacultyByStatus(boolean isAtive);

@@ -335,11 +335,11 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
 
             },
             new String [] {
-                "ID", "Student No", "Student Name", "Type", "Grade Level"
+                "ID", "Student No", "LN", "FN", "MN", "Type", "Grade Level"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

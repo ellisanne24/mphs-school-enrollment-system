@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.List;
 import model.admission.Admission;
 import model.enrollment.Enrollment;
-import model.grade.Grade;
 import model.paymentterm.PaymentTerm;
+import model.promotionInfo.PromotionInfo;
 import model.registration.Registration;
 import model.section.Section;
 import model.subject.Subject;
@@ -29,6 +29,15 @@ public class Student {
     private Date entryDate;
     private Date dateGraduated;
     private Tuition tuitionFee;
+    private PromotionInfo promotionInfo;
+
+    public PromotionInfo getPromotionInfo() {
+        return promotionInfo;
+    }
+
+    public void setPromotionInfo(PromotionInfo promotionInfo) {
+        this.promotionInfo = promotionInfo;
+    }
 
     public int gradeLevelNo; //current gradelevelNo
 

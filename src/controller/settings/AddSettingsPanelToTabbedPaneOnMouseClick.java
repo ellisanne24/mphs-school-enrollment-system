@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import view.curriculum.Panel_Curriculum;
 import view.faculty.Panel_Faculty;
-import view.fees.JpnlFeeRecord;
+import view.fees.Panel_FeeRecord;
 import view.paymentsetting.PaymentScheduleSettings;
 import view.rooms.Panel_Rooms;
 import view.schedule.Panel_ClassSchedules;
@@ -93,7 +93,7 @@ public class AddSettingsPanelToTabbedPaneOnMouseClick implements MouseListener {
                     addPanelToTabbedPane(jpnlScheduleMgmt, new Panel_ClassSchedules());
                     break;
                 case 7:
-                    addPanelToTabbedPane(jpnlFeesMgmt, new JpnlFeeRecord());
+                    addPanelToTabbedPane(jpnlFeesMgmt, new Panel_FeeRecord());
                     break;
                 case 8:
                     addPanelToTabbedPane(jpnlCredentialsMgmt, null); //replace null with the correct panel used as UI

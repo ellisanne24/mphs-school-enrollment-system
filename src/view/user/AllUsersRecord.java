@@ -153,7 +153,7 @@ public class AllUsersRecord extends javax.swing.JPanel {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         jtpTopTabbedPane.remove(this);
-        Dashboard.setACCOUNTS_INSTANCE(0);
+        Dashboard.setUserAccountsInstanceCount(0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

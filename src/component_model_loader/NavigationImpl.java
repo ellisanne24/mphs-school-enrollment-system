@@ -22,7 +22,7 @@ public class NavigationImpl implements Navigation {
         if (choice == JOptionPane.YES_OPTION) {
             Dashboard.jtpTopTabbedPane.remove(jPanelRegistration);
             returnHome();
-            Dashboard.setREGISTRATION_INSTANCE(0);
+            Dashboard.setRegistrationInstanceCount(0);
         }
     }
 
@@ -32,7 +32,7 @@ public class NavigationImpl implements Navigation {
         if (choice == JOptionPane.YES_OPTION) {
             Dashboard.jtpTopTabbedPane.remove(jPanelEnrollment);
             returnHome();
-            Dashboard.setENROLLMENT_INSTANCE(0);
+            Dashboard.setEnrollmentInstanceCount(0);
         }
     }
 
@@ -42,7 +42,7 @@ public class NavigationImpl implements Navigation {
         if (choice == JOptionPane.YES_OPTION) {
             Dashboard.jtpTopTabbedPane.remove(jPanelPayment);
             returnHome();
-            Dashboard.setPAYMENTS_INSTANCE(0);
+            Dashboard.setPaymentsAndAssessmentInstanceCount(0);
         }
     }
 
@@ -52,7 +52,7 @@ public class NavigationImpl implements Navigation {
         if (choice == JOptionPane.YES_OPTION) {
             Dashboard.jtpTopTabbedPane.remove(jPanelReports);
             returnHome();
-            Dashboard.setREPORTS_INSTANCE(0);
+            Dashboard.setReportsInstanceCount(0);
         }
     }
 
@@ -62,7 +62,7 @@ public class NavigationImpl implements Navigation {
         if (choice == JOptionPane.YES_OPTION) {
             Dashboard.jtpTopTabbedPane.remove(jPanelManagement);
             returnHome();
-            Dashboard.setMANAGEMENT_INSTANCE(0);
+            Dashboard.setSettingsInstanceCount(0);
         }
     }
 
@@ -72,7 +72,7 @@ public class NavigationImpl implements Navigation {
         if (choice == JOptionPane.YES_OPTION) {
              Dashboard.jtpTopTabbedPane.remove(jPanelGrades);
             returnHome();
-            Dashboard.setGRADES_INSTANCE(0);
+            Dashboard.setGradingSystemInstanceCount(0);
         }
     }
 
@@ -82,7 +82,7 @@ public class NavigationImpl implements Navigation {
         if (choice == JOptionPane.YES_OPTION) {
              Dashboard.jtpTopTabbedPane.remove(jPanelAccounts);
             returnHome();
-            Dashboard.setACCOUNTS_INSTANCE(0);
+            Dashboard.setUserAccountsInstanceCount(0);
         }
     }
 

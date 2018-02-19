@@ -171,6 +171,8 @@ public class Panel_Rooms extends javax.swing.JPanel implements Initializer {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_control, gridBagConstraints);
 
         panel_masterrecord.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Rooms Master List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
@@ -201,23 +203,35 @@ public class Panel_Rooms extends javax.swing.JPanel implements Initializer {
         });
         jtblRoomMasterList.setMinimumSize(new java.awt.Dimension(1185, 530));
         jtblRoomMasterList.setPreferredSize(new java.awt.Dimension(1185, 530));
-        jtblRoomMasterList.setRowHeight(20);
+        jtblRoomMasterList.setRowHeight(30);
         jtblRoomMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblRoomMasterList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_masterrecord.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_masterrecord, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         add(panel_toppanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 

@@ -61,7 +61,6 @@ public class ScheduleFacultyCellEditor extends DefaultCellEditor {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         if (!sectionType.equalsIgnoreCase("S")) {
             List<Faculty> list = facultyDaoImpl.getAllFacultyHandlingSubjectBySubjectCode(subject.getSubjectCode(), currentSchoolYearId);
-
             for (Faculty f : list) {
                 model.addElement(f);
             }

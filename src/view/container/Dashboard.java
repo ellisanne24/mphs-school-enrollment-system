@@ -1,9 +1,8 @@
 package view.container;
 
 import controller.admintools.DisplayRecordGeneratorController;
-import daoimpl.FacultyDaoImpl;
 import daoimpl.PermissionDaoImpl;
-import daoimpl.UserDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
 import view.enrollment.Panel_Enrollment;
 import view.user.AllUsersRecord;
 import utility.calendar.CalendarUtil;
@@ -25,15 +24,18 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import model.permission.dashboardpermission.DashboardPermission;
-import model.role.Role;
+import model.schoolyear.SchoolYear;
 import model.testdata.SubjectTestDataModel;
 import model.user.User;
-import threads.SchoolYearLoaderThread;
+import utility.initializer.Initializer;
 import view.grades.View_Panel_GradingSystem;
 import view.payment.Panel_Payment;
 import view.registration.View_Panel_Registration;
 
-public class Dashboard extends javax.swing.JFrame {
+public class Dashboard extends javax.swing.JFrame implements Initializer {
+
+    private SchoolYearDaoImpl schoolYearDaoImpl;
+    private PermissionDaoImpl permissionDaoImpl;
 
     private Image imageSchoolLogo;
     private Image imageEnrollment;
@@ -49,23 +51,21 @@ public class Dashboard extends javax.swing.JFrame {
 
     private ImageIcon imageIconHome;
 
-    private final GUIManager guiManager;
+    private static int registration_tab_index;
+    private static int enrollment_tab_index;
+    private static int gradingsystem_tabe_index;
+    private static int reports_tab_index;
+    private static int settings_tab_index;
+    private static int accounts_tab_index;
+    private static int payments_tab_index;
 
-    private static int REGISTRATION_TAB_INDEX;
-    private static int ENROLLMENT_TAB_INDEX;
-    private static int GRADES_TAB_INDEX;
-    private static int REPORTS_TAB_INDEX;
-    private static int MANAGEMENT_TAB_INDEX;
-    private static int ACCOUNTS_TAB_INDEX;
-    private static int PAYMENTS_TAB_INDEX;
-
-    private static int REGISTRATION_INSTANCE = 0;
-    private static int ENROLLMENT_INSTANCE = 0;
-    private static int GRADES_INSTANCE = 0;
-    private static int REPORTS_INSTANCE = 0;
-    private static int MANAGEMENT_INSTANCE = 0;
-    private static int ACCOUNTS_INSTANCE = 0;
-    private static int PAYMENTS_INSTANCE = 0;
+    private static int registration_instance_count = 0;
+    private static int enrollment_instance_count = 0;
+    private static int gradingsystem_instance_count = 0;
+    private static int reports_instance_count = 0;
+    private static int settings_instance_count = 0;
+    private static int useraccounts_instance_count = 0;
+    private static int payment_and_assessment_instance_count = 0;
 
     private boolean hasRegistrationAccess;
     private boolean hasReportsAccess;
@@ -82,44 +82,58 @@ public class Dashboard extends javax.swing.JFrame {
 
     public Dashboard(User user) {
         initComponents();
-        
         this.user = user;
 
-        setUILookAndFeel();
-        initDashboardPermissions();
-        
-        guiManager = new GUIManager();
-        guiManager.prepareImageBackgrounds();
-        guiManager.setGUIComponentProperties();
-
-        initThreads();
-        setUserInfo();
+        initDaoImpl();
         initControllers();
+        initViewComponents();
 
-        //
         SubjectTestDataModel stdm = new SubjectTestDataModel();
         stdm.getDescription();
     }
 
-    private void setUILookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initControllers() {
+    @Override
+    public void initControllers() {
         lbl_RoleLabel.addMouseListener(new DisplayRecordGeneratorController());
     }
 
-    private void initThreads() {
-        SchoolYearLoaderThread schoolYearThread = new SchoolYearLoaderThread(jlblCurrentSchoolYear);
-        schoolYearThread.start();
+    @Override
+    public void initGridBagConstraints() {
     }
 
-    private void setUserInfo() {
+    @Override
+    public void initJCompModelLoaders() {
+    }
+
+    @Override
+    public void initRenderers() {
+    }
+
+    @Override
+    public void initModels() {
+    }
+
+    @Override
+    public void initViewComponents() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
+        int schoolYearFrom = schoolYearDaoImpl.getCurrentSchoolYear().getYearFrom();
+        int schoolYearTo = schoolYearDaoImpl.getCurrentSchoolYear().getYearTo();
+        jlblCurrentSchoolYear.setText(schoolYearFrom + "-" + schoolYearTo);
+
+        DashboardPermission dashboardPermission = permissionDaoImpl.getDashBoardPermissionByRoleId(user.getRole().getId());
+        hasAccountsAccess = dashboardPermission.hasAccountsAccess();
+        hasEnrollmentAccess = dashboardPermission.hasEnrollmentAccess();
+        hasGradesAccess = dashboardPermission.hasGradeAccess();
+        hasPaymentAccess = dashboardPermission.hasPaymentAccess();
+        hasRegistrationAccess = dashboardPermission.hasRegistrationAccess();
+        hasSettingsAccess = dashboardPermission.hasSettingsAccess();
+        hasReportsAccess = dashboardPermission.hasReportsAccess();
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         String date = dateFormat.format(user.getLastLoginDate());
@@ -134,74 +148,102 @@ public class Dashboard extends javax.swing.JFrame {
         jlblTimeText.setText(time);
         jlblHelloUserNameText.setText(user.getFirstName());
         jlblRoleText.setText(user.getRole().getRoleName());
+
+        String registrationImgPath = hasRegistrationAccess == true
+                ? ("assets/registrationNoText.jpg") : ("assets/registrationlocked1.png");
+        String enrollmentImgPath = hasEnrollmentAccess == true
+                ? ("assets/enrollmentNoText.jpg") : ("assets/enrollmentlocked1.png");
+        String gradesImgPath = hasGradesAccess == true
+                ? ("assets/gradesNoText.jpg") : ("assets/gradeslocked1.png");
+        String settingsImgPath = hasSettingsAccess == true
+                ? ("assets/managementNoText.jpg") : ("assets/settingslocked1.png");
+        String accountsImgPath = hasAccountsAccess == true
+                ? ("assets/accountsNoText.jpg") : ("assets/accountslocked1.png");
+        String paymentsImgPath = hasPaymentAccess == true
+                ? ("assets/paymentsNotext.jpg") : ("assets/paymentslocked1.png");
+
+        ImageUtil imgUtil = new ImageUtil();
+
+        imageHeader = imgUtil.getRenderedImageForJPanel("assets/headerNoText.jpg", jpnlHeader);
+        imageSchoolLogo = imgUtil.getRenderedImageForJPanel("assets/LaunchPadBg.jpg", jpnlLaunchPad);
+        imageReports = imgUtil.getRenderedImageForJPanel("assets/reportsNoText.jpg", jpnlReportsButton);
+        imageRegistration = imgUtil.getRenderedImageForJPanel(registrationImgPath, jpnlRegistrationButton);
+        imageEnrollment = imgUtil.getRenderedImageForJPanel(enrollmentImgPath, jpnlEnrollmentButton);
+        imageGrades = imgUtil.getRenderedImageForJPanel(gradesImgPath, jpnlGradesButton);
+        imageManagement = imgUtil.getRenderedImageForJPanel(settingsImgPath, jpnlManagementButton);
+        imageAccounts = imgUtil.getRenderedImageForJPanel(accountsImgPath, jpnlAccountsButton);
+        imagePayments = imgUtil.getRenderedImageForJPanel(paymentsImgPath, jpnlPaymentButton);
+        imageCalendar = imgUtil.getRenderedImageForJPanel("assets/calendarNoText.jpg", jpnlCalendar);
+        imageUser = imgUtil.getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlUserImage);
+        imageIconHome = imgUtil.getResourceAsImageIcon("/assets/home.png", 20, 20);
+
+        jlblDateToday.setText(CalendarUtil.getDateToday());
+        jlblDayToday.setText(CalendarUtil.getDayToday());
+        jtpTopTabbedPane.setIconAt(0, imageIconHome);
+        jspTopMost.getVerticalScrollBar().setUnitIncrement(26);
+        jspCardContainer.getVerticalScrollBar().setUnitIncrement(26);
     }
 
-    private void initDashboardPermissions() {
-        PermissionDaoImpl pdi = new PermissionDaoImpl();
-        DashboardPermission dbp = pdi.getDashBoardPermissionByRoleId(user.getRole().getId());
-        hasAccountsAccess = dbp.hasAccountsAccess();
-        hasEnrollmentAccess = dbp.hasEnrollmentAccess();
-        hasGradesAccess = dbp.hasGradeAccess();
-        hasPaymentAccess = dbp.hasPaymentAccess();
-        hasRegistrationAccess = dbp.hasRegistrationAccess();
-        hasSettingsAccess = dbp.hasSettingsAccess();
-        hasReportsAccess = dbp.hasReportsAccess();
+    @Override
+    public void initDaoImpl() {
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        permissionDaoImpl = new PermissionDaoImpl();
     }
 
-    public static int getREGISTRATION_INSTANCE() {
-        return REGISTRATION_INSTANCE;
+    public static int getRegistrationInstanceCount() {
+        return registration_instance_count;
     }
 
-    public static void setREGISTRATION_INSTANCE(int REGISTRATION_INSTANCE) {
-        Dashboard.REGISTRATION_INSTANCE = REGISTRATION_INSTANCE;
+    public static void setRegistrationInstanceCount(int count) {
+        Dashboard.registration_instance_count = count;
     }
 
-    public static int getENROLLMENT_INSTANCE() {
-        return ENROLLMENT_INSTANCE;
+    public static int getEnrollmentInstanceCount() {
+        return enrollment_instance_count;
     }
 
-    public static void setENROLLMENT_INSTANCE(int ENROLLMENT_INSTANCE) {
-        Dashboard.ENROLLMENT_INSTANCE = ENROLLMENT_INSTANCE;
+    public static void setEnrollmentInstanceCount(int count) {
+        Dashboard.enrollment_instance_count = count;
     }
 
-    public static int getGRADES_INSTANCE() {
-        return GRADES_INSTANCE;
+    public static int getGradingSystemInstanceCount() {
+        return gradingsystem_instance_count;
     }
 
-    public static void setGRADES_INSTANCE(int GRADES_INSTANCE) {
-        Dashboard.GRADES_INSTANCE = GRADES_INSTANCE;
+    public static void setGradingSystemInstanceCount(int count) {
+        Dashboard.gradingsystem_instance_count = count;
     }
 
-    public static int getREPORTS_INSTANCE() {
-        return REPORTS_INSTANCE;
+    public static int getReportsInstanceCount() {
+        return reports_instance_count;
     }
 
-    public static void setREPORTS_INSTANCE(int REPORTS_INSTANCE) {
-        Dashboard.REPORTS_INSTANCE = REPORTS_INSTANCE;
+    public static void setReportsInstanceCount(int count) {
+        Dashboard.reports_instance_count = count;
     }
 
-    public static int getMANAGEMENT_INSTANCE() {
-        return MANAGEMENT_INSTANCE;
+    public static int getSettingsInstanceCount() {
+        return settings_instance_count;
     }
 
-    public static void setMANAGEMENT_INSTANCE(int MANAGEMENT_INSTANCE) {
-        Dashboard.MANAGEMENT_INSTANCE = MANAGEMENT_INSTANCE;
+    public static void setSettingsInstanceCount(int count) {
+        Dashboard.settings_instance_count = count;
     }
 
-    public static int getACCOUNTS_INSTANCE() {
-        return ACCOUNTS_INSTANCE;
+    public static int getUserAccountsInstanceCount() {
+        return useraccounts_instance_count;
     }
 
-    public static void setACCOUNTS_INSTANCE(int ACCOUNTS_INSTANCE) {
-        Dashboard.ACCOUNTS_INSTANCE = ACCOUNTS_INSTANCE;
+    public static void setUserAccountsInstanceCount(int count) {
+        Dashboard.useraccounts_instance_count = count;
     }
 
-    public static int getPAYMENTS_INSTANCE() {
-        return PAYMENTS_INSTANCE;
+    public static int getPaymentsAndAssessmentInstanceCount() {
+        return payment_and_assessment_instance_count;
     }
 
-    public static void setPAYMENTS_INSTANCE(int PAYMENTS_INSTANCE) {
-        Dashboard.PAYMENTS_INSTANCE = PAYMENTS_INSTANCE;
+    public static void setPaymentsAndAssessmentInstanceCount(int count) {
+        Dashboard.payment_and_assessment_instance_count = count;
     }
 
     @SuppressWarnings("unchecked")
@@ -1092,65 +1134,23 @@ public class Dashboard extends javax.swing.JFrame {
     pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public class GUIManager {
-
-        private void setGUIComponentProperties() {
-            jlblDateToday.setText(CalendarUtil.getDateToday());
-            jlblDayToday.setText(CalendarUtil.getDayToday());
-            jtpTopTabbedPane.setIconAt(0, imageIconHome);
-            jspTopMost.getVerticalScrollBar().setUnitIncrement(26);
-            jspCardContainer.getVerticalScrollBar().setUnitIncrement(26);
-        }
-
-        private void prepareImageBackgrounds() {
-            String registrationImgPath = hasRegistrationAccess == true
-                    ? ("assets/registrationNoText.jpg") : ("assets/registrationlocked1.png");
-            String enrollmentImgPath = hasEnrollmentAccess == true
-                    ? ("assets/enrollmentNoText.jpg") : ("assets/enrollmentlocked1.png");
-            String gradesImgPath = hasGradesAccess == true
-                    ? ("assets/gradesNoText.jpg") : ("assets/gradeslocked1.png");
-            String settingsImgPath = hasSettingsAccess == true
-                    ? ("assets/managementNoText.jpg") : ("assets/settingslocked1.png");
-            String accountsImgPath = hasAccountsAccess == true
-                    ? ("assets/accountsNoText.jpg") : ("assets/accountslocked1.png");
-            String paymentsImgPath = hasPaymentAccess == true
-                    ? ("assets/paymentsNotext.jpg") : ("assets/paymentslocked1.png");
-
-            ImageUtil imgUtil = new ImageUtil();
-
-            imageHeader = imgUtil.getRenderedImageForJPanel("assets/headerNoText.jpg", jpnlHeader);
-            imageSchoolLogo = imgUtil.getRenderedImageForJPanel("assets/LaunchPadBg.jpg", jpnlLaunchPad);
-            imageReports = imgUtil.getRenderedImageForJPanel("assets/reportsNoText.jpg", jpnlReportsButton);
-            imageRegistration = imgUtil.getRenderedImageForJPanel(registrationImgPath, jpnlRegistrationButton);
-            imageEnrollment = imgUtil.getRenderedImageForJPanel(enrollmentImgPath, jpnlEnrollmentButton);
-            imageGrades = imgUtil.getRenderedImageForJPanel(gradesImgPath, jpnlGradesButton);
-            imageManagement = imgUtil.getRenderedImageForJPanel(settingsImgPath, jpnlManagementButton);
-            imageAccounts = imgUtil.getRenderedImageForJPanel(accountsImgPath, jpnlAccountsButton);
-            imagePayments = imgUtil.getRenderedImageForJPanel(paymentsImgPath, jpnlPaymentButton);
-            imageCalendar = imgUtil.getRenderedImageForJPanel("assets/calendarNoText.jpg", jpnlCalendar);
-            imageUser = imgUtil.getRenderedImageForJPanel("assets/usernameIcon.jpg", jpnlUserImage);
-            imageIconHome = imgUtil.getResourceAsImageIcon("/assets/home.png", 20, 20);
-        }
-    }
-
     public static void flipCardToLaunchPad() {
         CardLayoutUtil.flipCardTo(cardContainer, jpnlLaunchPad);
     }
 
     private void jpnlRegistrationButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlRegistrationButtonMouseClicked
         if (evt.getClickCount() >= 1) {
-            initDashboardPermissions();
             if (hasRegistrationAccess) {
-                if (REGISTRATION_INSTANCE <= 0) {
+                if (registration_instance_count <= 0) {
                     View_Panel_Registration panelRegistration = new View_Panel_Registration("register");
                     jtpTopTabbedPane.addTab("Registration", panelRegistration);
                     jtpTopTabbedPane.setSelectedComponent(panelRegistration);
-                    setREGISTRATION_INSTANCE(1);
-                    REGISTRATION_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+                    setRegistrationInstanceCount(1);
+                    registration_tab_index = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
-                    jtpTopTabbedPane.setSelectedIndex(REGISTRATION_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(registration_tab_index - 1);
                 } else {
-                    jtpTopTabbedPane.setSelectedIndex(REGISTRATION_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(registration_tab_index - 1);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblRegistration.getText() + " Module.");
@@ -1161,18 +1161,17 @@ public class Dashboard extends javax.swing.JFrame {
     private void jpnlEnrollmentButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlEnrollmentButtonMouseClicked
 //        CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new EnrollmentPanel());
         if (evt.getClickCount() >= 1) {
-            initDashboardPermissions();
             if (hasEnrollmentAccess) {
-                if (ENROLLMENT_INSTANCE <= 0) {
+                if (enrollment_instance_count <= 0) {
                     Panel_Enrollment enrollmentPanel = new Panel_Enrollment(user);
                     jtpTopTabbedPane.addTab("Enrollment", enrollmentPanel);
                     jtpTopTabbedPane.setSelectedComponent(enrollmentPanel);
-                    setENROLLMENT_INSTANCE(1);
-                    ENROLLMENT_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+                    setEnrollmentInstanceCount(1);
+                    enrollment_tab_index = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
-                    jtpTopTabbedPane.setSelectedIndex(ENROLLMENT_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(enrollment_tab_index - 1);
                 } else {
-                    jtpTopTabbedPane.setSelectedIndex(ENROLLMENT_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(enrollment_tab_index - 1);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblEnrollment.getText() + " Module.");
@@ -1182,18 +1181,18 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void jpnlGradesButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlGradesButtonMouseClicked
         if (evt.getClickCount() >= 1) {
-            initDashboardPermissions();
             if (hasGradesAccess) {
-                if (GRADES_INSTANCE <= 0) {
-                    View_Panel_GradingSystem panel_GradingSystem = new View_Panel_GradingSystem(user);
+                if (gradingsystem_instance_count <= 0) {
+                    SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+                    View_Panel_GradingSystem panel_GradingSystem = new View_Panel_GradingSystem(user,currentSchoolYear);
                     jtpTopTabbedPane.add("Grades", panel_GradingSystem);
                     jtpTopTabbedPane.setSelectedComponent(panel_GradingSystem);
-                    setGRADES_INSTANCE(1);
-                    GRADES_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+                    setGradingSystemInstanceCount(1);
+                    gradingsystem_tabe_index = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
-                    jtpTopTabbedPane.setSelectedIndex(GRADES_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(gradingsystem_tabe_index - 1);
                 } else {
-                    jtpTopTabbedPane.setSelectedIndex(GRADES_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(gradingsystem_tabe_index - 1);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblGrades.getText() + " Module.");
@@ -1204,19 +1203,18 @@ public class Dashboard extends javax.swing.JFrame {
     private void jpnlPaymentButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlPaymentButtonMouseClicked
 //        CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new PaymentsPanel());
         if (evt.getClickCount() >= 1) {
-            initDashboardPermissions();
             if (hasPaymentAccess) {
-                if (PAYMENTS_INSTANCE <= 0) {
+                if (payment_and_assessment_instance_count <= 0) {
                     Panel_Payment paymentPanel;
                     paymentPanel = new Panel_Payment();
                     jtpTopTabbedPane.add("Payment", paymentPanel);
                     jtpTopTabbedPane.setSelectedComponent(paymentPanel);
-                    setPAYMENTS_INSTANCE(1);
-                    PAYMENTS_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+                    setPaymentsAndAssessmentInstanceCount(1);
+                    payments_tab_index = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
-                    jtpTopTabbedPane.setSelectedIndex(PAYMENTS_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(payments_tab_index - 1);
                 } else {
-                    jtpTopTabbedPane.setSelectedIndex(PAYMENTS_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(payments_tab_index - 1);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblPayment.getText() + " Module.");
@@ -1229,18 +1227,17 @@ public class Dashboard extends javax.swing.JFrame {
 //        CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new SettingsPanel());
 
         if (evt.getClickCount() >= 1) {
-            initDashboardPermissions();
             if (hasSettingsAccess) {
-                if (MANAGEMENT_INSTANCE <= 0) {
+                if (settings_instance_count <= 0) {
                     SettingsPanel settings = new SettingsPanel();
                     jtpTopTabbedPane.add("Settings", settings);
                     jtpTopTabbedPane.setSelectedComponent(settings);
-                    setMANAGEMENT_INSTANCE(1);
-                    MANAGEMENT_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+                    setSettingsInstanceCount(1);
+                    settings_tab_index = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
-                    jtpTopTabbedPane.setSelectedIndex(MANAGEMENT_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(settings_tab_index - 1);
                 } else {
-                    jtpTopTabbedPane.setSelectedIndex(MANAGEMENT_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(settings_tab_index - 1);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblSettings.getText() + " Module.");
@@ -1252,18 +1249,17 @@ public class Dashboard extends javax.swing.JFrame {
     private void jpnlAccountsButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlAccountsButtonMouseClicked
 //        CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new AllUsersRecord());
         if (evt.getClickCount() >= 1) {
-            initDashboardPermissions();
             if (hasAccountsAccess) {
-                if (ACCOUNTS_INSTANCE <= 0) {
+                if (useraccounts_instance_count <= 0) {
                     AllUsersRecord accountsPanel = new AllUsersRecord();
                     jtpTopTabbedPane.add("Accounts", accountsPanel);
                     jtpTopTabbedPane.setSelectedComponent(accountsPanel);
-                    setACCOUNTS_INSTANCE(1);
-                    ACCOUNTS_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+                    setUserAccountsInstanceCount(1);
+                    accounts_tab_index = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
-                    jtpTopTabbedPane.setSelectedIndex(ACCOUNTS_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(accounts_tab_index - 1);
                 } else {
-                    jtpTopTabbedPane.setSelectedIndex(ACCOUNTS_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(accounts_tab_index - 1);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblAccounts.getText() + " Module.");
@@ -1274,18 +1270,17 @@ public class Dashboard extends javax.swing.JFrame {
     private void jpnlReportsButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnlReportsButtonMouseClicked
 //           CardLayoutUtil.flipCardTo(jpnlTopCardContainer, new AllUsersRecord());
         if (evt.getClickCount() >= 1) {
-            initDashboardPermissions();
             if (hasReportsAccess) {
-                if (ACCOUNTS_INSTANCE <= 0) {
+                if (useraccounts_instance_count <= 0) {
 //                    Reports reports = new Reports();
 //                    jtpTopTabbedPane.add("Reports", reports);
 //                    jtpTopTabbedPane.setSelectedComponent(reports);
 //                    setREPORTS_INSTANCE(1);
 //                    REPORTS_TAB_INDEX = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
-                    jtpTopTabbedPane.setSelectedIndex(REPORTS_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(reports_tab_index - 1);
                 } else {
-                    jtpTopTabbedPane.setSelectedIndex(REPORTS_TAB_INDEX - 1);
+                    jtpTopTabbedPane.setSelectedIndex(reports_tab_index - 1);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You don't have privileges to access " + jlblReports.getText() + " Module.");

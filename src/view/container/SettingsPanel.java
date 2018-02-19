@@ -51,7 +51,6 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
         jtpManagementTabbedPane = new javax.swing.JTabbedPane();
         jspSubjectMgmt = new javax.swing.JScrollPane();
         jpnlSubjectMgmt = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
         jspSubjectCatMgmt = new javax.swing.JScrollPane();
         jpnlSubjectCatMgmt = new javax.swing.JPanel();
         jspCurriculumMgmt = new javax.swing.JScrollPane();
@@ -127,10 +126,6 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
         jtpManagementTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jpnlSubjectMgmt.setLayout(new java.awt.GridBagLayout());
-
-        jPanel7.setLayout(new java.awt.GridBagLayout());
-        jpnlSubjectMgmt.add(jPanel7, new java.awt.GridBagConstraints());
-
         jspSubjectMgmt.setViewportView(jpnlSubjectMgmt);
 
         jtpManagementTabbedPane.addTab("Subjects", jspSubjectMgmt);
@@ -732,7 +727,6 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JButton jbtnClear;
     private javax.swing.JButton jbtnCreateCredential;

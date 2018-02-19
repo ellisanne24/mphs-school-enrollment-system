@@ -3,6 +3,7 @@ package view.enrollment;
 import component_model_loader.EnrollmentJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.RegistrationJCompModelLoader;
+import component_renderers.Renderer_Enrolled_GradeLevel_JTable;
 import component_renderers.Renderer_GradeLevel_JComboBox;
 import controller.enrollment.DisplayAllEnrolledOnGradeLevelFilter;
 import controller.enrollment.DisplayDialogSectionAssignment;
@@ -24,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.user.User;
 import utility.initializer.Initializer;
+import utility.jtable.JTableUtil;
 
 /**
  *
@@ -63,6 +65,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initRenderers() {
+        jtblEnrolledMasterList.setDefaultRenderer(Object.class, new Renderer_Enrolled_GradeLevel_JTable(4));
         jcmbEnrolledFilterGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
     }
 
@@ -72,6 +75,8 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initViewComponents() {
+        JTableUtil.applyCustomHeaderRenderer(jtblEnrolledMasterList);
+        JTableUtil.applyCustomHeaderRenderer(jtblRegisteredMasterList);
         jcmbEnrolledFilterGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jlblCurrentSchoolYearRegistered.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
         jlblCurrentSchoolYearEnrolled.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
@@ -412,6 +417,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         panel_masterrecord1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtblEnrolledMasterList = new javax.swing.JTable();
+        jpnlPromoted = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -739,6 +745,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jpnlEnrolled.add(panel_toppanel1, gridBagConstraints);
 
         jtpContainer.addTab("Enrolled", jpnlEnrolled);
+        jtpContainer.addTab("Promoted", jpnlPromoted);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -782,6 +789,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel jlblCurrentSchoolYearRegistered;
     private javax.swing.JPanel jpnlContent;
     private javax.swing.JPanel jpnlEnrolled;
+    private javax.swing.JPanel jpnlPromoted;
     private javax.swing.JPanel jpnlRegistered;
     private javax.swing.JTable jtblEnrolledMasterList;
     private javax.swing.JTable jtblRegisteredMasterList;

@@ -134,15 +134,24 @@ public class Panel_Faculty extends javax.swing.JPanel{
         });
         jtblSpecializationSubjects.setMinimumSize(new java.awt.Dimension(590, 235));
         jtblSpecializationSubjects.setPreferredSize(new java.awt.Dimension(590, 235));
-        jtblSpecializationSubjects.setRowHeight(20);
+        jtblSpecializationSubjects.setRowHeight(30);
         jtblSpecializationSubjects.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(jtblSpecializationSubjects);
 
-        panel_particularsubjects.add(jScrollPane3, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_particularsubjects.add(jScrollPane3, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_particularsubjects, gridBagConstraints);
 
         panel_control.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -220,6 +229,8 @@ public class Panel_Faculty extends javax.swing.JPanel{
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_control, gridBagConstraints);
 
         panel_specialization.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Specialization", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
@@ -251,15 +262,24 @@ public class Panel_Faculty extends javax.swing.JPanel{
         });
         jtblSpecialization.setMinimumSize(new java.awt.Dimension(590, 235));
         jtblSpecialization.setPreferredSize(new java.awt.Dimension(590, 235));
-        jtblSpecialization.setRowHeight(20);
+        jtblSpecialization.setRowHeight(30);
         jtblSpecialization.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jtblSpecialization);
 
-        panel_specialization.add(jScrollPane2, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_specialization.add(jScrollPane2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_specialization, gridBagConstraints);
 
         panel_masterrecord.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Faculty Master List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
@@ -293,26 +313,36 @@ public class Panel_Faculty extends javax.swing.JPanel{
         jtblFacultyMasterList.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         jtblFacultyMasterList.setMinimumSize(new java.awt.Dimension(1185, 1000));
         jtblFacultyMasterList.setPreferredSize(new java.awt.Dimension(1185, 1000));
-        jtblFacultyMasterList.setRowHeight(20);
+        jtblFacultyMasterList.setRowHeight(30);
         jtblFacultyMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblFacultyMasterList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_masterrecord.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_masterrecord, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         add(panel_toppanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 

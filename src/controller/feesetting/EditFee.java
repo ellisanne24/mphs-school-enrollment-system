@@ -24,7 +24,7 @@ import model.fee.Fee;
 import model.feecategory.FeeCategory;
 import model.schoolyear.SchoolYear;
 import utility.string.StringUtil;
-import static view.fees.JpnlFeeRecord.jtblFeeRecord;
+import static view.fees.Panel_FeeRecord.jtblFeeRecord;
 import utility.form.FormValidator;
 
 /**

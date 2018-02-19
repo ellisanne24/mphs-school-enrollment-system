@@ -1,11 +1,14 @@
 package component_model_loader;
 
 import daoimpl.RegistrationDaoImpl;
+import daoimpl.SchoolYearDaoImpl;
+import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.registration.Registration;
+import model.schoolyear.SchoolYear;
 
 /**
  *
@@ -13,18 +16,20 @@ import model.registration.Registration;
  */
 public class RegistrationJCompModelLoader {
     private final RegistrationDaoImpl registrationDaoImpl;
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
     
     public RegistrationJCompModelLoader(){
         registrationDaoImpl = new RegistrationDaoImpl();
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
     
     public DefaultTableModel getAllRegistrationInfoByAdmissionStatus(JComboBox jcmbAdmissionStatus, JTable jTable) {
         DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
         tableModel.setRowCount(0);
         int admissionStatus = jcmbAdmissionStatus.getSelectedItem().toString().equalsIgnoreCase("Complete") ? 1 : 0;
-        Object[] registrationList = registrationDaoImpl.getAllRegistrationInfoByAdmissionStatus(admissionStatus).toArray();
-        for (Object o : registrationList) {
-            Registration r = (Registration) o;
+        SchoolYear currentSy = schoolYearDaoImpl.getCurrentSchoolYear();
+        List<Registration> registrationList = registrationDaoImpl.getAllRegistrationInfoByAdmissionStatus(admissionStatus,currentSy.getYearFrom());
+        for (Registration r : registrationList) {
             Object[] rowData = {
                 r.getRegistrationId(),
                 r.getLastName(),
@@ -60,12 +65,11 @@ public class RegistrationJCompModelLoader {
         return tableModel;
     }
     
-    public DefaultTableModel getAllRegisteredApplicantsByKeyword(JTextField jtfSearchBox,JTable jTable){
+    public DefaultTableModel getAllRegisteredApplicantsByKeyword(JTextField jtfSearchBox,JTable jTable, int schoolYearFrom){
         DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
         tableModel.setRowCount(0);
-        Object[] registrationList = registrationDaoImpl.getAllRegistrationInfoByWildCard(jtfSearchBox.getText().trim()).toArray();
-        for (Object o : registrationList) {
-            Registration r = (Registration) o;
+        List<Registration> registrationList = registrationDaoImpl.getAllRegistrationInfoByWildCard(jtfSearchBox.getText().trim(),schoolYearFrom);
+        for (Registration r : registrationList) {
             Object[] rowData = {
                 r.getRegistrationId(),
                 r.getLastName(),

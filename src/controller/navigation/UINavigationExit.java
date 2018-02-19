@@ -34,22 +34,22 @@ public class UINavigationExit implements ActionListener{
             returnToDashboard();
             switch (dashboardMenuItem) {
                 case ENROLLMENT:
-                    Dashboard.setENROLLMENT_INSTANCE(0);
+                    Dashboard.setEnrollmentInstanceCount(0);
                     break;
                 case SETTINGS:
-                    Dashboard.setMANAGEMENT_INSTANCE(0);
+                    Dashboard.setSettingsInstanceCount(0);
                     break;
                 case GRADINGSYSTEM:
-                    Dashboard.setGRADES_INSTANCE(0);
+                    Dashboard.setGradingSystemInstanceCount(0);
                     break;
                 case PAYMENTS:
-                    Dashboard.setPAYMENTS_INSTANCE(0);
+                    Dashboard.setPaymentsAndAssessmentInstanceCount(0);
                     break;
                 case REGISTRATION:
-                    Dashboard.setREGISTRATION_INSTANCE(0);
+                    Dashboard.setRegistrationInstanceCount(0);
                     break;
                 case ACCOUNTS:
-                    Dashboard.setACCOUNTS_INSTANCE(0);
+                    Dashboard.setUserAccountsInstanceCount(0);
                     break;
                 default:
                     break;

@@ -10,12 +10,14 @@ import component_renderers.Renderer_Section_Session_JComboBox;
 import controller.global.Controller_JButton_ExitJDialog;
 import controller.section.CreateSection;
 import controller.section.EditSection;
+import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import model.schoolyear.SchoolYear;
 import model.section.Section;
 import utility.initializer.Initializer;
 
@@ -30,6 +32,7 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     private FacultyJCompModelLoader facultyJCompModelLoader;
     private Renderer_Faculty_JComboBox facultyJComboBoxRenderer;
     
+    private SchoolYearDaoImpl schoolYearDaoImpl;
     private SectionDaoImpl sectionDaoImpl;
 
     public DialogSectionCrud(java.awt.Frame parent, boolean modal, String action) {
@@ -38,12 +41,13 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
 
         this.action = action;
 
+        initDaoImpl();
         initJCompModelLoaders();
         initRenderers();
         initModels();
         initViewComponents();
         initControllers();
-        initDaoImpl();
+        
     }
 
     /**
@@ -61,13 +65,13 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         this.action = action;
         this.sectionIdOfSelected = sectionIdOfSelected;
 
+        initDaoImpl();
         initJCompModelLoaders();
         initRenderers();
         initModels();
         initViewComponents();
         initControllers();
-        initDaoImpl();
-
+        
         initForm();
     }
 
@@ -336,6 +340,9 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
         jcmbSession.setRenderer(new Renderer_Section_Session_JComboBox());
         gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
         facultyJComboBoxRenderer = new Renderer_Faculty_JComboBox();
+
+        jcmbGradeLevel.setRenderer(gradeLevelJComboBoxRenderer);
+        jcmbAdviser.setRenderer(facultyJComboBoxRenderer);
     }
 
     @Override
@@ -355,10 +362,10 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
 
     @Override
     public void initViewComponents() {
+        SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+        
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
-        jcmbGradeLevel.setRenderer(gradeLevelJComboBoxRenderer);
-        jcmbAdviser.setRenderer(facultyJComboBoxRenderer);
-        jcmbAdviser.setModel(facultyJCompModelLoader.getAllFaculty());
+        jcmbAdviser.setModel(facultyJCompModelLoader.getAllFacultyIdHandlingAdvisory(currentSchoolYear));
 
         if (action.equalsIgnoreCase("create")) {
             jcmbStatus.setVisible(false);
@@ -386,6 +393,7 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
 
     @Override
     public void initDaoImpl() {
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
         sectionDaoImpl = new SectionDaoImpl();
     }
 

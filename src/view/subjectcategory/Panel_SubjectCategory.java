@@ -172,6 +172,8 @@ public class Panel_SubjectCategory extends javax.swing.JPanel implements Initial
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_control, gridBagConstraints);
 
         panel_masterrecord.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Subject Categories", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
@@ -202,15 +204,24 @@ public class Panel_SubjectCategory extends javax.swing.JPanel implements Initial
         });
         jtblSubjectCategoryMasterList.setMinimumSize(new java.awt.Dimension(1185, 260));
         jtblSubjectCategoryMasterList.setPreferredSize(new java.awt.Dimension(1185, 260));
-        jtblSubjectCategoryMasterList.setRowHeight(20);
+        jtblSubjectCategoryMasterList.setRowHeight(30);
         jtblSubjectCategoryMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblSubjectCategoryMasterList);
 
-        panel_masterrecord.add(jScrollPane1, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_masterrecord.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_masterrecord, gridBagConstraints);
 
         panel_particularsubs.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Subjects Under", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
@@ -241,21 +252,33 @@ public class Panel_SubjectCategory extends javax.swing.JPanel implements Initial
         });
         jtblAssignedSubjects.setMinimumSize(new java.awt.Dimension(1185, 245));
         jtblAssignedSubjects.setPreferredSize(new java.awt.Dimension(1185, 245));
-        jtblAssignedSubjects.setRowHeight(20);
+        jtblAssignedSubjects.setRowHeight(30);
         jtblAssignedSubjects.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jtblAssignedSubjects);
 
-        panel_particularsubs.add(jScrollPane2, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_particularsubs.add(jScrollPane2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_particularsubs, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         add(panel_toppanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 

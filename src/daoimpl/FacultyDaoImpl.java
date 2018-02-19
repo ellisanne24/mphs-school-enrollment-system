@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.classtype.ClassType;
 import model.faculty.Faculty;
+import model.schoolyear.SchoolYear;
 import model.subjectcategory.SubjectCategory;
 import model.user.User;
 import utility.database.DBType;
@@ -321,6 +322,33 @@ public class FacultyDaoImpl implements IFaculty {
     }
 
     @Override
+    public List<Faculty> getAllFacultyHandlingAdvisory(SchoolYear schoolYear) {
+        List<Faculty> facultyList = new ArrayList<>();
+        String SQL = "{CALL getAllFacultyHandlingAdvisory(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Faculty f = new Faculty();
+                    f.setFacultyID(rs.getInt("faculty_id"));
+                    f.setLastName(rs.getString("lastName"));
+                    f.setFirstName(rs.getString("firstName"));
+                    f.setMiddleName(rs.getString("middleName"));
+                    f.setContactNo(rs.getString("contactNo"));
+                    f.setEmail(rs.getString("email"));
+                    f.setStatus(rs.getBoolean("status"));
+                    facultyList.add(f);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return facultyList;
+    }
+    
+
+    @Override
     public List<Faculty> getAllFacultyByStatus(boolean isActive) {
         String SQLa = "{CALL getAllFacultyByStatus(?)}";
         String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
@@ -498,11 +526,10 @@ public class FacultyDaoImpl implements IFaculty {
     @Override
     public Faculty getFacultyById(int facultyId) {
         Faculty faculty = new Faculty();
-        String SQL = "{CALL getFacultyById(?,?)}";
+        String SQL = "{CALL getFacultyById(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
             cs.setInt(1, facultyId);
-            cs.setInt(2, schoolYearDaoImpl.getCurrentSchoolYearId());
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
                     ClassType classType = new ClassType();

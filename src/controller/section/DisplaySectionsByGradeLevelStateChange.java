@@ -27,6 +27,6 @@ public class DisplaySectionsByGradeLevelStateChange implements ItemListener{
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        jtblSectionMasterList.setModel(sectionJCompModelLoader.getSectionsOfCurrentSchoolYearByGradeLevelNo(jcmbGradeLevel, jtblSectionMasterList));
+        jtblSectionMasterList.setModel(sectionJCompModelLoader.getSectionsByGradeLevelNo(jtblSectionMasterList,jcmbGradeLevel));
     }
 }

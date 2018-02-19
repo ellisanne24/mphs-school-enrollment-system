@@ -3,8 +3,10 @@ package view.promotion;
 import component_model_loader.SectionJCompModelLoader;
 import component_renderers.Renderer_Promotion_Students_JTable;
 import component_renderers.Renderer_Section_JComboBox;
+import controller.global.Controller_JButton_ExitJDialog;
 import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.promotion.Controller_ItemListener_Section_JComboBox;
+import controller.promotion.Controller_Promote_JButton;
 import controller.promotion.Controller_Promotion_Students_JTable_TableModel;
 import daoimpl.FacultyDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
@@ -27,12 +29,14 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private FacultyDaoImpl facultyDaoImpl;
     private User user;
+    private final SchoolYear currentSchoolYear;
     
-    public Dialog_Promotion(java.awt.Frame parent, boolean modal, User user) {
+    public Dialog_Promotion(java.awt.Frame parent, boolean modal, User user, SchoolYear currentSchoolYear) {
         super(parent, modal);
         initComponents();
         
         this.user = user;
+        this.currentSchoolYear = currentSchoolYear;
         
         initDaoImpl();
         initJCompModelLoaders();
@@ -70,6 +74,8 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
 
     @Override
     public void initControllers() {
+        jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
+        jbtnPromote.addActionListener(new Controller_Promote_JButton(this, currentSchoolYear));
         jtblStudents.getModel().addTableModelListener(new Controller_Promotion_Students_JTable_TableModel());
         jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jcmbSections.addItemListener(new Controller_ItemListener_Section_JComboBox(this));
@@ -80,6 +86,8 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
     }
+    
+    
 
     public JComboBox<String> getJcmbSections() {
         return jcmbSections;
@@ -148,15 +156,17 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         jpnlStudents = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblStudents = new javax.swing.JTable();
+        jspWarningConsole = new javax.swing.JScrollPane();
+        jtaWarningConsole = new javax.swing.JTextArea();
         panel_footer = new javax.swing.JPanel();
         jbtnCancel = new javax.swing.JButton();
         jbtnSaveAndClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Student Promotion");
-        setMinimumSize(new java.awt.Dimension(1000, 600));
+        setMinimumSize(new java.awt.Dimension(1200, 600));
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(1000, 600));
+        setPreferredSize(new java.awt.Dimension(1200, 600));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -272,6 +282,26 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudents.add(jScrollPane1, gridBagConstraints);
 
+        jspWarningConsole.setBorder(javax.swing.BorderFactory.createTitledBorder("Summary / Warnings"));
+        jspWarningConsole.setMinimumSize(new java.awt.Dimension(27, 118));
+
+        jtaWarningConsole.setBackground(new java.awt.Color(0, 0, 0));
+        jtaWarningConsole.setColumns(20);
+        jtaWarningConsole.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jtaWarningConsole.setForeground(new java.awt.Color(204, 255, 0));
+        jtaWarningConsole.setRows(5);
+        jtaWarningConsole.setDisabledTextColor(new java.awt.Color(153, 255, 0));
+        jtaWarningConsole.setEnabled(false);
+        jspWarningConsole.setViewportView(jtaWarningConsole);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudents.add(jspWarningConsole, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -341,6 +371,8 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
     private javax.swing.JLabel jlblSection;
     private javax.swing.JPanel jpnlControl;
     private javax.swing.JPanel jpnlStudents;
+    private javax.swing.JScrollPane jspWarningConsole;
+    private javax.swing.JTextArea jtaWarningConsole;
     private javax.swing.JTable jtblStudents;
     private javax.swing.JTextField jtfSearchBox;
     private javax.swing.JPanel panel_footer;

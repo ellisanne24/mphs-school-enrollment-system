@@ -211,7 +211,7 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
         });
         jtblSectionMasterList.setMinimumSize(new java.awt.Dimension(1185, 530));
         jtblSectionMasterList.setPreferredSize(new java.awt.Dimension(1185, 530));
-        jtblSectionMasterList.setRowHeight(20);
+        jtblSectionMasterList.setRowHeight(30);
         jtblSectionMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblSectionMasterList);
 

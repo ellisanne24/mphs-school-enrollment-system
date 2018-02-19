@@ -5,9 +5,9 @@ import daoimpl.SchoolYearDaoImpl;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
+import model.schoolyear.SchoolYear;
 import model.subjectcategory.SubjectCategory;
 
 /**
@@ -38,6 +38,15 @@ public class FacultyJCompModelLoader {
     public DefaultComboBoxModel getAllFaculty() {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<Faculty> list = facultyDaoImpl.getAllFaculty();
+        for (Faculty f : list) {
+            comboModel.addElement(f.getFacultyID());
+        }
+        return comboModel;
+    }
+    
+    public DefaultComboBoxModel getAllFacultyIdHandlingAdvisory(SchoolYear schoolYear) {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Faculty> list = facultyDaoImpl.getAllFacultyHandlingAdvisory(schoolYear);
         for (Faculty f : list) {
             comboModel.addElement(f.getFacultyID());
         }

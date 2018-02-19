@@ -17,12 +17,14 @@ import controller.schedule.ItemListener_GradeLevel_JComboBox;
 import controller.schedule.ActionListener_Schedule_LoadToSummary_JButton;
 import controller.schedule.ItemListener_Room_JComboBox;
 import controller.schedule.ItemListener_SectionType_JComboBox;
-import controller.schedule.KeyListener_LoadSubjectFacultyOnClick_JTable;
+import controller.schedule.MouseListener_LoadSubjectFacultyOnClick_JTable;
 import controller.schedule.ItemListener_Section_JComboBox;
+import controller.schedule.KeyListener_LoadSubjectFacultyOnArrowKeyPressed_JTable;
 import controller.schedule.TableModelListener_ScheduleSheet_JTable;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.ButtonGroup;
@@ -737,8 +739,9 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
 
     @Override
     public void initControllers() {
+        jtblSchedule.addKeyListener(new KeyListener_LoadSubjectFacultyOnArrowKeyPressed_JTable(this));
         jtblSchedule.getModel().addTableModelListener(new TableModelListener_ScheduleSheet_JTable(this));
-        jtblSchedule.addMouseListener(new KeyListener_LoadSubjectFacultyOnClick_JTable(this));
+        jtblSchedule.addMouseListener(new MouseListener_LoadSubjectFacultyOnClick_JTable(this));
         jcmbGradeLevel.addItemListener(new ItemListener_GradeLevel_JComboBox(this));
         jcmbSection.addItemListener(new ItemListener_Section_JComboBox(this));
         jcmbSectionType.addItemListener(new ItemListener_SectionType_JComboBox(this));

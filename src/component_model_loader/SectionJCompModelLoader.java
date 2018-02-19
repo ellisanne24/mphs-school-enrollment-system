@@ -57,6 +57,33 @@ public class SectionJCompModelLoader {
         return tableModel;
     }
 
+    public DefaultComboBoxModel getSectionsByGradeLevelNo(JComboBox jcmbGradeLevel){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
+        List<Section> sectionList = sectionDaoImpl.getSectionsByGradeLevelNo(gradeLevelNo);
+        for (Section s : sectionList) {
+            comboModel.addElement(s);
+        }
+        return comboModel;
+    }
+    
+    public DefaultTableModel getSectionsByGradeLevelNo(JTable table, JComboBox jcmbGradeLevel){
+        DefaultTableModel tableModel = (DefaultTableModel)table.getModel();
+        tableModel.setRowCount(0);
+        int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
+        List<Section> sectionList = sectionDaoImpl.getSectionsByGradeLevelNo(gradeLevelNo);
+        for (Section s : sectionList) {
+            Object[] rowData = {
+                s.getSectionId(), s.getSectionName(), s.getGradeLevel().getLevelNo(),
+                s.getAdviser().getLastName() + ", " + s.getAdviser().getFirstName() + " " + s.getAdviser().getMiddleName(),
+                s.getSectionSession(), s.getSchoolYear().getYearFrom(),
+                s.getIsActive() == true ? "Yes" : "No"
+            };
+            tableModel.addRow(rowData);
+        }
+        return tableModel;
+    }
+    
     /**
      * Returns a DefaultTableModel containing sectionId, sectionName,
      * sectionGradeLevel level, sectionAdviser lastname, firstname, middlename,

@@ -3,12 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/grade/ItemListener_Dialog_InputGrade_ClassHandled_JComboBox.java</file>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/grade/ItemListener_Dialog_InputGrade_Section_JComboBox.java</file>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/daoimpl/SectionDaoImpl.java</file>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/component_model_loader/SectionJCompModelLoader.java</file>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/component_model_loader/SubjectJCompModelLoader.java</file>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/component_editor/ScheduleFacultyCellEditor.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/daoimpl/PromotionDaoImpl.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/daoimpl/StudentDaoImpl.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/container/Dashboard.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/promotion/Controller_Promote_JButton.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/promotion/Dialog_Promotion.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/component_model_loader/StudentJCompModelLoader.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/grades/View_Panel_GradingSystem.java</file>
         </group>
     </open-files>
 </project-private>

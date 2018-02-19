@@ -626,5 +626,47 @@ public class SectionDaoImpl implements ISection {
         }
         return sectionList;
     }
+
+    @Override
+    public List<Section> getSectionsByGradeLevelNo(int gradeLevelNo) {
+        String SQL = "{CALL getSectionsByGradeLevelNo(?)}";
+        List<Section> sectionList = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,gradeLevelNo);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    GradeLevel g = new GradeLevel();
+                    g.setLevelNo(rs.getInt("grade_level"));
+                    
+                    SchoolYear sy = new SchoolYear();
+                    sy.setYearFrom(rs.getInt("yearFrom"));
+                    
+                    Faculty adviser = new Faculty();
+                    adviser.setFacultyID(rs.getInt("faculty_id"));
+                    adviser.setLastName(rs.getString("lastName"));
+                    adviser.setFirstName(rs.getString("firstName"));
+                    adviser.setMiddleName(rs.getString("middleName"));
+                    
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
+                    section.setSectionSession(rs.getString("session"));
+                    section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
+                    section.setGradeLevel(g);
+                    section.setSchoolYear(sy);
+                    section.setAdviser(adviser);
+                    
+                    sectionList.add(section);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sectionList;
+    }
     
 }

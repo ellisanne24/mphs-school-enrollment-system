@@ -1333,7 +1333,7 @@ public class Old_RegistrationForm extends javax.swing.JPanel {
         if(choice == JOptionPane.YES_OPTION){
             CardLayoutUtil.flipCardTo(Dashboard.jpnlTopCardContainer,Dashboard.jpnlTopCard);
             Dashboard.jtpTopTabbedPane.remove(this);
-            Dashboard.setREGISTRATION_INSTANCE(0);
+            Dashboard.setRegistrationInstanceCount(0);
         }
         
     }//GEN-LAST:event_jbtnCancelRegistrationActionPerformed

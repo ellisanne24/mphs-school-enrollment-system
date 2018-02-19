@@ -199,10 +199,10 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         jbtnSaveAndNew = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Override Grading");
-        setMinimumSize(new java.awt.Dimension(900, 600));
+        setTitle("Input Grades Per Subject");
+        setMinimumSize(new java.awt.Dimension(1000, 600));
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(900, 600));
+        setPreferredSize(new java.awt.Dimension(1000, 600));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 

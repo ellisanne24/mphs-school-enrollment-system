@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import view.fees.JdlgFeeCrud;
-import static view.fees.JpnlFeeRecord.jtblFeeRecord;
+import static view.fees.Panel_FeeRecord.jtblFeeRecord;
 
 /**
  *

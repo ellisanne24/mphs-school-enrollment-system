@@ -18,4 +18,6 @@ public interface ISchoolYear {
     
     boolean add(SchoolYear schoolyear);
     boolean isCurrent(SchoolYear schoolyear);
+    boolean open(SchoolYear schoolYear);
+    boolean close(SchoolYear schoolYear);
 }

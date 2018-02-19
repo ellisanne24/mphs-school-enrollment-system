@@ -33,7 +33,8 @@ public class TableModelListener_Dialog_InputGrade_GradingSheet_JTable implements
                     int divisor = 0;
                     for (int col = 0; col < tableModel.getColumnCount(); col++) {
                         if (col == 3 || col == 4 || col == 5 || col == 6) {
-                            if (tableModel.getValueAt(row, col) != null) {
+                            Object value = tableModel.getValueAt(row, col);
+                            if (value != null && !value.toString().trim().isEmpty()) {
                                 divisor++;
                                 sum += Integer.parseInt(tableModel.getValueAt(row, col).toString());
                             }
