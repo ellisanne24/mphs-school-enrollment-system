@@ -28,6 +28,30 @@ public class FeeDaoImpl implements IFee {
         gradeLevelDaoImpl = new GradeLevelDaoImpl();
         feeCategoryDaoImpl = new FeeCategoryDaoImpl();
     }
+
+    @Override
+    public Fee getSummerFeePerSubject() {
+        Fee fee = new Fee();
+        String SQL = "{CALL getSummerFeePerSubject()}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    FeeCategory feeCategory = new FeeCategory();
+                    feeCategory.setId(rs.getInt("fee_category_id"));
+                    feeCategory.setName(rs.getString("fee_category"));
+                    
+                    fee.setId(rs.getInt("fee_id"));
+                    fee.setName(rs.getString("fee_name"));
+                    fee.setFeeCategory(feeCategory);
+                    fee.setAmount(rs.getBigDecimal("fee_amount"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return fee;
+    }
     
     @Override
     public double getSumOfTuitionFeesByGradeLevelId(Integer aGradeLevelId) {
@@ -78,7 +102,7 @@ public class FeeDaoImpl implements IFee {
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getErrorCode() + "\n" + e.getMessage());
+            e.printStackTrace();
         }
         return sumOfMiscellaneousFees;
     }

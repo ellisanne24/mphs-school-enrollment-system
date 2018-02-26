@@ -1,4 +1,3 @@
-
 package model.grade;
 
 import java.util.Date;
@@ -10,15 +9,42 @@ import model.user.User;
  * @author John Ferdinand Antonio
  */
 public class Grade {
-   private int studentId;
-   private int subjectId;
-   private int gradeId;
-   private int value;
-   private int gradingPeriod;
-   private String gradeType; //summer or regular
-   private SchoolYear schoolYear;
-   private Date dateSubmitted;
-   private User addedBy;
+
+    private int gradeId;
+    private int studentId;
+    private int subjectId;
+    private int gradeValue;
+    private int gradingPeriod;
+    private String gradeType; //summer or regular
+    private SchoolYear schoolYear;
+    private Date dateSubmitted;
+    private User addedBy;
+    private boolean isPass;
+    private boolean isFail;
+
+    public boolean isIsPass() {
+        return isPass;
+    }
+
+    public void setIsPass(boolean isPass) {
+        this.isPass = isPass;
+    }
+
+    public boolean isIsFail() {
+        return isFail;
+    }
+
+    public void setIsFail(boolean isFail) {
+        this.isFail = isFail;
+    }
+
+    public boolean isIsPassing() {
+        return isPass;
+    }
+
+    public void setIsPassing(boolean isPassing) {
+        this.isPass = isPassing;
+    }
 
     public int getStudentId() {
         return studentId;
@@ -35,7 +61,7 @@ public class Grade {
     public void setSubjectId(int subjectId) {
         this.subjectId = subjectId;
     }
-   
+
     public User getAddedBy() {
         return addedBy;
     }
@@ -45,14 +71,12 @@ public class Grade {
     }
 
     public int getValue() {
-        return value;
+        return gradeValue;
     }
 
     public void setValue(int value) {
-        this.value = value;
+        this.gradeValue = value;
     }
-   
-   
 
     public Date getDateSubmitted() {
         return dateSubmitted;
@@ -93,6 +117,5 @@ public class Grade {
     public void setSchoolYear(SchoolYear schoolYear) {
         this.schoolYear = schoolYear;
     }
-    
-   
+
 }

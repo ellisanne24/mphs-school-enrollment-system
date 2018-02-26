@@ -48,7 +48,7 @@ public class ItemListener_Dialog_InputGrade_SubjectCode_JComboBox implements Ite
                     Object studentId = view.getJtblGradingSheet().getValueAt(row, 0);
                     Student student = new Student();
                     student.setStudentId(Integer.parseInt(studentId.toString().trim()));
-                    gradeList = gradeDaoImpl.getGradesByStudentSubjectAndSchoolYear(student, subject, schoolYear);
+                    gradeList = gradeDaoImpl.getGradesOf(student, subject, schoolYear);
                     setGradesToColumns(gradeList, row);
                 }
             }

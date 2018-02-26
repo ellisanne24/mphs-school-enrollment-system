@@ -7,6 +7,7 @@ import model.faculty.Faculty;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
+import model.student.Student;
 import model.subject.Subject;
 
 /**
@@ -15,6 +16,7 @@ import model.subject.Subject;
  */
 public interface ISubject {
     Subject getSubjectInfoById(int subjectId);
+    List<Subject> getSummerSubjectsOf(Student student, SchoolYear schoolYear);
     List<Subject> getAllSubjectsInfo();
     List<Subject> getSubjectInfoByWildCard(String wildCardChar);
     List<Subject> getAllSubjectsByGradeLevelId(int gradeLevelId);

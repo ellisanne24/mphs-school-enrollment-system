@@ -23,11 +23,13 @@ public class StudentDaoImpl implements IStudent {
     private final AdmissionDaoImpl admissionDaoImpl;
     private final RegistrationDaoImpl registrationDaoImpl;
     private final GradeLevelDaoImpl gradeLevelDaoImpl;
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
 
     public StudentDaoImpl() {
         admissionDaoImpl = new AdmissionDaoImpl();
         registrationDaoImpl = new RegistrationDaoImpl();
         gradeLevelDaoImpl = new GradeLevelDaoImpl();
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
 
     @Override
@@ -143,11 +145,12 @@ public class StudentDaoImpl implements IStudent {
     @Override
     public Student getStudentByStudentNo(int studentNo) {
         String SQLa = "{CALL getStudentByStudentNo(?)}";
-
+        String SQLb = "{CALL isStudentRecommendedToTakeSummer(?,?)}";
         Student student = new Student();
         Registration r = new Registration();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
-            try (CallableStatement csA = con.prepareCall(SQLa);) {
+            try (CallableStatement csA = con.prepareCall(SQLa);
+                    CallableStatement csB = con.prepareCall(SQLb);) {
                 csA.setInt(1, studentNo);
                 try (ResultSet rs = csA.executeQuery();) {
                     while (rs.next()) {
@@ -202,6 +205,14 @@ public class StudentDaoImpl implements IStudent {
                         student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O") == true ? 0 : 1);
                         student.setGradeLevelNo(rs.getInt("currentGradeLevel"));
                         student.setRegistration(r);
+                    }
+                }
+                
+                csB.setInt(1, studentNo);
+                csB.setInt(2, schoolYearDaoImpl.getCurrentSchoolYearId());
+                try(ResultSet rsb = csB.executeQuery();){
+                    while(rsb.next()){
+                        student.setIsRecommendedToTakeSummer(rsb.getBoolean("isRecommendedToTakeSummer"));
                     }
                 }
 

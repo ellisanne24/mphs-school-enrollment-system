@@ -39,6 +39,7 @@ public interface IFee {
     List<GradeLevel> getGradeLevelAssignment(int aFeeId);
     
     Fee getFeeInfoById(int feeId);
+    Fee getSummerFeePerSubject();
     List<Fee> getFeesByWildcard(String wildCardChar);
     List<Fee> getFeesByGradeLevelId(int gradeLevelId);
     Fee getFeeGradeLevelAssignmentAndAmountById(int feeId);

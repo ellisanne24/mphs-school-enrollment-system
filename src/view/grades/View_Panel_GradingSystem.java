@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -24,6 +26,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import model.faculty.Faculty;
 import model.grade.Grade;
+import model.quarter.Quarter;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.user.User;
@@ -38,15 +41,17 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
     private final User user;
     private final SchoolYear currentSchoolYear;
+    private final Quarter currentQuarter;
     private StudentJCompModelLoader studentJCompModelLoader;
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private StudentDaoImpl studentDaoImpl;
     private FacultyDaoImpl facultyDaoImpl;
     
-    public View_Panel_GradingSystem(User user, SchoolYear currentSchoolYear) {
+    public View_Panel_GradingSystem(User user, SchoolYear currentSchoolYear, Quarter currentQuarter) {
         initComponents();
         this.user = user;
         this.currentSchoolYear = currentSchoolYear;
+        this.currentQuarter = currentQuarter;
         
         initDaoImpl();
         initJCompModelLoaders();
@@ -76,9 +81,15 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     public void initViewComponents() {
         JTableUtil.applyCustomHeaderRenderer(jtblAdvisoryGradesList);
         if(user.getRole().getRoleName().trim().equalsIgnoreCase("Faculty")){
+            Date dateToday = Calendar.getInstance().getTime();
+            if(dateToday.after(currentQuarter.getGradingDueDate())){
+                jbtnAdvisoryInputGrades.setEnabled(false);
+            }else{
+                jbtnAdvisoryInputGrades.setEnabled(true);
+            }
             jtpTop.remove(jpnlADMIN);
             loadFacultyStudents();
-            loadStudentGrades();
+            loadStudentGrades(5,6,7,8);
         }else if(user.getRole().getRoleName().trim().equalsIgnoreCase("Administrator")){
             jtpTop.remove(jpnlMA);
             jtpTop.remove(jpnlHS);
@@ -91,7 +102,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jtblAdvisoryGradesList.setModel(studentJCompModelLoader.getStudentsOfAdviser(jtblAdvisoryGradesList, faculty, schoolYear));
     }
     
-    private void loadStudentGrades() {
+    private void loadStudentGrades(int qtr1Column, int qtr2Column, int qtr3Column, int qtr4Column) {
         GradeDaoImpl gradeDaoImpl = new GradeDaoImpl();
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
         SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
@@ -100,7 +111,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
                 Student student = new Student();
                 student.setStudentId(Integer.parseInt(jtblAdvisoryGradesList.getValueAt(tRow, 0).toString().trim()));
                 for (int tCol = 0; tCol < jtblAdvisoryGradesList.getColumnCount(); tCol++) {
-                    ArrayList<Integer> quarterCols = new ArrayList<>(Arrays.asList(5, 6, 7, 8));
+                    ArrayList<Integer> quarterCols = new ArrayList<>(Arrays.asList(qtr1Column, qtr2Column, qtr3Column, qtr4Column));
                     for (int colNo : quarterCols) {
                         if (tCol == colNo) {
                             int gradingPeriod = (colNo - 4);
@@ -118,13 +129,13 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jbtnAdvisoryPromotion.addActionListener(new Controller_JButton_DisplayDialogPromotion(user,currentSchoolYear));
         jtfAdvisorySearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnAdvisoryViewReportCard.addActionListener(new ActionListener_Display_Dialog_ViewReportCard_JButton(this));
-        jbtnAdvisoryInputGrades.addActionListener(new ActionListener_Display_Dialog_InputGrade_JButton(user));
+        jbtnAdvisoryInputGrades.addActionListener(new ActionListener_Display_Dialog_InputGrade_JButton(user,currentSchoolYear));
         jtblAdvisoryGradesList.getModel().addTableModelListener(new Controller_TableModel_GradingSystem_MyAdvisoryGradesList(this));
         jbtnAdvisoryRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadFacultyStudents();
-                loadStudentGrades();
+                loadStudentGrades(5,6,7,8);
             }
         });
     }
@@ -184,10 +195,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         return jbtnAdvisorySearch;
     }
 
-    public JButton getJbtnViewAll() {
-        return jbtnAdvisoryViewAll;
-    }
-
     public JComboBox<String> getJcmbSearchBy() {
         return jcmbAdvisorySearchBy;
     }
@@ -231,7 +238,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jpnlTopMyAdvisory = new javax.swing.JPanel();
         jpnlAdvisoryControl = new javax.swing.JPanel();
         jbtnAdvisoryInputGrades = new javax.swing.JButton();
-        jbtnAdvisoryViewAll = new javax.swing.JButton();
         jbtnAdvisoryPrint = new javax.swing.JButton();
         jtfAdvisorySearchBox = new javax.swing.JTextField();
         jbtnAdvisorySearch = new javax.swing.JButton();
@@ -279,6 +285,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
         jbtnAdvisoryInputGrades.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnAdvisoryInputGrades.setText("Input Grades");
+        jbtnAdvisoryInputGrades.setEnabled(false);
         jbtnAdvisoryInputGrades.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtnAdvisoryInputGradesActionPerformed(evt);
@@ -288,13 +295,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         jpnlAdvisoryControl.add(jbtnAdvisoryInputGrades, gridBagConstraints);
-
-        jbtnAdvisoryViewAll.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnAdvisoryViewAll.setText("View All");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        jpnlAdvisoryControl.add(jbtnAdvisoryViewAll, gridBagConstraints);
 
         jbtnAdvisoryPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnAdvisoryPrint.setText("Print");
@@ -631,7 +631,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     private javax.swing.JButton jbtnAdvisoryPromotion;
     private javax.swing.JButton jbtnAdvisoryRefresh;
     private javax.swing.JButton jbtnAdvisorySearch;
-    private javax.swing.JButton jbtnAdvisoryViewAll;
     private javax.swing.JButton jbtnAdvisoryViewReportCard;
     private javax.swing.JButton jbtnNonAdvisoryInputGrades;
     private javax.swing.JButton jbtnNonAdvisoryOpen;

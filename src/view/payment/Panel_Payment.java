@@ -7,6 +7,9 @@ import daoimpl.FeeDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.PaymentTermDaoImpl;
 import daoimpl.StudentDaoImpl;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -16,19 +19,28 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import model.schoolyear.SchoolYear;
+import model.user.User;
 import utility.initializer.Initializer;
 
 
 public class Panel_Payment extends javax.swing.JPanel implements Initializer{
+    
+    private final User user;
+    private final SchoolYear currentSchoolYear;
     private StudentDaoImpl studentDaoImpl;
     private GradeLevelDaoImpl gradeLevelDaoImpl;
     private FeeDaoImpl feeDaoImpl;
     private PaymentTermDaoImpl paymentTermDaoImpl;
 
-    public Panel_Payment() {
+    public Panel_Payment(User user, SchoolYear currentSchoolYear) {
         initComponents();
+        this.user = user;
+        this.currentSchoolYear = currentSchoolYear;
+        
         initDaoImpl();
         initControllers();
+        initViewComponents();
     }
 
     @Override
@@ -53,7 +65,10 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initViewComponents() {
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateToday = Calendar.getInstance().getTime();
+        jlblDateToday.setText(sdf.format(dateToday));
+        jlblRecommendForSummerMessage.setText("");
     }
 
     @Override
@@ -69,6 +84,14 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gradeLevelDaoImpl = new GradeLevelDaoImpl();
         feeDaoImpl = new FeeDaoImpl();
         paymentTermDaoImpl = new PaymentTermDaoImpl();
+    }
+
+    public JLabel getJlblRecommendForSummerMessage() {
+        return jlblRecommendForSummerMessage;
+    }
+    
+    public JButton getJbtnAssignSummerFee() {
+        return jbtnAssignSummerFee;
     }
 
     public JTextField getSearchbox8() {
@@ -634,7 +657,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         panel_toppanel = new javax.swing.JPanel();
         panel_searchcontainer = new javax.swing.JPanel();
         javax.swing.JLabel lbl_datetoday = new javax.swing.JLabel();
-        javax.swing.JLabel jtfDateToday = new javax.swing.JLabel();
+        jlblDateToday = new javax.swing.JLabel();
         javax.swing.JLabel lbl_separator = new javax.swing.JLabel();
         jtfSearchBoxMakePayment = new javax.swing.JTextField();
         jbtnSearch = new javax.swing.JButton();
@@ -659,6 +682,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jtfFirstName = new javax.swing.JTextField();
         jtfStatus = new javax.swing.JTextField();
         jtfMiddleName = new javax.swing.JTextField();
+        jlblRecommendForSummerMessage = new javax.swing.JLabel();
         jScrollPane12 = new javax.swing.JScrollPane();
         jpnlCurrentSchoolYearTuition = new javax.swing.JPanel();
         lbl_basicfee = new javax.swing.JLabel();
@@ -709,6 +733,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jtblBalanceBreakDown = new javax.swing.JTable();
         panel_balancebreakdowncontainer2 = new javax.swing.JPanel();
         jbtnMakePayment = new javax.swing.JButton();
+        jbtnAssignSummerFee = new javax.swing.JButton();
         tabpanel_paymenthistory = new javax.swing.JPanel();
         panel_historycontrol = new javax.swing.JPanel();
         jtfPaymentHistorySearchBox = new javax.swing.JTextField();
@@ -791,16 +816,16 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints.gridy = 0;
         panel_searchcontainer.add(lbl_datetoday, gridBagConstraints);
 
-        jtfDateToday.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jtfDateToday.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jtfDateToday.setMaximumSize(new java.awt.Dimension(200, 35));
-        jtfDateToday.setMinimumSize(new java.awt.Dimension(200, 35));
-        jtfDateToday.setPreferredSize(new java.awt.Dimension(200, 35));
+        jlblDateToday.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jlblDateToday.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jlblDateToday.setMaximumSize(new java.awt.Dimension(200, 35));
+        jlblDateToday.setMinimumSize(new java.awt.Dimension(200, 35));
+        jlblDateToday.setPreferredSize(new java.awt.Dimension(200, 35));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_searchcontainer.add(jtfDateToday, gridBagConstraints);
+        panel_searchcontainer.add(jlblDateToday, gridBagConstraints);
 
         lbl_separator.setBackground(new java.awt.Color(204, 204, 204));
         lbl_separator.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -1020,6 +1045,18 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfMiddleName, gridBagConstraints);
+
+        jlblRecommendForSummerMessage.setBackground(new java.awt.Color(204, 255, 0));
+        jlblRecommendForSummerMessage.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jlblRecommendForSummerMessage.setForeground(new java.awt.Color(0, 0, 0));
+        jlblRecommendForSummerMessage.setText("Recommended For Summer Text");
+        jlblRecommendForSummerMessage.setOpaque(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudentDetails.add(jlblRecommendForSummerMessage, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -1612,10 +1649,21 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jbtnMakePayment.setMinimumSize(new java.awt.Dimension(200, 50));
         jbtnMakePayment.setPreferredSize(new java.awt.Dimension(200, 50));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_balancebreakdowncontainer2.add(jbtnMakePayment, gridBagConstraints);
+
+        jbtnAssignSummerFee.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnAssignSummerFee.setText("Assign Summer Fee");
+        jbtnAssignSummerFee.setEnabled(false);
+        jbtnAssignSummerFee.setMinimumSize(new java.awt.Dimension(150, 50));
+        jbtnAssignSummerFee.setPreferredSize(new java.awt.Dimension(150, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_balancebreakdowncontainer2.add(jbtnAssignSummerFee, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -2329,6 +2377,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton jbtnAdjustmentsMakeAdjustment;
     private javax.swing.JButton jbtnAdjustmentsSearch;
     private javax.swing.JTextField jbtnAdjustmentsSearchBox;
+    private javax.swing.JButton jbtnAssignSummerFee;
     private javax.swing.JButton jbtnDiscountsPrint;
     private javax.swing.JButton jbtnDiscountsSearch;
     private javax.swing.JComboBox<String> jbtnDiscountsSearchBy;
@@ -2344,7 +2393,9 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JComboBox<String> jcmbPaymentHistorySearchBy;
     private javax.swing.JComboBox<String> jcmbPaymentTerm;
     private javax.swing.JComboBox<String> jcmbReceiptsSearchBy;
+    private javax.swing.JLabel jlblDateToday;
     private javax.swing.JLabel jlblDiscountPercentText;
+    private javax.swing.JLabel jlblRecommendForSummerMessage;
     private javax.swing.JLabel jlblRemainingBalanceText;
     private javax.swing.JLabel jlblStudentNo;
     private javax.swing.JLabel jlblTotalPaidText;

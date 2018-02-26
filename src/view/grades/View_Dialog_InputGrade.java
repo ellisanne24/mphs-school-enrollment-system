@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import model.classtype.ClassType;
+import model.schoolyear.SchoolYear;
 import model.user.User;
 import utility.initializer.Initializer;
 
@@ -28,14 +29,15 @@ import utility.initializer.Initializer;
 public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initializer{
 
     private final User user;
+    private final SchoolYear currentSchoolYear;
     private ClassTypeDaoImpl classTypeDaoImpl;
     private ClassTypeJCompModelLoader classTypeJCompModelLoader;
         
-    
-    public View_Dialog_InputGrade(java.awt.Frame parent, boolean modal, User user) {
+    public View_Dialog_InputGrade(java.awt.Frame parent, boolean modal, User user, SchoolYear currentSchoolYear) {
         super(parent, modal);
         initComponents();
         this.user = user;
+        this.currentSchoolYear = currentSchoolYear;
         
         initDaoImpl();
         initJCompModelLoaders();
@@ -82,7 +84,7 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
     public void initControllers() {
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jcmbSubjectCode.addItemListener(new ItemListener_Dialog_InputGrade_SubjectCode_JComboBox(this));
-        jbtnSaveAndClose.addActionListener(new ActionListener_Dialog_InputGrade_Save_JButton(this, user));
+        jbtnSaveAndClose.addActionListener(new ActionListener_Dialog_InputGrade_Save_JButton(this, user,currentSchoolYear));
         jcmbClassHandled.addItemListener(new ItemListener_Dialog_InputGrade_ClassHandled_JComboBox(this, user));
         jcmbSection.addItemListener(new ItemListener_Dialog_InputGrade_Section_JComboBox(this, user));
         jtblGradingSheet.getModel().addTableModelListener(new TableModelListener_Dialog_InputGrade_GradingSheet_JTable(this));

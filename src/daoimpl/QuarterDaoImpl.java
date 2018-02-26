@@ -38,7 +38,7 @@ public class QuarterDaoImpl implements IQuarter{
             
         } catch (SQLException e) {
             isSuccessful = false;
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return isSuccessful;
     }
@@ -79,7 +79,29 @@ public class QuarterDaoImpl implements IQuarter{
 
     @Override
     public List<Quarter> getQuarterBySchoolYear(SchoolYear aSchoolYear) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Quarter> quarterList = new ArrayList<>();
+        return quarterList;
+    }
+
+    @Override
+    public Quarter getCurrentQuarterOf(SchoolYear schoolYear) {
+        Quarter currentQuarter = new Quarter();
+        String SQL = "{CALL getCurrentQuarterOf(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    currentQuarter.setQuarterNo(rs.getInt("quarter_no"));
+                    currentQuarter.setStartDate(rs.getDate("start_date"));
+                    currentQuarter.setEndDate(rs.getDate("end_date"));
+                    currentQuarter.setGradingDueDate(rs.getDate("grading_due_date"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return currentQuarter;
     }
     
 }

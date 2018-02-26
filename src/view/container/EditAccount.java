@@ -114,7 +114,7 @@ public class EditAccount extends javax.swing.JDialog {
             String newPasswordReEnter = PasswordUtil.toString(jpfNewPasswordReEnter.getPassword());
             UserDaoImpl udi = new UserDaoImpl();
             User user = new User();
-            user.setId(userId);
+            user.setUserID(userId);
             user.setUsername(jtfUsername.getText().trim());
             user.setPassword(newPasswordReEnter);
             isUpdated = udi.update(user);

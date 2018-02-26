@@ -29,6 +29,42 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     }
 
     @Override
+    public boolean paySummerFees(Tuition tuitionFee) {
+        boolean isSuccessful = false;
+        DateUtil dateUtil = new DateUtil();
+        String SQLa = "{CALL addBalanceBreakDownFee(?,?,?,?,?,?,?,?)}";
+        PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
+        Student student = tuitionFee.getStudent();
+        int schoolYearId = tuitionFee.getSchoolyearId();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+            try (CallableStatement csa = con.prepareCall(SQLa);){
+                for(BalanceBreakDownFee b : tuitionFee.getBalanceBreakDownFees()){
+                    csa.setString(1, b.getName().trim());
+                    csa.setBigDecimal(2, b.getAmount());
+                    csa.setDate(3, dateUtil.toSqlDate(b.getDeadline()));
+                    csa.setString(4, b.getCategory().trim());
+                    csa.setInt(5, student.getStudentId());
+                    csa.setInt(6, paymentTerm.getPaymentTermId());
+                    csa.setInt(7, schoolYearId);
+                    csa.registerOutParameter(8, Types.INTEGER);
+                    csa.executeUpdate();
+                    int balancebreakdownId = csa.getInt(8);
+                }
+                con.commit();
+                isSuccessful = true;
+            } catch (SQLException e) {
+                con.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isSuccessful;
+    }
+
+    
+    
+    @Override
     public boolean add(Tuition tuitionFee) {
         boolean isAdded = false;
         DateUtil dateUtil = new DateUtil();

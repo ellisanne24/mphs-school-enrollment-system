@@ -6,9 +6,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
+import model.faculty.Faculty;
 import model.grade.Grade;
+import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.subject.Subject;
@@ -22,6 +26,23 @@ import utility.database.DBUtil;
  */
 public class GradeDaoImpl implements IGrade {
 
+    @Override
+    public int getCountofFailedGradesOf(Student student, SchoolYear schoolYear) {
+        int count = 0;
+        String SQL = "{CALL getCountOfFailedGradesOf(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+    
     @Override
     public boolean addStudentGrades(List<Grade> gradeList) {
         boolean isSuccessful = false;
@@ -60,7 +81,7 @@ public class GradeDaoImpl implements IGrade {
     }
 
     @Override
-    public List<Grade> getGradesByStudentSubjectAndSchoolYear(Student student, Subject subject, SchoolYear schoolYear) {
+    public List<Grade> getGradesOf(Student student, Subject subject, SchoolYear schoolYear) {
         String SQL = "{CALL getGradesByStudentIdSubjectIdAndSchoolYearId(?,?,?)}";
         List<Grade> gradeList = new ArrayList<>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
@@ -71,7 +92,7 @@ public class GradeDaoImpl implements IGrade {
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
                     User user = new User();
-                    user.setId(rs.getInt("added_by_user_id"));
+                    user.setUserID(rs.getInt("added_by_user_id"));
                     SchoolYear sy = new SchoolYear();
                     sy.setSchoolYearId(rs.getInt("schoolyear_id"));
 
@@ -137,7 +158,7 @@ public class GradeDaoImpl implements IGrade {
     }
 
     @Override
-    public Grade getStudentFinalGradeForSchoolYear(Student student, SchoolYear schoolYear) {
+    public Grade getFinalGradeOf(Student student, SchoolYear schoolYear) {
         Grade grade = new Grade();
         String SQL = "{CALL getStudentFinalGradeForSchoolYear(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
@@ -157,5 +178,42 @@ public class GradeDaoImpl implements IGrade {
 
         return grade;
     }
+
+    @Override
+    public Map<Faculty, Subject> getFacultySubjectPairOfSubjectsNotGradedYet(Student student, GradeLevel gradeLevel, SchoolYear schoolYear) {
+        Map<Faculty,Subject> map = new HashMap<>();
+        String SQL = "{CALL getFacultySubjectPairOfSubjectsNotGradedYet(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, student.getStudentId());
+            cs.setInt(2, gradeLevel.getGradeLevelId());
+            cs.setInt(3, schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Faculty faculty = new Faculty();
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
+                    faculty.setLastName(rs.getString("lastName"));
+                    faculty.setFirstName(rs.getString("firstName"));
+                    faculty.setMiddleName(rs.getString("middleName"));
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+                    faculty.setStatus(rs.getBoolean("status"));
+                    
+                    Subject subject = new Subject();
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectCode(rs.getString("code"));
+                    subject.setSubjectTitle(rs.getString("title"));
+                    subject.setSubjectDescription(rs.getString("description"));
+                    
+                    map.put(faculty, subject);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+    
+    
     
 }

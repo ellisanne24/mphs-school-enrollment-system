@@ -27,6 +27,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import model.fee.Fee;
 import model.paymentterm.PaymentTerm;
+import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.Tuition;
 import service.tuition.TuitionPopulator;
@@ -95,14 +96,15 @@ public class SearchStudent implements KeyListener {
             studentNo = Integer.parseInt(view.getJtfSearchBoxMakePayment().getText().trim());
             if (studentExist()) {
                 clearForm();
-                initializeStudent();
+                initializeStudent();//should execute first
+                initAssignSummerFeeButton(student);
                 initializeFees();
                 initializeBalanceBreakDownTableModelListener();
                 if (studentHasTuitionRecord()) {
-                    Tuition t = tuitionFeeDaoImpl.getBy(student.getStudentId(), currentSchoolYearId);
-                    view.getJlblTotalPaidText().setText(""+t.getTotalPaid());
-                    view.getJlblRemainingBalanceText().setText(""+t.getRemainingBalance());
-                    view.getJcmbPaymentTerm().setSelectedItem(t.getPaymentTerm().getPaymentTermName().trim());
+                    Tuition tuition = tuitionFeeDaoImpl.getBy(student.getStudentId(), currentSchoolYearId);
+                    view.getJlblTotalPaidText().setText(""+tuition.getTotalPaid());
+                    view.getJlblRemainingBalanceText().setText(""+tuition.getRemainingBalance());
+                    view.getJcmbPaymentTerm().setSelectedItem(tuition.getPaymentTerm().getPaymentTermName().trim());
                     view.getJcmbPaymentTerm().setEnabled(false);
                     initializeBalanceBreakDownTable();
                     initializeReceiptsMasterListTable();
@@ -119,6 +121,17 @@ public class SearchStudent implements KeyListener {
         }
     }
 
+    private void initAssignSummerFeeButton(Student s){
+        SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+        view.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(view,s,currentSchoolYear));
+        if(s.getIsRecommendedToTakeSummer()){
+            view.getJlblRecommendForSummerMessage().setText("Student is recommended for summer.");
+            view.getJbtnAssignSummerFee().setEnabled(true);
+        }else{
+            view.getJbtnAssignSummerFee().setEnabled(false);
+        }
+    }
+    
     private void initializeStudent() {
         student = studentDaoImpl.getStudentByStudentNo(studentNo);
         view.getJcmbPaymentTerm().setModel(paymentTermJCompModelLoader.getPaymentTermNames());
@@ -164,7 +177,9 @@ public class SearchStudent implements KeyListener {
     private BigDecimal getFeesSum() {
         BigDecimal sum = new BigDecimal(BigInteger.ZERO);
         for (Fee f : feeList) {
-            sum = sum.add(f.getAmount());
+            if(!f.getFeeCategory().getName().trim().equalsIgnoreCase("Summer")){
+                sum = sum.add(f.getAmount());
+            }
         }
         return sum;
     }
@@ -251,6 +266,7 @@ public class SearchStudent implements KeyListener {
                 }
             }
         }
+        view.getJlblRecommendForSummerMessage().setText("");
         view.getJlblRemainingBalanceText().setText("");
         view.getJlblTotalPaidText().setText("");
     }

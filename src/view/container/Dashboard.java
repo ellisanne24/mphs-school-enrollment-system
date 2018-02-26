@@ -2,6 +2,7 @@ package view.container;
 
 import controller.admintools.DisplayRecordGeneratorController;
 import daoimpl.PermissionDaoImpl;
+import daoimpl.QuarterDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import view.enrollment.Panel_Enrollment;
 import view.user.AllUsersRecord;
@@ -24,6 +25,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import model.permission.dashboardpermission.DashboardPermission;
+import model.quarter.Quarter;
 import model.schoolyear.SchoolYear;
 import model.testdata.SubjectTestDataModel;
 import model.user.User;
@@ -31,11 +33,13 @@ import utility.initializer.Initializer;
 import view.grades.View_Panel_GradingSystem;
 import view.payment.Panel_Payment;
 import view.registration.View_Panel_Registration;
+import view.reports.Panel_Reports;
 
 public class Dashboard extends javax.swing.JFrame implements Initializer {
 
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private PermissionDaoImpl permissionDaoImpl;
+    private QuarterDaoImpl quarterDaoImpl;
 
     private Image imageSchoolLogo;
     private Image imageEnrollment;
@@ -76,6 +80,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     private boolean hasSettingsAccess;
 
     private final User user;
+    private SchoolYear currentSchoolYear;
     public static int userId;
     public static int facultyId;
     public static int adviserId;
@@ -85,6 +90,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
         this.user = user;
 
         initDaoImpl();
+        initModels();
         initControllers();
         initViewComponents();
 
@@ -111,6 +117,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
 
     @Override
     public void initModels() {
+        currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
     }
 
     @Override
@@ -188,6 +195,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         permissionDaoImpl = new PermissionDaoImpl();
+        quarterDaoImpl = new QuarterDaoImpl();
     }
 
     public static int getRegistrationInstanceCount() {
@@ -1163,7 +1171,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
         if (evt.getClickCount() >= 1) {
             if (hasEnrollmentAccess) {
                 if (enrollment_instance_count <= 0) {
-                    Panel_Enrollment enrollmentPanel = new Panel_Enrollment(user);
+                    Panel_Enrollment enrollmentPanel = new Panel_Enrollment(user,currentSchoolYear);
                     jtpTopTabbedPane.addTab("Enrollment", enrollmentPanel);
                     jtpTopTabbedPane.setSelectedComponent(enrollmentPanel);
                     setEnrollmentInstanceCount(1);
@@ -1183,8 +1191,8 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
         if (evt.getClickCount() >= 1) {
             if (hasGradesAccess) {
                 if (gradingsystem_instance_count <= 0) {
-                    SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
-                    View_Panel_GradingSystem panel_GradingSystem = new View_Panel_GradingSystem(user,currentSchoolYear);
+                    Quarter currentQuarter = quarterDaoImpl.getCurrentQuarterOf(currentSchoolYear);
+                    View_Panel_GradingSystem panel_GradingSystem = new View_Panel_GradingSystem(user,currentSchoolYear,currentQuarter);
                     jtpTopTabbedPane.add("Grades", panel_GradingSystem);
                     jtpTopTabbedPane.setSelectedComponent(panel_GradingSystem);
                     setGradingSystemInstanceCount(1);
@@ -1206,7 +1214,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
             if (hasPaymentAccess) {
                 if (payment_and_assessment_instance_count <= 0) {
                     Panel_Payment paymentPanel;
-                    paymentPanel = new Panel_Payment();
+                    paymentPanel = new Panel_Payment(user, currentSchoolYear);
                     jtpTopTabbedPane.add("Payment", paymentPanel);
                     jtpTopTabbedPane.setSelectedComponent(paymentPanel);
                     setPaymentsAndAssessmentInstanceCount(1);
@@ -1272,11 +1280,11 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
         if (evt.getClickCount() >= 1) {
             if (hasReportsAccess) {
                 if (useraccounts_instance_count <= 0) {
-//                    Reports reports = new Reports();
-//                    jtpTopTabbedPane.add("Reports", reports);
-//                    jtpTopTabbedPane.setSelectedComponent(reports);
-//                    setREPORTS_INSTANCE(1);
-//                    REPORTS_TAB_INDEX = jtpTopTabbedPane.getTabCount();
+                    Panel_Reports reports = new Panel_Reports(user,currentSchoolYear);
+                    jtpTopTabbedPane.add("Reports", reports);
+                    jtpTopTabbedPane.setSelectedComponent(reports);
+                    setReportsInstanceCount(1);
+                    reports_tab_index = jtpTopTabbedPane.getTabCount();
                 } else if (jtpTopTabbedPane.getTabCount() == 0) {
                     jtpTopTabbedPane.setSelectedIndex(reports_tab_index - 1);
                 } else {

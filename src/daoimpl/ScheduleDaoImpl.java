@@ -294,6 +294,63 @@ public class ScheduleDaoImpl implements ISchedule {
         
         return hasSchedule;
     }
+
+    @Override
+    public Faculty getScheduleFacultyOf(Subject subject, SchoolYear schoolYear) {
+        Faculty faculty = new Faculty();
+        String SQL = "{CALL getScheduleFacultyOf(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, subject.getSubjectId());
+            cs.setInt(2, schoolYear.getSchoolYearId());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    faculty.setFacultyID(rs.getInt("faculty_id"));
+                    faculty.setLastName(rs.getString("lastName"));
+                    faculty.setFirstName(rs.getString("firstName"));
+                    faculty.setMiddleName(rs.getString("middleName"));
+                    faculty.setContactNo(rs.getString("contactNo"));
+                    faculty.setEmail(rs.getString("email"));
+                    faculty.setStatus(rs.getBoolean("status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return faculty;
+    }
+
+    @Override
+    public List<Schedule> getScheduleDayTimeRoomOf(Subject subject, SchoolYear schoolYear) {
+        List<Schedule> scheduleList = new ArrayList<>();
+        String SQL = "{CALL getScheduleDayTimeRoomOf(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,subject.getSubjectId());
+            cs.setInt(2,schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Room room = new Room();
+                    room.setRoomID(rs.getInt("room_id"));
+                    room.setRoomName(rs.getString("room_name_or_num"));
+                    room.setBuildingName(rs.getString("bldg_name_or_num"));
+                    room.setCapacity(rs.getString("capacity"));
+                    room.setDescription(rs.getString("notes"));
+                    
+                    Schedule schedule = new Schedule();
+                    schedule.setDay(rs.getString("schedule_day"));
+                    schedule.setStartTime(rs.getInt("startTime"));
+                    schedule.setEndTime(rs.getInt("endTime"));
+                    schedule.setRoom(room);
+                    
+                    scheduleList.add(schedule);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return scheduleList;
+    }
  
     
     

@@ -28,6 +28,7 @@ public class SchoolYearJCompModelLoader {
             SchoolYear sy = (SchoolYear) o;
             Object[] rowData = {
                 sy.getSchoolYearId(),
+                sy.getIsActive() == true ? "Active" : "Inactive",
                 sy.getYearFrom() + " - " + sy.getYearTo(),
                 sy.getSchoolYearStartDate(),
                 sy.getSchoolYearEndDate(),
@@ -37,7 +38,11 @@ public class SchoolYearJCompModelLoader {
                 sy.getSummerEnrollmentEndDate(),
                 sy.getSummerClassStartDate(), 
                 sy.getSummerClassEndDate(),
-                sy.getIsActive() == true ? "Active" : "Inactive",};
+                sy.getQuarters().get(0).getStartDate(),sy.getQuarters().get(0).getEndDate(),
+                sy.getQuarters().get(1).getStartDate(),sy.getQuarters().get(1).getEndDate(),
+                sy.getQuarters().get(2).getStartDate(),sy.getQuarters().get(2).getEndDate(),
+                sy.getQuarters().get(3).getStartDate(),sy.getQuarters().get(3).getEndDate(),
+                };
             tableModel.addRow(rowData);
         }
         return tableModel;
@@ -90,6 +95,15 @@ public class SchoolYearJCompModelLoader {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
         comboModel.addElement(schoolYear);
+        return comboModel;
+    }
+    
+    public DefaultComboBoxModel getAllSchoolYear(){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<SchoolYear> schoolYearList = schoolYearDaoImpl.getAllSchoolYear();
+        for(SchoolYear sy : schoolYearList){
+            comboModel.addElement(sy);
+        }
         return comboModel;
     }
 }

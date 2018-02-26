@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import model.faculty.Faculty;
 import model.schoolyear.SchoolYear;
@@ -28,7 +29,7 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
     private SectionJCompModelLoader sectionJCompModelLoader;
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private FacultyDaoImpl facultyDaoImpl;
-    private User user;
+    private final User user;
     private final SchoolYear currentSchoolYear;
     
     public Dialog_Promotion(java.awt.Frame parent, boolean modal, User user, SchoolYear currentSchoolYear) {
@@ -74,11 +75,12 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
 
     @Override
     public void initControllers() {
+        jbtnRefresh.addActionListener(new Controller_ItemListener_Section_JComboBox(this, currentSchoolYear));
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
-        jbtnPromote.addActionListener(new Controller_Promote_JButton(this, currentSchoolYear));
+        jbtnPromote.addActionListener(new Controller_Promote_JButton(this, currentSchoolYear, user));
         jtblStudents.getModel().addTableModelListener(new Controller_Promotion_Students_JTable_TableModel());
         jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
-        jcmbSections.addItemListener(new Controller_ItemListener_Section_JComboBox(this));
+        jcmbSections.addItemListener(new Controller_ItemListener_Section_JComboBox(this,currentSchoolYear));
     }
 
     @Override
@@ -88,6 +90,9 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
     }
     
     
+    public JTextArea getJtaWarningConsole() {
+        return jtaWarningConsole;
+    }
 
     public JComboBox<String> getJcmbSections() {
         return jcmbSections;
@@ -103,18 +108,6 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
 
     public JButton getJbtnPromote() {
         return jbtnPromote;
-    }
-
-    public JButton getJbtnPromoteAll() {
-        return jbtnPromoteAll;
-    }
-
-    public JButton getJbtnRetain() {
-        return jbtnRetain;
-    }
-
-    public JButton getJbtnSaveAndClose() {
-        return jbtnSaveAndClose;
     }
 
     public JButton getJbtnSearch() {
@@ -151,8 +144,7 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         jtfSearchBox = new javax.swing.JTextField();
         jbtnSearch = new javax.swing.JButton();
         jbtnPromote = new javax.swing.JButton();
-        jbtnRetain = new javax.swing.JButton();
-        jbtnPromoteAll = new javax.swing.JButton();
+        jbtnRefresh = new javax.swing.JButton();
         jpnlStudents = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblStudents = new javax.swing.JTable();
@@ -160,7 +152,6 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         jtaWarningConsole = new javax.swing.JTextArea();
         panel_footer = new javax.swing.JPanel();
         jbtnCancel = new javax.swing.JButton();
-        jbtnSaveAndClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Student Promotion");
@@ -175,8 +166,8 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         panel_toppanel.setLayout(new java.awt.GridBagLayout());
 
         jpnlControl.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Control", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        jpnlControl.setMinimumSize(new java.awt.Dimension(1000, 70));
-        jpnlControl.setPreferredSize(new java.awt.Dimension(1000, 70));
+        jpnlControl.setMinimumSize(new java.awt.Dimension(1000, 50));
+        jpnlControl.setPreferredSize(new java.awt.Dimension(1000, 50));
         jpnlControl.setLayout(new java.awt.GridBagLayout());
 
         jlblSection.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -184,8 +175,8 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jlblSection, gridBagConstraints);
 
         jcmbSections.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -194,7 +185,8 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jcmbSections, gridBagConstraints);
 
         jtfSearchBox.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
@@ -202,42 +194,37 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         jtfSearchBox.setMinimumSize(new java.awt.Dimension(150, 25));
         jtfSearchBox.setPreferredSize(new java.awt.Dimension(150, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jtfSearchBox, gridBagConstraints);
 
         jbtnSearch.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnSearch.setText("Search");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 20);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jbtnSearch, gridBagConstraints);
 
         jbtnPromote.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnPromote.setText("Promote");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jbtnPromote, gridBagConstraints);
 
-        jbtnRetain.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnRetain.setText("Retain");
+        jbtnRefresh.setText("Refresh ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
-        jpnlControl.add(jbtnRetain, gridBagConstraints);
-
-        jbtnPromoteAll.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnPromoteAll.setText("Promote All");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
-        jpnlControl.add(jbtnPromoteAll, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlControl.add(jbtnRefresh, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -283,11 +270,12 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         jpnlStudents.add(jScrollPane1, gridBagConstraints);
 
         jspWarningConsole.setBorder(javax.swing.BorderFactory.createTitledBorder("Summary / Warnings"));
-        jspWarningConsole.setMinimumSize(new java.awt.Dimension(27, 118));
+        jspWarningConsole.setMinimumSize(new java.awt.Dimension(27, 200));
+        jspWarningConsole.setPreferredSize(new java.awt.Dimension(223, 200));
 
         jtaWarningConsole.setBackground(new java.awt.Color(0, 0, 0));
         jtaWarningConsole.setColumns(20);
-        jtaWarningConsole.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jtaWarningConsole.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jtaWarningConsole.setForeground(new java.awt.Color(204, 255, 0));
         jtaWarningConsole.setRows(5);
         jtaWarningConsole.setDisabledTextColor(new java.awt.Color(153, 255, 0));
@@ -328,17 +316,6 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_footer.add(jbtnCancel, gridBagConstraints);
 
-        jbtnSaveAndClose.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnSaveAndClose.setText("Save & Close");
-        jbtnSaveAndClose.setMaximumSize(new java.awt.Dimension(110, 40));
-        jbtnSaveAndClose.setMinimumSize(new java.awt.Dimension(110, 40));
-        jbtnSaveAndClose.setPreferredSize(new java.awt.Dimension(120, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        panel_footer.add(jbtnSaveAndClose, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -363,9 +340,7 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtnCancel;
     private javax.swing.JButton jbtnPromote;
-    private javax.swing.JButton jbtnPromoteAll;
-    private javax.swing.JButton jbtnRetain;
-    private javax.swing.JButton jbtnSaveAndClose;
+    private javax.swing.JButton jbtnRefresh;
     private javax.swing.JButton jbtnSearch;
     private javax.swing.JComboBox<String> jcmbSections;
     private javax.swing.JLabel jlblSection;

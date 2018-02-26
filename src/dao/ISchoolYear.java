@@ -9,6 +9,7 @@ import model.schoolyear.SchoolYear;
  */
 public interface ISchoolYear {
     List<SchoolYear> getAllSchoolYearInfo();
+    List<SchoolYear> getAllSchoolYear();
     List<SchoolYear> getAllYearFrom();
     List<SchoolYear> getAllYearTo();
     SchoolYear getSchoolYearById(int schoolYearId);

@@ -4,6 +4,7 @@ import daoimpl.GradeLevelDaoImpl;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 
 public class GradeLevelJCompModelLoader {
 
@@ -62,12 +63,20 @@ public class GradeLevelJCompModelLoader {
         DefaultComboBoxModel dcm = new DefaultComboBoxModel();
         List<GradeLevel> gradeLevelList = gradeLevelDaoImpl.getAllRegisteredSubjectGradeLevel();
         Object[] obj = gradeLevelList.toArray();
-
         for (Object o : obj) {
             GradeLevel g = (GradeLevel) o;
             dcm.addElement(g.getLevelNo());
         }
-
         return dcm;
+    }
+    
+    public DefaultComboBoxModel getSummerGradeLevelsOf(SchoolYear schoolYear){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<GradeLevel> summerGradeLevels = gradeLevelDaoImpl.getSummerGradeLevelsOf(schoolYear);
+        for(GradeLevel summerGradeLevel : summerGradeLevels){
+            comboModel.addElement(summerGradeLevel.getLevelNo());
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
     }
 }

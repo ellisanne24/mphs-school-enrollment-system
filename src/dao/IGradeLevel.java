@@ -6,8 +6,12 @@
 package dao;
 
 import java.util.List;
+import java.util.Map;
+import model.faculty.Faculty;
 import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 import model.student.Student;
+import model.subject.Subject;
 
 /**
  *
@@ -18,6 +22,7 @@ public interface IGradeLevel {
     int getId(GradeLevel aGradeLevel);
     GradeLevel getById(int aGradeLevelId);
     
+    List<GradeLevel> getSummerGradeLevelsOf(SchoolYear schoolYear);
     List<GradeLevel> getAllGradeLevelsInfo();
     List<GradeLevel> getAllActiveGradeLevels();
     List<GradeLevel> getAllInactiveGradeLevels();

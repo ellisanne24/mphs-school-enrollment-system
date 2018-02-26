@@ -49,7 +49,7 @@ public class UserDaoImpl implements IUser{
                 while (rsa.next()) {
                     user.setDateCreated(rsa.getDate("dateCreated"));
                     user.setFirstName(rsa.getString("firstname"));
-                    user.setId(rsa.getInt("user_id"));
+                    user.setUserID(rsa.getInt("user_id"));
                     user.setIsActive(rsa.getBoolean("isActive"));
                     user.setIsLocked(rsa.getBoolean("isLocked"));
                     user.setLastLoginDate(rsa.getTimestamp("lastLoginDate"));
@@ -85,7 +85,7 @@ public class UserDaoImpl implements IUser{
                     u.setMiddleName(rs.getString("middlename"));
                     u.setLastName(rs.getString("lastname"));
                     u.setUsername(rs.getString("username"));
-                    u.setId(rs.getInt("user_id"));
+                    u.setUserID(rs.getInt("user_id"));
                     Role role = new Role();
                     int roleId = rs.getInt("role_id");
                     String roleName = rs.getString("role");

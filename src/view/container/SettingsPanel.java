@@ -482,6 +482,7 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
 
         jtpManagementTabbedPane.addTab("Lan", jspLanMgmt);
 
+        jpnlSchoolYearMgmt.setLayout(new java.awt.GridBagLayout());
         jspSchoolYearMgmt.setViewportView(jpnlSchoolYearMgmt);
 
         jtpManagementTabbedPane.addTab("School Year", jspSchoolYearMgmt);

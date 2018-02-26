@@ -7,7 +7,7 @@ import java.util.List;
 import model.admission.Admission;
 import model.enrollment.Enrollment;
 import model.paymentterm.PaymentTerm;
-import model.promotionInfo.PromotionInfo;
+import model.promotionInfo.Promotion;
 import model.registration.Registration;
 import model.section.Section;
 import model.subject.Subject;
@@ -26,17 +26,26 @@ public class Student {
     private boolean exists;
     private boolean isActive;
     private boolean isGraduated;
+    private boolean isRecommendedToTakeSummer;
     private Date entryDate;
     private Date dateGraduated;
     private Tuition tuitionFee;
-    private PromotionInfo promotionInfo;
+    private Promotion promotion;
 
-    public PromotionInfo getPromotionInfo() {
-        return promotionInfo;
+    public boolean getIsRecommendedToTakeSummer() {
+        return isRecommendedToTakeSummer;
     }
 
-    public void setPromotionInfo(PromotionInfo promotionInfo) {
-        this.promotionInfo = promotionInfo;
+    public void setIsRecommendedToTakeSummer(boolean isRecommendedToTakeSummer) {
+        this.isRecommendedToTakeSummer = isRecommendedToTakeSummer;
+    }
+    
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(Promotion promotion) {
+        this.promotion = promotion;
     }
 
     public int gradeLevelNo; //current gradelevelNo

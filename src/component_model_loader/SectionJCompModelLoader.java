@@ -64,6 +64,7 @@ public class SectionJCompModelLoader {
         for (Section s : sectionList) {
             comboModel.addElement(s);
         }
+        comboModel.setSelectedItem(null);
         return comboModel;
     }
     

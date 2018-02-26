@@ -14,6 +14,7 @@ import model.faculty.Faculty;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
+import model.student.Student;
 import model.subject.Subject;
 import utility.database.DBType;
 import utility.database.DBUtil;
@@ -35,10 +36,8 @@ public class SubjectDaoImpl implements ISubject {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Subject subject = new Subject();
-
                     subject.setSubjectId(rs.getInt("subject_id"));
                     subject.setSubjectTitle(rs.getString("title"));
-
                     list.add(subject);
                 }
             }
@@ -87,17 +86,17 @@ public class SubjectDaoImpl implements ISubject {
         String SQL = "{CALL getAllSubjectsByStatusAndGradeLevelId(?,?)}";
         List<Subject> subjectList = new ArrayList<>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
+                CallableStatement cs = con.prepareCall(SQL);) {
             cs.setInt(1, isActive == true ? 1 : 0);
             cs.setInt(2, gradeLevelId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     GradeLevel g = new GradeLevel();
                     g.setLevelNo(rs.getInt("grade_level"));
-                    
+
                     SchoolYear schoolYearCreated = new SchoolYear();
                     schoolYearCreated.setSchoolYearId(rs.getInt("year_created_schoolyear_id"));
-                    
+
                     Subject s = new Subject();
                     s.setSubjectId(rs.getInt("subject_id"));
                     s.setSubjectCode(rs.getString("code"));
@@ -105,7 +104,7 @@ public class SubjectDaoImpl implements ISubject {
                     s.setSubjectDescription(rs.getString("description"));
                     s.setGradeLevel(g);
                     s.setSchoolYearCreated(schoolYearCreated);
-                    
+
                     subjectList.add(s);
                 }
             }
@@ -114,8 +113,6 @@ public class SubjectDaoImpl implements ISubject {
         }
         return subjectList;
     }
-    
-    
 
     @Override
     public List<Subject> getSubjectInfoByWildCard(String wildCardChar) {
@@ -224,7 +221,7 @@ public class SubjectDaoImpl implements ISubject {
             cs.setString(3, subject.getSubjectDescription());
             cs.registerOutParameter(4, java.sql.Types.INTEGER);
             cs.setInt(5, subject.getGradeLevel().getGradeLevelId());
-            cs.setInt(6,subject.getSchoolYearCreated().getSchoolYearId());
+            cs.setInt(6, subject.getSchoolYearCreated().getSchoolYearId());
             cs.executeUpdate();
             subject.setSubjectId(cs.getInt(4));
 
@@ -273,11 +270,9 @@ public class SubjectDaoImpl implements ISubject {
     public int getSubjectId(Subject aSubject) {
         int id = 0;
         String sql = "{call getSubjectIdByCode(?)}";
-
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(sql);) {
             cs.setString(1, aSubject.getSubjectCode());
-
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     id = rs.getInt("subject_id");
@@ -286,7 +281,6 @@ public class SubjectDaoImpl implements ISubject {
         } catch (SQLException ex) {
             System.err.println("Error at getSubjectId " + ex);
         }
-
         return id;
     }
 
@@ -444,12 +438,12 @@ public class SubjectDaoImpl implements ISubject {
         String SQL = "{CALL getSubjectsHandledByFacultyUsingFacultyIdSectionIdAndSyId(?,?,?)}";
         List<Subject> subjectList = new ArrayList<>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,f.getFacultyID());
-            cs.setInt(2,s.getSectionId());
-            cs.setInt(3,sy.getSchoolYearId());
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, f.getFacultyID());
+            cs.setInt(2, s.getSectionId());
+            cs.setInt(3, sy.getSchoolYearId());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     Subject subject = new Subject();
                     subject.setSubjectId(rs.getInt("subject_id"));
                     subject.setSubjectCode(rs.getString("code"));
@@ -464,4 +458,28 @@ public class SubjectDaoImpl implements ISubject {
         return subjectList;
     }
 
+    @Override
+    public List<Subject> getSummerSubjectsOf(Student student, SchoolYear schoolYear) {
+        String SQL = "{CALL getSummerSubjectsOf(?,?)}";
+        List<Subject> subjects = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,student.getStudentId());
+            cs.setInt(2,schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    Subject subject = new Subject();
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectCode(rs.getString("code"));
+                    subject.setSubjectTitle(rs.getString("title"));
+                    subject.setSubjectDescription(rs.getString("description"));
+                    subjects.add(subject);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subjects;
+    }
+    
 }

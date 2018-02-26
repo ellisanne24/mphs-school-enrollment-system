@@ -6,6 +6,7 @@ import model.paymentterm.PaymentTerm;
 import model.paymentterm.PaymentTermPenalty;
 import model.period.Period;
 import model.schoolyear.SchoolYear;
+import model.student.Student;
 
 /**
  *
@@ -21,4 +22,5 @@ public interface IPaymentTerm {
    
     List<SchoolYear> getSchoolYearsWithPenalty();//
     List<PaymentTermPenalty> getPenaltyInformationBySchoolYearId(int schoolYearId);//
+    PaymentTerm getPaymentTermOf(Student student, SchoolYear schoolYear);
 }

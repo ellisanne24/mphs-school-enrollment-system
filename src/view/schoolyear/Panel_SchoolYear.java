@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import utility.initializer.Initializer;
+import utility.jtable.JTableUtil;
 
 public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
 
@@ -46,6 +47,7 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initViewComponents() {
+        JTableUtil.applyCustomHeaderRenderer(jtblSchoolYearMasterList);
         jtblSchoolYearMasterList.setModel(schoolYearJCompModelLoader.getAllSchoolYearInfo(jtblSchoolYearMasterList));
     }
 
@@ -192,26 +194,29 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toppanel.add(panel_control, gridBagConstraints);
 
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(2800, 558));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(2800, 558));
+
         panel_masterrecord.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Record Master List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        panel_masterrecord.setMinimumSize(new java.awt.Dimension(1200, 555));
-        panel_masterrecord.setPreferredSize(new java.awt.Dimension(1200, 555));
+        panel_masterrecord.setMinimumSize(new java.awt.Dimension(2000, 555));
+        panel_masterrecord.setPreferredSize(new java.awt.Dimension(2500, 555));
         panel_masterrecord.setLayout(new java.awt.GridBagLayout());
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         jtblSchoolYearMasterList.setAutoCreateRowSorter(true);
-        jtblSchoolYearMasterList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblSchoolYearMasterList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblSchoolYearMasterList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "School Year", "SY Start Date", "SY End Date", "Enrollment Start", "Enrollment End", "Summer Enrollment Start", "Summer Enrollment End", "Summer Start", "Summer End", "Status"
+                "ID", "Status", "School Year", "SY Start Date", "SY End Date", "Enrollment Start", "Enrollment End", "Summer Enrollment Start", "Summer Enrollment End", "Summer Start", "Summer End", "1stQtr Grading Start", "1stQtr Grading Due", "2ndQtr Grading Start", "2ndQtr Grading Due", "3rdQtr Grading Start", "3rdQtr Grading Due", "4thQtr Grading Start", "4thQtr Grading Due"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -220,7 +225,7 @@ public class Panel_SchoolYear extends javax.swing.JPanel implements Initializer{
         });
         jtblSchoolYearMasterList.setMinimumSize(new java.awt.Dimension(1185, 530));
         jtblSchoolYearMasterList.setPreferredSize(new java.awt.Dimension(1185, 530));
-        jtblSchoolYearMasterList.setRowHeight(20);
+        jtblSchoolYearMasterList.setRowHeight(30);
         jtblSchoolYearMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jtblSchoolYearMasterList);
 

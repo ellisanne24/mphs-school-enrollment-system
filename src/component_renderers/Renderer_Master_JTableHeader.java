@@ -26,7 +26,7 @@ public class Renderer_Master_JTableHeader implements UIResource, TableCellRender
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component component = original.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        component.setFont(component.getFont().deriveFont(Font.BOLD,14));
+        component.setFont(component.getFont().deriveFont(Font.BOLD,12));
         return component;
     }
     

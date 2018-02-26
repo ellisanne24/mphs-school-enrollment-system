@@ -14,6 +14,7 @@ import dao.IPaymentTerm;
 import model.paymentterm.PaymentTermPenalty;
 import model.period.Period;
 import model.schoolyear.SchoolYear;
+import model.student.Student;
 import utility.date.DateUtil;
 
 /**
@@ -291,5 +292,48 @@ public class PaymentTermDaoImpl implements IPaymentTerm{
         }
         return list;
     }
+
+    @Override
+    public PaymentTerm getPaymentTermOf(Student student, SchoolYear schoolYear) {
+        String SQLa = "{CALL getPaymentTermOf(?,?)}";
+        String SQLb = "{CALL getPaymentTermPeriodsByPaymentTermId(?)}";
+        PaymentTerm paymentTerm = new PaymentTerm();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement csa = con.prepareCall(SQLa);
+                CallableStatement csb = con.prepareCall(SQLb);){
+            csa.setInt(1,student.getStudentNo());
+            csa.setInt(2, schoolYear.getSchoolYearId());
+            try(ResultSet rsa = csa.executeQuery();){
+                while(rsa.next()){
+                    int paymentTermId = rsa.getInt("paymentterm_id");
+                    paymentTerm.setPaymentTermId(rsa.getInt("paymentterm_id"));
+                    paymentTerm.setPaymentTermName(rsa.getString("paymentterm_name"));
+                    paymentTerm.setIsPaymentTermActive(rsa.getBoolean("isPaymentTermActive"));
+                    paymentTerm.setDivisor(rsa.getInt("divisor"));
+                    paymentTerm.setSchoolYearId(rsa.getInt("schoolyear_id"));
+                    
+                    List<Period> periods = new ArrayList<>();
+                    csb.setInt(1, paymentTermId);
+                    try (ResultSet rsb = csb.executeQuery();) {
+                        while (rsb.next()) {
+                            Period period = new Period();
+                            period.setPeriodId(rsb.getInt("period_id"));
+                            period.setPeriodCode(rsb.getString("period_code"));
+                            period.setPeriodName(rsb.getString("period_name"));
+                            period.setPaymentDeadline(rsb.getDate("paymentdeadline"));
+
+                            periods.add(period);
+                        }
+                    }
+                    paymentTerm.setPeriods(periods);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return paymentTerm;
+    }
+    
+    
     
 }

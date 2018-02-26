@@ -22,43 +22,20 @@ import view.grades.View_Dialog_InputGrade;
 public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionListener {
 
     private final View_Dialog_InputGrade view;
-    private final SchoolYearDaoImpl schoolYearDaoImpl;
     private final GradeDaoImpl gradeDaoImpl;
     private final User user;
+    private final SchoolYear currentSchoolYear;
 
-    public ActionListener_Dialog_InputGrade_Save_JButton(View_Dialog_InputGrade view, User user) {
+    public ActionListener_Dialog_InputGrade_Save_JButton(View_Dialog_InputGrade view, User user, SchoolYear currentSchoolYear) {
         this.view = view;
         this.user = user;
-        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        this.currentSchoolYear = currentSchoolYear;
         gradeDaoImpl = new GradeDaoImpl();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DefaultTableModel tableModel = (DefaultTableModel) view.getJtblGradingSheet().getModel();
-        Subject subject = (Subject) view.getJcmbSubjectCode().getSelectedItem();
-        SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
-        List<Grade> gradeList = new ArrayList<>();
-        for (int row = 0; row < tableModel.getRowCount(); row++) {
-            Student student = new Student();
-            student.setStudentId(Integer.parseInt(tableModel.getValueAt(row, 0).toString().trim()));
-            for (int col = 0; col < tableModel.getColumnCount(); col++) {
-                if (tableModel.getValueAt(row, col) != null) {
-                    if (col == 3 || col == 4 || col == 5 || col == 6) {
-                        Grade grade = new Grade();
-                        grade.setStudentId(student.getStudentId());
-                        grade.setSchoolYear(schoolYear);
-                        grade.setSubjectId(subject.getSubjectId());
-                        grade.setGradingPeriod(col - 2);//1st,2nd,3rd,4th 
-                        grade.setGradeType("R");
-                        grade.setValue(Integer.parseInt(tableModel.getValueAt(row, col).toString().trim()));
-                        grade.setAddedBy(user);
-                        gradeList.add(grade);
-                    }
-                }
-            }
-        }
-
+        List<Grade> gradeList = getPopulatedGrades();
         int choice = JOptionPane.showConfirmDialog(null, "Add Grades?", "Save Confirmation", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             boolean isSuccessful = gradeDaoImpl.addStudentGrades(gradeList);
@@ -72,6 +49,34 @@ public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionList
             }
 
         }
+    }
+    
+    private List<Grade> getPopulatedGrades(){
+        DefaultTableModel tableModel = (DefaultTableModel) view.getJtblGradingSheet().getModel();
+        Subject subject = (Subject) view.getJcmbSubjectCode().getSelectedItem();
+        List<Grade> gradeList = new ArrayList<>();
+        for (int row = 0; row < tableModel.getRowCount(); row++) {
+            Student student = new Student();
+            student.setStudentId(Integer.parseInt(tableModel.getValueAt(row, 0).toString().trim()));
+            for (int col = 0; col < tableModel.getColumnCount(); col++) {
+                if (tableModel.getValueAt(row, col) != null) {
+                    if (col == 3 || col == 4 || col == 5 || col == 6) {
+                        if (!tableModel.getValueAt(row, col).toString().trim().equals("0")) {
+                            Grade grade = new Grade();
+                            grade.setStudentId(student.getStudentId());
+                            grade.setSchoolYear(currentSchoolYear);
+                            grade.setSubjectId(subject.getSubjectId());
+                            grade.setGradingPeriod(col - 2);//1st,2nd,3rd,4th 
+                            grade.setGradeType("R");
+                            grade.setValue(Integer.parseInt(tableModel.getValueAt(row, col).toString().trim()));
+                            grade.setAddedBy(user);
+                            gradeList.add(grade);
+                        }
+                    }
+                }
+            }
+        }
+        return gradeList;
     }
 
     private boolean isFormValid() {

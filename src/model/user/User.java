@@ -80,7 +80,7 @@ public class User {
         return id;
     }
 
-    public void setId(int id) {
+    public void setUserID(int id) {
         this.id = id;
     }
 

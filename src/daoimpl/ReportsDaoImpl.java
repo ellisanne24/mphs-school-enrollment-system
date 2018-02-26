@@ -1,18 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package daoimpl;
 
 import dao.IReports;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.classlistreport.ClassListReport;
-import model.enrolleesreport.EnrolleesReport;
+import model.enrollment.Enrollment;
+import model.faculty.Faculty;
+import model.registration.Registration;
+import model.schedule.Schedule;
+import model.schoolyear.SchoolYear;
+import model.section.Section;
+import model.student.Student;
 import utility.database.DBType;
 import utility.database.DBUtil;
 
@@ -23,173 +25,94 @@ import utility.database.DBUtil;
 public class ReportsDaoImpl implements IReports{
 
     @Override
-    public List<EnrolleesReport> getAllEnrollees() {
-        List<EnrolleesReport> list = new ArrayList<>();
-        String SQL = "{CALL `getAllEnrollees`()}";
+    public Student getCOROf(int studentNo, SchoolYear schoolYear) {
+        String SQL = "{CALL getCOROf(?,?)}";
+        Student student = new Student();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    EnrolleesReport er = new EnrolleesReport();
-                    er.setDateOfEnrollment(rs.getDate("date_of_enrollment"));
-                    er.setEnrollmentId(rs.getInt("enrollment_id"));
-                    er.setGradelevel(rs.getInt("grade_level"));
-                    er.setIsWithdrawn(rs.getBoolean ("withdrawn"));
-                    er.setSchoolYear(rs.getInt("schoolYear"));
-                    er.setStudentFirstName(rs.getString("firstname"));
-                    er.setStudentId(rs.getInt("student_id"));
-                    er.setStudentLastName(rs.getString("lastname"));
-                    er.setStudentMiddleName(rs.getString("middlename"));
-                    list.add(er);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, studentNo);
+            cs.setInt(2, schoolYear.getSchoolYearId());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    Registration registration = new Registration();
+                    registration.setRegistrationId(rs.getInt("registration_id"));
+                    registration.setStudentType(rs.getString("student_type"));
+                    registration.setLastName(rs.getString("lastname"));
+                    registration.setFirstName(rs.getString("firstname"));
+                    registration.setMiddleName(rs.getString("middlename"));
+                    registration.setBirthday(rs.getDate("dob"));
+                    registration.setPlaceOfBirth(rs.getString("pob"));
+                    registration.setNationality(rs.getString("nationality"));
+                    registration.setReligion(rs.getString("religion"));
+                    registration.setGender(rs.getInt("gender") == 1 ? "Male" : "Female");
+                    registration.setFatherFirstName(rs.getString("father_firstname"));
+                    registration.setFatherMiddleName(rs.getString("father_middlename"));
+                    registration.setFatherLastName(rs.getString("father_lastname"));
+                    registration.setFatherOccupation(rs.getString("father_occupation"));
+                    registration.setFatherOfficePhoneNo(rs.getString("father_officephone_no"));
+                    registration.setFatherMobileNo(rs.getString("father_mobile_no"));
+                    registration.setIsFatherContactInCaseEmergency(rs.getBoolean("isFatherContactInCaseEmergency"));
+                    registration.setMotherFirstName(rs.getString("mother_firstname"));
+                    registration.setMotherMiddleName(rs.getString("mother_middlename"));
+                    registration.setMotherLastName(rs.getString("mother_lastname"));
+                    registration.setMotherOccupation(rs.getString("mother_occupation"));
+                    registration.setMotherOfficePhoneNo(rs.getString("mother_officephone_no"));
+                    registration.setMotherMobileNo(rs.getString("mother_mobile_no"));
+                    registration.setIsMotherContactInCaseEmergency(rs.getBoolean("isMotherContactInCaseEmergency"));
+                    registration.setGuardianLastName(rs.getString("guardian_lastname"));
+                    registration.setGuardianFirstName(rs.getString("guardian_firstname"));
+                    registration.setGuardianMiddleName(rs.getString("guardian_middlename"));
+                    registration.setGuardianOccupation(rs.getString("guardian_occupation"));
+                    registration.setGuardianMobileNo(rs.getString("guardian_mobile_no"));
+                    registration.setGuardianRelationToStudent(rs.getString("guardian_relation_to_student"));
+                    registration.setIsGuardianContactInCaseEmergency(rs.getBoolean("isGuardianContactInCaseEmergency"));
+                    registration.setSchoolLastAttended(rs.getString("school_last_attended"));
+                    registration.setSchoolLastAttendedAddress(rs.getString("school_last_attended_address"));
+                    registration.setAddressRoomOrHouseNo(rs.getString("room_or_house_no"));
+                    registration.setAddressStreet(rs.getString("street"));
+                    registration.setAddressBrgyOrSubd(rs.getString("brgy_or_subd"));
+                    registration.setAddressCity(rs.getString("city"));
+                    registration.setRegion(rs.getString("region"));
+                    registration.setGradeLevelNo(rs.getInt("gradelevel_no"));
+                    registration.setSchoolYearYearFrom(rs.getInt("schoolyear_yearfrom"));
+                    registration.setRegistrationDate(rs.getDate("date_registered"));
+
+                    String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
+                    registration.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes") ? true : false);
+                    
+                    Enrollment enrollment = new Enrollment();
+                    enrollment.setEnrollmentId(rs.getInt("enrollment_id"));
+                    enrollment.setSchoolYearId(rs.getInt("enrolledSchoolYearId"));
+                    enrollment.setEnrollmentDate(rs.getDate("dateEnrolled"));
+                    enrollment.setIsWithdrawn(rs.getBoolean("isEnrollmentWithdrawn"));
+                    enrollment.setEnrollmentType(rs.getString("enrollment_type"));
+                    
+                    Faculty adviser = new Faculty();
+                    adviser.setFacultyID(rs.getInt("adviser_id"));
+                    adviser.setLastName(rs.getString("facultyLastName"));
+                    adviser.setFirstName(rs.getString("facultyFirstName"));
+                    adviser.setMiddleName(rs.getString("facultyMiddleName"));
+                    
+                    Section section = new Section();
+                    section.setSectionName(rs.getString("sectionname"));
+                    section.setAdviser(adviser);
+                    
+                    student.setStudentId(rs.getInt("student_id"));
+                    student.setStudentNo(rs.getInt("student_no"));
+                    student.setIsActive(rs.getBoolean("isStudentActive"));
+                    student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O") == true ? 0 : 1);
+                    student.setGradeLevelNo(rs.getInt("currentGradeLevel"));
+                    student.setRegistration(registration);
+                    student.setEnrollment(enrollment);
+                    student.setSection(section);
                 }
             }
-            
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return student;
     }
 
-    @Override
-    public List<EnrolleesReport> getAllEnrollees(int schoolyearId) {
-        List<EnrolleesReport> list = new ArrayList<>();
-        String SQL = "{CALL `getAllEnrolleesBySchoolYearId`(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, schoolyearId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    EnrolleesReport er = new EnrolleesReport();
-                    er.setDateOfEnrollment(rs.getDate("date_of_enrollment"));
-                    er.setEnrollmentId(rs.getInt("enrollment_id"));
-                    er.setGradelevel(rs.getInt("grade_level"));
-                    er.setIsWithdrawn(rs.getBoolean ("withdrawn"));
-                    er.setSchoolYear(rs.getInt("schoolYear"));
-                    er.setStudentFirstName(rs.getString("firstname"));
-                    er.setStudentId(rs.getInt("student_id"));
-                    er.setStudentLastName(rs.getString("lastname"));
-                    er.setStudentMiddleName(rs.getString("middlename"));
-                    list.add(er);
-                }
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    @Override
-    public List<EnrolleesReport> getAllEnrollees(int schoolyearId, int gradelevelId) {
-        List<EnrolleesReport> list = new ArrayList<>();
-        String SQL = "{CALL `getAllEnrolleesBySchoolYearIdAndGradeLevelId`(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,schoolyearId);
-            cs.setInt(2, gradelevelId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    EnrolleesReport er = new EnrolleesReport();
-                    er.setDateOfEnrollment(rs.getDate("date_of_enrollment"));
-                    er.setEnrollmentId(rs.getInt("enrollment_id"));
-                    er.setGradelevel(rs.getInt("grade_level"));
-                    er.setIsWithdrawn(rs.getBoolean ("withdrawn"));
-                    er.setSchoolYear(rs.getInt("schoolYear"));
-                    er.setStudentFirstName(rs.getString("firstname"));
-                    er.setStudentId(rs.getInt("student_id"));
-                    er.setStudentLastName(rs.getString("lastname"));
-                    er.setStudentMiddleName(rs.getString("middlename"));
-                    list.add(er);
-                }
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    @Override
-    public List<ClassListReport> getAllClassList() {
-        List<ClassListReport> list = new ArrayList<>();
-        String SQL = "{CALL getAllClassList()}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-                try(ResultSet rs = cs.executeQuery();){
-                    while(rs.next()){
-                        ClassListReport clr = new ClassListReport();
-                        clr.setAdviserFirstName(rs.getString("adviser_firstname"));
-                        clr.setAdviserLastName(rs.getString("adviser_lastname"));
-                        clr.setSectionName(rs.getString("sectionName"));
-                        clr.setStudentFirstName(rs.getString("firstname"));
-                        clr.setStudentId(rs.getInt("student_id"));
-                        clr.setStudentLastName(rs.getString("lastname"));
-                        clr.setStudentMiddleName(rs.getString("middlename"));
-                        clr.setGradeLevel(rs.getInt("grade_level"));
-                        list.add(clr);
-                    }
-                }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    @Override
-    public List<ClassListReport> getClassList(int schoolYearId) {
-        List<ClassListReport> list = new ArrayList<>();
-        String SQL = "{CALL `getClassListBySchoolYearId`(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, schoolYearId);
-                try(ResultSet rs = cs.executeQuery();){
-                    while(rs.next()){
-                        ClassListReport clr = new ClassListReport();
-                        clr.setAdviserFirstName(rs.getString("adviser_firstname"));
-                        clr.setAdviserLastName(rs.getString("adviser_lastname"));
-                        clr.setSectionName(rs.getString("sectionName"));
-                        clr.setStudentFirstName(rs.getString("firstname"));
-                        clr.setStudentId(rs.getInt("student_id"));
-                        clr.setStudentLastName(rs.getString("lastname"));
-                        clr.setStudentMiddleName(rs.getString("middlename"));
-                        clr.setGradeLevel(rs.getInt("grade_level"));
-                        list.add(clr);
-                    }
-                }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    @Override
-    public List<ClassListReport> getAllClassList(int schoolYearId, int gradeLevelId) {
-        List<ClassListReport> list = new ArrayList<>();
-        String SQL = "{CALL `getClassListBySchoolYearIdAndGradeLevelId`(?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,schoolYearId);
-            cs.setInt(2,gradeLevelId);
-                try(ResultSet rs = cs.executeQuery();){
-                    while(rs.next()){
-                        ClassListReport clr = new ClassListReport();
-                        clr.setAdviserFirstName(rs.getString("adviser_firstname"));
-                        clr.setAdviserLastName(rs.getString("adviser_lastname"));
-                        clr.setSectionName(rs.getString("sectionName"));
-                        clr.setStudentFirstName(rs.getString("firstname"));
-                        clr.setStudentId(rs.getInt("student_id"));
-                        clr.setStudentLastName(rs.getString("lastname"));
-                        clr.setStudentMiddleName(rs.getString("middlename"));
-                        clr.setGradeLevel(rs.getInt("grade_level"));
-                        list.add(clr);
-                    }
-                }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-    
     
     
 }

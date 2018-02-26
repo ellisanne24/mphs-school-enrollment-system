@@ -5,6 +5,7 @@ import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SectionJCompModelLoader;
 import component_renderers.Renderer_Faculty_JComboBox;
 import component_renderers.Renderer_GradeLevel_JComboBox;
+import component_renderers.Renderer_Master_GradeLevel_JTableCell;
 import component_renderers.Renderer_Section_JComboBox;
 import controller.enrollment.DialogSectionAssignment_CapacityDenominatorDocumentPropertyListener;
 import controller.enrollment.DialogSectionAssignment_Clear;
@@ -13,6 +14,7 @@ import controller.enrollment.DialogSectionAssignment_OnGradeLevelItemStateChange
 import controller.enrollment.DialogSectionAssignment_RemoveStudentFromSection;
 import controller.enrollment.DialogSectionAssignment_Save;
 import controller.global.Controller_JButton_ExitJDialog;
+import controller.section.Controller_SectionAssignment_Summer_JCheckBox;
 import controller.section.DialogSectionAssignment_SectionStudentTableModelListener;
 import daoimpl.SchoolYearDaoImpl;
 import javax.swing.JButton;
@@ -23,19 +25,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import model.schoolyear.SchoolYear;
 import utility.initializer.Initializer;
+import utility.jtable.JTableUtil;
 
 public class Dialog_SectionAssignment extends javax.swing.JDialog implements Initializer {
     
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     private SectionJCompModelLoader sectionJCompModelLoader;
     private FacultyJCompModelLoader facultyJCompModelLoader;
-    private SchoolYearDaoImpl schoolYearDaoImpl;
+    private final SchoolYear currentSchoolYear;
     
-    public Dialog_SectionAssignment(java.awt.Frame parent, boolean modal) {
+    public Dialog_SectionAssignment(java.awt.Frame parent, boolean modal, SchoolYear currentSchoolYear) {
         super(parent, modal);
         initComponents();
-        
+        this.currentSchoolYear = currentSchoolYear;
         
         initDaoImpl();
         initJCompModelLoaders();
@@ -58,6 +62,8 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
 
     @Override
     public void initRenderers() {
+        jtblEnrolledStudents.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(6));
+        jtblSectionStudents.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(6));
         jcmbGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
         jcmbSection.setRenderer(new Renderer_Section_JComboBox());
         jcmbAdviser.setRenderer(new Renderer_Faculty_JComboBox());
@@ -69,14 +75,17 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
 
     @Override
     public void initViewComponents() {
+        JTableUtil.applyCustomHeaderRenderer(jtblSectionStudents);
+        JTableUtil.applyCustomHeaderRenderer(jtblEnrolledStudents);
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
-        jcmbSection.setModel(sectionJCompModelLoader.getAllSectionByStatusAndSchoolYearId(true, schoolYearDaoImpl.getCurrentSchoolYearId()));
+        jcmbSection.setModel(sectionJCompModelLoader.getAllSectionByStatusAndSchoolYearId(true, currentSchoolYear.getSchoolYearId()));
         jcmbAdviser.setModel(facultyJCompModelLoader.getAllFaculty());
         jcmbAdviser.setSelectedIndex(-1);
     }
 
     @Override
     public void initControllers() {
+        jcbSummer.addActionListener(new Controller_SectionAssignment_Summer_JCheckBox(this,currentSchoolYear));
         jcmbGradeLevel.addItemListener(new DialogSectionAssignment_OnGradeLevelItemStateChange(this));
         jbtnMoveStudentToSection.addActionListener(new DialogSectionAssignment_MoveStudentToSection(this));
         jbtnRemoveStudentFromSection.addActionListener(new DialogSectionAssignment_RemoveStudentFromSection(this));
@@ -89,7 +98,10 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
 
     @Override
     public void initDaoImpl() {
-        schoolYearDaoImpl = new SchoolYearDaoImpl();
+    }
+
+    public JCheckBox getJcbSummer() {
+        return jcbSummer;
     }
     
     @SuppressWarnings("unchecked")
@@ -105,16 +117,14 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jcmbSection = new javax.swing.JComboBox<>();
         lbl_name3 = new javax.swing.JLabel();
         lbl_name4 = new javax.swing.JLabel();
-        lbl_name5 = new javax.swing.JLabel();
         jcmbAdviser = new javax.swing.JComboBox<>();
-        lbl_name6 = new javax.swing.JLabel();
-        checkbox_enablemode = new javax.swing.JCheckBox();
         lbl_name7 = new javax.swing.JLabel();
         jtfCapacityNumerator = new javax.swing.JTextField();
         lbl_name8 = new javax.swing.JLabel();
         jtfCapacityDenominator = new javax.swing.JTextField();
         jcmbSession = new javax.swing.JComboBox<>();
         jbtnAutoAssign = new javax.swing.JButton();
+        jcbSummer = new javax.swing.JCheckBox();
         panel_subjectlist = new javax.swing.JPanel();
         panel_subjtable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -152,9 +162,10 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         lbl_name.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_name.setText("Select Grade Level :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(lbl_name, gridBagConstraints);
 
         jcmbGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -162,7 +173,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jcmbGradeLevel.setMinimumSize(new java.awt.Dimension(110, 25));
         jcmbGradeLevel.setPreferredSize(new java.awt.Dimension(110, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(jcmbGradeLevel, gridBagConstraints);
@@ -170,10 +181,10 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         lbl_name1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_name1.setText("Select Section :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 30, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(lbl_name1, gridBagConstraints);
 
         jcmbSection.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -182,7 +193,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jcmbSection.setMinimumSize(new java.awt.Dimension(150, 25));
         jcmbSection.setPreferredSize(new java.awt.Dimension(150, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -191,28 +202,20 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         lbl_name3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_name3.setText("Session :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(lbl_name3, gridBagConstraints);
 
         lbl_name4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_name4.setText("Adviser  :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(lbl_name4, gridBagConstraints);
-
-        lbl_name5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_name5.setText("Required GWA :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 15, 0, 0);
-        jpnlSectionDetails.add(lbl_name5, gridBagConstraints);
 
         jcmbAdviser.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jcmbAdviser.setActionCommand("adviser");
@@ -220,29 +223,10 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jcmbAdviser.setMinimumSize(new java.awt.Dimension(180, 25));
         jcmbAdviser.setPreferredSize(new java.awt.Dimension(180, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(jcmbAdviser, gridBagConstraints);
-
-        lbl_name6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_name6.setText("80.00");
-        lbl_name6.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 100);
-        jpnlSectionDetails.add(lbl_name6, gridBagConstraints);
-
-        checkbox_enablemode.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        checkbox_enablemode.setText("Special Section");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 30, 0, 0);
-        jpnlSectionDetails.add(checkbox_enablemode, gridBagConstraints);
 
         lbl_name7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_name7.setText("Total Capacity :");
@@ -250,6 +234,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(lbl_name7, gridBagConstraints);
 
         jtfCapacityNumerator.setColumns(2);
@@ -261,7 +246,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 8, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(jtfCapacityNumerator, gridBagConstraints);
 
         lbl_name8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -269,7 +254,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(lbl_name8, gridBagConstraints);
 
         jtfCapacityDenominator.setColumns(2);
@@ -281,7 +266,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 8, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(jtfCapacityDenominator, gridBagConstraints);
 
         jcmbSession.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -292,7 +277,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jcmbSession.setMinimumSize(new java.awt.Dimension(50, 25));
         jcmbSession.setPreferredSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -302,10 +287,17 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jbtnAutoAssign.setText("Auto Assign");
         jbtnAutoAssign.setActionCommand("autoassign");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 50, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlSectionDetails.add(jbtnAutoAssign, gridBagConstraints);
+
+        jcbSummer.setText("Summer");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlSectionDetails.add(jcbSummer, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -546,10 +538,6 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public JCheckBox getCheckbox_enablemode() {
-        return checkbox_enablemode;
-    }
-
     public JScrollPane getjScrollPane1() {
         return jScrollPane1;
     }
@@ -642,14 +630,6 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         return lbl_name4;
     }
 
-    public JLabel getLbl_name5() {
-        return lbl_name5;
-    }
-
-    public JLabel getLbl_name6() {
-        return lbl_name6;
-    }
-
     public JLabel getLbl_name7() {
         return lbl_name7;
     }
@@ -689,7 +669,6 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox checkbox_enablemode;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton jbtnAutoAssign;
@@ -699,6 +678,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
     private javax.swing.JButton jbtnRemoveStudentFromSection;
     private javax.swing.JButton jbtnSave;
     private javax.swing.JButton jbtnSaveAndNew;
+    private javax.swing.JCheckBox jcbSummer;
     private javax.swing.JComboBox<String> jcmbAdviser;
     private javax.swing.JComboBox<String> jcmbGradeLevel;
     private javax.swing.JComboBox<String> jcmbSection;
@@ -713,8 +693,6 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
     private javax.swing.JLabel lbl_name1;
     private javax.swing.JLabel lbl_name3;
     private javax.swing.JLabel lbl_name4;
-    private javax.swing.JLabel lbl_name5;
-    private javax.swing.JLabel lbl_name6;
     private javax.swing.JLabel lbl_name7;
     private javax.swing.JLabel lbl_name8;
     private javax.swing.JPanel panel_centercontrol;
