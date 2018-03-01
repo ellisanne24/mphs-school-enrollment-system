@@ -24,8 +24,8 @@ public class EnrollmentDaoImpl implements IEnrollment {
 
     private final SchoolYearDaoImpl schoolYearDaoImpl;
 
-    public EnrollmentDaoImpl(SchoolYearDaoImpl schoolYearDaoImpl) {
-        this.schoolYearDaoImpl = schoolYearDaoImpl;
+    public EnrollmentDaoImpl() {
+        this.schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
 
     @Override

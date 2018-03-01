@@ -3,13 +3,17 @@ package view.payment;
 import controller.payment.Dialog_MakePayment_ViewReceiptOfSelectedOR;
 import controller.payment.Display_Dialog_MakePayment;
 import controller.payment.SearchStudent;
+import controller.payment.SearchStudentByKeyword;
 import daoimpl.FeeDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.PaymentTermDaoImpl;
 import daoimpl.StudentDaoImpl;
+import java.awt.Component;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -19,13 +23,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
+import javax.swing.table.DefaultTableModel;
 import model.schoolyear.SchoolYear;
 import model.user.User;
 import utility.initializer.Initializer;
 
+public class Panel_Payment extends javax.swing.JPanel implements Initializer {
 
-public class Panel_Payment extends javax.swing.JPanel implements Initializer{
-    
     private final User user;
     private final SchoolYear currentSchoolYear;
     private StudentDaoImpl studentDaoImpl;
@@ -37,7 +42,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         initComponents();
         this.user = user;
         this.currentSchoolYear = currentSchoolYear;
-        
+
         initDaoImpl();
         initControllers();
         initViewComponents();
@@ -55,7 +60,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initRenderers() {
-
+        
     }
 
     @Override
@@ -73,9 +78,10 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initControllers() {
-        jtfSearchBoxMakePayment.addKeyListener(new SearchStudent(this, studentDaoImpl, gradeLevelDaoImpl, feeDaoImpl, paymentTermDaoImpl));
-        jbtnMakePayment.addActionListener(new Display_Dialog_MakePayment(this));
-        jbtnReceiptsView.addActionListener(new Dialog_MakePayment_ViewReceiptOfSelectedOR(jtblReceiptsMasterList,jtfStudentNo));
+//        jtfSearchBoxMakePayment.addKeyListener(new SearchStudent(this, studentDaoImpl, gradeLevelDaoImpl, feeDaoImpl, paymentTermDaoImpl));
+        jtfSearchBoxMakePayment.addKeyListener(new SearchStudentByKeyword(this, currentSchoolYear,user));
+//        jbtnMakePayment.addActionListener(new Display_Dialog_MakePayment(this));
+        jbtnReceiptsView.addActionListener(new Dialog_MakePayment_ViewReceiptOfSelectedOR(jtblReceiptsMasterList, jtfStudentNo));
     }
 
     @Override
@@ -85,11 +91,44 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         feeDaoImpl = new FeeDaoImpl();
         paymentTermDaoImpl = new PaymentTermDaoImpl();
     }
+    
+    
+    public void clearForm() {
+        List<Component[]> compArr = new ArrayList<>();
+        compArr.add(jpnlStudentDetails.getComponents());
+        compArr.add(jpnlDownpayment.getComponents());
+        compArr.add(jpnlMiscellaneous.getComponents());
+        compArr.add(jpnlBasic.getComponents());
+        compArr.add(jpnlOthers.getComponents());
+        compArr.add(jpnlBalanceBreakdown.getComponents());
+        compArr.add(jpnlCurrentSchoolYearTuition.getComponents());
+        compArr.add(jpnlReceiptsMasterList.getComponents());
+        for (int i = 0; i < compArr.size(); i++) {
+            for (Component c : compArr.get(i)) {
+                if (c instanceof JTextField) {
+                    ((JTextField) c).setText("");
+                } else if (c instanceof JScrollPane) {
+                    JViewport jViewPort = ((JScrollPane) c).getViewport();
+                    DefaultTableModel tableModel = new DefaultTableModel();
+                    if (((JTable) jViewPort.getView()) instanceof JTable) {
+                        tableModel = (DefaultTableModel) ((JTable) jViewPort.getView()).getModel();
+                        tableModel.setRowCount(0);
+                        ((JTable) jViewPort.getView()).setModel(tableModel);
+                    }
+                } else if (c instanceof JComboBox) {
+                    ((JComboBox) c).setSelectedIndex(-1);
+                }
+            }
+        }
+        jlblRecommendForSummerMessage.setText("");
+        jlblRemainingBalanceText.setText("");
+        jlblTotalPaidText.setText("");
+    }
 
     public JLabel getJlblRecommendForSummerMessage() {
         return jlblRecommendForSummerMessage;
     }
-    
+
     public JButton getJbtnAssignSummerFee() {
         return jbtnAssignSummerFee;
     }
@@ -642,12 +681,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return tabpanel_paymenthistory;
     }
 
-    
-    
-    
-    
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

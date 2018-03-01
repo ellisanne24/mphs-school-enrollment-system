@@ -1237,7 +1237,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
         if (evt.getClickCount() >= 1) {
             if (hasSettingsAccess) {
                 if (settings_instance_count <= 0) {
-                    SettingsPanel settings = new SettingsPanel();
+                    SettingsPanel settings = new SettingsPanel(currentSchoolYear,user);
                     jtpTopTabbedPane.add("Settings", settings);
                     jtpTopTabbedPane.setSelectedComponent(settings);
                     setSettingsInstanceCount(1);

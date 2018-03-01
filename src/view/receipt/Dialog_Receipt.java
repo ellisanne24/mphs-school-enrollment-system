@@ -86,6 +86,8 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
             tableModel.addRow(rowData);
         }
         jtblParticulars.setModel(tableModel);
+        
+        jlblCashierName.setText(officialReceipt.getPayment().getCashier().getLastName()+", "+officialReceipt.getPayment().getCashier().getFirstName());
     }
 
     @Override
@@ -161,6 +163,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jlblGradeLevelText = new javax.swing.JLabel();
     jPanel5 = new javax.swing.JPanel();
     jlblReceivedByCashierName = new javax.swing.JLabel();
+    jlblCashierName = new javax.swing.JLabel();
     jPanel3 = new javax.swing.JPanel();
     jLabel2 = new javax.swing.JLabel();
     jMenuBar1 = new javax.swing.JMenuBar();
@@ -546,12 +549,19 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
 
     jlblReceivedByCashierName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jlblReceivedByCashierName.setForeground(new java.awt.Color(0, 0, 0));
-    jlblReceivedByCashierName.setText("Received By: ");
+    jlblReceivedByCashierName.setText("Processed By :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel5.add(jlblReceivedByCashierName, gridBagConstraints);
+
+    jlblCashierName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblCashierName.setForeground(new java.awt.Color(0, 0, 0));
+    jlblCashierName.setText("CashierName");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
-    jPanel5.add(jlblReceivedByCashierName, gridBagConstraints);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel5.add(jlblCashierName, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -626,6 +636,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     private javax.swing.JLabel jlblAmountChargedText;
     private javax.swing.JLabel jlblCashReceived;
     private javax.swing.JLabel jlblCashReceivedText;
+    private javax.swing.JLabel jlblCashierName;
     private javax.swing.JLabel jlblChange;
     private javax.swing.JLabel jlblChangeText;
     private javax.swing.JLabel jlblDate;

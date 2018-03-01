@@ -24,19 +24,22 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.tuitionfee.Tuition;
+import model.user.User;
 import utility.initializer.Initializer;
 
 public class Dialog_MakePayment extends javax.swing.JDialog implements Initializer {
 
     private final boolean hasTuitionRecord;
     private final Tuition tuition;
+    private final User user;
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
     private final OfficialReceiptDaoImpl orNoDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
 
-    public Dialog_MakePayment(boolean hasTuitionRecord, Tuition tuition) {
+    public Dialog_MakePayment(boolean hasTuitionRecord, Tuition tuition, User user) {
         this.hasTuitionRecord = hasTuitionRecord;
         this.tuition = tuition;
+        this.user = user;
         this.tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
         this.orNoDaoImpl = new OfficialReceiptDaoImpl();
         this.schoolYearDaoImpl = new SchoolYearDaoImpl();
@@ -71,6 +74,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime now = LocalDateTime.now();
         jlblDateToday.setText(""+dtf.format(now));
+        jlblCashierName.setText(user.getLastName()+", "+user.getFirstName()+" "+user.getMiddleName());
     }
 
     private void initBalanceJCombo() {
@@ -123,7 +127,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jbtnRemove.addActionListener(new Dialog_MakePayment_RemoveItemToPay(this));
         jtblPaymentBreakDown.getModel().addTableModelListener(new Dialog_MakePayment_PaymentBreakDown_TableModelListener(this));
-        jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(hasTuitionRecord,this,tuition, tuitionFeeDaoImpl));
+        jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(hasTuitionRecord,this,tuition, tuitionFeeDaoImpl,user));
     }
 
     @Override

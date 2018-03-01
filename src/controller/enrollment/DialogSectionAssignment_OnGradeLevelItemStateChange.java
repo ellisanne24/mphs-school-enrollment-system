@@ -47,7 +47,7 @@ public class DialogSectionAssignment_OnGradeLevelItemStateChange implements Item
     }
 
     private void loadStudentsByGradeLevelSelected(){
-        EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
+        EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl();
         EnrollmentJCompModelLoader enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(enrollmentDaoImpl);
         JTable table = view.getJtblEnrolledStudents();
         JComboBox jcmbGradeLevel = view.getJcmbGradeLevel();

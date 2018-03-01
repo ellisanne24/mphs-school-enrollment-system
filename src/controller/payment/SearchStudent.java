@@ -95,7 +95,7 @@ public class SearchStudent implements KeyListener {
         if (inputIsValid()) {
             studentNo = Integer.parseInt(view.getJtfSearchBoxMakePayment().getText().trim());
             if (studentExist()) {
-                clearForm();
+                view.clearForm();
                 initializeStudent();//should execute first
                 initAssignSummerFeeButton(student);
                 initializeFees();
@@ -114,7 +114,7 @@ public class SearchStudent implements KeyListener {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Student not found.");
-                clearForm();
+                view.clearForm();
             }
         } else {
             JOptionPane.showMessageDialog(null, "You have entered an invalid input.");
@@ -237,38 +237,6 @@ public class SearchStudent implements KeyListener {
             }
             table.setModel(tableModel);
         }
-    }
-
-    private void clearForm() {
-        List<Component[]> compArr = new ArrayList<>();
-        compArr.add(view.getJpnlStudentDetails().getComponents());
-        compArr.add(view.getJpnlDownpayment().getComponents());
-        compArr.add(view.getJpnlMiscellaneous().getComponents());
-        compArr.add(view.getJpnlBasic().getComponents());
-        compArr.add(view.getJpnlOthers().getComponents());
-        compArr.add(view.getJpnlBalanceBreakdown().getComponents());
-        compArr.add(view.getJpnlCurrentSchoolYearTuition().getComponents());
-        compArr.add(view.getJpnlReceiptsMasterList().getComponents());
-        for (int i = 0; i < compArr.size(); i++) {
-            for (Component c : compArr.get(i)) {
-                if (c instanceof JTextField) {
-                    ((JTextField) c).setText("");
-                } else if (c instanceof JScrollPane) {
-                    JViewport jViewPort = ((JScrollPane) c).getViewport();
-                    DefaultTableModel tableModel = new DefaultTableModel();
-                    if (((JTable) jViewPort.getView()) instanceof JTable) {
-                        tableModel = (DefaultTableModel) ((JTable) jViewPort.getView()).getModel();
-                        tableModel.setRowCount(0);
-                        ((JTable) jViewPort.getView()).setModel(tableModel);
-                    }
-                } else if (c instanceof JComboBox) {
-                    ((JComboBox) c).setSelectedIndex(-1);
-                }
-            }
-        }
-        view.getJlblRecommendForSummerMessage().setText("");
-        view.getJlblRemainingBalanceText().setText("");
-        view.getJlblTotalPaidText().setText("");
     }
 
     private boolean studentExist() {

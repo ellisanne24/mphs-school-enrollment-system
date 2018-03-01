@@ -15,4 +15,5 @@ public interface IOfficialReceipt {
     
     OfficialReceipt getOfficialReceiptByOrNo(int orNo);
     List<OfficialReceipt> getAllOfficialReceiptsByStudentIdandSchoolYearId(int studentId, int schoolyearId);
+    List<OfficialReceipt> getAllOfficialReceiptsByStudentId(int studentId);
 }

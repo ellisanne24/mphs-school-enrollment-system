@@ -7,6 +7,7 @@ import component_model_loader.RegistrationJCompModelLoader;
 import component_renderers.Renderer_Enrolled_GradeLevel_JTable;
 import component_renderers.Renderer_GradeLevel_JComboBox;
 import component_renderers.Renderer_Master_GradeLevel_JTableCell;
+import controller.enrollment.Controller_ItemListener_RegisteredMasterList_GradeLevel_JComboBox;
 import controller.enrollment.DisplayAllEnrolledOnGradeLevelFilter;
 import controller.enrollment.DisplayDialogSectionAssignment;
 import controller.enrollment.RefreshEnrolledRecord;
@@ -77,6 +78,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jtblEnrolledMasterList.setDefaultRenderer(Object.class, new Renderer_Enrolled_GradeLevel_JTable(4));
         jcmbEnrolledFilterGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
         jtblPromoted.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(3));
+        jcmbRegistrationGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
     }
 
     @Override
@@ -102,6 +104,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         tableModel = registrationJCompModelLoader.getAllRegisteredApplicants(SchoolYearDaoImpl.getCurrentSchoolYearFrom(), jtblRegisteredMasterList);
         jtblRegisteredMasterList.setModel(tableModel);
         jtblEnrolledMasterList.setModel(enrollmentJCompModelLoader.getAllEnrolledOfCurrentSchoolYear(jtblEnrolledMasterList));
+        jcmbRegistrationGradeLevel.setModel(gradeLevelJCompModelLoader.getAllActiveGradeLevel());
     }
 
     @Override
@@ -115,14 +118,21 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jbtnEditRegistration.addActionListener(new Controller_JButton_DisplayRegistrationJDialog(jtblRegisteredMasterList, jbtnEditRegistration.getActionCommand()));
         jbtnRefreshRegistrationList.addActionListener(new Controller_JButton_RefreshRegistrationList(jtblRegisteredMasterList));
         jbtnSearchRegistered.addActionListener(new Controller_JButton_SearchRegistrationRecordByKeyword(jtfSearchRegistered, jtblRegisteredMasterList));
+        jcmbRegistrationGradeLevel.addItemListener(new Controller_ItemListener_RegisteredMasterList_GradeLevel_JComboBox(this, currentSchoolYear));
     }
 
     @Override
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
-        enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
+        enrollmentDaoImpl = new EnrollmentDaoImpl();
     }
 
+    public JComboBox<String> getJcmbRegistrationGradeLevel() {
+        return jcmbRegistrationGradeLevel;
+    }
+
+    
+        
     public JPanel getjPanel1() {
         return jPanel1;
     }
@@ -417,6 +427,8 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         lbl_show1 = new javax.swing.JLabel();
         jlblCurrentSchoolYearRegistered = new javax.swing.JLabel();
         jbtnEditRegistration = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jcmbRegistrationGradeLevel = new javax.swing.JComboBox<>();
         panel_masterrecord = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblRegisteredMasterList = new javax.swing.JTable();
@@ -510,7 +522,6 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_control.add(lbl_show1, gridBagConstraints);
 
@@ -519,8 +530,6 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_control.add(jlblCurrentSchoolYearRegistered, gridBagConstraints);
 
@@ -531,6 +540,21 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_control.add(jbtnEditRegistration, gridBagConstraints);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setText("Grade Level :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_control.add(jLabel1, gridBagConstraints);
+
+        jcmbRegistrationGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        panel_control.add(jcmbRegistrationGradeLevel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -866,6 +890,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -882,6 +907,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JComboBox<String> jcmbEnrolledFilterGradeLevel;
     private javax.swing.JComboBox<String> jcmbEnrolledShowFilter;
     private javax.swing.JComboBox<String> jcmbFilterRegistered;
+    private javax.swing.JComboBox<String> jcmbRegistrationGradeLevel;
     private javax.swing.JLabel jlblCurrentSchoolYearEnrolled;
     private javax.swing.JLabel jlblCurrentSchoolYearRegistered;
     private javax.swing.JPanel jpnlContent;

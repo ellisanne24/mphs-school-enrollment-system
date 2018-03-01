@@ -1,16 +1,20 @@
 package controller.registration;
 
 import daoimpl.AdmissionDaoImpl;
+import daoimpl.CredentialDaoImpl;
 import daoimpl.FeeDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.RegistrationDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import model.admission.Admission;
+import model.credential.Credential;
 import model.fee.Fee;
 import model.registration.Registration;
 import utility.date.DateUtil;
@@ -29,6 +33,7 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
     private final FeeDaoImpl feeDaoImpl;
     private final GradeLevelDaoImpl gradeLevelDaoImpl;
     private final AdmissionDaoImpl admissionDaoImpl;
+    private final CredentialDaoImpl credentialDaoImpl;
 
     private final int registrationId;
 
@@ -40,6 +45,7 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
         feeDaoImpl = new FeeDaoImpl();
         gradeLevelDaoImpl = new GradeLevelDaoImpl();
         admissionDaoImpl = new AdmissionDaoImpl();
+        credentialDaoImpl = new CredentialDaoImpl();
     }
 
     @Override
@@ -65,9 +71,9 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
         return isUpdated;
     }
 
-    private boolean updateRegistrationInfo(Registration reg){
+    private boolean updateRegistrationInfo(Registration registration){
         boolean isUpdated = false;
-        isUpdated = registrationDaoImpl.updateRegistration(reg);
+        isUpdated = registrationDaoImpl.updateRegistration(registration);
         return isUpdated;
     }
     
@@ -126,7 +132,21 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
             registration.setIsGuardianContactInCaseEmergency(view.getJcbGuardianContactEmergency().isSelected());
             registration.setSchoolLastAttended(view.getJtfSchoolLastAttended().getText().trim());
             registration.setSchoolLastAttendedAddress(view.getJtfSchoolLastAttendedAddress().getText().trim());
-
+            List<Credential> credentials = new ArrayList<>();
+            for(Component component : view.getJpnlCredentials().getComponents()){
+                if(component instanceof JCheckBox){
+                    JCheckBox checkBox = (JCheckBox)component;
+                    if(checkBox.isSelected()){
+                        String credentialName = checkBox.getText().trim();
+                        int credentialId = credentialDaoImpl.getCredentialIdByName(credentialName);
+                        Credential credential = new Credential();
+                        credential.setCredentialId(credentialId);
+                        credentials.add(credential);
+                    }
+                }
+            }
+            
+            registration.setCredentials(credentials);
             registration.setRegistrationId(registrationId);
         } catch (Exception e) {
             e.printStackTrace();

@@ -76,7 +76,7 @@ public class ItemListener_Dialog_InputGrade_SubjectCode_JComboBox implements Ite
         for(int row = 0; row < view.getJtblGradingSheet().getRowCount(); row++){
             for(int col = 0; col < view.getJtblGradingSheet().getColumnCount(); col++){
                 if(col == 3 || col == 4 || col == 5 || col == 6){
-                    view.getJtblGradingSheet().setValueAt(0, row, col);
+                    view.getJtblGradingSheet().setValueAt("", row, col);
                 }
             }
         }

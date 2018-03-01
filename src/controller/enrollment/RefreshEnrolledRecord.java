@@ -23,7 +23,7 @@ public class RefreshEnrolledRecord implements ActionListener {
     public RefreshEnrolledRecord(Panel_Enrollment view) {
         this.view = view;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
-        enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
+        enrollmentDaoImpl = new EnrollmentDaoImpl();
         enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(enrollmentDaoImpl);
     }
 

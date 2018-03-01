@@ -1,5 +1,6 @@
 package controller.registration;
 
+import daoimpl.CredentialDaoImpl;
 import daoimpl.RegistrationDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import java.awt.Component;
@@ -14,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import model.credential.Credential;
 import model.registration.Registration;
 import utility.date.DateUtil;
 import utility.form.FormValidator;
@@ -28,11 +30,13 @@ public class Controller_JButton_Register implements ActionListener, FormValidato
     private final View_Panel_Registration view;
     private final DateUtil dateUtil;
     private final RegistrationDaoImpl registrationDaoImpl;
+    private final CredentialDaoImpl credentialDaoImpl;
 
     public Controller_JButton_Register(View_Panel_Registration view) {
         this.view = view;
         dateUtil = new DateUtil();
         registrationDaoImpl = new RegistrationDaoImpl();
+        credentialDaoImpl = new CredentialDaoImpl();
     }
 
     private void clearForm() {
@@ -78,51 +82,68 @@ public class Controller_JButton_Register implements ActionListener, FormValidato
     }
 
     private Registration getRegistration() {
-        Registration r = new Registration();
+        Registration registration = new Registration();
         try {
-            r.setStudentType(view.getJcbTransferee().isSelected() == true ? "T" : "N");
-            r.setGradeLevelNo(Integer.parseInt(view.getJcmbGradeLevel().getSelectedItem().toString().trim()));
-            r.setLastName(view.getJtfLastName().getText().trim());
-            r.setFirstName(view.getJtfFirstName().getText().trim());
-            r.setMiddleName(view.getJtfMiddleName().getText().trim());
-            r.setGender(view.getJcmbGender().getSelectedItem().toString().trim());
-            r.setReligion(view.getJtfReligion().getText().trim());
-            r.setNationality(view.getJtfNationality().getText().trim());
-            r.setBirthday(dateUtil.toDate(view.getDpBirthday().getJFormattedTextField().getText().trim()));
-            r.setPlaceOfBirth(view.getJtfPlaceOfBirth().getText().trim());
-            r.setAddressRoomOrHouseNo(view.getJtfRoomNo().getText().trim());
-            r.setAddressStreet(view.getJtfStreet().getText().trim());
-            r.setAddressBrgyOrSubd(view.getJtfBrgySubd().getText().trim());
-            r.setAddressCity(view.getJtfCity().getText().trim());
-            r.setRegion(view.getJtfRegion().getText().trim());
-            r.setSchoolYearYearFrom(SchoolYearDaoImpl.getCurrentSchoolYearFrom());
-            r.setFatherFirstName(view.getJtfFatherFirstName().getText().trim());
-            r.setFatherMiddleName(view.getJtfFatherFirstName().getText().trim());
-            r.setFatherLastName(view.getJtfFatherLastName().getText().trim());
-            r.setFatherOccupation(view.getJtfFatherOccupation().getText().trim());
-            r.setFatherOfficePhoneNo(view.getJtfFatherOfficePhoneNo().getText().trim());
-            r.setFatherMobileNo(view.getJtfFatherMobile().getText().trim());
-            r.setIsFatherContactInCaseEmergency(view.getJcbFatherContactEmergency().isSelected());
-            r.setMotherFirstName(view.getJtfMotherFirstName().getText().trim());
-            r.setMotherMiddleName(view.getJtfMotherMiddleName().getText().trim());
-            r.setMotherLastName(view.getJtfMotherLastName().getText().trim());
-            r.setMotherOccupation(view.getJtfMotherOccupation().getText().trim());
-            r.setMotherOfficePhoneNo(view.getJtfMotherOfficePhoneNo().getText().trim());
-            r.setMotherMobileNo(view.getJtfMotherMobile().getText().trim());
-            r.setIsMotherContactInCaseEmergency(view.getJcbMotherContactEmergency().isSelected());
-            r.setGuardianFirstName(view.getJtfGuardianFirstName().getText().trim());
-            r.setGuardianMiddleName(view.getJtfGuardianMiddleName().getText().trim());
-            r.setGuardianLastName(view.getJtfGuardianLastName().getText().trim());
-            r.setGuardianOccupation(view.getJtfGuardianOccupation().getText().trim());
-            r.setGuardianMobileNo(view.getJtfGuardianMobile().getText().trim());
-            r.setGuardianRelationToStudent(view.getJtfGuardianRelationship().getText().trim());
-            r.setIsGuardianContactInCaseEmergency(view.getJcbGuardianContactEmergency().isSelected());
-            r.setSchoolLastAttended(view.getJtfSchoolLastAttended().getText().trim());
-            r.setSchoolLastAttendedAddress(view.getJtfSchoolLastAttendedAddress().getText().trim());
+            registration.setStudentType(view.getJcbTransferee().isSelected() == true ? "T" : "N");
+            registration.setGradeLevelNo(Integer.parseInt(view.getJcmbGradeLevel().getSelectedItem().toString().trim()));
+            registration.setLastName(view.getJtfLastName().getText().trim());
+            registration.setFirstName(view.getJtfFirstName().getText().trim());
+            registration.setMiddleName(view.getJtfMiddleName().getText().trim());
+            registration.setGender(view.getJcmbGender().getSelectedItem().toString().trim());
+            registration.setReligion(view.getJtfReligion().getText().trim());
+            registration.setNationality(view.getJtfNationality().getText().trim());
+            registration.setBirthday(dateUtil.toDate(view.getDpBirthday().getJFormattedTextField().getText().trim()));
+            registration.setPlaceOfBirth(view.getJtfPlaceOfBirth().getText().trim());
+            registration.setAddressRoomOrHouseNo(view.getJtfRoomNo().getText().trim());
+            registration.setAddressStreet(view.getJtfStreet().getText().trim());
+            registration.setAddressBrgyOrSubd(view.getJtfBrgySubd().getText().trim());
+            registration.setAddressCity(view.getJtfCity().getText().trim());
+            registration.setRegion(view.getJtfRegion().getText().trim());
+            registration.setSchoolYearYearFrom(SchoolYearDaoImpl.getCurrentSchoolYearFrom());
+            registration.setFatherFirstName(view.getJtfFatherFirstName().getText().trim());
+            registration.setFatherMiddleName(view.getJtfFatherFirstName().getText().trim());
+            registration.setFatherLastName(view.getJtfFatherLastName().getText().trim());
+            registration.setFatherOccupation(view.getJtfFatherOccupation().getText().trim());
+            registration.setFatherOfficePhoneNo(view.getJtfFatherOfficePhoneNo().getText().trim());
+            registration.setFatherMobileNo(view.getJtfFatherMobile().getText().trim());
+            registration.setIsFatherContactInCaseEmergency(view.getJcbFatherContactEmergency().isSelected());
+            registration.setMotherFirstName(view.getJtfMotherFirstName().getText().trim());
+            registration.setMotherMiddleName(view.getJtfMotherMiddleName().getText().trim());
+            registration.setMotherLastName(view.getJtfMotherLastName().getText().trim());
+            registration.setMotherOccupation(view.getJtfMotherOccupation().getText().trim());
+            registration.setMotherOfficePhoneNo(view.getJtfMotherOfficePhoneNo().getText().trim());
+            registration.setMotherMobileNo(view.getJtfMotherMobile().getText().trim());
+            registration.setIsMotherContactInCaseEmergency(view.getJcbMotherContactEmergency().isSelected());
+            registration.setGuardianFirstName(view.getJtfGuardianFirstName().getText().trim());
+            registration.setGuardianMiddleName(view.getJtfGuardianMiddleName().getText().trim());
+            registration.setGuardianLastName(view.getJtfGuardianLastName().getText().trim());
+            registration.setGuardianOccupation(view.getJtfGuardianOccupation().getText().trim());
+            registration.setGuardianMobileNo(view.getJtfGuardianMobile().getText().trim());
+            registration.setGuardianRelationToStudent(view.getJtfGuardianRelationship().getText().trim());
+            registration.setIsGuardianContactInCaseEmergency(view.getJcbGuardianContactEmergency().isSelected());
+            registration.setSchoolLastAttended(view.getJtfSchoolLastAttended().getText().trim());
+            registration.setSchoolLastAttendedAddress(view.getJtfSchoolLastAttendedAddress().getText().trim());
+            
+            List<Credential> credentialsSubmitted = new ArrayList<>();
+            for(Component c : view.getJpnlCredentials().getComponents()){
+                if(c instanceof JCheckBox){
+                    JCheckBox cb = (JCheckBox)c;
+                    if(cb.isSelected()){
+                        String credentialName = cb.getText().trim();
+                        int credentialId = credentialDaoImpl.getCredentialIdByName(credentialName);
+                        Credential credential = new Credential();
+                        credential.setCredentialId(credentialId);
+                        credentialsSubmitted.add(credential);
+                    }
+                }
+            }
+            
+            registration.setCredentials(credentialsSubmitted);
+            
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return r;
+        return registration;
     }
 
     @Override

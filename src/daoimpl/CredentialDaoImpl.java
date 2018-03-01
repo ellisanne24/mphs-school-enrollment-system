@@ -1,202 +1,162 @@
-
 package daoimpl;
 
 import utility.database.DBType;
 import utility.database.DBUtil;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import model.credential.Credential;
+import dao.ICredential;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
-import model.credential.Credential;
 import model.gradelevel.GradeLevel;
-import model.schoolyear.SchoolYear;
-import dao.ICredential;
+import model.user.User;
 
-public class CredentialDaoImpl implements ICredential{
-
-    private final GradeLevelDaoImpl gradeLevelDaoImpl = new GradeLevelDaoImpl();
+public class CredentialDaoImpl implements ICredential {
 
     @Override
-    public boolean removeCredentialById(int aCredentialId) {
+    public boolean addCredential(Credential credential) {
         boolean isAdded;
-        String SQL = "{CALL removeCredentialById(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,aCredentialId);
-            cs.executeUpdate();
-            isAdded = true;
-        } catch (SQLException e) {
-            isAdded = false;
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
-        }
-        return isAdded;
-    }
-    
-    
-    
-    @Override
-    public List<Credential> getCredentialByGradeLevelId(int aGradeLevelId) {
-        List<Credential> credentialList = new ArrayList<>();
-        String SQL = "{CALL getCredentialByGradeLevelId(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1, aGradeLevelId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    
-                    SchoolYear yearCreated = new SchoolYear();
-                    yearCreated.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    yearCreated.setYearFrom(rs.getInt("yearFrom"));
-                    yearCreated.setYearTo(rs.getInt("yearTo"));
-                    
-                    Credential credential = new Credential();
-                    credential.setCredentialId(rs.getInt("credential_id"));
-                    credential.setCredentialName(rs.getString("credential_name"));
-                    credential.setDateAdded(rs.getDate("date_added"));
-                    credential.setSchoolYearCreated(yearCreated);
-                    credential.setGradeLevelsAssigned(getGradeLevelsAssignedToCredentialById(rs.getInt("credential_id")));
-                    
-                    credentialList.add(credential);
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
-        }
-        return credentialList;
-    }
-
-    @Override
-    public boolean addCredential(Credential aCredential) {
-        Integer countOfGradeLevels = aCredential.getGradeLevelsAssigned().size();
-        boolean isAdded;
-        String SQLa = "{CALL addCredential(?,?,?)}";
-        String SQLb = "{CALL assignCredential(?,?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+        String SQLa = "{CALL addCredential(?,?,?,?)}";
+        String SQLb = "{CALL addCredentialGradeLevel(?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            con.setAutoCommit(false);
             try (CallableStatement csa = con.prepareCall(SQLa);
-                    CallableStatement csb = con.prepareCall(SQLb);){
-                con.setAutoCommit(false);
-                csa.setString(1,aCredential.getCredentialName());
-                csa.setString(2, aCredential.getCredentialDescription());
-                csa.registerOutParameter(3, Types.INTEGER);
+                    CallableStatement csb = con.prepareCall(SQLb);) {
+                csa.setString(1, credential.getCredentialName());
+                csa.setString(2, credential.getCredentialDescription());
+                csa.setInt(3, credential.getCreatedBy().getUserId());
+                csa.registerOutParameter(4, Types.INTEGER);
                 csa.executeUpdate();
-                Integer aCredentialId = csa.getInt(3);// credential_id returned after adding credential by csa
-                
-                for (int index=0; index<countOfGradeLevels; index++ ) {
-                    Integer aGradeLevelId = aCredential.getGradeLevelsAssigned().get(index).getGradeLevelId();
-                    csb.setInt(1, aCredentialId);
-                    csb.setInt(2, aGradeLevelId);
-//                    JOptionPane.showMessageDialog(null,"GradeLevelId: "+aGradeLevelId);
-                    csb.setInt(3, aCredential.getSchoolYearCreated().getSchoolYearId());
+                int credentialId = csa.getInt(4);// credential_id returned after adding credential by csa
+
+                for (GradeLevel g : credential.getGradeLevelsAssigned()) {
+                    int gradeLevelId = g.getGradeLevelId();
+                    csb.setInt(1, credentialId);
+                    csb.setInt(2, gradeLevelId);
+                    csb.setInt(3, credential.getYearCreated().getSchoolYearId());
                     csb.executeUpdate();
                 }
                 isAdded = true;
                 con.commit();
             } catch (SQLException e) {
                 con.rollback();
+                con.setAutoCommit(true);
                 isAdded = false;
-                JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+                e.printStackTrace();
             }
-            
+
         } catch (SQLException e) {
             isAdded = false;
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return isAdded;
     }
 
     @Override
-    public Integer getCredentialIdByName(String aCredentialName) {
-        Integer aCredentialId = null;
+    public int getCredentialIdByName(String credentialName) {
+        Integer credentialId = null;
         String SQL = "{CALL getCredentialIdByName(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1,aCredentialName);
+            cs.setString(1, credentialName.trim());
             try(ResultSet rs = cs.executeQuery();){
-                while (rs.next()) {
-                    aCredentialId = rs.getInt("credential_id");
+                while(rs.next()){
+                    credentialId = rs.getInt("credential_id");
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
-        return aCredentialId;
+        return credentialId;
     }
-
-    @Override
-    public boolean alreadyExists(String aCredentialName) {
-        int rowCount = 0;
-        boolean exists = false;
-        String SQL = "{CALL credentialAlreadyExists(?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setString(1, aCredentialName);
-                try(ResultSet rs = cs.executeQuery();){
-                    while(rs.next()){
-                        rowCount++;
-                    }
-                    exists = rowCount>0;
-                }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
-        }
-        return exists;
-    }
-
-    
     
     @Override
     public List<Credential> getAllCredentials() {
         List<Credential> credentialList = new ArrayList<>();
-        String SQL = "{CALL getAllCredentials()}";
+        String SQLa = "{CALL getAllCredentials()}";
+        String SQLb = "{CALL getCredentialGradeLevels(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+                CallableStatement getAllCredentials = con.prepareCall(SQLa);
+                CallableStatement getCredentialGradeLevels = con.prepareCall(SQLb);){
+            try (ResultSet rsa = getAllCredentials.executeQuery();) {
+                while (rsa.next()) {
+                    User user = new User();
+                    user.setUserID(rsa.getInt("user_id"));
+                    user.setUsername(rsa.getString("username"));
+                    user.setPassword(rsa.getString("username"));
+                    user.setIsActive(rsa.getBoolean("isActive"));
+                    user.setLastName(rsa.getString("lastname"));
+                    user.setFirstName(rsa.getString("firstname"));
+                    user.setMiddleName(rsa.getString("middlename"));
+                    
                     Credential credential = new Credential();
-                    SchoolYear yearCreated = new SchoolYear();
-                    yearCreated.setSchoolYearId(rs.getInt("schoolyear_id"));
-                    yearCreated.setYearFrom(rs.getInt("yearFrom"));
-                    yearCreated.setYearTo(rs.getInt("yearTo"));
+                    credential.setCreatedBy(user);
+                    credential.setCredentialId(rsa.getInt("credential_id"));
+                    credential.setCredentialName(rsa.getString("credential_name"));
+                    credential.setDateAdded(rsa.getDate("date_added"));
+                    credential.setCredentialDescription(rsa.getString("credential_description"));
+                    credential.setIsActive(rsa.getBoolean("is_credential_active"));
                     
-                    credential.setCredentialId(rs.getInt("credential_id"));
-                    credential.setCredentialName(rs.getString("credential_name"));
-                    credential.setDateAdded(rs.getDate("date_added"));
-                    credential.setCredentialDescription(rs.getString("credential_description"));
-                    credential.setGradeLevelsAssigned(getGradeLevelsAssignedToCredentialById(rs.getInt("credential_id")));
-                    credential.setSchoolYearCreated(yearCreated);
-                    
+                    List<GradeLevel> gradeLevelsAssigned = new ArrayList<>();
+                    getCredentialGradeLevels.setInt(1, rsa.getInt("credential_id"));
+                    try (ResultSet rsb = getCredentialGradeLevels.executeQuery();) {
+                        while (rsb.next()) {
+                            GradeLevel gradeLevel = new GradeLevel();
+                            gradeLevel.setGradeLevelID(rsb.getInt("gradelevel_id"));
+                            gradeLevel.setLevelNo(rsb.getInt("grade_level"));
+                            gradeLevelsAssigned.add(gradeLevel);
+                        }
+                    }
+                    credential.setGradeLevelsAssigned(gradeLevelsAssigned);
                     credentialList.add(credential);
                 }
             }
+            
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
         return credentialList;
     }
 
     @Override
-    public List<GradeLevel> getGradeLevelsAssignedToCredentialById(int aCredentialId) {
-        List<GradeLevel> gradeLevelList = new ArrayList<>();
-        String SQL = "{CALL getGradeLevelsAssignedToCredentialById(?)}";
+    public List<Credential> getCredentialsBy(GradeLevel gradeLevel) {
+        List<Credential> credentialList = new ArrayList<>();
+        String SQLa = "{CALL getCredentialsByGradeLevel(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,aCredentialId);
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    GradeLevel gradeLevel = new GradeLevel();
-                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
-                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
-                    gradeLevelList.add(gradeLevel);
+                CallableStatement getCredentialsByGradeLevel = con.prepareCall(SQLa);){
+            getCredentialsByGradeLevel.setInt(1, gradeLevel.getGradeLevelId());
+            try (ResultSet rsa = getCredentialsByGradeLevel.executeQuery();) {
+                while (rsa.next()) {
+                    User user = new User();
+                    user.setUserID(rsa.getInt("user_id"));
+                    user.setUsername(rsa.getString("username"));
+                    user.setPassword(rsa.getString("username"));
+                    user.setIsActive(rsa.getBoolean("isActive"));
+                    user.setLastName(rsa.getString("lastname"));
+                    user.setFirstName(rsa.getString("firstname"));
+                    user.setMiddleName(rsa.getString("middlename"));
+                    
+                    Credential credential = new Credential();
+                    credential.setCreatedBy(user);
+                    credential.setCredentialId(rsa.getInt("credential_id"));
+                    credential.setCredentialName(rsa.getString("credential_name"));
+                    credential.setDateAdded(rsa.getDate("date_added"));
+                    credential.setCredentialDescription(rsa.getString("credential_description"));
+                    credential.setIsActive(rsa.getBoolean("is_credential_active"));
+                    
+                    credentialList.add(credential);
                 }
             }
+            
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
-        return gradeLevelList;
+        return credentialList;
     }
+    
+    
     
 }

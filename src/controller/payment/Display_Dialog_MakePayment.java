@@ -17,11 +17,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.enrollment.Enrollment;
-import model.particulars.Particular;
 import model.paymentterm.PaymentTerm;
-import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.Tuition;
+import model.user.User;
 import view.payment.Dialog_MakePayment;
 import view.payment.Panel_Payment;
 
@@ -38,9 +37,11 @@ public class Display_Dialog_MakePayment implements ActionListener {
     private final StudentDaoImpl studentDaoImpl;
     private final PaymentTermDaoImpl paymentTermDaoImpl;
     private Student student;
+    private final User user;
 
-    public Display_Dialog_MakePayment(Panel_Payment view) {
+    public Display_Dialog_MakePayment(Panel_Payment view, User user) {
         this.view = view;
+        this.user = user;
         studentDaoImpl = new StudentDaoImpl();
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
@@ -180,7 +181,7 @@ public class Display_Dialog_MakePayment implements ActionListener {
     }
 
     private void displayDialog(boolean hasTuitionRecord, Tuition tuition) {
-        Dialog_MakePayment dialog = new Dialog_MakePayment(hasTuitionRecord, tuition);
+        Dialog_MakePayment dialog = new Dialog_MakePayment(hasTuitionRecord, tuition,user);
         if (dialog.isShowing()) {
             dialog.dispose();
         } else {
