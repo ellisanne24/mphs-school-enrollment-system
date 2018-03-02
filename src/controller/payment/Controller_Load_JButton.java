@@ -113,13 +113,8 @@ public class Controller_Load_JButton implements ActionListener {
             Tuition tuition = tuitionFeeDaoImpl.getBy(student.getStudentId(), currentSchoolYear.getSchoolYearId());
             view.getJlblTotalPaidText().setText("" + tuition.getTotalPaid());
             view.getJlblRemainingBalanceText().setText("" + tuition.getRemainingBalance());
-            if(tuition.getPaymentTerm() == null){
-                
-            }else{
-                view.getJcmbPaymentTerm().setSelectedItem(tuition.getPaymentTerm().getPaymentTermName().trim());
-                view.getJcmbPaymentTerm().setEnabled(false);
-            }
-           
+            view.getJcmbPaymentTerm().setSelectedItem(tuition.getPaymentTerm().getPaymentTermName().trim());
+            view.getJcmbPaymentTerm().setEnabled(false);
             initializeBalanceBreakDownTable();
             initializeReceiptsMasterListTable();
             initAssignSummerFeeButton();
@@ -127,6 +122,7 @@ public class Controller_Load_JButton implements ActionListener {
         } else {
             view.getJcmbPaymentTerm().setEnabled(true);
             initializePaymentTermComboItemListener();
+            view.getJbtnAddDiscount().addActionListener(new Controller_Display_Dialog_AddDiscount(view, feeList, hasStudentNo, student, currentSchoolYear, user));
             view.getJbtnMakePayment().addActionListener(new New_Display_Dialog_MakePayment(hasStudentNo, student, view, currentSchoolYear, user));
         }
     }
@@ -162,6 +158,9 @@ public class Controller_Load_JButton implements ActionListener {
                 int paymentTermID = paymentTermDaoImpl.getPaymentTermIDByName(paymentTermName);
                 paymentTerm = paymentTermDaoImpl.getPaymentTermByPaymentTermId(paymentTermID);
                 initBalanceBreakDownTable(paymentTerm);
+                view.getJtfDiscount().setText("");
+                view.getJcbDiscount().setSelected(false);
+                view.getJbtnAddDiscount().setEnabled(false);
             }
         });
     }

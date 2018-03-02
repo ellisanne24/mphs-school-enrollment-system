@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import model.balancebreakdownfee.BalanceBreakDownFee;
+import model.discount.Discount;
 import model.enrollment.Enrollment;
 import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
@@ -34,6 +36,7 @@ public class New_Display_Dialog_MakePayment implements ActionListener{
     private final Panel_Payment view;
     private final SchoolYear currentSchoolYear;
     private final User user;
+    private final List<Discount> discounts;
     private final PaymentTermDaoImpl paymentTermDaoImpl;
     private final StudentDaoImpl studentDaoImpl;
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
@@ -47,6 +50,7 @@ public class New_Display_Dialog_MakePayment implements ActionListener{
         this.paymentTermDaoImpl = new PaymentTermDaoImpl();
         this.studentDaoImpl = new StudentDaoImpl();
         this.tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
+        discounts = new ArrayList<>();
     }
     
     /**
@@ -54,7 +58,8 @@ public class New_Display_Dialog_MakePayment implements ActionListener{
      * In other words, use only for student applicants who are not officially considered student of school.
      * @param student
      * @param view
-     * @param currentSchoolYear 
+     * @param currentSchoolYear
+     * @param user
      */
     public New_Display_Dialog_MakePayment(Student student, Panel_Payment view, SchoolYear currentSchoolYear, User user) {
         this.hasStudentNo = false;
@@ -65,12 +70,36 @@ public class New_Display_Dialog_MakePayment implements ActionListener{
         this.paymentTermDaoImpl = new PaymentTermDaoImpl();
         this.studentDaoImpl = new StudentDaoImpl();
         this.tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
+        discounts = new ArrayList<>();
+    }
+    
+    /**
+     * Use this constructor only for student applicants who has not been given a student number
+     * In other words, use only for student applicants who are not officially considered student of school.
+     * @param student
+     * @param view
+     * @param currentSchoolYear
+     * @param user
+     * @param discounts
+     */
+    public New_Display_Dialog_MakePayment(Student student, Panel_Payment view, SchoolYear currentSchoolYear, User user, List<Discount> discounts) {
+        this.hasStudentNo = false;
+        this.student = student;
+        this.view = view;
+        this.currentSchoolYear = currentSchoolYear;
+        this.user = user;
+        this.paymentTermDaoImpl = new PaymentTermDaoImpl();
+        this.studentDaoImpl = new StudentDaoImpl();
+        this.tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
+        this.discounts = discounts;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(hasStudentNo){
-            Tuition tuition = tuitionFeeDaoImpl.getBy(student.getStudentId(), currentSchoolYear.getSchoolYearId());
+            int studentId = student.getStudentId();
+            int schoolYearId = currentSchoolYear.getSchoolYearId();
+            Tuition tuition = tuitionFeeDaoImpl.getBy(studentId, schoolYearId);
             tuition.setStudent(student);
             displayDialog(true, tuition);
         }else{
@@ -86,6 +115,7 @@ public class New_Display_Dialog_MakePayment implements ActionListener{
         tuition.setPaymentTerm(getPaymentTerm());
         tuition.setBalanceBreakDownFees(getBalanceBreakDownFeeList());
         tuition.setSchoolyearId(currentSchoolYear.getSchoolYearId());
+        tuition.setDiscounts(discounts);
         return tuition;
     }
     

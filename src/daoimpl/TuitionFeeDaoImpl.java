@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import model.balancebreakdownfee.BalanceBreakDownFee;
+import model.discount.Discount;
 import model.particulars.Particular;
 import model.payment.Payment;
 import model.paymentterm.PaymentTerm;
@@ -270,6 +271,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         String sqlF = "{CALL markOrNoAsUsed(?)}";
         String sqlG = "{CALL addEnrollment(?,?,?,?,?)}";
         String SQLH = "{CALL activateStudent(?)}";
+        String SQLI = "{CALL addStudentDiscounts(?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
             con.setAutoCommit(false);
             try (CallableStatement cs_addStudent = con.prepareCall(sqlA);
@@ -279,7 +281,8 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     CallableStatement cs_addTransactionBalanceBreakDown = con.prepareCall(sqlE);
                     CallableStatement cs_markOrNoAsUsed = con.prepareCall(sqlF);
                     CallableStatement cs_addEnrollment = con.prepareCall(sqlG);
-                    CallableStatement cs_activateStudent = con.prepareCall(SQLH);){
+                    CallableStatement cs_activateStudent = con.prepareCall(SQLH);
+                    CallableStatement cs_addStudentDiscounts = con.prepareCall(SQLI);){
                 cs_addStudent.setInt(1, tuition.getStudent().getAdmission().getAdmissionId());
                 cs_addStudent.setString(2, tuition.getStudent().getRegistration().getStudentType());
                 cs_addStudent.registerOutParameter(3, Types.INTEGER);
@@ -305,7 +308,6 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     cs_addBalanceBreakDownFee.executeUpdate();
                     int balancebreakdownId = cs_addBalanceBreakDownFee.getInt(8);
                     breakdownFeeId_and_breakdownFeeName_pair.put(balancebreakdownId, bbFee.getName());
-                    System.out.println("BalanceBreakDownId : "+balancebreakdownId);
                 }
                 
                 cs_addTransaction.setInt(1, studentId);
@@ -344,6 +346,14 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 
                 cs_activateStudent.setInt(1, studentId);
                 cs_activateStudent.executeUpdate();
+                
+                for(Discount d : tuition.getDiscounts()){
+                    cs_addStudentDiscounts.setInt(1, studentId);
+                    cs_addStudentDiscounts.setInt(2, d.getDiscountID());
+                    cs_addStudentDiscounts.setInt(3, schoolYearId);
+                    cs_addStudentDiscounts.setInt(4, d.getCreatedBy().getUserId());
+                    cs_addStudentDiscounts.executeUpdate();
+                }
                 
                 con.commit();
                 isSuccessful = true;

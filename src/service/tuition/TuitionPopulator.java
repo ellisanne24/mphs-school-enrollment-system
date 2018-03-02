@@ -7,10 +7,13 @@ package service.tuition;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import model.discount.Discount;
 import model.fee.Fee;
 import model.paymentterm.PaymentTerm;
 import model.period.Period;
@@ -23,19 +26,42 @@ public class TuitionPopulator {
 
     private final List<Fee> fees;
     private final PaymentTerm paymentTerm;
+    private List<Discount> discounts;
 
     public TuitionPopulator(List<Fee> fees, PaymentTerm paymentTerm) {
         this.fees = fees;
         this.paymentTerm = paymentTerm;
+        discounts = new ArrayList<>();
+    }
+    
+    public TuitionPopulator(List<Fee> fees, PaymentTerm paymentTerm, List<Discount> discounts) {
+        this.fees = fees;
+        this.paymentTerm = paymentTerm;
+        this.discounts = discounts;
     }
 
+    private BigDecimal getDiscount(){
+        BigDecimal feeSum = new BigDecimal(getFeesSum().toString());
+        Double totalPercent = 0.0;
+        for(Discount d : discounts){
+            totalPercent+= d.getPercent();
+        }
+        BigDecimal discountAmount = feeSum.multiply(BigDecimal.valueOf(totalPercent)).divide(BigDecimal.valueOf(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return discountAmount;
+    }
+    
     public BigDecimal getPerPeriodAmount() {
         BigDecimal feeSum = new BigDecimal(getFeesSum().toString());
+        if(discounts.size() > 0){
+            feeSum = feeSum.subtract(getDiscount());
+        }
+        
         BigDecimal downpayment = getDownpaymentAmount();
         BigDecimal others = getOthersFeeSum();
         BigDecimal divisor = BigDecimal.valueOf(paymentTerm.getDivisor());
         BigDecimal perPeriod = new BigDecimal(BigInteger.ZERO);
         perPeriod = perPeriod.add(feeSum.subtract(downpayment).subtract(others).divide(divisor)).setScale(2, BigDecimal.ROUND_HALF_UP);
+        
         return perPeriod;
     }
 

@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -127,6 +128,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jbtnRemove.addActionListener(new Dialog_MakePayment_RemoveItemToPay(this));
         jtblPaymentBreakDown.getModel().addTableModelListener(new Dialog_MakePayment_PaymentBreakDown_TableModelListener(this));
+        
         jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(hasTuitionRecord,this,tuition, tuitionFeeDaoImpl,user));
     }
 
