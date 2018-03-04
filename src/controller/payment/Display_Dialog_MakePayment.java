@@ -1,7 +1,6 @@
 package controller.payment;
 
 import daoimpl.PaymentTermDaoImpl;
-import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
 import daoimpl.TuitionFeeDaoImpl;
 import java.awt.event.ActionEvent;
@@ -16,8 +15,10 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import model.balancebreakdownfee.BalanceBreakDownFee;
+import model.discount.Discount;
 import model.enrollment.Enrollment;
 import model.paymentterm.PaymentTerm;
+import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.Tuition;
 import model.user.User;
@@ -28,120 +29,72 @@ import view.payment.Panel_Payment;
  *
  * @author Jordan
  */
-public class Display_Dialog_MakePayment implements ActionListener {
-
-    private final int currentSchoolYearId;
-    private final Panel_Payment view;
-    private final SchoolYearDaoImpl schoolYearDaoImpl;
-    private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
-    private final StudentDaoImpl studentDaoImpl;
-    private final PaymentTermDaoImpl paymentTermDaoImpl;
+public class Display_Dialog_MakePayment implements ActionListener{
+    
+    private boolean hasStudentNo;
     private Student student;
+    private List<Discount> discounts;
+    private final Panel_Payment view;
+    private final SchoolYear currentSchoolYear;
     private final User user;
+    private final PaymentTermDaoImpl paymentTermDaoImpl;
+    private final StudentDaoImpl studentDaoImpl;
+    private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
 
-    public Display_Dialog_MakePayment(Panel_Payment view, User user) {
+    public Display_Dialog_MakePayment(Panel_Payment view) {
         this.view = view;
-        this.user = user;
-        studentDaoImpl = new StudentDaoImpl();
-        schoolYearDaoImpl = new SchoolYearDaoImpl();
-        tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
-        paymentTermDaoImpl = new PaymentTermDaoImpl();
-        currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
+        this.currentSchoolYear = view.getCurrentSchoolYear();
+        this.user = view.getUser();
+        this.paymentTermDaoImpl = new PaymentTermDaoImpl();
+        this.studentDaoImpl = new StudentDaoImpl();
+        this.tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String studentNo = view.getJtfStudentNo().getText().trim();
-        if (inputIsValid(studentNo)) {
-            initializeStudent(studentNo);
-            if (studentHasTuitionRecord(student.getStudentNo())) {
-                Tuition tuition = tuitionFeeDaoImpl.getBy(student.getStudentId(), currentSchoolYearId);
-                tuition.setStudent(student);
-                displayDialog(true, tuition);
-            } else {
-                Tuition newTuition = getNewTuition();
-                displayDialog(false, newTuition);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Invalid input");
+        if(hasStudentNo){
+            int studentId = student.getStudentId();
+            int schoolYearId = currentSchoolYear.getSchoolYearId();
+            Tuition tuition = tuitionFeeDaoImpl.getBy(studentId, schoolYearId);
+            tuition.setStudent(student);
+            displayDialog(true, tuition);
+        }else{
+            student = view.getStudent();
+            discounts = view.getDiscounts();
+            Tuition newTuition = createTuitionFor(student);
+            displayDialog(false, newTuition);
         }
     }
 
-    private void initializeStudent(String studentNo) {
-        student = studentDaoImpl.getStudentByStudentNo(Integer.parseInt(studentNo));
+    private Tuition createTuitionFor(Student s) {
+        s.setEnrollment(enrollment());
+        Tuition tuition = new Tuition();
+        tuition.setStudent(s);
+        tuition.setPaymentTerm(paymentTerm());
+        tuition.setBalanceBreakDownFees(balanceBreakDownFees());
+        tuition.setSchoolyearId(currentSchoolYear.getSchoolYearId());
+        tuition.setDiscounts(discounts);
+        return tuition;
     }
-
-    /**
-     * Checks if the string is an Integer.
-     *
-     * @param s is any String input on JComponent such as JTextField, JLabel,
-     * etc
-     * @return false if it fails to parse the string to an Integer. true if the
-     * String input is Integer.
-     */
-    private boolean inputIsValid(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * Checks if the student has already been assigned with Tuition
-     * BalanceBreakDownFees in the database for a particular school year. This
-     * method does the checking by studentNo instead of studentId
-     *
-     * @return
-     */
-    private boolean studentHasTuitionRecord(int studentNo) {
-        return studentDaoImpl.hasTuitionRecord(studentNo, currentSchoolYearId);
-    }
-
-    /**
-     * Use for students with no record yet.
-     *
-     * @return
-     */
-    private Student getStudent() {
-        int studentNo = Integer.parseInt(view.getJtfStudentNo().getText().trim());
-        Student s = studentDaoImpl.getStudentByStudentNo(studentNo);
-        s.setEnrollment(getEnrollment());
-        return s;
-    }
-
-    /**
-     * Use for students with no record yet.
-     *
-     * @return
-     */
-    private Enrollment getEnrollment() {
+    
+    
+    private Enrollment enrollment() {
         Enrollment enrollment = new Enrollment();
-        String enrollmentType = getPaymentTerm().getPaymentTermName().trim().equalsIgnoreCase("Summer") == true ? "S" : "R";
+        String enrollmentType = paymentTerm().getPaymentTermName().trim().equalsIgnoreCase("Summer") == true ? "S" : "R";
         enrollment.setEnrollmentType(enrollmentType.trim());
-        enrollment.setSchoolYearId(currentSchoolYearId);
+        enrollment.setSchoolYearId(currentSchoolYear.getSchoolYearId());
         return enrollment;
     }
-
-    /**
-     * Use for students with no record yet.
-     *
-     * @return
-     */
-    private PaymentTerm getPaymentTerm() {
+    
+    
+    private PaymentTerm paymentTerm() {
         String paymentTermName = view.getJcmbPaymentTerm().getSelectedItem().toString().trim();
         int paymentTermID = paymentTermDaoImpl.getPaymentTermIDByName(paymentTermName);
         PaymentTerm paymentTerm = paymentTermDaoImpl.getPaymentTermByPaymentTermId(paymentTermID);
         return paymentTerm;
     }
-
-    /**
-     * Use for students with no record yet
-     *
-     * @return
-     */
-    private List<BalanceBreakDownFee> getBalanceBreakDownFeeList() {
+    
+    private List<BalanceBreakDownFee> balanceBreakDownFees() {
         List<BalanceBreakDownFee> bbFeeList = new ArrayList<>();
         JTable t = view.getJtblBalanceBreakDown();
         for (int i = 0; i < t.getRowCount(); i++) {
@@ -165,23 +118,10 @@ public class Display_Dialog_MakePayment implements ActionListener {
         }
         return bbFeeList;
     }
-
-    /**
-     * Use for students with no record yet.
-     *
-     * @return
-     */
-    private Tuition getNewTuition() {
-        Tuition tuition = new Tuition();
-        tuition.setStudent(getStudent());
-        tuition.setPaymentTerm(getPaymentTerm());
-        tuition.setBalanceBreakDownFees(getBalanceBreakDownFeeList());
-        tuition.setSchoolyearId(currentSchoolYearId);
-        return tuition;
-    }
-
+    
+    
     private void displayDialog(boolean hasTuitionRecord, Tuition tuition) {
-        Dialog_MakePayment dialog = new Dialog_MakePayment(hasTuitionRecord, tuition,user);
+        Dialog_MakePayment dialog = new Dialog_MakePayment(hasTuitionRecord, tuition, user);
         if (dialog.isShowing()) {
             dialog.dispose();
         } else {
@@ -192,5 +132,4 @@ public class Display_Dialog_MakePayment implements ActionListener {
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         }
     }
-
 }

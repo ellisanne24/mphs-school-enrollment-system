@@ -1,21 +1,18 @@
 package view.payment;
 
 import controller.payment.Controller_Dialog_AddDiscount_ApplyDiscount_JButton;
-import controller.payment.Controller_Dialog_AddDiscount_MoveDiscountToApplied;
-import controller.payment.Controller_Dialog_AddDiscount_RemoveFromApplied_JButton;
 import daoimpl.DiscountDaoImpl;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import model.discount.Discount;
-import model.fee.Fee;
-import model.schoolyear.SchoolYear;
-import model.student.Student;
-import model.user.User;
 import utility.initializer.Initializer;
 import utility.jtable.JTableUtil;
 
@@ -27,24 +24,11 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
 
     private DiscountDaoImpl discountDaoImpl;
     private final Panel_Payment panelPayment;
-    private final List<Fee> feeList;
-    private final boolean hasStudentNo;
-    private final Student student;
-    private final SchoolYear currentSchoolYear;
-    private final User user;
 
-    public Dialog_AddDiscount(
-            java.awt.Frame parent, boolean modal, Panel_Payment panelPayment, List<Fee> feeList, boolean hasStudentNo, Student student, SchoolYear currentSchoolYear,User user) {
+    public Dialog_AddDiscount(java.awt.Frame parent, boolean modal, Panel_Payment panelPayment) {
         super(parent, modal);
         initComponents();
-
         this.panelPayment = panelPayment;
-        this.feeList = feeList;
-        this.hasStudentNo = hasStudentNo;
-        this.student = student;
-        this.currentSchoolYear = currentSchoolYear;
-        this.user = user;
-
         initDaoImpl();
         initJCompModelLoaders();
         initRenderers();
@@ -257,6 +241,8 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
 
         jbtnApplyDiscount.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jbtnApplyDiscount.setText("Apply Discount");
+        jbtnApplyDiscount.setActionCommand("applydiscount");
+        jbtnApplyDiscount.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -291,15 +277,40 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
 
     @Override
     public void initViewComponents() {
-        loadAllDiscounts();
+        loadDiscountsList();
+        loadAppliedDiscounts();
         JTableUtil.applyCustomHeaderRenderer(jtblDiscountList);
         JTableUtil.applyCustomHeaderRenderer(jtblAppliedDiscount);
+        JTableUtil.resizeColumnWidthsOf(jtblDiscountList);
+        JTableUtil.resizeColumnWidthsOf(jtblAppliedDiscount);
     }
 
     @Override
     public void initControllers() {
-        jbtnMoveToAppliedDiscount.addActionListener(new Controller_Dialog_AddDiscount_MoveDiscountToApplied(this));
-        jbtnRemoveFromAppliedDiscount.addActionListener(new Controller_Dialog_AddDiscount_RemoveFromApplied_JButton(this));
+        jbtnMoveToAppliedDiscount.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jtblDiscountList.getRowCount() > 0) {
+                    JTableUtil.moveRowData(jtblDiscountList, jtblAppliedDiscount);
+                    panelPayment.setTableModelAppliedDiscount((DefaultTableModel)jtblAppliedDiscount.getModel());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nothing to move.");
+                }
+            }
+        });
+        jbtnRemoveFromAppliedDiscount.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == jbtnRemoveFromAppliedDiscount) {
+                    if (jtblAppliedDiscount.getRowCount() > 0 && jtblAppliedDiscount.getSelectedRowCount() > 0) {
+                        JTableUtil.moveRowData(jtblAppliedDiscount, jtblDiscountList);
+                        panelPayment.setTableModelAppliedDiscount((DefaultTableModel)jtblAppliedDiscount.getModel());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Nothing is selected.");
+                    }
+                }
+            }
+        });
         jtblAppliedDiscount.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -310,9 +321,12 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
                     }
                 }
                 jtfTotalDiscountPercent.setText("" + totalPercent);
+                jbtnApplyDiscount.setEnabled(jtblAppliedDiscount.getRowCount() > 0);
+                JTableUtil.resizeColumnWidthsOf(jtblDiscountList);
+                JTableUtil.resizeColumnWidthsOf(jtblAppliedDiscount);
             }
         });
-        jbtnApplyDiscount.addActionListener(new Controller_Dialog_AddDiscount_ApplyDiscount_JButton(panelPayment, this, feeList, hasStudentNo, student, currentSchoolYear, user));
+        jbtnApplyDiscount.addActionListener(new Controller_Dialog_AddDiscount_ApplyDiscount_JButton(panelPayment, this));
     }
 
     @Override
@@ -320,7 +334,7 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
         discountDaoImpl = new DiscountDaoImpl();
     }
 
-    private void loadAllDiscounts() {
+    private void loadDiscountsList() {
         DefaultTableModel tableModel = (DefaultTableModel) jtblDiscountList.getModel();
         tableModel.setRowCount(0);
         List<Discount> discounts = discountDaoImpl.getAllDiscount();
@@ -332,6 +346,24 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
             tableModel.addRow(rowData);
         }
         jtblDiscountList.setModel(tableModel);
+    }
+    
+    private void loadAppliedDiscounts(){
+        if(panelPayment.getHasStudentNo()){
+            loadForStudent();
+        }else{
+            loadForStudentApplicant();
+        }
+    }
+    
+    private void loadForStudent(){
+        
+    }
+    
+    private void loadForStudentApplicant(){
+        if(panelPayment.getTableModelAppliedDiscount().getRowCount() != 0){
+            jtblAppliedDiscount.setModel(panelPayment.getTableModelAppliedDiscount());
+        }
     }
 
     public JButton getJbtnApplyDiscount() {

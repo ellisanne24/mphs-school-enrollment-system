@@ -10,6 +10,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import model.officialreceipt.OfficialReceipt;
 import model.student.Student;
+import view.payment.Panel_Payment;
 import view.receipt.Dialog_Receipt;
 
 /**
@@ -18,12 +19,10 @@ import view.receipt.Dialog_Receipt;
  */
 public class Dialog_MakePayment_ViewReceiptOfSelectedOR implements ActionListener{
 
-    private final JTable jtblReceiptsMasterList;
-    private final JTextField jtfStudentNo;
-
-    public Dialog_MakePayment_ViewReceiptOfSelectedOR(JTable jtblReceiptsMasterList,JTextField jtfStudentNo) {
-        this.jtblReceiptsMasterList = jtblReceiptsMasterList;
-        this.jtfStudentNo = jtfStudentNo;
+    private final Panel_Payment panelPayment;
+    
+    public Dialog_MakePayment_ViewReceiptOfSelectedOR(Panel_Payment panelPayment) {
+        this.panelPayment = panelPayment;
     }
     
     @Override
@@ -32,15 +31,15 @@ public class Dialog_MakePayment_ViewReceiptOfSelectedOR implements ActionListene
     }
     
     private void displayReceipt(){
-        if(jtblReceiptsMasterList.getSelectedRow() > -1){
-            int selectedRow = jtblReceiptsMasterList.getSelectedRow();
-            int studentNo = Integer.parseInt(jtfStudentNo.getText().trim());
-            StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
-            Student student = studentDaoImpl.getStudentByStudentNo(studentNo);
-            int orNo = Integer.parseInt(jtblReceiptsMasterList.getValueAt(selectedRow, 0).toString().toString());
+        JTable t = panelPayment.getJtblReceiptsMasterList();
+        if(t.getSelectedRow() > -1){
+            int selectedRow = t.getSelectedRow();
+            Student student = panelPayment.getStudent();
+            int orNo = Integer.parseInt(t.getValueAt(selectedRow, 0).toString().toString());
             OfficialReceiptDaoImpl officialReceiptDaoImpl = new OfficialReceiptDaoImpl();
             OfficialReceipt officialReceipt = new OfficialReceipt();
             officialReceipt = officialReceiptDaoImpl.getOfficialReceiptByOrNo(orNo);
+            
             Dialog_Receipt dialog = new Dialog_Receipt(student,officialReceipt);
             dialog.setPreferredSize(new Dimension(800,600));
             dialog.setLocationRelativeTo(null);

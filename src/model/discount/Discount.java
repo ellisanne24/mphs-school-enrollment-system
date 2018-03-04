@@ -5,6 +5,7 @@
  */
 package model.discount;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import model.user.User;
 
@@ -15,7 +16,7 @@ public class Discount {
     private String description;
     private boolean isActive;
     private Date dateCreated;
-    private double amount;
+    private BigDecimal amount;
     private User createdBy;
     private String provision;
 
@@ -51,11 +52,11 @@ public class Discount {
         this.createdBy = createdBy;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
     

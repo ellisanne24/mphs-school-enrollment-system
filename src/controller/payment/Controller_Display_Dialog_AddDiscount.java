@@ -18,26 +18,15 @@ import view.payment.Panel_Payment;
 public class Controller_Display_Dialog_AddDiscount implements ActionListener{
     
     private final Panel_Payment view;
-    private final List<Fee> feeList;
-    private final boolean hasStudentNo;
-    private final Student student;
-    private final SchoolYear currentSchoolYear;
-    private final User user;
 
-    public Controller_Display_Dialog_AddDiscount(
-            Panel_Payment view, List<Fee> feeList,boolean hasStudentNo, Student student,SchoolYear currentSchoolYear,User user) {
+    public Controller_Display_Dialog_AddDiscount(Panel_Payment view) {
         this.view = view;
-        this.feeList = feeList;
-        this.hasStudentNo = hasStudentNo;
-        this.student = student;
-        this.currentSchoolYear = currentSchoolYear;
-        this.user = user;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == view.getJbtnAddDiscount()){
-            Dialog_AddDiscount dialog = new Dialog_AddDiscount(null, true, view,feeList,hasStudentNo,student,currentSchoolYear,user);
+        if(e.getSource() == view.getJbtnSelectDiscount()){
+            Dialog_AddDiscount dialog = new Dialog_AddDiscount(null, true, view);
             dialog.pack();
             dialog.setLocationRelativeTo(null);
             dialog.setVisible(true);

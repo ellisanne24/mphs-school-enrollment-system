@@ -15,11 +15,13 @@ import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import model.admission.Admission;
+import model.discount.Discount;
 import model.fee.Fee;
 import model.paymentterm.PaymentTerm;
 import model.registration.Registration;
@@ -38,7 +40,7 @@ import view.payment.Panel_Payment;
 public class Controller_Load_JButton implements ActionListener {
 
     private final Dialog_SearchStudentByKeyword searchResultDialog;
-    private final Panel_Payment view;
+    private final Panel_Payment panelPayment;
     private final RegistrationDaoImpl registrationDaoImpl;
     private final StudentDaoImpl studentDaoImpl;
     private final GradeLevelDaoImpl gradeLevelDaoImpl;
@@ -53,9 +55,9 @@ public class Controller_Load_JButton implements ActionListener {
     private final SchoolYear currentSchoolYear;
     private final User user;
 
-    public Controller_Load_JButton(Dialog_SearchStudentByKeyword searchResultDialog, Panel_Payment view, SchoolYear currentSchoolYear, User user) {
+    public Controller_Load_JButton(Dialog_SearchStudentByKeyword searchResultDialog, Panel_Payment panelPayment, SchoolYear currentSchoolYear, User user) {
         this.searchResultDialog = searchResultDialog;
-        this.view = view;
+        this.panelPayment = panelPayment;
         this.currentSchoolYear = currentSchoolYear;
         this.user = user;
         this.registrationDaoImpl = new RegistrationDaoImpl();
@@ -81,11 +83,11 @@ public class Controller_Load_JButton implements ActionListener {
                     Admission admission = new Admission();
                     admission.setAdmissionId(admissionId);
                     initStudentBy(registration, admission);
-                    view.clearForm();
+                    panelPayment.clearForm();
                     initForm(false);
                 } else {
                     initStudentBy(studentNo);
-                    view.clearForm();
+                    panelPayment.clearForm();
                     initForm(true);
                 }
             }
@@ -104,71 +106,89 @@ public class Controller_Load_JButton implements ActionListener {
     }
 
     private void initForm(boolean hasStudentNo) {
-        view.clearForm();
+        panelPayment.clearForm();
         initStudentDetails(hasStudentNo);
         initializeFees();
         initializeBalanceBreakDownTableModelListener();
 
         if (hasStudentNo) {
             Tuition tuition = tuitionFeeDaoImpl.getBy(student.getStudentId(), currentSchoolYear.getSchoolYearId());
-            view.getJlblTotalPaidText().setText("" + tuition.getTotalPaid());
-            view.getJlblRemainingBalanceText().setText("" + tuition.getRemainingBalance());
-            view.getJcmbPaymentTerm().setSelectedItem(tuition.getPaymentTerm().getPaymentTermName().trim());
-            view.getJcmbPaymentTerm().setEnabled(false);
+            panelPayment.getJlblTotalPaidText().setText("" + tuition.getTotalPaid());
+            panelPayment.getJlblRemainingBalanceText().setText("" + tuition.getRemainingBalance());
+            panelPayment.getJcmbPaymentTerm().setSelectedItem(tuition.getPaymentTerm().getPaymentTermName().trim());
+            panelPayment.getJcmbModeOfPayment().setSelectedItem(tuition.getPaymentTerm().getPaymentTermName().trim().equalsIgnoreCase("Cash")? "Cash" : "Installment");
+            BigDecimal totalDiscount = new BigDecimal(BigInteger.ZERO).setScale(2,BigDecimal.ROUND_HALF_UP);
+            for(Discount d : tuition.getDiscounts()){
+                totalDiscount = totalDiscount.add(d.getAmount());
+            }
+            if(tuition.getDiscounts().size() > 0){
+                panelPayment.getJcbDiscount().setSelected(true);
+                panelPayment.getJcbDiscount().setEnabled(false);
+            }else{
+                panelPayment.getJcbDiscount().setSelected(false);
+                panelPayment.getJcbDiscount().setEnabled(true);
+            }
+            panelPayment.getJtfDiscount().setText(""+totalDiscount);
+            panelPayment.getJcmbPaymentTerm().setEnabled(false);
+            panelPayment.setHasStudentNo(hasStudentNo);
+            panelPayment.setStudent(student);
+            panelPayment.setFeeList(feeList);
             initializeBalanceBreakDownTable();
             initializeReceiptsMasterListTable();
             initAssignSummerFeeButton();
-            view.getJbtnMakePayment().addActionListener(new New_Display_Dialog_MakePayment(hasStudentNo, student, view, currentSchoolYear, user));
         } else {
-            view.getJcmbPaymentTerm().setEnabled(true);
+            panelPayment.getJcmbPaymentTerm().setEnabled(true);
             initializePaymentTermComboItemListener();
-            view.getJbtnAddDiscount().addActionListener(new Controller_Display_Dialog_AddDiscount(view, feeList, hasStudentNo, student, currentSchoolYear, user));
-            view.getJbtnMakePayment().addActionListener(new New_Display_Dialog_MakePayment(hasStudentNo, student, view, currentSchoolYear, user));
+            panelPayment.setHasStudentNo(hasStudentNo);
+            panelPayment.setStudent(student);
+            panelPayment.setFeeList(feeList);
+            panelPayment.getJcmbModeOfPayment().setEnabled(true);
         }
     }
 
     
     private void initializeBalanceBreakDownTable(){
-        JTable table = view.getJtblBalanceBreakDown();
+        JTable table = panelPayment.getJtblBalanceBreakDown();
         int studentId = student.getStudentId();
         table.setModel(tuitionFeesJCompModelLoader.getTuitionByStudentIdAndSchoolYearId(table, studentId, currentSchoolYear.getSchoolYearId()));
     }
     
     private void initializeReceiptsMasterListTable(){
         OfficialReceiptJCompModelLoader officialReceiptJCompModelLoader = new OfficialReceiptJCompModelLoader();
-        JTable table = view.getJtblReceipts();
+        JTable table = panelPayment.getJtblReceipts();
         int studentId = student.getStudentId();
         table.setModel(officialReceiptJCompModelLoader.getAllOfficialReceiptsByStudentId(table, studentId));
     }
     
     private void initAssignSummerFeeButton() {
-        view.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(view, student, currentSchoolYear));
+        panelPayment.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(panelPayment, student, currentSchoolYear));
         if (student.getIsRecommendedToTakeSummer()) {
-            view.getJlblRecommendForSummerMessage().setText("Student is recommended for summer.");
-            view.getJbtnAssignSummerFee().setEnabled(true);
+            panelPayment.getJlblRecommendForSummerMessage().setText("Student is recommended for summer.");
+            panelPayment.getJbtnAssignSummerFee().setEnabled(true);
         } else {
-            view.getJbtnAssignSummerFee().setEnabled(false);
+            panelPayment.getJbtnAssignSummerFee().setEnabled(false);
         }
     }
 
     private void initializePaymentTermComboItemListener() {
-        view.getJcmbPaymentTerm().addItemListener((ItemEvent e) -> {
+        panelPayment.getJcmbPaymentTerm().addItemListener((ItemEvent e) -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 String paymentTermName = e.getItem().toString().trim();
                 int paymentTermID = paymentTermDaoImpl.getPaymentTermIDByName(paymentTermName);
                 paymentTerm = paymentTermDaoImpl.getPaymentTermByPaymentTermId(paymentTermID);
                 initBalanceBreakDownTable(paymentTerm);
-                view.getJtfDiscount().setText("");
-                view.getJcbDiscount().setSelected(false);
-                view.getJbtnAddDiscount().setEnabled(false);
+                panelPayment.getJtfDiscount().setText("");
+                panelPayment.getJcbDiscount().setSelected(false);
+                panelPayment.getJcbDiscount().setEnabled(true);
+                panelPayment.getJbtnSelectDiscount().setEnabled(false);
             }
         });
     }
 
     private void initBalanceBreakDownTable(PaymentTerm paymentTerm) {
         TuitionPopulator tuitionPopulator = new TuitionPopulator(feeList, paymentTerm);
-        DefaultTableModel tableModel = tuitionPopulator.getTuitionItemsTableModel(view.getJtblBalanceBreakDown());
-        view.getJtblBalanceBreakDown().setModel(tableModel);
+        DefaultTableModel tableModel = tuitionPopulator.getTuitionItemsTableModel(panelPayment.getJtblBalanceBreakDown());
+        panelPayment.getJtblBalanceBreakDown().setModel(tableModel);
     }
 
     private void initStudentDetails(boolean hasStudentNo) {
@@ -176,30 +196,30 @@ public class Controller_Load_JButton implements ActionListener {
         String studentNo = (hasStudentNo == true) ? student.getStudentNo() + "" : "";
         Object studentType = (hasStudentNo == true) ? student.getStudentType() : student.getRegistration().getStudentType();
         if (studentType instanceof Integer) {
-            view.getJtfStudentType().setText(Integer.parseInt(studentType.toString()) == 1 ? "New" : "Old");
+            panelPayment.getJtfStudentType().setText(Integer.parseInt(studentType.toString()) == 1 ? "New" : "Old");
         } else if (studentType instanceof String) {
-            view.getJtfStudentType().setText(studentType.toString().equalsIgnoreCase("N") ? "New" : studentType.toString().equalsIgnoreCase("T") ? "Transferee" : "Old");
+            panelPayment.getJtfStudentType().setText(studentType.toString().equalsIgnoreCase("N") ? "New" : studentType.toString().equalsIgnoreCase("T") ? "Transferee" : "Old");
         }
-        view.getJcmbPaymentTerm().setModel(paymentTermJCompModelLoader.getPaymentTermNames());
-        view.getJtfStudentNo().setText(studentNo);
-        view.getJtfLastName().setText(student.getRegistration().getLastName());
-        view.getJtfFirstName().setText(student.getRegistration().getFirstName());
-        view.getJtfMiddleName().setText(student.getRegistration().getMiddleName());
-        view.getJtfGradeLevel().setText(gradeLevelNo == 0 ? "Kindergarten" : gradeLevelNo + "");
-        view.getJtfStatus().setText(student.isActive() == true ? "Active" : "Inactive");
+        panelPayment.getJcmbPaymentTerm().setModel(paymentTermJCompModelLoader.getPaymentTermNames());
+        panelPayment.getJtfStudentNo().setText(studentNo);
+        panelPayment.getJtfLastName().setText(student.getRegistration().getLastName());
+        panelPayment.getJtfFirstName().setText(student.getRegistration().getFirstName());
+        panelPayment.getJtfMiddleName().setText(student.getRegistration().getMiddleName());
+        panelPayment.getJtfGradeLevel().setText(gradeLevelNo == 0 ? "Kindergarten" : gradeLevelNo + "");
+        panelPayment.getJtfStatus().setText(student.isActive() == true ? "Active" : "Inactive");
     }
 
     private void initializeFees() {
         feeList = feeDaoImpl.getFeesByGradeLevelId(gradeLevelDaoImpl.getId(student.getGradeLevelNo()));
-        initFeeTableModelListenerFor(view.getJtblDownpayment(), view.getJtfDownPayment());
-        initFeeTableModelListenerFor(view.getJtblBasic(), view.getJtfBasicFee());
-        initFeeTableModelListenerFor(view.getJtblMiscellaneous(), view.getJtfMiscellaneous());
-        initFeeTableModelListenerFor(view.getJtblOthers(), view.getJtfOtherFees());
-        view.getJtfTotal().setText("" + getFeesSum());
-        setFeeRecordTo("Downpayment", view.getJtblDownpayment());
-        setFeeRecordTo("Others", view.getJtblOthers());
-        setFeeRecordTo("Miscellaneous", view.getJtblMiscellaneous());
-        setFeeRecordTo("Basic", view.getJtblBasic());
+        initFeeTableModelListenerFor(panelPayment.getJtblDownpayment(), panelPayment.getJtfDownPayment());
+        initFeeTableModelListenerFor(panelPayment.getJtblBasic(), panelPayment.getJtfBasicFee());
+        initFeeTableModelListenerFor(panelPayment.getJtblMiscellaneous(), panelPayment.getJtfMiscellaneous());
+        initFeeTableModelListenerFor(panelPayment.getJtblOthers(), panelPayment.getJtfOtherFees());
+        panelPayment.getJtfTotal().setText("" + getFeesSum());
+        setFeeRecordTo("Downpayment", panelPayment.getJtblDownpayment());
+        setFeeRecordTo("Others", panelPayment.getJtblOthers());
+        setFeeRecordTo("Miscellaneous", panelPayment.getJtblMiscellaneous());
+        setFeeRecordTo("Basic", panelPayment.getJtblBasic());
     }
 
     private void initFeeTableModelListenerFor(JTable table, JTextField textField) {
@@ -215,8 +235,8 @@ public class Controller_Load_JButton implements ActionListener {
     }
 
     private void initializeBalanceBreakDownTableModelListener() {
-        view.getJtblBalanceBreakDown().getModel().addTableModelListener((TableModelEvent e) -> {
-            view.getJbtnMakePayment().setEnabled(view.getJtblBalanceBreakDown().getRowCount() > 0);
+        panelPayment.getJtblBalanceBreakDown().getModel().addTableModelListener((TableModelEvent e) -> {
+            panelPayment.getJbtnMakePayment().setEnabled(panelPayment.getJtblBalanceBreakDown().getRowCount() > 0);
         });
     }
 

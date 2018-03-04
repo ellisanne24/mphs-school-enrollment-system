@@ -24,10 +24,10 @@ public class SearchStudentByKeyword implements KeyListener{
     private final StudentDaoImpl studentDaoImpl;
     private final User user;
 
-    public SearchStudentByKeyword(Panel_Payment view, SchoolYear currentSchoolYear, User user) {
+    public SearchStudentByKeyword(Panel_Payment view) {
         this.view = view;
-        this.currentSchoolYear = currentSchoolYear;
-        this.user = user;
+        this.currentSchoolYear = view.getCurrentSchoolYear();
+        this.user = view.getUser();
         studentDaoImpl = new StudentDaoImpl();
     }
     

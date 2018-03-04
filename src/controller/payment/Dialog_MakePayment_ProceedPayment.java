@@ -64,13 +64,10 @@ public class Dialog_MakePayment_ProceedPayment implements ActionListener {
     private Payment getPayment() {
         Payment payment = new Payment();
         if (paymentInputAreValid()) {
-            List<Particular> particulars = getParticulars();
-            BigDecimal amountReceived = getAmountReceived();
-            BigDecimal amountCharged = getAmountCharged();
             int orNo = Integer.parseInt(view.getJlblOrNo().getText().trim());
-            payment.setParticulars(particulars);
-            payment.setAmountReceived(amountReceived);
-            payment.setAmountCharged(amountCharged);
+            payment.setParticulars(particulars());
+            payment.setAmountReceived(amountReceived());
+            payment.setAmountCharged(amountCharged());
             payment.setOrNo(orNo);
             payment.setCashier(user);
         }
@@ -87,24 +84,24 @@ public class Dialog_MakePayment_ProceedPayment implements ActionListener {
         return isValid;
     }
     
-    private BigDecimal getAmountReceived(){
+    private BigDecimal amountReceived(){
         String amountReceived = view.getJtfTendered().getText().trim();
         return BigDecimal.valueOf(Double.parseDouble(amountReceived)).setScale(2, RoundingMode.HALF_UP);
     }
     
-    private BigDecimal getAmountCharged() {
+    private BigDecimal amountCharged() {
         String amountCharged = view.getJtfAmountCharged().getText().trim();
         return BigDecimal.valueOf(Double.parseDouble(amountCharged)).setScale(2, RoundingMode.HALF_UP);
     }
 
-    private List<Particular> getParticulars() {
+    private List<Particular> particulars() {
         List<Particular> particularList = new ArrayList<>();
         JTable t = view.getJtblPaymentBreakDown();
         for (int i = 0; i < t.getRowCount(); i++) {
             String balancebreakdownName = t.getValueAt(i, 0).toString().trim();
             Particular particular = new Particular();
             particular.setName(balancebreakdownName);
-            particular.setAmountPaid(getAmountCharged());
+            particular.setAmountPaid(amountCharged());
             particularList.add(particular);
         }
         return particularList;

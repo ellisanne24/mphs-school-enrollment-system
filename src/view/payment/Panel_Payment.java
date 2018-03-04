@@ -4,18 +4,16 @@ import controller.payment.Controller_Display_Dialog_AddDiscount;
 import controller.payment.Controller_PaymentPanel_Discount_JCheckBox;
 import controller.payment.Dialog_MakePayment_ViewReceiptOfSelectedOR;
 import controller.payment.Display_Dialog_MakePayment;
-import controller.payment.SearchStudent;
 import controller.payment.SearchStudentByKeyword;
-import daoimpl.FeeDaoImpl;
-import daoimpl.GradeLevelDaoImpl;
-import daoimpl.PaymentTermDaoImpl;
-import daoimpl.StudentDaoImpl;
 import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -27,27 +25,35 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.table.DefaultTableModel;
+import model.discount.Discount;
+import model.fee.Fee;
 import model.schoolyear.SchoolYear;
+import model.student.Student;
 import model.user.User;
+import renderer.payment.Renderer_Payment_PanelPayment_BalanceBreakDown_JTable;
 import utility.initializer.Initializer;
 
 public class Panel_Payment extends javax.swing.JPanel implements Initializer {
 
-    private final User user;
+    private boolean hasStudentNo;
+    private Student student;
+    private List<Fee> feeList;
+    private List<Discount> discounts;
+    private DefaultTableModel tableModelAppliedDiscount;
     private final SchoolYear currentSchoolYear;
-    private StudentDaoImpl studentDaoImpl;
-    private GradeLevelDaoImpl gradeLevelDaoImpl;
-    private FeeDaoImpl feeDaoImpl;
-    private PaymentTermDaoImpl paymentTermDaoImpl;
+    private final User user;
 
     public Panel_Payment(User user, SchoolYear currentSchoolYear) {
         initComponents();
+        this.discounts = new ArrayList<>();
+        
         this.user = user;
         this.currentSchoolYear = currentSchoolYear;
 
         initDaoImpl();
-        initControllers();
+        initRenderers();
         initViewComponents();
+        initControllers();
     }
 
     @Override
@@ -62,7 +68,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
 
     @Override
     public void initRenderers() {
-        
+        jtblBalanceBreakDown.setDefaultRenderer(Object.class, new Renderer_Payment_PanelPayment_BalanceBreakDown_JTable(3));
     }
 
     @Override
@@ -76,26 +82,42 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         Date dateToday = Calendar.getInstance().getTime();
         jlblDateToday.setText(sdf.format(dateToday));
         jlblRecommendForSummerMessage.setText("");
-        jbtnAddDiscount.setEnabled(false);
+        jbtnSelectDiscount.setEnabled(false);
     }
 
     @Override
     public void initControllers() {
-//        jtfSearchBoxMakePayment.addKeyListener(new SearchStudent(this, studentDaoImpl, gradeLevelDaoImpl, feeDaoImpl, paymentTermDaoImpl));
-        jtfSearchBoxMakePayment.addKeyListener(new SearchStudentByKeyword(this, currentSchoolYear,user));
-//        jbtnMakePayment.addActionListener(new Display_Dialog_MakePayment(this));
-        jbtnReceiptsView.addActionListener(new Dialog_MakePayment_ViewReceiptOfSelectedOR(jtblReceiptsMasterList, jtfStudentNo));
+        jtfSearchBoxMakePayment.addKeyListener(new SearchStudentByKeyword(this));
+        jbtnMakePayment.addActionListener(new Display_Dialog_MakePayment(this));
+        jbtnReceiptsView.addActionListener(new Dialog_MakePayment_ViewReceiptOfSelectedOR(this));
         jcbDiscount.addActionListener(new Controller_PaymentPanel_Discount_JCheckBox(this));
+        jbtnSelectDiscount.addActionListener(new Controller_Display_Dialog_AddDiscount(this));
+        jcmbModeOfPayment.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String modeOfPayment = e.getItem().toString().trim();
+                    DefaultComboBoxModel comboModel = (DefaultComboBoxModel) jcmbPaymentTerm.getModel();
+                    if (modeOfPayment.equalsIgnoreCase("Installment")) {
+                        comboModel.removeElement("Cash");
+                        comboModel.addElement("Quarterly");
+                        comboModel.addElement("Semestral");
+                        comboModel.addElement("Monthly");
+                    } else if (modeOfPayment.equalsIgnoreCase("Cash")) {
+                        comboModel.removeAllElements();
+                        comboModel.addElement("Cash");
+                    }
+                } else {
+
+                }
+            }
+        });
     }
 
     @Override
     public void initDaoImpl() {
-        studentDaoImpl = new StudentDaoImpl();
-        gradeLevelDaoImpl = new GradeLevelDaoImpl();
-        feeDaoImpl = new FeeDaoImpl();
-        paymentTermDaoImpl = new PaymentTermDaoImpl();
+        
     }
-    
     
     public void clearForm() {
         List<Component[]> compArr = new ArrayList<>();
@@ -127,8 +149,68 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         jlblRecommendForSummerMessage.setText("");
         jlblRemainingBalanceText.setText("");
         jlblTotalPaidText.setText("");
+        jcbDiscount.setSelected(false);
+        tableModelAppliedDiscount = new DefaultTableModel();
     }
 
+    public JComboBox<String> getJcmbModeOfPayment() {
+        return jcmbModeOfPayment;
+    }
+    
+    public DefaultTableModel getTableModelAppliedDiscount() {
+        return tableModelAppliedDiscount;
+    }
+
+    public void setTableModelAppliedDiscount(DefaultTableModel tableModelAppliedDiscount) {
+        this.tableModelAppliedDiscount = tableModelAppliedDiscount;
+    }
+
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(List<Discount> discounts) {
+        this.discounts = discounts;
+    }
+
+    public JTable getJtblReceiptsMasterList() {
+        return jtblReceiptsMasterList;
+    }
+
+    public SchoolYear getCurrentSchoolYear() {
+        return currentSchoolYear;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Fee> getFeeList() {
+        return feeList;
+    }
+
+    public void setFeeList(List<Fee> feeList) {
+        this.feeList = feeList;
+    }
+
+    public boolean getHasStudentNo() {
+        return hasStudentNo;
+    }
+
+    public void setHasStudentNo(boolean hasStudentNo) {
+        this.hasStudentNo = hasStudentNo;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    
+    
     public JLabel getJlblRecommendForSummerMessage() {
         return jlblRecommendForSummerMessage;
     }
@@ -153,8 +235,8 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         return btn_Search15;
     }
 
-    public JButton getJbtnAddDiscount() {
-        return jbtnAddDiscount;
+    public JButton getJbtnSelectDiscount() {
+        return jbtnSelectDiscount;
     }
 
     public JComboBox<String> getCombo_filter5() {
@@ -704,6 +786,8 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         jtfStatus = new javax.swing.JTextField();
         jtfMiddleName = new javax.swing.JTextField();
         jlblRecommendForSummerMessage = new javax.swing.JLabel();
+        javax.swing.JLabel lbl_datetoday2 = new javax.swing.JLabel();
+        jcmbModeOfPayment = new javax.swing.JComboBox<>();
         jScrollPane12 = new javax.swing.JScrollPane();
         jpnlCurrentSchoolYearTuition = new javax.swing.JPanel();
         lbl_basicfee = new javax.swing.JLabel();
@@ -726,7 +810,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         jlblTotalPaidText = new javax.swing.JLabel();
         jpnlDiscount = new javax.swing.JPanel();
         jcbDiscount = new javax.swing.JCheckBox();
-        jbtnAddDiscount = new javax.swing.JButton();
+        jbtnSelectDiscount = new javax.swing.JButton();
         panel_tabscontainer = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         tabpanel_makepayment = new javax.swing.JPanel();
@@ -986,18 +1070,20 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         lbl_paymentterm.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_paymentterm.setText("Payment Term :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(lbl_paymentterm, gridBagConstraints);
 
         jcmbPaymentTerm.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcmbPaymentTerm.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jcmbPaymentTerm, gridBagConstraints);
 
         jtfStudentNo.setColumns(10);
@@ -1007,6 +1093,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStudentNo, gridBagConstraints);
 
@@ -1017,6 +1104,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfLastName, gridBagConstraints);
 
@@ -1027,6 +1115,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfGradeLevel, gridBagConstraints);
 
@@ -1037,6 +1126,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStudentType, gridBagConstraints);
 
@@ -1047,6 +1137,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfFirstName, gridBagConstraints);
 
@@ -1057,6 +1148,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStatus, gridBagConstraints);
 
@@ -1067,6 +1159,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfMiddleName, gridBagConstraints);
 
@@ -1076,11 +1169,31 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         jlblRecommendForSummerMessage.setText("Recommended For Summer Text");
         jlblRecommendForSummerMessage.setOpaque(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jlblRecommendForSummerMessage, gridBagConstraints);
+
+        lbl_datetoday2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_datetoday2.setText("Mode of Payment :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudentDetails.add(lbl_datetoday2, gridBagConstraints);
+
+        jcmbModeOfPayment.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcmbModeOfPayment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Installment" }));
+        jcmbModeOfPayment.setSelectedIndex(-1);
+        jcmbModeOfPayment.setEnabled(false);
+        jcmbModeOfPayment.setMinimumSize(new java.awt.Dimension(150, 25));
+        jcmbModeOfPayment.setPreferredSize(new java.awt.Dimension(150, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudentDetails.add(jcmbModeOfPayment, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -1313,23 +1426,24 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
 
         jcbDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jcbDiscount.setText("Discount");
+        jcbDiscount.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         jpnlDiscount.add(jcbDiscount, gridBagConstraints);
 
-        jbtnAddDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnAddDiscount.setText("Add");
-        jbtnAddDiscount.setActionCommand("add");
-        jbtnAddDiscount.setMaximumSize(new java.awt.Dimension(80, 30));
-        jbtnAddDiscount.setMinimumSize(new java.awt.Dimension(80, 30));
-        jbtnAddDiscount.setPreferredSize(new java.awt.Dimension(80, 30));
+        jbtnSelectDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnSelectDiscount.setText("Select");
+        jbtnSelectDiscount.setActionCommand("add");
+        jbtnSelectDiscount.setMaximumSize(new java.awt.Dimension(80, 30));
+        jbtnSelectDiscount.setMinimumSize(new java.awt.Dimension(80, 30));
+        jbtnSelectDiscount.setPreferredSize(new java.awt.Dimension(80, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jpnlDiscount.add(jbtnAddDiscount, gridBagConstraints);
+        jpnlDiscount.add(jbtnSelectDiscount, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1583,14 +1697,13 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         jScrollPane5.setMinimumSize(new java.awt.Dimension(840, 275));
         jScrollPane5.setPreferredSize(new java.awt.Dimension(840, 275));
 
-        jtblBalanceBreakDown.setAutoCreateRowSorter(true);
         jtblBalanceBreakDown.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblBalanceBreakDown.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Name", "Amount Due", "Balance", "Due Date", "Paid", "Category", "Penalty"
+                "Name", "Amount Due", "Balance", "Due Date", "Fully Paid", "Category", "Penalty"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -2357,7 +2470,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable11;
-    private javax.swing.JButton jbtnAddDiscount;
     private javax.swing.JButton jbtnAdjustmentPrint;
     private javax.swing.JButton jbtnAdjustmentsMakeAdjustment;
     private javax.swing.JButton jbtnAdjustmentsSearch;
@@ -2372,8 +2484,10 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
     private javax.swing.JButton jbtnReceiptsSearch;
     private javax.swing.JButton jbtnReceiptsView;
     private javax.swing.JButton jbtnSearch;
+    private javax.swing.JButton jbtnSelectDiscount;
     private javax.swing.JCheckBox jcbDiscount;
     private javax.swing.JComboBox<String> jcmbAdjustmentsSearchBy;
+    private javax.swing.JComboBox<String> jcmbModeOfPayment;
     private javax.swing.JComboBox<String> jcmbPaymentHistorySearchBy;
     private javax.swing.JComboBox<String> jcmbPaymentTerm;
     private javax.swing.JComboBox<String> jcmbReceiptsSearchBy;

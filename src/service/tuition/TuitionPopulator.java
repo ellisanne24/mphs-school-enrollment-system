@@ -68,7 +68,9 @@ public class TuitionPopulator {
     private BigDecimal getFeesSum() {
         BigDecimal sum = new BigDecimal(BigInteger.ZERO);
         for (Fee f : fees) {
-            sum = sum.add(f.getAmount());
+            if(!f.getFeeCategory().getName().trim().equalsIgnoreCase("Summer")){
+                sum = sum.add(f.getAmount());
+            }
         }
         return sum;
     }

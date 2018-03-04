@@ -2,6 +2,7 @@
 package daoimpl;
 
 import dao.ITuitionFee;
+import java.math.BigDecimal;
 import utility.database.DBType;
 import utility.database.DBUtil;
 import java.sql.CallableStatement;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
 import model.particulars.Particular;
@@ -114,17 +116,21 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         String SQLa = "{CALL getTuitionByStudentIdAndSchoolYearId(?,?)}";
         String SQLb = "{CALL getTuitionTotalPaidAndRemainingBalance(?,?)}";
         String SQLc = "{CALL getTuitionPaymentTermByStudentIdAndSchoolYearId(?,?)}";
+        String SQLd = "{CALL getStudentDiscountBy(?,?)}";
         List<BalanceBreakDownFee> bbFeeList = new ArrayList<>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement csa = con.prepareCall(SQLa);
                 CallableStatement csb = con.prepareCall(SQLb);
-                CallableStatement csc = con.prepareCall(SQLc);){
+                CallableStatement csc = con.prepareCall(SQLc);
+                CallableStatement csd = con.prepareCall(SQLd);){
             csa.setInt(1,studentId);
             csa.setInt(2,schoolyearId);
             csb.setInt(1, studentId);
             csb.setInt(2, schoolyearId);
             csc.setInt(1, studentId);
             csc.setInt(2,schoolyearId);
+            csd.setInt(1, studentId);
+            csd.setInt(2, schoolyearId);
             try(ResultSet rs = csa.executeQuery();){
                 while(rs.next()){
                     BalanceBreakDownFee bb = new BalanceBreakDownFee();
@@ -160,6 +166,22 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     paymentTerm.setDivisor(rs.getInt("divisor"));
                 }
             }
+            
+            List<Discount> discounts = new ArrayList<>();
+            try(ResultSet rs = csd.executeQuery();){
+                while(rs.next()){
+                    Discount discount = new Discount();
+                    discount.setDiscountID(rs.getInt("discount_id"));
+                    discount.setDiscountName(rs.getString("discount_name"));
+                    discount.setPercent(rs.getInt("percentage"));
+                    discount.setDescription(rs.getString("description"));
+                    discount.setDateCreated(rs.getDate("date_created"));
+                    discount.setProvision(rs.getString("provision"));
+                    discount.setAmount(rs.getBigDecimal("discount_amount"));
+                    discounts.add(discount);
+                }
+            }
+            tuitionFee.setDiscounts(discounts);
             tuitionFee.setSchoolyearId(schoolyearId);
             tuitionFee.setBalanceBreakDownFees(bbFeeList);
             tuitionFee.setPaymentTerm(paymentTerm);
@@ -271,7 +293,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
         String sqlF = "{CALL markOrNoAsUsed(?)}";
         String sqlG = "{CALL addEnrollment(?,?,?,?,?)}";
         String SQLH = "{CALL activateStudent(?)}";
-        String SQLI = "{CALL addStudentDiscounts(?,?,?,?)}";
+        String SQLI = "{CALL addStudentDiscounts(?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
             con.setAutoCommit(false);
             try (CallableStatement cs_addStudent = con.prepareCall(sqlA);
@@ -346,12 +368,12 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 
                 cs_activateStudent.setInt(1, studentId);
                 cs_activateStudent.executeUpdate();
-                
                 for(Discount d : tuition.getDiscounts()){
                     cs_addStudentDiscounts.setInt(1, studentId);
                     cs_addStudentDiscounts.setInt(2, d.getDiscountID());
                     cs_addStudentDiscounts.setInt(3, schoolYearId);
                     cs_addStudentDiscounts.setInt(4, d.getCreatedBy().getUserId());
+                    cs_addStudentDiscounts.setBigDecimal(5, d.getAmount());
                     cs_addStudentDiscounts.executeUpdate();
                 }
                 
