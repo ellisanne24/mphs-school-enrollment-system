@@ -130,7 +130,7 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
 
         jtpManagementTabbedPane.addTab("Payment Schedules", jspPaymentScheduleMgmt);
 
-        jpnlDiscountsMgmt.setLayout(new java.awt.GridBagLayout());
+        jpnlDiscountsMgmt.setLayout(new java.awt.BorderLayout());
         jtpManagementTabbedPane.addTab("Discounts", jpnlDiscountsMgmt);
 
         jpnlLanMgmt.setLayout(new java.awt.GridBagLayout());

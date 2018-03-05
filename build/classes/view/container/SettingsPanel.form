@@ -258,7 +258,7 @@
                             </Constraint>
                           </Constraints>
 
-                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
+                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
                         </Container>
                         <Container class="javax.swing.JScrollPane" name="jspLanMgmt">
                           <Constraints>

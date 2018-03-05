@@ -1939,24 +1939,24 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         jScrollPane8.setName(""); // NOI18N
         jScrollPane8.setPreferredSize(new java.awt.Dimension(1182, 360));
 
+        jtblDiscounts.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblDiscounts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "School Year", "Discount Type", "Percentage", "Amount", "Date Applied"
+                "School Year", "Discount Type", "Percentage", "Amount", "Provision", "Date Applied"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jtblDiscounts.setIntercellSpacing(new java.awt.Dimension(20, 1));
-        jtblDiscounts.setRowHeight(20);
+        jtblDiscounts.setRowHeight(30);
         jtblDiscounts.getTableHeader().setReorderingAllowed(false);
         jScrollPane8.setViewportView(jtblDiscounts);
 

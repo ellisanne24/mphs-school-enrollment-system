@@ -292,7 +292,6 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
             public void actionPerformed(ActionEvent e) {
                 if (jtblDiscountList.getRowCount() > 0) {
                     JTableUtil.moveRowData(jtblDiscountList, jtblAppliedDiscount);
-                    panelPayment.setTableModelAppliedDiscount((DefaultTableModel)jtblAppliedDiscount.getModel());
                 } else {
                     JOptionPane.showMessageDialog(null, "Nothing to move.");
                 }
@@ -304,7 +303,6 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
                 if (e.getSource() == jbtnRemoveFromAppliedDiscount) {
                     if (jtblAppliedDiscount.getRowCount() > 0 && jtblAppliedDiscount.getSelectedRowCount() > 0) {
                         JTableUtil.moveRowData(jtblAppliedDiscount, jtblDiscountList);
-                        panelPayment.setTableModelAppliedDiscount((DefaultTableModel)jtblAppliedDiscount.getModel());
                     } else {
                         JOptionPane.showMessageDialog(null, "Nothing is selected.");
                     }
@@ -352,18 +350,11 @@ public class Dialog_AddDiscount extends javax.swing.JDialog implements Initializ
         if(panelPayment.getHasStudentNo()){
             loadForStudent();
         }else{
-            loadForStudentApplicant();
         }
     }
     
     private void loadForStudent(){
         
-    }
-    
-    private void loadForStudentApplicant(){
-        if(panelPayment.getTableModelAppliedDiscount().getRowCount() != 0){
-            jtblAppliedDiscount.setModel(panelPayment.getTableModelAppliedDiscount());
-        }
     }
 
     public JButton getJbtnApplyDiscount() {

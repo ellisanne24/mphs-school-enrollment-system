@@ -128,6 +128,16 @@ public class Controller_Load_JButton implements ActionListener {
                 panelPayment.getJcbDiscount().setSelected(false);
                 panelPayment.getJcbDiscount().setEnabled(true);
             }
+            DefaultTableModel discountTableModel = (DefaultTableModel) panelPayment.getJtblDiscounts().getModel();
+            for (Discount d : tuition.getDiscounts()) {
+                Object[] rowData = {
+                    d.getSchoolYear().getYearFrom() + "-" + d.getSchoolYear().getYearTo(), d.getDiscountName(),
+                    d.getPercent(), d.getAmount(), d.getProvision(), d.getDateApplied()
+                };
+                discountTableModel.addRow(rowData);
+            }
+            panelPayment.getJtblDiscounts().setModel(discountTableModel);
+            
             panelPayment.getJtfDiscount().setText(""+totalDiscount);
             panelPayment.getJcmbPaymentTerm().setEnabled(false);
             panelPayment.setHasStudentNo(hasStudentNo);

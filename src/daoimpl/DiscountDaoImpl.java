@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package daoimpl;
 
 import utility.database.DBType;
@@ -57,5 +53,75 @@ public class DiscountDaoImpl implements IDiscount {
         }
         return discountsList;
     }
+
+    @Override
+    public Discount getDiscountBy(int discountId) {
+        String SQL = "{CALL getDiscountById(?)}";
+        Discount discount = new Discount();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, discountId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    User createdBy = new User();
+                    createdBy.setUserID(rs.getInt("created_by_user_id"));
+                    createdBy.setLastName(rs.getString("lastname"));
+                    createdBy.setFirstName(rs.getString("firstname"));
+                    createdBy.setMiddleName(rs.getString("middlename"));
+                    
+                    discount.setDiscountID(rs.getInt("discount_id"));
+                    discount.setDiscountName(rs.getString("discount_name"));
+                    discount.setPercent(rs.getInt("percentage"));
+                    discount.setDescription(rs.getString("description"));
+                    discount.setDateCreated(rs.getDate("date_created"));
+                    discount.setProvision(rs.getString("provision"));
+                    discount.setIsActive(rs.getBoolean("isDiscountActive"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return discount;
+    }
+
+    @Override
+    public boolean create(Discount discount) {
+        boolean isSuccessful = false;
+        String SQL = "{CALL createDiscount(?,?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setString(1, discount.getDiscountName());
+            cs.setInt(2, discount.getPercent());
+            cs.setString(3, discount.getDescription());
+            cs.setInt(4, discount.getCreatedBy().getUserId());
+            cs.setString(5, discount.getProvision());
+            cs.executeUpdate();
+            isSuccessful = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isSuccessful;
+    }
+
+    @Override
+    public boolean update(Discount discount) {
+        boolean isSuccessful = false;
+        String SQL = "{CALL updateDiscount(?,?,?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setString(1, discount.getDiscountName());
+            cs.setInt(2,discount.getPercent());
+            cs.setString(3, discount.getDescription());
+            cs.setInt(4, discount.getIsActive() == true? 1 : 0);
+            cs.setString(5, discount.getProvision());
+            cs.setInt(6, discount.getDiscountID());
+            cs.executeUpdate();
+            isSuccessful = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isSuccessful;
+    }
+    
     
 }

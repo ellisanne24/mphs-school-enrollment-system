@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model.discount;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import model.schoolyear.SchoolYear;
 import model.user.User;
 
 public class Discount {
@@ -16,10 +13,28 @@ public class Discount {
     private String description;
     private boolean isActive;
     private Date dateCreated;
+    private Date dateApplied;
     private BigDecimal amount;
     private User createdBy;
     private String provision;
+    private SchoolYear schoolYear;
 
+    public Date getDateApplied() {
+        return dateApplied;
+    }
+
+    public void setDateApplied(Date dateApplied) {
+        this.dateApplied = dateApplied;
+    }
+    
+    public SchoolYear getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(SchoolYear schoolYear) {
+        this.schoolYear = schoolYear;
+    }
+    
     public String getProvision() {
         return provision;
     }

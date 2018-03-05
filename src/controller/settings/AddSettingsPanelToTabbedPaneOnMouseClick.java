@@ -10,6 +10,7 @@ import model.user.User;
 import view.container.SettingsPanel;
 import view.credential.Panel_Credential;
 import view.curriculum.Panel_Curriculum;
+import view.discount.Panel_Discount;
 import view.faculty.Panel_Faculty;
 import view.fees.Panel_FeeRecord;
 import view.paymentsetting.PaymentScheduleSettings;
@@ -78,8 +79,7 @@ public class AddSettingsPanelToTabbedPaneOnMouseClick implements MouseListener {
                     addPanelToTabbedPane(view.getJpnlPaymentScheduleMgmt(), new PaymentScheduleSettings());
                     break;
                 case 10:
-//                    addPanelToTabbedPane(jpnlDiscountsMgmt, null);
-                    JOptionPane.showMessageDialog(null, "Settings for Discounts is still under development.");
+                    addPanelToTabbedPane(view.getJpnlDiscountsMgmt(), new Panel_Discount(currentSchoolYear, user));
                     break;
                 case 11:
 //                    addPanelToTabbedPane(jpnlLanMgmt, null);

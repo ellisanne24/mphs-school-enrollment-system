@@ -2,7 +2,6 @@
 package daoimpl;
 
 import dao.ITuitionFee;
-import java.math.BigDecimal;
 import utility.database.DBType;
 import utility.database.DBUtil;
 import java.sql.CallableStatement;
@@ -14,12 +13,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JOptionPane;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.discount.Discount;
 import model.particulars.Particular;
 import model.payment.Payment;
 import model.paymentterm.PaymentTerm;
+import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.Tuition;
 import utility.date.DateUtil;
@@ -170,14 +169,21 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
             List<Discount> discounts = new ArrayList<>();
             try(ResultSet rs = csd.executeQuery();){
                 while(rs.next()){
+                    SchoolYear schoolYear = new SchoolYear();
+                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    schoolYear.setYearFrom(rs.getInt("yearFrom"));
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    
                     Discount discount = new Discount();
                     discount.setDiscountID(rs.getInt("discount_id"));
                     discount.setDiscountName(rs.getString("discount_name"));
                     discount.setPercent(rs.getInt("percentage"));
                     discount.setDescription(rs.getString("description"));
                     discount.setDateCreated(rs.getDate("date_created"));
+                    discount.setDateApplied(rs.getDate("date_applied"));
                     discount.setProvision(rs.getString("provision"));
                     discount.setAmount(rs.getBigDecimal("discount_amount"));
+                    discount.setSchoolYear(schoolYear);
                     discounts.add(discount);
                 }
             }

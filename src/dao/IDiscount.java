@@ -10,4 +10,7 @@ import model.discount.Discount;
  */
 public interface IDiscount {
     List<Discount> getAllDiscount();
+    Discount getDiscountBy(int discountId);
+    boolean create(Discount discount);
+    boolean update(Discount discount);
 }

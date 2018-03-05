@@ -4,6 +4,7 @@ import model.admission.Admission;
 import dao.IAdmission;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import utility.database.DBType;
@@ -24,8 +25,6 @@ public class AdmissionDaoImpl implements IAdmission {
     public boolean completeAdmission(Admission admission) {
         boolean isSuccessful = false;
         String SQLa = "{CALL addAdmission(?,?,?,?)}";
-//        String SQLb = "{CALL addStudent(?,?,?)}";
-//        String SQLc = "{CALL addSchoolYearStudent(?,?,?)}";
         int registrationId = admission.getRegistration().getRegistrationId();
         int gradeLevelId = gradeLevelDaoImpl.getId(admission.getRegistration().getGradeLevelNo());
         int schoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
@@ -38,20 +37,6 @@ public class AdmissionDaoImpl implements IAdmission {
                 csa.setInt(3, schoolYearId);
                 csa.registerOutParameter(4, Types.INTEGER);
                 csa.executeUpdate();
-                
-//                int admissionId = csa.getInt(4);
-//                String studentType = admission.getRegistration().getStudentType().trim();
-//                csb.setInt(1, admissionId);
-//                csb.setString(2, studentType);
-//                csb.registerOutParameter(3, Types.INTEGER);
-//                csb.executeUpdate();
-//                
-//                int studentId = csb.getInt(3);
-//                csc.setInt(1, schoolYearId);
-//                csc.setInt(2,studentId);
-//                csc.setInt(3, gradeLevelId);
-//                csc.executeUpdate();
-                
                 con.commit();
                 isSuccessful = true;
             } catch (SQLException e) {
@@ -61,8 +46,27 @@ public class AdmissionDaoImpl implements IAdmission {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         return isSuccessful;
     }
+
+    @Override
+    public boolean isAdmissionCompleteFor(int registrationId) {
+        boolean isComplete = false;
+        String SQL = "{CALL isAdmissionCompleteFor(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, registrationId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    isComplete = rs.getBoolean("admissionComplete");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isComplete;
+    }
+    
+    
 
 }

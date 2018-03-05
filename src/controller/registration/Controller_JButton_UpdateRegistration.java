@@ -66,7 +66,14 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
         if (view.getJcmbAdmissionStatus().getSelectedItem().toString().trim().equalsIgnoreCase("Pending")) {
             isUpdated = updateRegistrationInfo(reg);
         } else if (view.getJcmbAdmissionStatus().getSelectedItem().toString().trim().equalsIgnoreCase("Complete")) {
-            isUpdated = (updateRegistrationInfo(reg)) && (completeAdmission(reg));
+            //if admissionCompleteFor(int registrationId) updateRegistration()
+            //else updateRegistration() and completeAdmission()
+            if(admissionDaoImpl.isAdmissionCompleteFor(registrationId)){
+                isUpdated = updateRegistrationInfo(reg);
+            }else{
+                isUpdated = (updateRegistrationInfo(reg)) && (completeAdmission(reg));
+            }
+            
         }
         return isUpdated;
     }
