@@ -100,11 +100,15 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jcmbEnrolledFilterGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jlblCurrentSchoolYearRegistered.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
         jlblCurrentSchoolYearEnrolled.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
+        loadRegistrationRecord();
+        jtblEnrolledMasterList.setModel(enrollmentJCompModelLoader.getAllEnrolledOfCurrentSchoolYear(jtblEnrolledMasterList));
+        jcmbRegistrationGradeLevel.setModel(gradeLevelJCompModelLoader.getAllActiveGradeLevel());
+    }
+    
+    public void loadRegistrationRecord(){
         DefaultTableModel tableModel = new DefaultTableModel();
         tableModel = registrationJCompModelLoader.getAllRegisteredApplicants(SchoolYearDaoImpl.getCurrentSchoolYearFrom(), jtblRegisteredMasterList);
         jtblRegisteredMasterList.setModel(tableModel);
-        jtblEnrolledMasterList.setModel(enrollmentJCompModelLoader.getAllEnrolledOfCurrentSchoolYear(jtblEnrolledMasterList));
-        jcmbRegistrationGradeLevel.setModel(gradeLevelJCompModelLoader.getAllActiveGradeLevel());
     }
 
     @Override
@@ -115,7 +119,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jbtnRefreshEnrolledRecords.addActionListener(new RefreshEnrolledRecord(this));
         jcmbEnrolledFilterGradeLevel.addItemListener(new DisplayAllEnrolledOnGradeLevelFilter(this));
         jcmbFilterRegistered.addItemListener(new Controller_JComboBox_DisplayRegistrationRecordByAdmissionStatus(jtblRegisteredMasterList, jcmbFilterRegistered));
-        jbtnEditRegistration.addActionListener(new Controller_JButton_DisplayRegistrationJDialog(jtblRegisteredMasterList, jbtnEditRegistration.getActionCommand()));
+        jbtnEditRegistration.addActionListener(new Controller_JButton_DisplayRegistrationJDialog(this,jtblRegisteredMasterList, jbtnEditRegistration.getActionCommand()));
         jbtnRefreshRegistrationList.addActionListener(new Controller_JButton_RefreshRegistrationList(jtblRegisteredMasterList));
         jbtnSearchRegistered.addActionListener(new Controller_JButton_SearchRegistrationRecordByKeyword(jtfSearchRegistered, jtblRegisteredMasterList));
         jcmbRegistrationGradeLevel.addItemListener(new Controller_ItemListener_RegisteredMasterList_GradeLevel_JComboBox(this, currentSchoolYear));
@@ -891,7 +895,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    public static javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

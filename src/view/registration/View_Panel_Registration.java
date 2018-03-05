@@ -12,15 +12,24 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import model.credential.Credential;
 import model.registration.Registration;
 import model.schoolyear.SchoolYear;
@@ -29,6 +38,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import utility.date.DateLabelFormatter;
 import utility.initializer.Initializer;
+import view.enrollment.Panel_Enrollment;
 
 public class View_Panel_Registration extends javax.swing.JPanel implements Initializer {
 
@@ -41,6 +51,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
     private JDatePickerImpl dpBirthday;
     private DateLabelFormatter dateLabelFormatter;
 
+    private Panel_Enrollment panelEnrollment;
     private String action;
     private int registrationIdOfSelected;
 
@@ -64,8 +75,9 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
      * @param user
      * @param registrationIdOfSelected
      */
-    public View_Panel_Registration(String action, int registrationIdOfSelected) {
+    public View_Panel_Registration(Panel_Enrollment panelEnrollment, String action, int registrationIdOfSelected) {
         initComponents();
+        this.panelEnrollment = panelEnrollment;
         this.action = action;
         this.registrationIdOfSelected = registrationIdOfSelected;
 
@@ -118,6 +130,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
 
     @Override
     public void initViewComponents() {
+        jlblAge.setText("");
         if (action.equalsIgnoreCase("editregistration")) {
             jbtnRegister.setVisible(false);
             jlblAdmissionStatus.setVisible(true);
@@ -143,6 +156,27 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
         Insets i = new Insets(3, 3, 3, 3);
         jpnlStudentInfo.add(dpBirthday, setPosition(5, 0, 0.5, 0, GridBagConstraints.HORIZONTAL, GridBagConstraints.WEST, i));
 
+        dpBirthday.getJFormattedTextField().getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                Date selectedDate = (Date) dpBirthday.getModel().getValue();
+                LocalDate birthDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate now = LocalDate.now();
+                int age = Period.between(birthDate, now).getYears();
+//                JOptionPane.showMessageDialog(null, "Age: " + age);
+                jlblAge.setText(""+age);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                
+            }
+        });
+        
         SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
         jlblCurrentSchoolYear.setText("" + schoolYear.getYearFrom() + " - " + schoolYear.getYearTo());
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
@@ -153,10 +187,11 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
     public void initControllers() {
         jcmbGradeLevel.addItemListener(new Controller_JComboBox_GradeLevel(this));
         jbtnRegister.addActionListener(new Controller_JButton_Register(this));
-        jbtnSaveEdit.addActionListener(new Controller_JButton_UpdateRegistration(this, registrationIdOfSelected));
+        jbtnSaveEdit.addActionListener(new Controller_JButton_UpdateRegistration(panelEnrollment,this, registrationIdOfSelected));
     }
 
     private void initForm() {
+        
         Registration r = registrationDaoImpl.getRegistrationInfoById(registrationIdOfSelected);
         jcbTransferee.setSelected(r.getStudentType().equalsIgnoreCase("T") ? true : false);
         jcmbAdmissionStatus.setSelectedItem(r.getIsAdmissionComplete() == true ? "Complete" : "Pending");
@@ -212,12 +247,17 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
                 }
             }
         }
+        jcmbRegistrationStatus.setSelectedItem(r.getIsRegistrationActive()==true?"Active":"Inactive");
     }
 
     @Override
     public void initDaoImpl() {
         registrationDaoImpl = new RegistrationDaoImpl();
         schoolYearDaoImpl = new SchoolYearDaoImpl();
+    }
+
+    public JComboBox<String> getJcmbRegistrationStatus() {
+        return jcmbRegistrationStatus;
     }
     
     public JDatePanelImpl getDpnlBirthday() {
@@ -664,6 +704,8 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
         jtfReligion = new javax.swing.JTextField();
         jtfNationality = new javax.swing.JTextField();
         jtfPlaceOfBirth = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jlblAge = new javax.swing.JLabel();
         jpnlHomeAddress = new javax.swing.JPanel();
         lbl_room = new javax.swing.JLabel();
         jtfRoomNo = new javax.swing.JTextField();
@@ -1147,6 +1189,24 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentInfo.add(jtfPlaceOfBirth, gridBagConstraints);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setText("Age :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudentInfo.add(jLabel2, gridBagConstraints);
+
+        jlblAge.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jlblAge.setText("AgeText");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudentInfo.add(jlblAge, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -1376,6 +1436,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
         jtfFatherOccupation.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfFatherOccupation.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jtfFatherOccupation.setMinimumSize(new java.awt.Dimension(120, 20));
+        jtfFatherOccupation.setName("fatheroccupation"); // NOI18N
         jtfFatherOccupation.setPreferredSize(new java.awt.Dimension(120, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
@@ -1395,6 +1456,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
         jtfFatherOfficePhoneNo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfFatherOfficePhoneNo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jtfFatherOfficePhoneNo.setMinimumSize(new java.awt.Dimension(120, 20));
+        jtfFatherOfficePhoneNo.setName("fatherofficephone"); // NOI18N
         jtfFatherOfficePhoneNo.setPreferredSize(new java.awt.Dimension(120, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
@@ -1480,6 +1542,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
         jtfMotherOccupation.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfMotherOccupation.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jtfMotherOccupation.setMinimumSize(new java.awt.Dimension(120, 20));
+        jtfMotherOccupation.setName("motheroccupation"); // NOI18N
         jtfMotherOccupation.setPreferredSize(new java.awt.Dimension(120, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
@@ -1499,6 +1562,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
         jtfMotherOfficePhoneNo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfMotherOfficePhoneNo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jtfMotherOfficePhoneNo.setMinimumSize(new java.awt.Dimension(120, 20));
+        jtfMotherOfficePhoneNo.setName("motherofficephoneno"); // NOI18N
         jtfMotherOfficePhoneNo.setPreferredSize(new java.awt.Dimension(120, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
@@ -1906,6 +1970,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JButton jbtnCamera;
     private javax.swing.JButton jbtnCancel;
     private javax.swing.JButton jbtnClear;
@@ -1921,6 +1986,7 @@ public class View_Panel_Registration extends javax.swing.JPanel implements Initi
     private javax.swing.JComboBox<String> jcmbGradeLevel;
     private javax.swing.JComboBox<String> jcmbRegistrationStatus;
     private javax.swing.JLabel jlblAdmissionStatus;
+    private javax.swing.JLabel jlblAge;
     private javax.swing.JLabel jlblCurrentSchoolYear;
     private javax.swing.JLabel jlblFatherMobile;
     private javax.swing.JLabel jlblGuardianMiddleName;

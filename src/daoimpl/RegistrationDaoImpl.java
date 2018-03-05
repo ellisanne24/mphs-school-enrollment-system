@@ -427,6 +427,7 @@ public class RegistrationDaoImpl implements IRegistration{
                    
                     String isAdmissionComplete = rsA.getString("isAdmissionComplete").trim();
                     registration.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes")? true : false);
+                    registration.setIsRegistrationActive(rsA.getBoolean("is_registration_active"));
                     
                     List<Credential> credentialsSubmitted = new ArrayList<>();
                     try(ResultSet rsB = getRegistrationCredentialsSubmitted.executeQuery();){
@@ -561,7 +562,7 @@ public class RegistrationDaoImpl implements IRegistration{
                 + "?,?,?,?,?,?,?,?,?,?,"
                 + "?,?,?,?,?,?,?,?,?,?,"
                 + "?,?,?,?,?,?,?,?,?,?,"
-                + "?,?,?,?,?,?,?,?,?,?"
+                + "?,?,?,?,?,?,?,?,?,?,?"
                 + ") "
                 + "}";
         String SQLb = "{CALL deleteRegistrationCredentialBy(?)}";
@@ -611,6 +612,7 @@ public class RegistrationDaoImpl implements IRegistration{
                 updateRegistration.setInt(38,registration.getGradeLevelNo());
                 updateRegistration.setInt(39, registration.getSchoolYearYearFrom());
                 updateRegistration.setInt(40, registration.getRegistrationId());
+                updateRegistration.setInt(41, registration.getIsRegistrationActive() == true? 1:0);
                 updateRegistration.executeUpdate();
                 
                 deleteRegistrationCredentialBy.setInt(1, registration.getRegistrationId());

@@ -67,7 +67,7 @@ public class Registration {
         this.credentials = credentials;
     }
 
-    public boolean isIsRegistrationActive() {
+    public boolean getIsRegistrationActive() {
         return isRegistrationActive;
     }
 

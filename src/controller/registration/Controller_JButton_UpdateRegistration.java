@@ -18,6 +18,7 @@ import model.credential.Credential;
 import model.fee.Fee;
 import model.registration.Registration;
 import utility.date.DateUtil;
+import view.enrollment.Panel_Enrollment;
 import view.registration.View_Panel_Registration;
 
 /**
@@ -26,8 +27,9 @@ import view.registration.View_Panel_Registration;
  */
 public class Controller_JButton_UpdateRegistration implements ActionListener {
 
+    private Panel_Enrollment panelEnrollment;
     private View_Panel_Registration view;
-    
+
     private final DateUtil dateUtil;
     private final RegistrationDaoImpl registrationDaoImpl;
     private final FeeDaoImpl feeDaoImpl;
@@ -37,7 +39,8 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
 
     private final int registrationId;
 
-    public Controller_JButton_UpdateRegistration(View_Panel_Registration view, int registrationId) {
+    public Controller_JButton_UpdateRegistration(Panel_Enrollment panelEnrollment,View_Panel_Registration view, int registrationId) {
+        this.panelEnrollment = panelEnrollment;
         this.registrationId = registrationId;
         this.view = view;
         dateUtil = new DateUtil();
@@ -54,6 +57,7 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
         if (choice == JOptionPane.YES_OPTION) {
             if (update()) {
                 JOptionPane.showMessageDialog(null, "Successfully saved changes.");
+                panelEnrollment.loadRegistrationRecord();
             } else {
                 JOptionPane.showMessageDialog(null, "Failed to save changes.");
             }
@@ -62,34 +66,35 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
 
     private boolean update() {
         boolean isUpdated = false;
-        Registration reg = getRegistration();
+        Registration registration = getRegistration();
         if (view.getJcmbAdmissionStatus().getSelectedItem().toString().trim().equalsIgnoreCase("Pending")) {
-            isUpdated = updateRegistrationInfo(reg);
+            isUpdated = updateRegistrationInfo(registration);
         } else if (view.getJcmbAdmissionStatus().getSelectedItem().toString().trim().equalsIgnoreCase("Complete")) {
-            //if admissionCompleteFor(int registrationId) updateRegistration()
-            //else updateRegistration() and completeAdmission()
-            if(admissionDaoImpl.isAdmissionCompleteFor(registrationId)){
-                isUpdated = updateRegistrationInfo(reg);
-            }else{
-                isUpdated = (updateRegistrationInfo(reg)) && (completeAdmission(reg));
+            if (admissionDaoImpl.isAdmissionCompleteFor(registrationId)) {
+                isUpdated = updateRegistrationInfo(registration);
+            } else {
+                isUpdated = (updateRegistrationInfo(registration)) && (completeAdmission(registration));
+                if(isUpdated){
+                    JOptionPane.showMessageDialog(null,"Successfully completed admission process.");
+                }
             }
-            
+
         }
         return isUpdated;
     }
 
-    private boolean updateRegistrationInfo(Registration registration){
+    private boolean updateRegistrationInfo(Registration registration) {
         boolean isUpdated = false;
         isUpdated = registrationDaoImpl.updateRegistration(registration);
         return isUpdated;
     }
-    
+
     private boolean completeAdmission(Registration registration) {
         boolean isCompleted = false;
         List<Fee> feeList = new ArrayList<>();
         int gradeLevelId = gradeLevelDaoImpl.getId(registration.getGradeLevelNo());
         feeList = feeDaoImpl.getFeesByGradeLevelId(gradeLevelId);
-        
+
         Admission admission = new Admission();
         admission.setRegistration(registration);
         admission.setFeeList(feeList);
@@ -97,6 +102,8 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
         return isCompleted;
     }
     
+    
+
     private Registration getRegistration() {
         Registration registration = new Registration();
         try {
@@ -140,10 +147,10 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
             registration.setSchoolLastAttended(view.getJtfSchoolLastAttended().getText().trim());
             registration.setSchoolLastAttendedAddress(view.getJtfSchoolLastAttendedAddress().getText().trim());
             List<Credential> credentials = new ArrayList<>();
-            for(Component component : view.getJpnlCredentials().getComponents()){
-                if(component instanceof JCheckBox){
-                    JCheckBox checkBox = (JCheckBox)component;
-                    if(checkBox.isSelected()){
+            for (Component component : view.getJpnlCredentials().getComponents()) {
+                if (component instanceof JCheckBox) {
+                    JCheckBox checkBox = (JCheckBox) component;
+                    if (checkBox.isSelected()) {
                         String credentialName = checkBox.getText().trim();
                         int credentialId = credentialDaoImpl.getCredentialIdByName(credentialName);
                         Credential credential = new Credential();
@@ -152,7 +159,7 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
                     }
                 }
             }
-            
+            registration.setIsRegistrationActive(view.getJcmbRegistrationStatus().getSelectedItem().toString().trim().equalsIgnoreCase("Active") ? true : false);
             registration.setCredentials(credentials);
             registration.setRegistrationId(registrationId);
         } catch (Exception e) {
@@ -161,4 +168,3 @@ public class Controller_JButton_UpdateRegistration implements ActionListener {
         return registration;
     }
 }
-

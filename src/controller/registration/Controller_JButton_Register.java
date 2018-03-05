@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import model.credential.Credential;
 import model.registration.Registration;
+import org.jdatepicker.impl.JDatePickerImpl;
 import utility.date.DateUtil;
 import utility.form.FormValidator;
 import view.registration.View_Panel_Registration;
@@ -57,21 +58,35 @@ public class Controller_JButton_Register implements ActionListener, FormValidato
                     ((JCheckBox) c).setSelected(false);
                 } else if (c instanceof JList) {
                     ((DefaultListModel) ((JList) c).getModel()).removeAllElements();
+                } else if(c instanceof JDatePickerImpl){
+                    ((JDatePickerImpl)c).getJFormattedTextField().setText("");
                 }
             }
         }
+        removeCredentials();
     }
 
+    private void removeCredentials(){
+         view.getJpnlCredentials().removeAll();
+         view.getJpnlCredentials().repaint();
+         view.getJpnlCredentials().revalidate();
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         int choice = JOptionPane.showConfirmDialog(null, "Save Registration?", "Registration Confirmation", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
-            if (register()) {
-                JOptionPane.showMessageDialog(null, "Successfully registered.");
-                clearForm();
+            if (formIsValid()) {
+                if (register()) {
+                    JOptionPane.showMessageDialog(null, "Successfully registered.");
+                    clearForm();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to register.");
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "Failed to register.");
+                JOptionPane.showMessageDialog(null,"Please fill out all required fields.");
             }
+            
         }
     }
 
@@ -148,19 +163,28 @@ public class Controller_JButton_Register implements ActionListener, FormValidato
 
     @Override
     public boolean formIsValid() {
-        boolean isValid = false;
-        List<Component[]> components = new ArrayList<>();
-        components.add(view.getJpnlStudentInfo().getComponents());
-        for (int i = 0; i < components.size(); i++) {
-            for (Component c : components.get(i)) {
+        boolean isValid = true;
+        List<Component[]> compArr = new ArrayList<>();
+        compArr.add(view.getJpnlStudentInfo().getComponents());
+        compArr.add(view.getJpnlHomeAddress().getComponents());
+        for (int i = 0; i < compArr.size(); i++) {
+            for (Component c : compArr.get(i)) {
                 if (c instanceof JTextField) {
-                    isValid = isValid && ((JTextField) c).getText().isEmpty();
+                    if (((JTextField)c) != view.getJtfFatherOccupation() && ((JTextField)c) != view.getJtfFatherOfficePhoneNo()
+                            && ((JTextField)c) != view.getJtfMotherOccupation() && ((JTextField)c) != view.getJtfMotherOfficePhoneNo()) {
+                        isValid = isValid && !((JTextField) c).getText().trim().isEmpty();
+                    }
                 }
                 if (c instanceof JComboBox) {
-                    isValid = isValid && ((JComboBox) c).getSelectedIndex() == -1;
+                    isValid = isValid && ((JComboBox) c).getSelectedIndex() > -1;
                 }
+                if(c instanceof JDatePickerImpl){
+                    isValid = isValid && !((JDatePickerImpl) c).getJFormattedTextField().getText().trim().isEmpty();
+                }
+                
             }
         }
+        isValid = isValid && view.getJcmbGradeLevel().getSelectedIndex() > -1;
         return isValid;
     }
 }
