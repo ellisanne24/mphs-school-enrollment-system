@@ -10,6 +10,7 @@ import controller.section.DisplaySectionsByGradeLevelStateChange;
 import controller.section.DisplaySectionsByWildCardOnKeyPress;
 import controller.section.DisplaySectionsByWildCardOnSearch;
 import utility.initializer.Initializer;
+import utility.jtable.JTableUtil;
 
 public class Panel_Sections extends javax.swing.JPanel implements Initializer{
 
@@ -31,6 +32,7 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initRenderers() {
+        JTableUtil.applyCustomHeaderRenderer(jtblSectionMasterList);
         jtblSectionMasterList.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(2));
         gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
     }
@@ -54,6 +56,7 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
         jcmbFilterByGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jcmbFilterByGradeLevel.setRenderer(gradeLevelJComboBoxRenderer);
         jtblSectionMasterList.setModel(sectionJCompModelLoader.getAllSections(jtblSectionMasterList));
+        JTableUtil.resizeColumnWidthsOf(jtblSectionMasterList);
     }
 
     @Override

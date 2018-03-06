@@ -27,23 +27,6 @@ import utility.database.DBUtil;
 public class GradeDaoImpl implements IGrade {
 
     @Override
-    public int getCountofFailedGradesOf(Student student, SchoolYear schoolYear) {
-        int count = 0;
-        String SQL = "{CALL getCountOfFailedGradesOf(?,?,?)}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
-                    
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return count;
-    }
-    
-    @Override
     public boolean addStudentGrades(List<Grade> gradeList) {
         boolean isSuccessful = false;
         String SQLa = "{CALL deleteGradesBySubjectIdAndSchoolYearId(?,?)}";
