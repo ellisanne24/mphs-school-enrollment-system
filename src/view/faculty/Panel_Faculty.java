@@ -16,7 +16,7 @@ public class Panel_Faculty extends javax.swing.JPanel{
     
     private Faculty faculty = new Faculty();    
     private FacultyJCompModelLoader facultyLoader = new FacultyJCompModelLoader();
-    private FacultyDaoImpl fdi = new FacultyDaoImpl(new SchoolYearDaoImpl());
+    private FacultyDaoImpl fdi = new FacultyDaoImpl();
     
     public Panel_Faculty() {
         initComponents();

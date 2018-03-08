@@ -695,10 +695,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         return panel_searchcontainer;
     }
 
-    public JPanel getPanel_separator() {
-        return panel_separator;
-    }
-
     public JPanel getPanel_statuscontainer() {
         return panel_statuscontainer;
     }
@@ -767,7 +763,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         panel_studentdetailscontainer = new javax.swing.JPanel();
         panel_studentdetails = new javax.swing.JPanel();
         jpnlPhotoContainer = new javax.swing.JPanel();
-        panel_separator = new javax.swing.JPanel();
         jpnlStudentDetails = new javax.swing.JPanel();
         jlblStudentNo = new javax.swing.JLabel();
         lbl_type = new javax.swing.JLabel();
@@ -979,26 +974,14 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         panel_studentdetails.setLayout(new java.awt.GridBagLayout());
 
         jpnlPhotoContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jpnlPhotoContainer.setMinimumSize(new java.awt.Dimension(110, 110));
-        jpnlPhotoContainer.setPreferredSize(new java.awt.Dimension(110, 110));
+        jpnlPhotoContainer.setMinimumSize(new java.awt.Dimension(150, 150));
+        jpnlPhotoContainer.setPreferredSize(new java.awt.Dimension(150, 150));
         jpnlPhotoContainer.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_studentdetails.add(jpnlPhotoContainer, gridBagConstraints);
-
-        panel_separator.setBackground(new java.awt.Color(187, 187, 187));
-        panel_separator.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        panel_separator.setMinimumSize(new java.awt.Dimension(3, 120));
-        panel_separator.setPreferredSize(new java.awt.Dimension(3, 120));
-        panel_separator.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        panel_studentdetails.add(panel_separator, gridBagConstraints);
 
         jpnlStudentDetails.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jpnlStudentDetails.setMinimumSize(new java.awt.Dimension(750, 110));
@@ -1086,80 +1069,87 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jcmbPaymentTerm, gridBagConstraints);
 
-        jtfStudentNo.setColumns(10);
-        jtfStudentNo.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfStudentNo.setColumns(8);
+        jtfStudentNo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfStudentNo.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfStudentNo.setEnabled(false);
+        jtfStudentNo.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStudentNo, gridBagConstraints);
 
-        jtfLastName.setColumns(10);
-        jtfLastName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfLastName.setColumns(8);
+        jtfLastName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfLastName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfLastName.setEnabled(false);
+        jtfLastName.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfLastName, gridBagConstraints);
 
-        jtfGradeLevel.setColumns(10);
-        jtfGradeLevel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfGradeLevel.setColumns(8);
+        jtfGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfGradeLevel.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfGradeLevel.setEnabled(false);
+        jtfGradeLevel.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfGradeLevel, gridBagConstraints);
 
-        jtfStudentType.setColumns(10);
-        jtfStudentType.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfStudentType.setColumns(8);
+        jtfStudentType.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfStudentType.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfStudentType.setEnabled(false);
+        jtfStudentType.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStudentType, gridBagConstraints);
 
-        jtfFirstName.setColumns(10);
-        jtfFirstName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfFirstName.setColumns(8);
+        jtfFirstName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfFirstName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfFirstName.setEnabled(false);
+        jtfFirstName.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfFirstName, gridBagConstraints);
 
-        jtfStatus.setColumns(10);
-        jtfStatus.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfStatus.setColumns(8);
+        jtfStatus.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfStatus.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfStatus.setEnabled(false);
+        jtfStatus.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStatus, gridBagConstraints);
 
-        jtfMiddleName.setColumns(10);
-        jtfMiddleName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfMiddleName.setColumns(8);
+        jtfMiddleName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfMiddleName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfMiddleName.setEnabled(false);
+        jtfMiddleName.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfMiddleName, gridBagConstraints);
 
@@ -2569,7 +2559,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
     private javax.swing.JPanel panel_historydetails2;
     private javax.swing.JPanel panel_historydetails5;
     private javax.swing.JPanel panel_searchcontainer;
-    private javax.swing.JPanel panel_separator;
     private javax.swing.JPanel panel_statuscontainer;
     private javax.swing.JPanel panel_studentdetails;
     private javax.swing.JPanel panel_studentdetailscontainer;

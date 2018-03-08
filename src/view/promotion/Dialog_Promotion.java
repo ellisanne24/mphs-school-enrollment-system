@@ -86,7 +86,7 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
     @Override
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
-        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        facultyDaoImpl = new FacultyDaoImpl();
     }
     
     

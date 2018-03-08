@@ -61,7 +61,7 @@ public class AddSettingsPanelToTabbedPaneOnMouseClick implements MouseListener {
                     addPanelToTabbedPane(view.getJpnlFacultyMgmt(), new Panel_Faculty());
                     break;
                 case 4:
-                    addPanelToTabbedPane(view.getJpnlSectionMgmt(), new Panel_Sections());
+                    addPanelToTabbedPane(view.getJpnlSectionMgmt(), new Panel_Sections(currentSchoolYear,user));
                     break;
                 case 5:
                     addPanelToTabbedPane(view.getJpnlRoomMgmt(), new Panel_Rooms());

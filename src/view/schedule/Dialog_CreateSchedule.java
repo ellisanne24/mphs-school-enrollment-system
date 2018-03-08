@@ -22,13 +22,8 @@ import controller.schedule.ItemListener_Section_JComboBox;
 import controller.schedule.KeyListener_LoadSubjectFacultyOnArrowKeyPressed_JTable;
 import controller.schedule.TableModelListener_ScheduleSheet_JTable;
 import daoimpl.SchoolYearDaoImpl;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
 import javax.swing.ButtonGroup;
-import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -39,7 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import utility.initializer.Initializer;
@@ -66,25 +60,23 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         initModels();
         initControllers();
         
-        applyCellEditorListener();
+//        applyCellEditorListener();
         
     }
-
-   
     
     private void applyCellEditorListener() {
         jtblSchedule.getDefaultEditor(Object.class).addCellEditorListener(
                 new CellEditorListener() {
             @Override
             public void editingCanceled(ChangeEvent e) {
-                JOptionPane.showMessageDialog(null,"Editing Cancelled");
+//                JOptionPane.showMessageDialog(null,"Editing Cancelled");
                 int columnSelected = jtblSchedule.getSelectedColumn();
                 jtblSchedule.changeSelection(jtblSchedule.getSelectedRow(), columnSelected + 1, false, false);
             }
 
             @Override
             public void editingStopped(ChangeEvent e) {
-                JOptionPane.showMessageDialog(null,"Editing Cancelled");
+//                JOptionPane.showMessageDialog(null,"Editing Cancelled");
                  int columnSelected = jtblSchedule.getSelectedColumn();
                 jtblSchedule.changeSelection(jtblSchedule.getSelectedRow(), columnSelected + 1, false, false);
             }
@@ -184,6 +176,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jPanel5.add(jlblSection, gridBagConstraints);
 
         jcmbSection.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcmbSection.setEnabled(false);
         jcmbSection.setMinimumSize(new java.awt.Dimension(80, 26));
         jcmbSection.setPreferredSize(new java.awt.Dimension(150, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -222,6 +215,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jPanel5.add(jLabel1, gridBagConstraints);
 
         jcmbRoom.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcmbRoom.setEnabled(false);
         jcmbRoom.setPreferredSize(new java.awt.Dimension(60, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
@@ -242,6 +236,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jcmbSectionType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jcmbSectionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "R" }));
         jcmbSectionType.setSelectedIndex(-1);
+        jcmbSectionType.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
@@ -415,6 +410,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jtfSectionName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfSectionName.setForeground(new java.awt.Color(0, 0, 0));
         jtfSectionName.setBorder(null);
+        jtfSectionName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfSectionName.setEnabled(false);
         jtfSectionName.setMinimumSize(new java.awt.Dimension(110, 30));
         jtfSectionName.setPreferredSize(new java.awt.Dimension(110, 30));
@@ -428,6 +424,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jtfAdviserName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfAdviserName.setForeground(new java.awt.Color(0, 0, 0));
         jtfAdviserName.setBorder(null);
+        jtfAdviserName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfAdviserName.setEnabled(false);
         jtfAdviserName.setMinimumSize(new java.awt.Dimension(150, 30));
         jtfAdviserName.setPreferredSize(new java.awt.Dimension(150, 30));
@@ -442,6 +439,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jtfSchoolYear.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfSchoolYear.setForeground(new java.awt.Color(0, 0, 0));
         jtfSchoolYear.setBorder(null);
+        jtfSchoolYear.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfSchoolYear.setEnabled(false);
         jtfSchoolYear.setMinimumSize(new java.awt.Dimension(150, 30));
         jtfSchoolYear.setPreferredSize(new java.awt.Dimension(150, 30));
@@ -461,6 +459,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jtfGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfGradeLevel.setForeground(new java.awt.Color(0, 0, 0));
         jtfGradeLevel.setBorder(null);
+        jtfGradeLevel.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfGradeLevel.setEnabled(false);
         jtfGradeLevel.setMinimumSize(new java.awt.Dimension(150, 30));
         jtfGradeLevel.setPreferredSize(new java.awt.Dimension(150, 30));

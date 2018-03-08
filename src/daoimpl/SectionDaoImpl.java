@@ -103,22 +103,22 @@ public class SectionDaoImpl implements ISection {
         String SQLb = "{CALL updateSectionSettings(?,?,?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
-            try (CallableStatement csa = con.prepareCall(SQLa);
-                    CallableStatement csb = con.prepareCall(SQLb);) {
+            try (CallableStatement updateSection = con.prepareCall(SQLa);
+                    CallableStatement updateSectionSettings = con.prepareCall(SQLb);) {
                 
-                csa.setInt(1,section.getSectionId());
-                csa.setString(2, section.getSectionName());
-                csa.setBoolean(3, section.getIsActive());
-                csa.executeUpdate();
+                updateSection.setInt(1,section.getSectionId());
+                updateSection.setString(2, section.getSectionName());
+                updateSection.setBoolean(3, section.getIsActive());
+                updateSection.executeUpdate();
                 
-                csb.setInt(1, section.getSectionId());
-                csb.setInt(2, section.getSchoolYear().getSchoolYearId());
-                csb.setInt(3, section.getGradeLevel().getGradeLevelId());
-                csb.setString(4, section.getSectionSession().trim());
-                csb.setInt(5,section.getAdviser().getFacultyID());
-                csb.setInt(6, section.getCapacity());
-                csb.setString(7, section.getSectionType());
-                csb.executeUpdate();
+                updateSectionSettings.setInt(1, section.getSectionId());
+                updateSectionSettings.setInt(2, section.getSchoolYear().getSchoolYearId());
+                updateSectionSettings.setInt(3, section.getGradeLevel().getGradeLevelId());
+                updateSectionSettings.setString(4, section.getSectionSession().trim());
+                updateSectionSettings.setInt(5,section.getAdviser().getFacultyID());
+                updateSectionSettings.setInt(6, section.getCapacity());
+                updateSectionSettings.setString(7, section.getSectionType());
+                updateSectionSettings.executeUpdate();
                 
                 con.commit();
                 isUpdated = true;
@@ -172,14 +172,14 @@ public class SectionDaoImpl implements ISection {
                 CallableStatement cs = con.prepareCall(SQL);) {
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
-                    Section s = new Section();
-                    s.setSectionId(rs.getInt("section_id"));
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
                     SchoolYear schoolYear = new SchoolYear();
                     schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    s.setSchoolYear(schoolYear);
-                    s.setSectionName(rs.getString("sectionName"));
-                    s.setIsActive(rs.getBoolean("isActive"));
-                    s.setDateCreated(rs.getString("date_created"));
+                    section.setSchoolYear(schoolYear);
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
                     
                     GradeLevel gradeLevel = new GradeLevel();
                     gradeLevel.setLevelNo(rs.getInt("grade_level"));
@@ -190,12 +190,13 @@ public class SectionDaoImpl implements ISection {
                     adviser.setFirstName(rs.getString("firstName"));
                     adviser.setMiddleName(rs.getString("middleName"));
                     
-                    s.setGradeLevel(gradeLevel);
-                    s.setAdviser(adviser);
-                    s.setSectionSession(rs.getString("session"));
-                    s.setCapacity(rs.getInt("capacity"));
+                    section.setGradeLevel(gradeLevel);
+                    section.setAdviser(adviser);
+                    section.setSectionSession(rs.getString("session"));
+                    section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
                     
-                    sectionList.add(s);
+                    sectionList.add(section);
                 }
             }
         } catch (SQLException e) {
@@ -309,14 +310,14 @@ public class SectionDaoImpl implements ISection {
             cs.setString(1,wildCardChar);
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
-                    Section s = new Section();
-                    s.setSectionId(rs.getInt("section_id"));
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
                     SchoolYear schoolYear = new SchoolYear();
                     schoolYear.setYearFrom(rs.getInt("yearFrom"));
-                    s.setSchoolYear(schoolYear);
-                    s.setSectionName(rs.getString("sectionName"));
-                    s.setIsActive(rs.getBoolean("isActive"));
-                    s.setDateCreated(rs.getString("date_created"));
+                    section.setSchoolYear(schoolYear);
+                    section.setSectionName(rs.getString("sectionName"));
+                    section.setIsActive(rs.getBoolean("isActive"));
+                    section.setDateCreated(rs.getString("date_created"));
                     
                     GradeLevel gradeLevel = new GradeLevel();
                     gradeLevel.setLevelNo(rs.getInt("grade_level"));
@@ -327,12 +328,13 @@ public class SectionDaoImpl implements ISection {
                     adviser.setFirstName(rs.getString("firstName"));
                     adviser.setMiddleName(rs.getString("middleName"));
                     
-                    s.setGradeLevel(gradeLevel);
-                    s.setSectionSession(rs.getString("session"));
-                    s.setAdviser(adviser);
-                    s.setCapacity(rs.getInt("capacity"));
+                    section.setGradeLevel(gradeLevel);
+                    section.setSectionSession(rs.getString("session"));
+                    section.setAdviser(adviser);
+                    section.setCapacity(rs.getInt("capacity"));
+                    section.setSectionType(rs.getString("section_type"));
                     
-                    sectionList.add(s);
+                    sectionList.add(section);
                 }
             }
         } catch (SQLException e) {

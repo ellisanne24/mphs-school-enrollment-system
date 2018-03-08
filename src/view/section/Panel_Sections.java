@@ -9,6 +9,10 @@ import controller.section.DisplaySectionCrudDialog;
 import controller.section.DisplaySectionsByGradeLevelStateChange;
 import controller.section.DisplaySectionsByWildCardOnKeyPress;
 import controller.section.DisplaySectionsByWildCardOnSearch;
+import javax.swing.JTable;
+import model.schoolyear.SchoolYear;
+import model.user.User;
+import renderer.section.Renderer_Section_MasterList_JTable;
 import utility.initializer.Initializer;
 import utility.jtable.JTableUtil;
 
@@ -19,8 +23,14 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
     
     private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
     
-    public Panel_Sections() {
+    private final SchoolYear currentSchoolYear;
+    private final User user;
+    
+    public Panel_Sections(SchoolYear currentSchoolYear, User user) {
         initComponents();
+        
+        this.currentSchoolYear = currentSchoolYear;
+        this.user = user;
         
         initJCompModelLoaders();
         initRenderers();
@@ -33,7 +43,7 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
     @Override
     public void initRenderers() {
         JTableUtil.applyCustomHeaderRenderer(jtblSectionMasterList);
-        jtblSectionMasterList.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(2));
+        jtblSectionMasterList.setDefaultRenderer(Object.class, new Renderer_Section_MasterList_JTable(4, 2, 7));
         gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
     }
     
@@ -55,8 +65,12 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
     public void initViewComponents() {
         jcmbFilterByGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jcmbFilterByGradeLevel.setRenderer(gradeLevelJComboBoxRenderer);
-        jtblSectionMasterList.setModel(sectionJCompModelLoader.getAllSections(jtblSectionMasterList));
+        loadSectionMasterList();
         JTableUtil.resizeColumnWidthsOf(jtblSectionMasterList);
+    }
+    
+    public void loadSectionMasterList(){
+        jtblSectionMasterList.setModel(sectionJCompModelLoader.getAllSections(jtblSectionMasterList));
     }
 
     @Override
@@ -65,15 +79,21 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
         tf_searchbox.addKeyListener(new DisplaySectionsByWildCardOnKeyPress(tf_searchbox, jtblSectionMasterList));
         btn_Search.addActionListener(new DisplaySectionsByWildCardOnSearch(tf_searchbox, jtblSectionMasterList));
         jcmbFilterByGradeLevel.addItemListener(new DisplaySectionsByGradeLevelStateChange(jcmbFilterByGradeLevel, jtblSectionMasterList));
-        btn_createnew.addActionListener(new DisplaySectionCrudDialog(jtblSectionMasterList));
-        btn_Edit.addActionListener(new DisplaySectionCrudDialog(jtblSectionMasterList));
-        btn_View.addActionListener(new DisplaySectionCrudDialog(jtblSectionMasterList));
+        btn_createnew.addActionListener(new DisplaySectionCrudDialog(this,currentSchoolYear));
+        btn_Edit.addActionListener(new DisplaySectionCrudDialog(this,currentSchoolYear));
+        btn_View.addActionListener(new DisplaySectionCrudDialog(this,currentSchoolYear));
     }
 
     @Override
     public void initDaoImpl() {
     }
 
+    public JTable getJtblSectionMasterList() {
+        return jtblSectionMasterList;
+    }
+
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -201,11 +221,11 @@ public class Panel_Sections extends javax.swing.JPanel implements Initializer{
 
             },
             new String [] {
-                "Section Id", "Section Name", "Grade Level", "Adviser", "Session", "School Year", "Status"
+                "Section Id", "Section Name", "Grade Level", "Adviser", "Session", "School Year", "Status", "Section Type"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import model.classtype.ClassType;
 import model.faculty.Faculty;
 import model.schoolyear.SchoolYear;
+import model.section.Section;
 import model.subjectcategory.SubjectCategory;
 import model.user.User;
 import utility.database.DBType;
@@ -24,10 +25,10 @@ public class FacultyDaoImpl implements IFaculty {
 
     private final SchoolYearDaoImpl schoolYearDaoImpl;
 
-    public FacultyDaoImpl(SchoolYearDaoImpl schoolYearDaoImpl) {
-        this.schoolYearDaoImpl = schoolYearDaoImpl;
+    public FacultyDaoImpl() {
+        this.schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
-    
+
     @Override
     public boolean createFaculty(Faculty faculty) {
         boolean isCreated = false;
@@ -90,19 +91,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rsa.getString(5));
                     faculty.setEmail(rsa.getString(6));
                     faculty.setStatus(rsa.getBoolean(7));
-                    
+
                     csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csb.setInt(2, rsa.getInt(1));
                     ResultSet rsb = csb.executeQuery();
                     rsb.next();
                     faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
-                    
+
                     csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csc.setInt(2, rsa.getInt(1));
                     ResultSet rsc = csc.executeQuery();
                     rsc.next();
                     faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
-                    
+
                     list.add(faculty);
                 }
             }
@@ -134,26 +135,26 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString("contactNo"));
                     faculty.setEmail(rs.getString("email"));
                     faculty.setStatus(rs.getBoolean("status"));
-                    
+
                     ClassType classType = new ClassType();
                     classType.setClassTypeID(rs.getInt("classtype_id"));
                     classType.setClassTypeName(rs.getString("classtype"));
                     classType.setIsActive(rs.getBoolean("is_classtype_active"));
                     classType.setDateAdded(rs.getDate("date_added"));
                     faculty.setClassType(classType);
-                    
+
                     csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csb.setInt(2, faculty.getFacultyID());
                     ResultSet rsb = csb.executeQuery();
                     rsb.next();
                     faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
-                    
+
                     csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csc.setInt(2, faculty.getFacultyID());
                     ResultSet rsc = csc.executeQuery();
                     rsc.next();
                     faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
-                    
+
                     list.add(faculty);
                 }
             }
@@ -255,16 +256,16 @@ public class FacultyDaoImpl implements IFaculty {
                 csa.setString(6, faculty.getEmail());
                 csa.setBoolean(7, faculty.getStatus());
                 csa.executeUpdate();
-                
-                csb.setInt(1,faculty.getFacultyID());
+
+                csb.setInt(1, faculty.getFacultyID());
                 csb.setInt(2, schoolYearDaoImpl.getCurrentSchoolYearId());
                 csb.executeUpdate();
-                
-                csc.setInt(1,faculty.getFacultyID());
-                csc.setInt(2,faculty.getClassType().getClassTypeID());
-                csc.setInt(3,schoolYearDaoImpl.getCurrentSchoolYearId());
+
+                csc.setInt(1, faculty.getFacultyID());
+                csc.setInt(2, faculty.getClassType().getClassTypeID());
+                csc.setInt(3, schoolYearDaoImpl.getCurrentSchoolYearId());
                 csc.executeUpdate();
-                
+
                 con.commit();
                 isUpdated = true;
             } catch (SQLException e) {
@@ -288,7 +289,7 @@ public class FacultyDaoImpl implements IFaculty {
                 CallableStatement cs = con.prepareCall(select);
                 CallableStatement csb = con.prepareCall(SQLb);
                 CallableStatement csc = con.prepareCall(SQLc);) {
-            
+
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     faculty = new Faculty();
@@ -299,19 +300,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString(5));
                     faculty.setEmail(rs.getString(6));
                     faculty.setStatus(rs.getBoolean(7));
-                    
+
                     csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csb.setInt(2, faculty.getFacultyID());
                     ResultSet rsb = csb.executeQuery();
                     rsb.next();
                     faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
-                    
+
                     csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csc.setInt(2, faculty.getFacultyID());
                     ResultSet rsc = csc.executeQuery();
                     rsc.next();
                     faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
-                    
+
                     list.add(faculty);
                 }
             }
@@ -326,10 +327,10 @@ public class FacultyDaoImpl implements IFaculty {
         List<Faculty> facultyList = new ArrayList<>();
         String SQL = "{CALL getAllFacultyHandlingAdvisory(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
+                CallableStatement cs = con.prepareCall(SQL);) {
             cs.setInt(1, schoolYear.getSchoolYearId());
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     Faculty f = new Faculty();
                     f.setFacultyID(rs.getInt("faculty_id"));
                     f.setLastName(rs.getString("lastName"));
@@ -346,14 +347,13 @@ public class FacultyDaoImpl implements IFaculty {
         }
         return facultyList;
     }
-    
 
     @Override
     public List<Faculty> getAllFacultyByStatus(boolean isActive) {
         String SQLa = "{CALL getAllFacultyByStatus(?)}";
         String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
         String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
-        
+
         List<Faculty> facultyList = new ArrayList<Faculty>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQLa);
@@ -370,19 +370,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString("contactNo"));
                     faculty.setEmail(rs.getString("email"));
                     faculty.setStatus(rs.getBoolean("status"));
-                    
+
                     csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csb.setInt(2, faculty.getFacultyID());
                     ResultSet rsb = csb.executeQuery();
                     rsb.next();
                     faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
-                    
+
                     csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csc.setInt(2, faculty.getFacultyID());
                     ResultSet rsc = csc.executeQuery();
                     rsc.next();
                     faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
-                    
+
                     facultyList.add(faculty);
                 }
             }
@@ -397,13 +397,13 @@ public class FacultyDaoImpl implements IFaculty {
         String SQLa = "{CALL getAllFacultyWithNoAdvisory()}";
         String SQLb = "{CALL facultyHasAMSchedule(?,?)}";
         String SQLc = "{CALL facultyHasPMSchedule(?,?)}";
-        
+
         List<Faculty> list = new ArrayList<>();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQLa);
                 CallableStatement csb = con.prepareCall(SQLb);
                 CallableStatement csc = con.prepareCall(SQLc);) {
-            
+
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     Faculty faculty = new Faculty();
@@ -414,19 +414,19 @@ public class FacultyDaoImpl implements IFaculty {
                     faculty.setContactNo(rs.getString(5));
                     faculty.setEmail(rs.getString(6));
                     faculty.setStatus(rs.getBoolean(7));
-                    
+
                     csb.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csb.setInt(2, faculty.getFacultyID());
                     ResultSet rsb = csb.executeQuery();
                     rsb.next();
                     faculty.setHasAMSchedule(rsb.getBoolean("hasAMSchedule"));
-                    
+
                     csc.setInt(1, schoolYearDaoImpl.getCurrentSchoolYearId());
                     csc.setInt(2, faculty.getFacultyID());
                     ResultSet rsc = csc.executeQuery();
                     rsc.next();
                     faculty.setHasPMSchedule(rsc.getBoolean("hasPMSchedule"));
-                    
+
                     list.add(faculty);
                 }
             }
@@ -488,39 +488,46 @@ public class FacultyDaoImpl implements IFaculty {
         return list;
     }
 
-    public boolean facultyHasAdvisory(int facultyId, int schoolYearId) {
-        boolean hasAdvisory = false;
-        String SQL = "{CALL facultyhasAdvisory(?,?)}";
+    @Override
+    public boolean isFacultyAvailableAdviserFor(String sectionSession, Faculty faculty, SchoolYear schoolYear) {
+        boolean isAvailable = false;
+        String SQL = "{CALL getAdviserAvailabilityBySession(?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
-            cs.setInt(1, facultyId);
-            cs.setInt(2, schoolYearId);
+            cs.setString(1, sectionSession);
+            cs.setInt(2, faculty.getFacultyID());
+            cs.setInt(3, schoolYear.getSchoolYearId());
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
-                    hasAdvisory = rs.getBoolean("hasAdvisory");
+                    isAvailable = rs.getBoolean("isAvailable");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return hasAdvisory;
+        return isAvailable;
     }
 
     @Override
-    public int getFacultyIdByName(String lastName, String firstName, String middleName) {
-        int facultyId = 0;
-        String SQL = "{CALL getFacultyIdByName(?,?,?s)}";
+    public boolean isFacultyAvailableAdviserFor(Section section, Faculty faculty, SchoolYear schoolYear) {
+        boolean isAvailable = false;
+        String SQL = "{CALL isFacultyAvailableAdviserFor(?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, section.getSectionId());
+            cs.setString(2, section.getSectionSession().trim());
+            cs.setString(3, section.getSectionType().trim());
+            cs.setInt(4, faculty.getFacultyID());
+            cs.setInt(5, schoolYear.getSchoolYearId());
             try (ResultSet rs = cs.executeQuery();) {
                 while (rs.next()) {
-                    facultyId = rs.getInt("faculty_id");
+                    isAvailable = rs.getBoolean("isFacultyAvailable");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return facultyId;
+        return isAvailable;
     }
 
     @Override
@@ -538,7 +545,7 @@ public class FacultyDaoImpl implements IFaculty {
                     classType.setIsActive(rs.getBoolean("is_classtype_active"));
                     classType.setDateAdded(rs.getDate("date_added"));
                     faculty.setClassType(classType);
-                    
+
                     faculty.setFacultyID(rs.getInt("faculty_id"));
                     faculty.setLastName(rs.getString("lastName"));
                     faculty.setFirstName(rs.getString("firstName"));
@@ -559,10 +566,10 @@ public class FacultyDaoImpl implements IFaculty {
         String SQL = "{CALL getFacultyByUserId(?)}";
         Faculty faculty = new Faculty();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
+                CallableStatement cs = con.prepareCall(SQL);) {
             cs.setInt(1, user.getUserId());
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     faculty.setFacultyID(rs.getInt("faculty_id"));
                     faculty.setLastName(rs.getString("lastName"));
                     faculty.setFirstName(rs.getString("firstName"));
@@ -578,6 +585,4 @@ public class FacultyDaoImpl implements IFaculty {
         return faculty;
     }
 
-    
-    
 }

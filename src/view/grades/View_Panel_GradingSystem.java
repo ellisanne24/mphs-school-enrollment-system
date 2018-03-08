@@ -144,7 +144,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     public void initDaoImpl() {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         studentDaoImpl = new StudentDaoImpl();
-        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        facultyDaoImpl = new FacultyDaoImpl();
     }
 
     public JButton getJbtnRefresh() {

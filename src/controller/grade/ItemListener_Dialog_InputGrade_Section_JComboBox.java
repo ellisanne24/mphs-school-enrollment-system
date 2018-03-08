@@ -34,7 +34,7 @@ public class ItemListener_Dialog_InputGrade_Section_JComboBox implements ItemLis
 
     public ItemListener_Dialog_InputGrade_Section_JComboBox(View_Dialog_InputGrade view, User user) {
         schoolYearDaoImpl = new SchoolYearDaoImpl();
-        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        facultyDaoImpl = new FacultyDaoImpl();
         studentDaoImpl = new StudentDaoImpl();
         subjectJCompModelLoader = new SubjectJCompModelLoader();
         studentJCompModelLoader = new StudentJCompModelLoader(studentDaoImpl);

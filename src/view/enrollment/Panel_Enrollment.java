@@ -87,6 +87,18 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initViewComponents() {
+        jtblPromoted.setModel(promotionJCompModelLoader.getAllPromotedStudentOf(jtblPromoted, currentSchoolYear));
+        jtblSummerStudents.setModel(promotionJCompModelLoader.getAllSummerStudentsOf(jtblSummerStudents, currentSchoolYear));
+        jcmbEnrolledFilterGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
+        jlblCurrentSchoolYearRegistered.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
+        jlblCurrentSchoolYearEnrolled.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
+        loadRegistrationRecord();
+        loadEnrolledRecord();
+        jcmbRegistrationGradeLevel.setModel(gradeLevelJCompModelLoader.getAllActiveGradeLevel());
+        formatJTables();
+    }
+    
+    private void formatJTables(){
         JTableUtil.applyCustomHeaderRenderer(jtblEnrolledMasterList);
         JTableUtil.applyCustomHeaderRenderer(jtblRegisteredMasterList);
         JTableUtil.applyCustomHeaderRenderer(jtblPromoted);
@@ -95,27 +107,25 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         JTableUtil.resizeColumnWidthsOf(jtblRegisteredMasterList);
         JTableUtil.resizeColumnWidthsOf(jtblPromoted);
         JTableUtil.resizeColumnWidthsOf(jtblSummerStudents);
-        jtblPromoted.setModel(promotionJCompModelLoader.getAllPromotedStudentOf(jtblPromoted, currentSchoolYear));
-        jtblSummerStudents.setModel(promotionJCompModelLoader.getAllSummerStudentsOf(jtblSummerStudents, currentSchoolYear));
-        jcmbEnrolledFilterGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
-        jlblCurrentSchoolYearRegistered.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
-        jlblCurrentSchoolYearEnrolled.setText(""+SchoolYearDaoImpl.getCurrentSchoolYearFrom());
-        loadRegistrationRecord();
+    }
+    
+    public void loadEnrolledRecord(){
         jtblEnrolledMasterList.setModel(enrollmentJCompModelLoader.getAllEnrolledOfCurrentSchoolYear(jtblEnrolledMasterList));
-        jcmbRegistrationGradeLevel.setModel(gradeLevelJCompModelLoader.getAllActiveGradeLevel());
+        formatJTables();
     }
     
     public void loadRegistrationRecord(){
         DefaultTableModel tableModel = new DefaultTableModel();
         tableModel = registrationJCompModelLoader.getAllRegisteredApplicants(SchoolYearDaoImpl.getCurrentSchoolYearFrom(), jtblRegisteredMasterList);
         jtblRegisteredMasterList.setModel(tableModel);
+        formatJTables();
     }
 
     @Override
     public void initControllers() {
         jtfSearchRegistered.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jtfEnrolledSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
-        jbtnSectioning.addActionListener(new DisplayDialogSectionAssignment(currentSchoolYear));
+        jbtnSectioning.addActionListener(new DisplayDialogSectionAssignment(this,currentSchoolYear));
         jbtnRefreshEnrolledRecords.addActionListener(new RefreshEnrolledRecord(this));
         jcmbEnrolledFilterGradeLevel.addItemListener(new DisplayAllEnrolledOnGradeLevelFilter(this));
         jcmbFilterRegistered.addItemListener(new Controller_JComboBox_DisplayRegistrationRecordByAdmissionStatus(jtblRegisteredMasterList, jcmbFilterRegistered));
@@ -134,8 +144,6 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
     public JComboBox<String> getJcmbRegistrationGradeLevel() {
         return jcmbRegistrationGradeLevel;
     }
-
-    
         
     public JPanel getjPanel1() {
         return jPanel1;
@@ -465,6 +473,8 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         jpnlContent.setLayout(new java.awt.GridBagLayout());
+
+        jtpContainer.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jpnlRegistered.setLayout(new java.awt.GridBagLayout());
 

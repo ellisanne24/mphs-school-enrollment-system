@@ -28,7 +28,12 @@ public class ItemListener_SectionType_JComboBox implements ItemListener{
         if(view.getJcmbSectionType().getSelectedIndex() > -1){
             resetForm();
             loadSectionsByGradeLevel();
+            enableSectionCombo();
         }
+    }
+    
+    private void enableSectionCombo(){
+        view.getJcmbSection().setEnabled(true);
     }
     
     private void loadSectionsByGradeLevel() {

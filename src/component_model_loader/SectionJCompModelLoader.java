@@ -32,7 +32,7 @@ public class SectionJCompModelLoader {
                 s.getSectionId(), s.getSectionName(), s.getGradeLevel().getLevelNo(),
                 s.getAdviser().getLastName() + ", " + s.getAdviser().getFirstName() + " " + s.getAdviser().getMiddleName(),
                 s.getSectionSession(), s.getSchoolYear().getYearFrom(),
-                s.getIsActive() == true ? "Active" : "Inactive"
+                s.getIsActive() == true ? "Active" : "Inactive",s.getSectionType()
             };
             tableModel.addRow(rowData);
         }
@@ -50,7 +50,7 @@ public class SectionJCompModelLoader {
                 s.getSectionId(), s.getSectionName(), s.getGradeLevel().getLevelNo(),
                 s.getAdviser().getLastName() + ", " + s.getAdviser().getFirstName() + " " + s.getAdviser().getMiddleName(),
                 s.getSectionSession(), s.getSchoolYear().getYearFrom(),
-                s.getIsActive() == true ? "Yes" : "No"
+                s.getIsActive() == true ? "Yes" : "No",s.getSectionType()
             };
             tableModel.addRow(rowData);
         }
@@ -78,7 +78,7 @@ public class SectionJCompModelLoader {
                 s.getSectionId(), s.getSectionName(), s.getGradeLevel().getLevelNo(),
                 s.getAdviser().getLastName() + ", " + s.getAdviser().getFirstName() + " " + s.getAdviser().getMiddleName(),
                 s.getSectionSession(), s.getSchoolYear().getYearFrom(),
-                s.getIsActive() == true ? "Yes" : "No"
+                s.getIsActive() == true ? "Yes" : "No",s.getSectionType()
             };
             tableModel.addRow(rowData);
         }

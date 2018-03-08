@@ -52,7 +52,7 @@ public class Renderer_Faculty_JComboBox extends JLabel implements ListCellRender
     
     private String getFacultyCompleteName(int facultyId) {
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        FacultyDaoImpl facultyDaoImpl = new FacultyDaoImpl();
         Faculty f = facultyDaoImpl.getFacultyById(facultyId);
         StringBuilder sb = new StringBuilder();
         sb.append(f.getLastName());

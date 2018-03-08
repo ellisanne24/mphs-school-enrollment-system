@@ -29,17 +29,17 @@ public class Renderer_SectionType_JComboBox extends JLabel implements ListCellRe
                 this.setText("Regular");
             } else if (value.toString().equalsIgnoreCase("S")) {
                 this.setText("Summer");
-            } else {
-                this.setText("Select");
             }
-
-            if (isSelected) {
-                this.setBackground(Color.YELLOW);
-                this.setForeground(Color.BLACK);
-            } else {
-                this.setBackground(list.getBackground());
-                this.setForeground(list.getForeground());
-            }
+        } else {
+            this.setText("Select");
+        }
+        
+        if (isSelected) {
+            this.setBackground(Color.YELLOW);
+            this.setForeground(Color.BLACK);
+        } else {
+            this.setBackground(list.getBackground());
+            this.setForeground(list.getForeground());
         }
 
         return this;

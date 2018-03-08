@@ -871,14 +871,15 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
 
     jpnlUserInformation.setBackground(new java.awt.Color(0, 114, 187));
     jpnlUserInformation.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jpnlUserInformation.setMinimumSize(new java.awt.Dimension(250, 250));
-    jpnlUserInformation.setPreferredSize(new java.awt.Dimension(250, 250));
+    jpnlUserInformation.setMinimumSize(new java.awt.Dimension(220, 250));
+    jpnlUserInformation.setPreferredSize(new java.awt.Dimension(230, 250));
     jpnlUserInformation.setLayout(new java.awt.GridBagLayout());
 
-    jpnlUserImage.setMaximumSize(new java.awt.Dimension(200, 200));
-    jpnlUserImage.setMinimumSize(new java.awt.Dimension(200, 200));
+    jpnlUserImage.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlUserImage.setMaximumSize(new java.awt.Dimension(150, 150));
+    jpnlUserImage.setMinimumSize(new java.awt.Dimension(150, 150));
     jpnlUserImage.setOpaque(false);
-    jpnlUserImage.setPreferredSize(new java.awt.Dimension(200, 200));
+    jpnlUserImage.setPreferredSize(new java.awt.Dimension(150, 150));
     jpnlUserImage.setLayout(new java.awt.GridBagLayout());
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -887,12 +888,12 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlUserInformation.add(jpnlUserImage, gridBagConstraints);
 
-    jpnlAccountInformation.setMinimumSize(new java.awt.Dimension(150, 150));
+    jpnlAccountInformation.setMinimumSize(new java.awt.Dimension(50, 220));
     jpnlAccountInformation.setOpaque(false);
-    jpnlAccountInformation.setPreferredSize(new java.awt.Dimension(150, 149));
+    jpnlAccountInformation.setPreferredSize(new java.awt.Dimension(50, 220));
     jpnlAccountInformation.setLayout(new java.awt.GridBagLayout());
 
-    jlblChangePassword.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jlblChangePassword.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblChangePassword.setForeground(new java.awt.Color(255, 255, 255));
     jlblChangePassword.setText("Edit Account");
     jlblChangePassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -908,7 +909,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblChangePassword, gridBagConstraints);
 
-    jlblStatus.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jlblStatus.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblStatus.setForeground(new java.awt.Color(255, 255, 255));
     jlblStatus.setText("Last login date :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -916,8 +917,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblStatus, gridBagConstraints);
 
-    jlblLastLoginText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
-    jlblLastLoginText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblLastLoginText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblLastLoginText.setText("date text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -926,7 +926,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblLastLoginText, gridBagConstraints);
 
-    jlblUserIdLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jlblUserIdLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblUserIdLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblUserIdLabel.setText("Account ID :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -935,8 +935,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblUserIdLabel, gridBagConstraints);
 
-    jlblUserIdText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
-    jlblUserIdText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblUserIdText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblUserIdText.setText("Account ID Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 2;
@@ -944,7 +943,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblUserIdText, gridBagConstraints);
 
-    jlblLastNameLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jlblLastNameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblLastNameLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblLastNameLabel.setText("Last Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -953,8 +952,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblLastNameLabel, gridBagConstraints);
 
-    lbl_LastNameText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
-    lbl_LastNameText.setForeground(new java.awt.Color(0, 0, 0));
+    lbl_LastNameText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     lbl_LastNameText.setText("Last Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 3;
@@ -962,7 +960,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_LastNameText, gridBagConstraints);
 
-    jlblFirstNameLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jlblFirstNameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblFirstNameLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblFirstNameLabel.setText("First Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -971,8 +969,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblFirstNameLabel, gridBagConstraints);
 
-    lbl_FirstNameText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
-    lbl_FirstNameText.setForeground(new java.awt.Color(0, 0, 0));
+    lbl_FirstNameText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     lbl_FirstNameText.setText("First Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -981,7 +978,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_FirstNameText, gridBagConstraints);
 
-    jlblMiddleNameLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jlblMiddleNameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblMiddleNameLabel.setForeground(new java.awt.Color(255, 255, 255));
     jlblMiddleNameLabel.setText("Middle Name : ");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -991,8 +988,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblMiddleNameLabel, gridBagConstraints);
 
-    lbl_MiddleNameText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
-    lbl_MiddleNameText.setForeground(new java.awt.Color(0, 0, 0));
+    lbl_MiddleNameText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     lbl_MiddleNameText.setText("Middle Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -1001,7 +997,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_MiddleNameText, gridBagConstraints);
 
-    lbl_RoleLabel.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    lbl_RoleLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     lbl_RoleLabel.setForeground(new java.awt.Color(255, 255, 255));
     lbl_RoleLabel.setText("Role :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1011,8 +1007,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(lbl_RoleLabel, gridBagConstraints);
 
-    jlblRoleText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
-    jlblRoleText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblRoleText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblRoleText.setText("Role Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -1021,8 +1016,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblRoleText, gridBagConstraints);
 
-    jlblTimeText.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
-    jlblTimeText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblTimeText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblTimeText.setText("time text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -1031,7 +1025,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jlblTimeText, gridBagConstraints);
 
-    jLabel4.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jLabel4.setForeground(new java.awt.Color(255, 255, 255));
     jLabel4.setText("Last login time :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1051,7 +1045,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlAccountInformation.add(jSeparator1, gridBagConstraints);
 
-    jlblLogout.setFont(new java.awt.Font("Microsoft JhengHei UI", 0, 14)); // NOI18N
+    jlblLogout.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblLogout.setForeground(new java.awt.Color(255, 255, 255));
     jlblLogout.setText("Log out");
     jlblLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1103,7 +1097,6 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     jPanel3.add(jLabel2, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -1112,7 +1105,6 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlUserInformation.add(jpnlHelloUser, gridBagConstraints);
 

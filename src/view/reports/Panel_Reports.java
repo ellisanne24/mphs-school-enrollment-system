@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import model.schoolyear.SchoolYear;
 import model.user.User;
 import utility.component.ImageUtil;
-import utility.component.JTableUtil;
+import utility.jtable.JTableUtil;
 import utility.initializer.Initializer;
 
 public class Panel_Reports extends javax.swing.JPanel implements Initializer{
@@ -83,6 +83,9 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
         jcmbCorSchoolYear.setModel(schoolYearJCompModelLoader.getAllSchoolYear());
         jcmbClassListSchoolYear.setModel(schoolYearJCompModelLoader.getAllSchoolYear());
         jcmbClassListGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
+        JTableUtil.applyCustomHeaderRenderer(jtblClassList);
+        JTableUtil.applyCustomHeaderRenderer(jtblReportCard);
+        JTableUtil.applyCustomHeaderRenderer(jtblSchedules);
     }
 
     @Override
@@ -472,7 +475,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     btn_Search13 = new javax.swing.JButton();
     panel_summary3 = new javax.swing.JPanel();
     jScrollPane3 = new javax.swing.JScrollPane();
-    jTable3 = new javax.swing.JTable();
+    jtblReceipts = new javax.swing.JTable();
     panel_classlist = new javax.swing.JPanel();
     panel_details4 = new javax.swing.JPanel();
     lbl_name14 = new javax.swing.JLabel();
@@ -542,13 +545,13 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     btn_Search22 = new javax.swing.JButton();
     panel_summary5 = new javax.swing.JPanel();
     jScrollPane5 = new javax.swing.JScrollPane();
-    jTable5 = new javax.swing.JTable();
+    jtblSchedules = new javax.swing.JTable();
     panel_reportcards = new javax.swing.JPanel();
     panel_details6 = new javax.swing.JPanel();
     lbl_name31 = new javax.swing.JLabel();
-    combo_gradelevel21 = new javax.swing.JComboBox<>();
-    Searchbox2 = new javax.swing.JTextField();
-    btn_Search27 = new javax.swing.JButton();
+    jmcbReportCardFilterBySchoolYear = new javax.swing.JComboBox<>();
+    jtfReportCardSearchBox = new javax.swing.JTextField();
+    jbtnReportCardsSearchBox = new javax.swing.JButton();
     lbl_name39 = new javax.swing.JLabel();
     combo_gradelevel26 = new javax.swing.JComboBox<>();
     panel_controls6 = new javax.swing.JPanel();
@@ -560,6 +563,41 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     lbl_name38 = new javax.swing.JLabel();
     btn_Search26 = new javax.swing.JButton();
     panel_summary6 = new javax.swing.JPanel();
+    jpnlClassListTop1 = new javax.swing.JPanel();
+    jpnlFooter2 = new javax.swing.JPanel();
+    jpnlSectionDetails1 = new javax.swing.JPanel();
+    jLabel23 = new javax.swing.JLabel();
+    jlblClassListSectionName1 = new javax.swing.JLabel();
+    jLabel26 = new javax.swing.JLabel();
+    jlblClassListGradeLevelText1 = new javax.swing.JLabel();
+    jLabel29 = new javax.swing.JLabel();
+    jlblClassListAdviserName1 = new javax.swing.JLabel();
+    jLabel18 = new javax.swing.JLabel();
+    jlblClassListSchoolYear1 = new javax.swing.JLabel();
+    jpnlBody2 = new javax.swing.JPanel();
+    jlblCertificateOfRegistration2 = new javax.swing.JLabel();
+    jpnlHeader2 = new javax.swing.JPanel();
+    jpnlClassListLogo1 = new javax.swing.JPanel(){
+        public void paintComponent(Graphics g){
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setComposite(AlphaComposite.getInstance(
+                AlphaComposite.SRC_OVER, 0.8f));
+        g2d.drawImage(schoolLogo, 0, 0, getWidth(), getHeight(), null);
+        jpnlClassListTop.repaint();
+    }
+    };
+    jPanel15 = new javax.swing.JPanel();
+    jLabel37 = new javax.swing.JLabel();
+    jLabel38 = new javax.swing.JLabel();
+    jLabel39 = new javax.swing.JLabel();
+    jPanel8 = new javax.swing.JPanel();
+    jspReportCard = new javax.swing.JScrollPane();
+    jtblReportCard = new javax.swing.JTable();
+    jLabel20 = new javax.swing.JLabel();
+    jTextField1 = new javax.swing.JTextField();
     panel_settings = new javax.swing.JPanel();
 
     setMinimumSize(new java.awt.Dimension(1300, 700));
@@ -1981,7 +2019,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jScrollPane3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-    jTable3.setModel(new javax.swing.table.DefaultTableModel(
+    jtblReceipts.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
         },
@@ -1997,10 +2035,10 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
             return canEdit [columnIndex];
         }
     });
-    jTable3.setIntercellSpacing(new java.awt.Dimension(16, 1));
-    jTable3.setRowHeight(20);
-    jTable3.getTableHeader().setReorderingAllowed(false);
-    jScrollPane3.setViewportView(jTable3);
+    jtblReceipts.setIntercellSpacing(new java.awt.Dimension(16, 1));
+    jtblReceipts.setRowHeight(20);
+    jtblReceipts.getTableHeader().setReorderingAllowed(false);
+    jScrollPane3.setViewportView(jtblReceipts);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -2616,7 +2654,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jScrollPane5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-    jTable5.setModel(new javax.swing.table.DefaultTableModel(
+    jtblSchedules.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
             {null, null, null},
             {null, null, null},
@@ -2635,9 +2673,9 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
             return canEdit [columnIndex];
         }
     });
-    jTable5.setIntercellSpacing(new java.awt.Dimension(16, 1));
-    jTable5.setRowHeight(20);
-    jScrollPane5.setViewportView(jTable5);
+    jtblSchedules.setIntercellSpacing(new java.awt.Dimension(16, 1));
+    jtblSchedules.setRowHeight(20);
+    jScrollPane5.setViewportView(jtblSchedules);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -2675,36 +2713,36 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
     panel_details6.add(lbl_name31, gridBagConstraints);
 
-    combo_gradelevel21.setEditable(true);
-    combo_gradelevel21.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    combo_gradelevel21.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select" }));
-    combo_gradelevel21.setMinimumSize(new java.awt.Dimension(100, 25));
-    combo_gradelevel21.setPreferredSize(new java.awt.Dimension(100, 25));
+    jmcbReportCardFilterBySchoolYear.setEditable(true);
+    jmcbReportCardFilterBySchoolYear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jmcbReportCardFilterBySchoolYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select" }));
+    jmcbReportCardFilterBySchoolYear.setMinimumSize(new java.awt.Dimension(100, 25));
+    jmcbReportCardFilterBySchoolYear.setPreferredSize(new java.awt.Dimension(100, 25));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    panel_details6.add(combo_gradelevel21, gridBagConstraints);
+    panel_details6.add(jmcbReportCardFilterBySchoolYear, gridBagConstraints);
 
-    Searchbox2.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
-    Searchbox2.setText("Search Here");
-    Searchbox2.setMinimumSize(new java.awt.Dimension(200, 25));
-    Searchbox2.setPreferredSize(new java.awt.Dimension(200, 25));
+    jtfReportCardSearchBox.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+    jtfReportCardSearchBox.setText("Search Here");
+    jtfReportCardSearchBox.setMinimumSize(new java.awt.Dimension(200, 25));
+    jtfReportCardSearchBox.setPreferredSize(new java.awt.Dimension(200, 25));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
     gridBagConstraints.weightx = 0.5;
-    panel_details6.add(Searchbox2, gridBagConstraints);
+    panel_details6.add(jtfReportCardSearchBox, gridBagConstraints);
 
-    btn_Search27.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    btn_Search27.setText("Search");
+    jbtnReportCardsSearchBox.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jbtnReportCardsSearchBox.setText("Search");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 5;
     gridBagConstraints.gridy = 0;
-    panel_details6.add(btn_Search27, gridBagConstraints);
+    panel_details6.add(jbtnReportCardsSearchBox, gridBagConstraints);
 
     lbl_name39.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     lbl_name39.setText("Search by :");
@@ -2809,6 +2847,276 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     panel_summary6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Report Summary", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
     panel_summary6.setLayout(new java.awt.GridBagLayout());
+
+    jpnlClassListTop1.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlClassListTop1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlClassListTop1.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlClassListTop1.setPreferredSize(new java.awt.Dimension(700, 599));
+    jpnlClassListTop1.setLayout(new java.awt.GridBagLayout());
+
+    jpnlFooter2.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlFooter2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlFooter2.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlFooter2.setMinimumSize(new java.awt.Dimension(795, 30));
+    jpnlFooter2.setPreferredSize(new java.awt.Dimension(1180, 30));
+    jpnlFooter2.setLayout(new java.awt.GridBagLayout());
+
+    jpnlSectionDetails1.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlSectionDetails1.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlSectionDetails1.setLayout(new java.awt.GridBagLayout());
+
+    jLabel23.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel23.setForeground(new java.awt.Color(0, 0, 0));
+    jLabel23.setText("Section :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jLabel23, gridBagConstraints);
+
+    jlblClassListSectionName1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSectionName1.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListSectionName1.setText("Section Text");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblClassListSectionName1, gridBagConstraints);
+
+    jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel26.setForeground(new java.awt.Color(0, 0, 0));
+    jLabel26.setText("Grade Level :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jLabel26, gridBagConstraints);
+
+    jlblClassListGradeLevelText1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListGradeLevelText1.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListGradeLevelText1.setText("Grade Level Text");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 5;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblClassListGradeLevelText1, gridBagConstraints);
+
+    jLabel29.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel29.setForeground(new java.awt.Color(0, 0, 0));
+    jLabel29.setText("Adviser :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jLabel29, gridBagConstraints);
+
+    jlblClassListAdviserName1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListAdviserName1.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListAdviserName1.setText("Adviser Name");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblClassListAdviserName1, gridBagConstraints);
+
+    jLabel18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel18.setForeground(new java.awt.Color(0, 0, 0));
+    jLabel18.setText("School Year :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 6;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jLabel18, gridBagConstraints);
+
+    jlblClassListSchoolYear1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSchoolYear1.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListSchoolYear1.setText("SY Text");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 7;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblClassListSchoolYear1, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlFooter2.add(jpnlSectionDetails1, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlClassListTop1.add(jpnlFooter2, gridBagConstraints);
+
+    jpnlBody2.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlBody2.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlBody2.setLayout(new java.awt.GridBagLayout());
+
+    jlblCertificateOfRegistration2.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+    jlblCertificateOfRegistration2.setForeground(new java.awt.Color(0, 0, 0));
+    jlblCertificateOfRegistration2.setText("REPORT CARD");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlBody2.add(jlblCertificateOfRegistration2, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlClassListTop1.add(jpnlBody2, gridBagConstraints);
+
+    jpnlHeader2.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlHeader2.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlHeader2.setLayout(new java.awt.GridBagLayout());
+
+    jpnlClassListLogo1.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlClassListLogo1.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlClassListLogo1.setMinimumSize(new java.awt.Dimension(100, 100));
+    jpnlClassListLogo1.setPreferredSize(new java.awt.Dimension(120, 120));
+    jpnlClassListLogo1.setLayout(new java.awt.GridBagLayout());
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlHeader2.add(jpnlClassListLogo1, gridBagConstraints);
+
+    jPanel15.setBackground(new java.awt.Color(255, 255, 255));
+    jPanel15.setForeground(new java.awt.Color(0, 0, 0));
+    jPanel15.setMinimumSize(new java.awt.Dimension(600, 18));
+    jPanel15.setPreferredSize(new java.awt.Dimension(600, 18));
+    jPanel15.setLayout(new java.awt.GridBagLayout());
+
+    jLabel37.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+    jLabel37.setForeground(new java.awt.Color(0, 102, 204));
+    jLabel37.setText("Mother of Perpetual Help School");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel15.add(jLabel37, gridBagConstraints);
+
+    jLabel38.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel38.setForeground(new java.awt.Color(51, 51, 51));
+    jLabel38.setText("Iris Street Dahlia, West Fairview Quezon City");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 3);
+    jPanel15.add(jLabel38, gridBagConstraints);
+
+    jLabel39.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel39.setForeground(new java.awt.Color(51, 51, 51));
+    jLabel39.setText("1118 Metro Manila, Philippines");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 3);
+    jPanel15.add(jLabel39, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlHeader2.add(jPanel15, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlClassListTop1.add(jpnlHeader2, gridBagConstraints);
+
+    jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+    jPanel8.setMinimumSize(new java.awt.Dimension(600, 300));
+    jPanel8.setPreferredSize(new java.awt.Dimension(500, 300));
+    jPanel8.setLayout(new java.awt.GridBagLayout());
+
+    jtblReportCard.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jtblReportCard.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+
+        },
+        new String [] {
+            "Subject", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Final Grade"
+        }
+    ) {
+        boolean[] canEdit = new boolean [] {
+            false, false, false, false, true, true
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit [columnIndex];
+        }
+    });
+    jtblReportCard.setEnabled(false);
+    jtblReportCard.setRowHeight(35);
+    jtblReportCard.getTableHeader().setReorderingAllowed(false);
+    jspReportCard.setViewportView(jtblReportCard);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel8.add(jspReportCard, gridBagConstraints);
+
+    jLabel20.setBackground(new java.awt.Color(255, 255, 255));
+    jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel20.setForeground(new java.awt.Color(0, 0, 0));
+    jLabel20.setText("General Average :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel8.add(jLabel20, gridBagConstraints);
+
+    jTextField1.setBackground(new java.awt.Color(255, 255, 255));
+    jTextField1.setColumns(8);
+    jTextField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jTextField1.setForeground(new java.awt.Color(0, 0, 0));
+    jTextField1.setEnabled(false);
+    jTextField1.setMinimumSize(new java.awt.Dimension(50, 23));
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel8.add(jTextField1, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlClassListTop1.add(jPanel8, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+    gridBagConstraints.weighty = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_summary6.add(jpnlClassListTop1, gridBagConstraints);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
@@ -2842,7 +3150,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField Searchbox2;
     private javax.swing.ButtonGroup btnGroup;
     private javax.swing.JButton btn_Search;
     private javax.swing.JButton btn_Search1;
@@ -2859,7 +3166,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton btn_Search24;
     private javax.swing.JButton btn_Search25;
     private javax.swing.JButton btn_Search26;
-    private javax.swing.JButton btn_Search27;
     private javax.swing.JButton btn_Search3;
     private javax.swing.JButton btn_Search4;
     private javax.swing.JButton btn_Search5;
@@ -2874,7 +3180,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JComboBox<String> combo_gradelevel19;
     private javax.swing.JComboBox<String> combo_gradelevel2;
     private javax.swing.JComboBox<String> combo_gradelevel20;
-    private javax.swing.JComboBox<String> combo_gradelevel21;
     private javax.swing.JComboBox<String> combo_gradelevel26;
     private javax.swing.JComboBox<String> combo_gradelevel3;
     private javax.swing.JComboBox<String> combo_gradelevel4;
@@ -2898,16 +3203,24 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -2917,12 +3230,14 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
@@ -2937,12 +3252,12 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable5;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton jbtnClassListGenerateReport;
     private javax.swing.JButton jbtnClassListPrint;
     private javax.swing.JButton jbtnCorPrint;
     private javax.swing.JButton jbtnGenerateCOR;
+    private javax.swing.JButton jbtnReportCardsSearchBox;
     private javax.swing.JComboBox<String> jcmbClassListGradeLevel;
     private javax.swing.JComboBox<String> jcmbClassListSchoolYear;
     private javax.swing.JComboBox<String> jcmbClassListSectionType;
@@ -2960,37 +3275,54 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel jlblCORStudentType;
     private javax.swing.JLabel jlblCertificateOfRegistration;
     private javax.swing.JLabel jlblCertificateOfRegistration1;
+    private javax.swing.JLabel jlblCertificateOfRegistration2;
     private javax.swing.JLabel jlblClassListAdviserName;
+    private javax.swing.JLabel jlblClassListAdviserName1;
     private javax.swing.JLabel jlblClassListGradeLevelText;
+    private javax.swing.JLabel jlblClassListGradeLevelText1;
     private javax.swing.JLabel jlblClassListSchoolYear;
+    private javax.swing.JLabel jlblClassListSchoolYear1;
     private javax.swing.JLabel jlblClassListSectionName;
+    private javax.swing.JLabel jlblClassListSectionName1;
     private javax.swing.JLabel jlblTotalAmount;
     private javax.swing.JLabel jlblUserCompleteName;
     private javax.swing.JLabel jlblUserRole;
+    private javax.swing.JComboBox<String> jmcbReportCardFilterBySchoolYear;
     private javax.swing.JPanel jpnlBody;
     private javax.swing.JPanel jpnlBody1;
+    private javax.swing.JPanel jpnlBody2;
     private javax.swing.JPanel jpnlClassListLogo;
+    private javax.swing.JPanel jpnlClassListLogo1;
     private javax.swing.JPanel jpnlClassListReportSummary;
     private javax.swing.JPanel jpnlClassListTop;
+    private javax.swing.JPanel jpnlClassListTop1;
     private javax.swing.JPanel jpnlFooter;
     private javax.swing.JPanel jpnlFooter1;
+    private javax.swing.JPanel jpnlFooter2;
     private javax.swing.JPanel jpnlHeader;
     private javax.swing.JPanel jpnlHeader1;
+    private javax.swing.JPanel jpnlHeader2;
     private javax.swing.JPanel jpnlLogo;
     private javax.swing.JPanel jpnlMiscellaneous;
     private javax.swing.JPanel jpnlOthers;
     private javax.swing.JPanel jpnlSectionDetails;
+    private javax.swing.JPanel jpnlSectionDetails1;
     private javax.swing.JPanel jpnlStudentDetails;
     private javax.swing.JPanel jpnlTop;
     private javax.swing.JPanel jpnlTuition;
+    private javax.swing.JScrollPane jspReportCard;
     private javax.swing.JTable jtblCORMiscellaneous;
     private javax.swing.JTable jtblCOROthers;
     private javax.swing.JTable jtblCORPaymentAssessment;
     private javax.swing.JTable jtblCORSchedule;
     private javax.swing.JTable jtblCORTuition;
     private javax.swing.JTable jtblClassList;
+    private javax.swing.JTable jtblReceipts;
+    private javax.swing.JTable jtblReportCard;
+    private javax.swing.JTable jtblSchedules;
     private javax.swing.JTextField jtfCorSearchBox;
     private javax.swing.JTextField jtfReceiptsSearchBox;
+    private javax.swing.JTextField jtfReportCardSearchBox;
     private javax.swing.JLabel lbl_name;
     private javax.swing.JLabel lbl_name1;
     private javax.swing.JLabel lbl_name10;

@@ -19,7 +19,7 @@ public class FacultyJCompModelLoader {
     private final FacultyDaoImpl facultyDaoImpl;
     
     public FacultyJCompModelLoader(){
-        facultyDaoImpl = new FacultyDaoImpl(new SchoolYearDaoImpl());
+        facultyDaoImpl = new FacultyDaoImpl();
     }
     
     private Object[] columnNames() {

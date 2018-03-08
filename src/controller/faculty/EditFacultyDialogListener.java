@@ -31,7 +31,7 @@ public class EditFacultyDialogListener implements ActionListener {
     public EditFacultyDialogListener(Dialog_FacultyEdit view, Faculty faculty) {
         this.view = view;
         this.schoolYearDaoImpl = new SchoolYearDaoImpl();
-        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        facultyDaoImpl = new FacultyDaoImpl();
         classTypeDaoImpl = new ClassTypeDaoImpl();
         rejectedData = new ArrayList<>();
         this.faculty = faculty;

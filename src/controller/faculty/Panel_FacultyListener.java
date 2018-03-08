@@ -31,7 +31,7 @@ public class Panel_FacultyListener implements ActionListener, MouseListener, Key
     private Faculty faculty = new Faculty();
     private SubjectCategory subjectCategory = new SubjectCategory();
     
-    private FacultyDaoImpl fdi = new FacultyDaoImpl(new SchoolYearDaoImpl());
+    private FacultyDaoImpl fdi = new FacultyDaoImpl();
     
     private FacultyJCompModelLoader tblFacultyLoader = new FacultyJCompModelLoader();
     private SubjectCategoryJCompModelLoader subjectCategoryJCompModelLoader = new SubjectCategoryJCompModelLoader();

@@ -97,7 +97,7 @@ public class Dialog_FacultyEdit extends javax.swing.JDialog implements Initializ
 
     @Override
     public void initDaoImpl() {
-        facultyDaoImpl = new FacultyDaoImpl(new SchoolYearDaoImpl());
+        facultyDaoImpl = new FacultyDaoImpl();
         classTypeDaoImpl = new ClassTypeDaoImpl();
     }
 
