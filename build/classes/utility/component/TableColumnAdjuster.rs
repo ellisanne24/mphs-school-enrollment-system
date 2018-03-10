@@ -1,4 +1,0 @@
-TableColumnAdjuster$1
-TableColumnAdjuster$ToggleAction
-TableColumnAdjuster
-TableColumnAdjuster$ColumnAction

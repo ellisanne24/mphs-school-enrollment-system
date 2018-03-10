@@ -26,8 +26,10 @@ public class Controller_Reports_ClassList_SchoolYear_JComboBox implements ItemLi
         if(e.getSource() == view.getJcmbClassListSchoolYear()){
             if(view.getJcmbCorSchoolYear().getSelectedIndex() > -1){
                 view.getJcmbClassListGradeLevel().setSelectedIndex(-1);
+                view.getJcmbClassListSectionType().setSelectedIndex(-1);
                 view.getJcmbClassListSecttion().setSelectedIndex(-1);
                 view.clearClassList();
+                view.getJcbClassListFaculty().setSelected(false);
             }
         }
     }

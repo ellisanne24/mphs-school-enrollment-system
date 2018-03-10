@@ -30,6 +30,16 @@ public class GradeLevelJCompModelLoader {
         return comboModel;
     }
     
+    public DefaultComboBoxModel getAllGradeLevelsAsModel() {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<GradeLevel> gradeLevelList = gradeLevelDaoImpl.getAllGradeLevelsInfo();
+        for (GradeLevel gradeLevel : gradeLevelList) {
+            comboModel.addElement(gradeLevel);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
+    
     public DefaultComboBoxModel getAllActiveGradeLevelNo(){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<GradeLevel> gradeLevelList = gradeLevelDaoImpl.getAllActiveGradeLevels();

@@ -1,29 +1,42 @@
 package view.reports;
 
+import component_model_loader.FacultyJCompModelLoader;
 import component_model_loader.GradeLevelJCompModelLoader;
+import component_model_loader.ReportsJCompModelLoader;
 import component_model_loader.SchoolYearJCompModelLoader;
+import component_renderers.Renderer_Faculty_JComboBox;
 import component_renderers.Renderer_GradeLevel_JComboBox;
 import component_renderers.Renderer_Reports_COR_Schedule_Subject_JTableCell;
 import component_renderers.Renderer_SchoolYear_JComboBox;
+import component_renderers.Renderer_SectionType_JComboBox;
 import component_renderers.Renderer_Section_JComboBox;
 import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.reports.Controller_Reports_CORtab_Search_JTextField;
+import controller.reports.Controller_Reports_ClassList_ClassType_JComboBox;
 import controller.reports.Controller_Reports_ClassList_GradeLevel_JComboBox;
 import controller.reports.Controller_Reports_ClassList_SchoolYear_JComboBox;
 import controller.reports.Controller_Reports_ClassList_Section_JComboBox;
-import daoimpl.ReportsDaoImpl;
+import controller.reports.Controller_Reports_ReportCard_Search_JTextField;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import model.faculty.Faculty;
 import model.schoolyear.SchoolYear;
 import model.user.User;
 import utility.component.ImageUtil;
@@ -38,11 +51,12 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     
     private SchoolYearJCompModelLoader schoolYearJCompModelLoader;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
-    private ReportsDaoImpl reportsDaoImpl;
+    private FacultyJCompModelLoader facultyJCompModelLoader;
+    private ReportsJCompModelLoader reportsJCompModelLoader;
     
     public Panel_Reports(User user, SchoolYear currentSchoolYear) {
         initComponents();
-        schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.jpg", 200, 200);
+        schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.png", 200, 200);
         this.user = user;
         this.currentSchoolYear = currentSchoolYear;
         
@@ -61,6 +75,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     public void initJCompModelLoaders() {
         schoolYearJCompModelLoader = new SchoolYearJCompModelLoader();
         gradeLevelJCompModelLoader = new GradeLevelJCompModelLoader();
+        facultyJCompModelLoader = new FacultyJCompModelLoader();
+        reportsJCompModelLoader = new ReportsJCompModelLoader();
     }
 
     @Override
@@ -70,6 +86,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
         jcmbClassListGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
         jcmbClassListSchoolYear.setRenderer(new Renderer_SchoolYear_JComboBox());
         jcmbClassListSecttion.setRenderer(new Renderer_Section_JComboBox());
+        jcmbClassListFaculty.setRenderer(new Renderer_Faculty_JComboBox());
+        jcmbClassListSectionType.setRenderer(new Renderer_SectionType_JComboBox());
     }
 
     @Override
@@ -80,9 +98,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     public void initViewComponents() {
         clearCOR();
         clearClassList();
+        clearReportCard();
+        jcmbClassListFaculty.setModel(facultyJCompModelLoader.getAllFacultyAsModel());
         jcmbCorSchoolYear.setModel(schoolYearJCompModelLoader.getAllSchoolYear());
         jcmbClassListSchoolYear.setModel(schoolYearJCompModelLoader.getAllSchoolYear());
-        jcmbClassListGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
+        jcmbClassListGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevelsAsModel());
         JTableUtil.applyCustomHeaderRenderer(jtblClassList);
         JTableUtil.applyCustomHeaderRenderer(jtblReportCard);
         JTableUtil.applyCustomHeaderRenderer(jtblSchedules);
@@ -92,14 +112,61 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     public void initControllers() {
         jtfCorSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jtfCorSearchBox.addKeyListener(new Controller_Reports_CORtab_Search_JTextField(this,user));
+        jtfReportCardSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jcmbClassListGradeLevel.addItemListener(new Controller_Reports_ClassList_GradeLevel_JComboBox(this));
         jcmbClassListSecttion.addItemListener(new Controller_Reports_ClassList_Section_JComboBox(this));
         jcmbClassListSchoolYear.addItemListener(new Controller_Reports_ClassList_SchoolYear_JComboBox(this));
+        jcmbClassListSectionType.addItemListener(new Controller_Reports_ClassList_ClassType_JComboBox(this));
+        jcbClassListFaculty.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    clearClassList();
+                    jcmbClassListSecttion.setSelectedIndex(-1);
+                    jcmbClassListSectionType.setSelectedIndex(-1);
+                    jcmbClassListGradeLevel.setSelectedIndex(-1);
+                    jcmbClassListGradeLevel.setEnabled(false);
+                    jcmbClassListSectionType.setEnabled(false);
+                    jcmbClassListSecttion.setEnabled(false);
+                    jcmbClassListFaculty.setEnabled(true);
+                }else{
+                    clearClassList();
+                    jcmbClassListGradeLevel.setEnabled(true);
+                    jcmbClassListSectionType.setEnabled(true);
+                    jcmbClassListSecttion.setEnabled(true);
+                    jcmbClassListFaculty.setSelectedIndex(-1);
+                    jcmbClassListFaculty.setEnabled(false);
+                }
+            }
+        });
+        jcmbClassListFaculty.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    clearClassList();
+                    Faculty faculty = (Faculty) jcmbClassListFaculty.getSelectedItem();
+                    SchoolYear schoolYear = (SchoolYear) jcmbClassListSchoolYear.getSelectedItem();
+                    jlblClassListAdviserNameText.setText(faculty.getLastName()+", "+faculty.getFirstName()+" "+faculty.getMiddleName());
+                    jlblClassListSchoolYearText.setText(schoolYear.getYearFrom()+"-"+schoolYear.getYearTo());
+                    jtblClassList.setModel(reportsJCompModelLoader.getClassListFor(jtblClassList, faculty, schoolYear));
+                    jlblClassListAdviser.setText("Teacher :");
+                    jlblClassListSection.setVisible(false);
+                    jlblClassListGradeLevel.setVisible(false);
+                    JTableUtil.applyCustomHeaderRenderer(jtblClassList);
+                    JTableUtil.resizeColumnWidthsOf(jtblClassList);
+                }else{
+                    jlblClassListAdviser.setText("Adviser :");
+                     jlblClassListGradeLevel.setVisible(true);
+                    jlblClassListSection.setVisible(true);
+                }
+            }
+        });
+        
+        jtfReportCardSearchBox.addKeyListener(new Controller_Reports_ReportCard_Search_JTextField(this));
     }
-
+    
     @Override
     public void initDaoImpl() {
-        reportsDaoImpl = new ReportsDaoImpl();
     }
     
     public void clearCOR(){
@@ -124,13 +191,89 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     }
     
     public void clearClassList(){
-        jlblClassListAdviserName.setText("");
+        jlblClassListAdviserNameText.setText("");
         jlblClassListGradeLevelText.setText("");
-        jlblClassListSchoolYear.setText("");
-        jlblClassListSectionName.setText("");
+        jlblClassListSchoolYearText.setText("");
+        jlblClassListSectionNameText.setText("");
         ((DefaultTableModel)jtblClassList.getModel()).setRowCount(0);
-       
     }
+    
+    public void clearReportCard(){
+        jlblReportCardsAdviserNameText.setText("");
+        jlblReportCardsSectionNameText.setText("");
+        jlblReportCardsGradeLevelText.setText("");
+        jlblReportCardsSchoolYearText.setText("");
+        ((DefaultTableModel)jtblReportCard.getModel()).setRowCount(0);
+        jtfReportCardGeneralAverage.setText("");
+    }
+
+    public JTextField getJtfReportCardGeneralAverage() {
+        return jtfReportCardGeneralAverage;
+    }
+
+    
+    
+    public JLabel getJlblReportCard() {
+        return jlblReportCard;
+    }
+
+    public JLabel getJlblReportCardGeneralAverage() {
+        return jlblReportCardGeneralAverage;
+    }
+
+    public JLabel getJlblReportCardsAdviser() {
+        return jlblReportCardsAdviser;
+    }
+
+    public JLabel getJlblReportCardsAdviserNameText() {
+        return jlblReportCardsAdviserNameText;
+    }
+
+    public JLabel getJlblReportCardsGradeLevel() {
+        return jlblReportCardsGradeLevel;
+    }
+
+    public JLabel getJlblReportCardsGradeLevelText() {
+        return jlblReportCardsGradeLevelText;
+    }
+
+    public JLabel getJlblReportCardsSchoolYear() {
+        return jlblReportCardsSchoolYear;
+    }
+
+    public JLabel getJlblReportCardsSchoolYearText() {
+        return jlblReportCardsSchoolYearText;
+    }
+
+    public JLabel getJlblReportCardsSection() {
+        return jlblReportCardsSection;
+    }
+
+    public JLabel getJlblReportCardsSectionNameText() {
+        return jlblReportCardsSectionNameText;
+    }
+    
+    public JLabel getJlblReportCardStudentName() {
+        return jlblReportCardStudentName;
+    }
+
+    public JTextField getJtfReportCardSearchBox() {
+        return jtfReportCardSearchBox;
+    }
+
+    public JScrollPane getJspReportCard() {
+        return jspReportCard;
+    }
+
+    public JTable getJtblReportCard() {
+        return jtblReportCard;
+    }
+    
+    public JCheckBox getJcbClassListFaculty() {
+        return jcbClassListFaculty;
+    }
+    
+    
 
     public JButton getJbtnClassListGenerateReport() {
         return jbtnClassListGenerateReport;
@@ -157,7 +300,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     }
 
     public JLabel getJlblClassListAdviserName() {
-        return jlblClassListAdviserName;
+        return jlblClassListAdviserNameText;
     }
 
     public JLabel getJlblClassListGradeLevelText() {
@@ -165,11 +308,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     }
 
     public JLabel getJlblClassListSchoolYear() {
-        return jlblClassListSchoolYear;
+        return jlblClassListSchoolYearText;
     }
 
     public JLabel getJlblClassListSectionName() {
-        return jlblClassListSectionName;
+        return jlblClassListSectionNameText;
     }
 
     public JPanel getJpnlClassListLogo() {
@@ -486,21 +629,24 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jcmbClassListGradeLevel = new javax.swing.JComboBox<>();
     lbl_name21 = new javax.swing.JLabel();
     jcmbClassListSecttion = new javax.swing.JComboBox<>();
+    jcmbClassListFaculty = new javax.swing.JComboBox<>();
+    jcbClassListFaculty = new javax.swing.JCheckBox();
     panel_controls4 = new javax.swing.JPanel();
     jbtnClassListGenerateReport = new javax.swing.JButton();
     jbtnClassListPrint = new javax.swing.JButton();
+    jScrollPane12 = new javax.swing.JScrollPane();
     jpnlClassListReportSummary = new javax.swing.JPanel();
     jpnlClassListTop = new javax.swing.JPanel();
     jpnlFooter1 = new javax.swing.JPanel();
     jpnlSectionDetails = new javax.swing.JPanel();
-    jLabel22 = new javax.swing.JLabel();
-    jlblClassListSectionName = new javax.swing.JLabel();
-    jLabel25 = new javax.swing.JLabel();
+    jlblClassListSection = new javax.swing.JLabel();
+    jlblClassListSectionNameText = new javax.swing.JLabel();
+    jlblClassListGradeLevel = new javax.swing.JLabel();
     jlblClassListGradeLevelText = new javax.swing.JLabel();
-    jLabel28 = new javax.swing.JLabel();
-    jlblClassListAdviserName = new javax.swing.JLabel();
-    jLabel6 = new javax.swing.JLabel();
+    jlblClassListAdviser = new javax.swing.JLabel();
+    jlblClassListAdviserNameText = new javax.swing.JLabel();
     jlblClassListSchoolYear = new javax.swing.JLabel();
+    jlblClassListSchoolYearText = new javax.swing.JLabel();
     jpnlBody1 = new javax.swing.JPanel();
     jlblCertificateOfRegistration1 = new javax.swing.JLabel();
     jpnlHeader1 = new javax.swing.JPanel();
@@ -548,36 +694,27 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jtblSchedules = new javax.swing.JTable();
     panel_reportcards = new javax.swing.JPanel();
     panel_details6 = new javax.swing.JPanel();
-    lbl_name31 = new javax.swing.JLabel();
-    jmcbReportCardFilterBySchoolYear = new javax.swing.JComboBox<>();
     jtfReportCardSearchBox = new javax.swing.JTextField();
     jbtnReportCardsSearchBox = new javax.swing.JButton();
     lbl_name39 = new javax.swing.JLabel();
     combo_gradelevel26 = new javax.swing.JComboBox<>();
-    panel_controls6 = new javax.swing.JPanel();
-    btn_Search23 = new javax.swing.JButton();
-    btn_Search24 = new javax.swing.JButton();
-    btn_Search25 = new javax.swing.JButton();
-    lbl_name36 = new javax.swing.JLabel();
-    lbl_name37 = new javax.swing.JLabel();
-    lbl_name38 = new javax.swing.JLabel();
-    btn_Search26 = new javax.swing.JButton();
     panel_summary6 = new javax.swing.JPanel();
     jpnlClassListTop1 = new javax.swing.JPanel();
     jpnlFooter2 = new javax.swing.JPanel();
     jpnlSectionDetails1 = new javax.swing.JPanel();
-    jLabel23 = new javax.swing.JLabel();
-    jlblClassListSectionName1 = new javax.swing.JLabel();
-    jLabel26 = new javax.swing.JLabel();
-    jlblClassListGradeLevelText1 = new javax.swing.JLabel();
-    jLabel29 = new javax.swing.JLabel();
-    jlblClassListAdviserName1 = new javax.swing.JLabel();
-    jLabel18 = new javax.swing.JLabel();
-    jlblClassListSchoolYear1 = new javax.swing.JLabel();
+    jlblReportCardsSection = new javax.swing.JLabel();
+    jlblReportCardsSectionNameText = new javax.swing.JLabel();
+    jlblReportCardsGradeLevel = new javax.swing.JLabel();
+    jlblReportCardsGradeLevelText = new javax.swing.JLabel();
+    jlblReportCardsAdviser = new javax.swing.JLabel();
+    jlblReportCardsAdviserNameText = new javax.swing.JLabel();
+    jlblReportCardsSchoolYear = new javax.swing.JLabel();
+    jlblReportCardsSchoolYearText = new javax.swing.JLabel();
+    jlblReportCardStudentName = new javax.swing.JLabel();
     jpnlBody2 = new javax.swing.JPanel();
-    jlblCertificateOfRegistration2 = new javax.swing.JLabel();
+    jlblReportCard = new javax.swing.JLabel();
     jpnlHeader2 = new javax.swing.JPanel();
-    jpnlClassListLogo1 = new javax.swing.JPanel(){
+    jpnlReportCardLogo = new javax.swing.JPanel(){
         public void paintComponent(Graphics g){
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(
@@ -596,8 +733,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jPanel8 = new javax.swing.JPanel();
     jspReportCard = new javax.swing.JScrollPane();
     jtblReportCard = new javax.swing.JTable();
-    jLabel20 = new javax.swing.JLabel();
-    jTextField1 = new javax.swing.JTextField();
+    jlblReportCardGeneralAverage = new javax.swing.JLabel();
+    jtfReportCardGeneralAverage = new javax.swing.JTextField();
+    jPanel9 = new javax.swing.JPanel();
+    jLabel6 = new javax.swing.JLabel();
+    jLabel18 = new javax.swing.JLabel();
     panel_settings = new javax.swing.JPanel();
 
     setMinimumSize(new java.awt.Dimension(1300, 700));
@@ -2062,8 +2202,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     panel_classlist.setLayout(new java.awt.GridBagLayout());
 
     panel_details4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Selection", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-    panel_details4.setMinimumSize(new java.awt.Dimension(995, 70));
-    panel_details4.setPreferredSize(new java.awt.Dimension(995, 70));
+    panel_details4.setMinimumSize(new java.awt.Dimension(995, 90));
+    panel_details4.setPreferredSize(new java.awt.Dimension(995, 90));
     panel_details4.setLayout(new java.awt.GridBagLayout());
 
     lbl_name14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -2073,7 +2213,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     panel_details4.add(lbl_name14, gridBagConstraints);
 
     jcmbClassListSchoolYear.setBackground(new java.awt.Color(255, 255, 255));
@@ -2086,50 +2226,52 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     panel_details4.add(jcmbClassListSchoolYear, gridBagConstraints);
 
     lbl_name16.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     lbl_name16.setText("Class Type :");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_details4.add(lbl_name16, gridBagConstraints);
-
-    jcmbClassListSectionType.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    jcmbClassListSectionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Regular", "Summer", "" }));
-    jcmbClassListSectionType.setMinimumSize(new java.awt.Dimension(150, 25));
-    jcmbClassListSectionType.setPreferredSize(new java.awt.Dimension(150, 25));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 3;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    panel_details4.add(jcmbClassListSectionType, gridBagConstraints);
-
-    lbl_name18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    lbl_name18.setText("Grade Level :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_details4.add(lbl_name18, gridBagConstraints);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_details4.add(lbl_name16, gridBagConstraints);
 
-    jcmbClassListGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    jcmbClassListGradeLevel.setMinimumSize(new java.awt.Dimension(150, 25));
-    jcmbClassListGradeLevel.setPreferredSize(new java.awt.Dimension(150, 25));
+    jcmbClassListSectionType.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jcmbClassListSectionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "R", "S" }));
+    jcmbClassListSectionType.setSelectedIndex(-1);
+    jcmbClassListSectionType.setMinimumSize(new java.awt.Dimension(150, 25));
+    jcmbClassListSectionType.setPreferredSize(new java.awt.Dimension(150, 25));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 5;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_details4.add(jcmbClassListSectionType, gridBagConstraints);
+
+    lbl_name18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    lbl_name18.setText("Grade Level :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_details4.add(lbl_name18, gridBagConstraints);
+
+    jcmbClassListGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jcmbClassListGradeLevel.setMaximumRowCount(11);
+    jcmbClassListGradeLevel.setMinimumSize(new java.awt.Dimension(150, 25));
+    jcmbClassListGradeLevel.setPreferredSize(new java.awt.Dimension(150, 25));
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     panel_details4.add(jcmbClassListGradeLevel, gridBagConstraints);
 
     lbl_name21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -2139,7 +2281,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     panel_details4.add(lbl_name21, gridBagConstraints);
 
     jcmbClassListSecttion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -2151,8 +2293,27 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 0;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     panel_details4.add(jcmbClassListSecttion, gridBagConstraints);
+
+    jcmbClassListFaculty.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jcmbClassListFaculty.setMaximumRowCount(25);
+    jcmbClassListFaculty.setEnabled(false);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_details4.add(jcmbClassListFaculty, gridBagConstraints);
+
+    jcbClassListFaculty.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jcbClassListFaculty.setText("Faculty");
+    jcbClassListFaculty.setToolTipText("Filter By Faculty");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_details4.add(jcbClassListFaculty, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -2162,8 +2323,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     panel_classlist.add(panel_details4, gridBagConstraints);
 
     panel_controls4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(187, 187, 187)));
-    panel_controls4.setMinimumSize(new java.awt.Dimension(995, 50));
-    panel_controls4.setPreferredSize(new java.awt.Dimension(995, 50));
+    panel_controls4.setMinimumSize(new java.awt.Dimension(995, 35));
+    panel_controls4.setPreferredSize(new java.awt.Dimension(995, 35));
     panel_controls4.setLayout(new java.awt.GridBagLayout());
 
     jbtnClassListGenerateReport.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -2214,32 +2375,32 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jpnlSectionDetails.setForeground(new java.awt.Color(0, 0, 0));
     jpnlSectionDetails.setLayout(new java.awt.GridBagLayout());
 
-    jLabel22.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel22.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel22.setText("Section :");
+    jlblClassListSection.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSection.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListSection.setText("Section :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails.add(jLabel22, gridBagConstraints);
+    jpnlSectionDetails.add(jlblClassListSection, gridBagConstraints);
 
-    jlblClassListSectionName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jlblClassListSectionName.setForeground(new java.awt.Color(0, 0, 0));
-    jlblClassListSectionName.setText("Section Text");
+    jlblClassListSectionNameText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSectionNameText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListSectionNameText.setText("Section Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails.add(jlblClassListSectionName, gridBagConstraints);
+    jpnlSectionDetails.add(jlblClassListSectionNameText, gridBagConstraints);
 
-    jLabel25.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel25.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel25.setText("Grade Level :");
+    jlblClassListGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListGradeLevel.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListGradeLevel.setText("Grade Level :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails.add(jLabel25, gridBagConstraints);
+    jpnlSectionDetails.add(jlblClassListGradeLevel, gridBagConstraints);
 
     jlblClassListGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     jlblClassListGradeLevelText.setForeground(new java.awt.Color(0, 0, 0));
@@ -2250,41 +2411,41 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListGradeLevelText, gridBagConstraints);
 
-    jLabel28.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel28.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel28.setText("Adviser :");
+    jlblClassListAdviser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListAdviser.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListAdviser.setText("Adviser :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails.add(jLabel28, gridBagConstraints);
+    jpnlSectionDetails.add(jlblClassListAdviser, gridBagConstraints);
 
-    jlblClassListAdviserName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jlblClassListAdviserName.setForeground(new java.awt.Color(0, 0, 0));
-    jlblClassListAdviserName.setText("Adviser Name");
+    jlblClassListAdviserNameText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListAdviserNameText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListAdviserNameText.setText("Adviser Name");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails.add(jlblClassListAdviserName, gridBagConstraints);
+    jpnlSectionDetails.add(jlblClassListAdviserNameText, gridBagConstraints);
 
-    jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel6.setText("School Year :");
+    jlblClassListSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSchoolYear.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListSchoolYear.setText("School Year :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 6;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails.add(jLabel6, gridBagConstraints);
+    jpnlSectionDetails.add(jlblClassListSchoolYear, gridBagConstraints);
 
-    jlblClassListSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jlblClassListSchoolYear.setForeground(new java.awt.Color(0, 0, 0));
-    jlblClassListSchoolYear.setText("SY Text");
+    jlblClassListSchoolYearText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSchoolYearText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblClassListSchoolYearText.setText("SY Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 7;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails.add(jlblClassListSchoolYear, gridBagConstraints);
+    jpnlSectionDetails.add(jlblClassListSchoolYearText, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridwidth = 2;
@@ -2400,11 +2561,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
         },
         new String [] {
-            "No", "Student No", "Last Name", "First Name", "MiddleName"
+            "No", "Student No", "Student Name"
         }
     ) {
         boolean[] canEdit = new boolean [] {
-            false, false, false, false, false
+            false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -2439,13 +2600,16 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlClassListReportSummary.add(jpnlClassListTop, gridBagConstraints);
 
+    jScrollPane12.setViewportView(jpnlClassListReportSummary);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
-    panel_classlist.add(jpnlClassListReportSummary, gridBagConstraints);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_classlist.add(jScrollPane12, gridBagConstraints);
 
     jTabbedPane1.addTab("Class List", panel_classlist);
 
@@ -2703,29 +2867,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     panel_details6.setPreferredSize(new java.awt.Dimension(995, 70));
     panel_details6.setLayout(new java.awt.GridBagLayout());
 
-    lbl_name31.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    lbl_name31.setText("School Year :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_details6.add(lbl_name31, gridBagConstraints);
-
-    jmcbReportCardFilterBySchoolYear.setEditable(true);
-    jmcbReportCardFilterBySchoolYear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    jmcbReportCardFilterBySchoolYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select" }));
-    jmcbReportCardFilterBySchoolYear.setMinimumSize(new java.awt.Dimension(100, 25));
-    jmcbReportCardFilterBySchoolYear.setPreferredSize(new java.awt.Dimension(100, 25));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    panel_details6.add(jmcbReportCardFilterBySchoolYear, gridBagConstraints);
-
     jtfReportCardSearchBox.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
     jtfReportCardSearchBox.setText("Search Here");
     jtfReportCardSearchBox.setMinimumSize(new java.awt.Dimension(200, 25));
@@ -2772,175 +2913,130 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.weightx = 0.5;
     panel_reportcards.add(panel_details6, gridBagConstraints);
 
-    panel_controls6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(187, 187, 187)));
-    panel_controls6.setMinimumSize(new java.awt.Dimension(995, 50));
-    panel_controls6.setPreferredSize(new java.awt.Dimension(995, 50));
-    panel_controls6.setLayout(new java.awt.GridBagLayout());
-
-    btn_Search23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    btn_Search23.setText("Generate Report");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_controls6.add(btn_Search23, gridBagConstraints);
-
-    btn_Search24.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    btn_Search24.setText("Reset");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    panel_controls6.add(btn_Search24, gridBagConstraints);
-
-    btn_Search25.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    btn_Search25.setText("Print");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 4;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    panel_controls6.add(btn_Search25, gridBagConstraints);
-
-    lbl_name36.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    lbl_name36.setText("Result Count :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 5;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_controls6.add(lbl_name36, gridBagConstraints);
-
-    lbl_name37.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    lbl_name37.setText("Section :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 7;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_controls6.add(lbl_name37, gridBagConstraints);
-
-    lbl_name38.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    lbl_name38.setText("Adviser :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 6;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_controls6.add(lbl_name38, gridBagConstraints);
-
-    btn_Search26.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    btn_Search26.setText("View");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 3;
-    gridBagConstraints.gridy = 0;
-    panel_controls6.add(btn_Search26, gridBagConstraints);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 3);
-    panel_reportcards.add(panel_controls6, gridBagConstraints);
-
     panel_summary6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Report Summary", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
     panel_summary6.setLayout(new java.awt.GridBagLayout());
 
-    jpnlClassListTop1.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlClassListTop1.setBackground(new java.awt.Color(0, 153, 204));
     jpnlClassListTop1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlClassListTop1.setForeground(new java.awt.Color(0, 0, 0));
     jpnlClassListTop1.setPreferredSize(new java.awt.Dimension(700, 599));
     jpnlClassListTop1.setLayout(new java.awt.GridBagLayout());
 
-    jpnlFooter2.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlFooter2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlFooter2.setBackground(new java.awt.Color(0, 153, 204));
     jpnlFooter2.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlFooter2.setMinimumSize(new java.awt.Dimension(795, 30));
-    jpnlFooter2.setPreferredSize(new java.awt.Dimension(1180, 30));
+    jpnlFooter2.setMinimumSize(new java.awt.Dimension(795, 45));
+    jpnlFooter2.setPreferredSize(new java.awt.Dimension(1180, 45));
     jpnlFooter2.setLayout(new java.awt.GridBagLayout());
 
-    jpnlSectionDetails1.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlSectionDetails1.setBackground(new java.awt.Color(0, 153, 204));
     jpnlSectionDetails1.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlSectionDetails1.setMinimumSize(new java.awt.Dimension(667, 35));
+    jpnlSectionDetails1.setPreferredSize(new java.awt.Dimension(667, 30));
     jpnlSectionDetails1.setLayout(new java.awt.GridBagLayout());
 
-    jLabel23.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel23.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel23.setText("Section :");
+    jlblReportCardsSection.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblReportCardsSection.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsSection.setText("Section :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblReportCardsSection, gridBagConstraints);
+
+    jlblReportCardsSectionNameText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsSectionNameText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsSectionNameText.setText("Section Text");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblReportCardsSectionNameText, gridBagConstraints);
+
+    jlblReportCardsGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblReportCardsGradeLevel.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsGradeLevel.setText("Grade Level :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jLabel23, gridBagConstraints);
+    jpnlSectionDetails1.add(jlblReportCardsGradeLevel, gridBagConstraints);
 
-    jlblClassListSectionName1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jlblClassListSectionName1.setForeground(new java.awt.Color(0, 0, 0));
-    jlblClassListSectionName1.setText("Section Text");
+    jlblReportCardsGradeLevelText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsGradeLevelText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsGradeLevelText.setText("Grade Level Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jlblClassListSectionName1, gridBagConstraints);
+    jpnlSectionDetails1.add(jlblReportCardsGradeLevelText, gridBagConstraints);
 
-    jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel26.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel26.setText("Grade Level :");
+    jlblReportCardsAdviser.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblReportCardsAdviser.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsAdviser.setText("Adviser :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblReportCardsAdviser, gridBagConstraints);
+
+    jlblReportCardsAdviserNameText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsAdviserNameText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsAdviserNameText.setText("Adviser Name");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails1.add(jlblReportCardsAdviserNameText, gridBagConstraints);
+
+    jlblReportCardsSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblReportCardsSchoolYear.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsSchoolYear.setText("School Year :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jLabel26, gridBagConstraints);
+    jpnlSectionDetails1.add(jlblReportCardsSchoolYear, gridBagConstraints);
 
-    jlblClassListGradeLevelText1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jlblClassListGradeLevelText1.setForeground(new java.awt.Color(0, 0, 0));
-    jlblClassListGradeLevelText1.setText("Grade Level Text");
+    jlblReportCardsSchoolYearText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsSchoolYearText.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardsSchoolYearText.setText("SY Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 5;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jlblClassListGradeLevelText1, gridBagConstraints);
+    jpnlSectionDetails1.add(jlblReportCardsSchoolYearText, gridBagConstraints);
 
-    jLabel29.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel29.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel29.setText("Adviser :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jLabel29, gridBagConstraints);
-
-    jlblClassListAdviserName1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jlblClassListAdviserName1.setForeground(new java.awt.Color(0, 0, 0));
-    jlblClassListAdviserName1.setText("Adviser Name");
+    jlblReportCardStudentName.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardStudentName.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardStudentName.setText("Student Name");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jlblClassListAdviserName1, gridBagConstraints);
-
-    jLabel18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel18.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel18.setText("School Year :");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 6;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jLabel18, gridBagConstraints);
-
-    jlblClassListSchoolYear1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jlblClassListSchoolYear1.setForeground(new java.awt.Color(0, 0, 0));
-    jlblClassListSchoolYear1.setText("SY Text");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 7;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlSectionDetails1.add(jlblClassListSchoolYear1, gridBagConstraints);
+    jpnlSectionDetails1.add(jlblReportCardStudentName, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlFooter2.add(jpnlSectionDetails1, gridBagConstraints);
 
@@ -2951,18 +3047,18 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlClassListTop1.add(jpnlFooter2, gridBagConstraints);
 
-    jpnlBody2.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlBody2.setBackground(new java.awt.Color(0, 153, 204));
     jpnlBody2.setForeground(new java.awt.Color(0, 0, 0));
     jpnlBody2.setLayout(new java.awt.GridBagLayout());
 
-    jlblCertificateOfRegistration2.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
-    jlblCertificateOfRegistration2.setForeground(new java.awt.Color(0, 0, 0));
-    jlblCertificateOfRegistration2.setText("REPORT CARD");
+    jlblReportCard.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+    jlblReportCard.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCard.setText("REPORT CARD");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlBody2.add(jlblCertificateOfRegistration2, gridBagConstraints);
+    jpnlBody2.add(jlblReportCard, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -2971,29 +3067,30 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlClassListTop1.add(jpnlBody2, gridBagConstraints);
 
-    jpnlHeader2.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlHeader2.setBackground(new java.awt.Color(0, 153, 204));
     jpnlHeader2.setForeground(new java.awt.Color(0, 0, 0));
     jpnlHeader2.setLayout(new java.awt.GridBagLayout());
 
-    jpnlClassListLogo1.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlClassListLogo1.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlClassListLogo1.setMinimumSize(new java.awt.Dimension(100, 100));
-    jpnlClassListLogo1.setPreferredSize(new java.awt.Dimension(120, 120));
-    jpnlClassListLogo1.setLayout(new java.awt.GridBagLayout());
+    jpnlReportCardLogo.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlReportCardLogo.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlReportCardLogo.setMinimumSize(new java.awt.Dimension(100, 100));
+    jpnlReportCardLogo.setOpaque(false);
+    jpnlReportCardLogo.setPreferredSize(new java.awt.Dimension(120, 120));
+    jpnlReportCardLogo.setLayout(new java.awt.GridBagLayout());
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlHeader2.add(jpnlClassListLogo1, gridBagConstraints);
+    jpnlHeader2.add(jpnlReportCardLogo, gridBagConstraints);
 
-    jPanel15.setBackground(new java.awt.Color(255, 255, 255));
+    jPanel15.setBackground(new java.awt.Color(0, 153, 204));
     jPanel15.setForeground(new java.awt.Color(0, 0, 0));
     jPanel15.setMinimumSize(new java.awt.Dimension(600, 18));
     jPanel15.setPreferredSize(new java.awt.Dimension(600, 18));
     jPanel15.setLayout(new java.awt.GridBagLayout());
 
     jLabel37.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-    jLabel37.setForeground(new java.awt.Color(0, 102, 204));
+    jLabel37.setForeground(new java.awt.Color(0, 0, 0));
     jLabel37.setText("Mother of Perpetual Help School");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -3039,22 +3136,22 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlClassListTop1.add(jpnlHeader2, gridBagConstraints);
 
-    jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+    jPanel8.setBackground(new java.awt.Color(0, 153, 204));
     jPanel8.setMinimumSize(new java.awt.Dimension(600, 300));
     jPanel8.setPreferredSize(new java.awt.Dimension(500, 300));
     jPanel8.setLayout(new java.awt.GridBagLayout());
 
-    jtblReportCard.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jtblReportCard.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jtblReportCard.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
         },
         new String [] {
-            "Subject", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Final Grade"
+            "Subject", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Final Grade", "Remarks"
         }
     ) {
         boolean[] canEdit = new boolean [] {
-            false, false, false, false, true, true
+            false, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -3076,29 +3173,62 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jspReportCard, gridBagConstraints);
 
-    jLabel20.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-    jLabel20.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel20.setText("General Average :");
+    jlblReportCardGeneralAverage.setBackground(new java.awt.Color(255, 255, 255));
+    jlblReportCardGeneralAverage.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardGeneralAverage.setForeground(new java.awt.Color(0, 0, 0));
+    jlblReportCardGeneralAverage.setText("General Average :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jPanel8.add(jLabel20, gridBagConstraints);
+    jPanel8.add(jlblReportCardGeneralAverage, gridBagConstraints);
 
-    jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-    jTextField1.setColumns(8);
-    jTextField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-    jTextField1.setForeground(new java.awt.Color(0, 0, 0));
-    jTextField1.setEnabled(false);
-    jTextField1.setMinimumSize(new java.awt.Dimension(50, 23));
+    jtfReportCardGeneralAverage.setBackground(new java.awt.Color(255, 255, 255));
+    jtfReportCardGeneralAverage.setColumns(8);
+    jtfReportCardGeneralAverage.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jtfReportCardGeneralAverage.setForeground(new java.awt.Color(0, 0, 0));
+    jtfReportCardGeneralAverage.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+    jtfReportCardGeneralAverage.setEnabled(false);
+    jtfReportCardGeneralAverage.setMinimumSize(new java.awt.Dimension(50, 23));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jPanel8.add(jTextField1, gridBagConstraints);
+    jPanel8.add(jtfReportCardGeneralAverage, gridBagConstraints);
+
+    jPanel9.setBackground(new java.awt.Color(0, 153, 204));
+    jPanel9.setForeground(new java.awt.Color(0, 0, 0));
+    jPanel9.setMinimumSize(new java.awt.Dimension(500, 30));
+    jPanel9.setPreferredSize(new java.awt.Dimension(500, 13));
+    jPanel9.setLayout(new java.awt.GridBagLayout());
+
+    jLabel6.setFont(new java.awt.Font("Tahoma", 2, 9)); // NOI18N
+    jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+    jLabel6.setText("Outstanding 90-100 (Passed), Very Satisfactory 85-89 (Passed) Did not meet expectations Below 75 (Failed)");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    jPanel9.add(jLabel6, gridBagConstraints);
+
+    jLabel18.setFont(new java.awt.Font("Tahoma", 2, 9)); // NOI18N
+    jLabel18.setForeground(new java.awt.Color(0, 0, 0));
+    jLabel18.setText("Satisfactory 80-84 (Passed), Fairly Satisfactory 75-79 (Passed), ");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    jPanel9.add(jLabel18, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel8.add(jPanel9, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -3162,10 +3292,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton btn_Search20;
     private javax.swing.JButton btn_Search21;
     private javax.swing.JButton btn_Search22;
-    private javax.swing.JButton btn_Search23;
-    private javax.swing.JButton btn_Search24;
-    private javax.swing.JButton btn_Search25;
-    private javax.swing.JButton btn_Search26;
     private javax.swing.JButton btn_Search3;
     private javax.swing.JButton btn_Search4;
     private javax.swing.JButton btn_Search5;
@@ -3206,14 +3332,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
@@ -3238,9 +3357,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -3252,12 +3373,13 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton jbtnClassListGenerateReport;
     private javax.swing.JButton jbtnClassListPrint;
     private javax.swing.JButton jbtnCorPrint;
     private javax.swing.JButton jbtnGenerateCOR;
     private javax.swing.JButton jbtnReportCardsSearchBox;
+    private javax.swing.JCheckBox jcbClassListFaculty;
+    private javax.swing.JComboBox<String> jcmbClassListFaculty;
     private javax.swing.JComboBox<String> jcmbClassListGradeLevel;
     private javax.swing.JComboBox<String> jcmbClassListSchoolYear;
     private javax.swing.JComboBox<String> jcmbClassListSectionType;
@@ -3275,24 +3397,32 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel jlblCORStudentType;
     private javax.swing.JLabel jlblCertificateOfRegistration;
     private javax.swing.JLabel jlblCertificateOfRegistration1;
-    private javax.swing.JLabel jlblCertificateOfRegistration2;
-    private javax.swing.JLabel jlblClassListAdviserName;
-    private javax.swing.JLabel jlblClassListAdviserName1;
+    private javax.swing.JLabel jlblClassListAdviser;
+    private javax.swing.JLabel jlblClassListAdviserNameText;
+    private javax.swing.JLabel jlblClassListGradeLevel;
     private javax.swing.JLabel jlblClassListGradeLevelText;
-    private javax.swing.JLabel jlblClassListGradeLevelText1;
     private javax.swing.JLabel jlblClassListSchoolYear;
-    private javax.swing.JLabel jlblClassListSchoolYear1;
-    private javax.swing.JLabel jlblClassListSectionName;
-    private javax.swing.JLabel jlblClassListSectionName1;
+    private javax.swing.JLabel jlblClassListSchoolYearText;
+    private javax.swing.JLabel jlblClassListSection;
+    private javax.swing.JLabel jlblClassListSectionNameText;
+    private javax.swing.JLabel jlblReportCard;
+    private javax.swing.JLabel jlblReportCardGeneralAverage;
+    private javax.swing.JLabel jlblReportCardStudentName;
+    private javax.swing.JLabel jlblReportCardsAdviser;
+    private javax.swing.JLabel jlblReportCardsAdviserNameText;
+    private javax.swing.JLabel jlblReportCardsGradeLevel;
+    private javax.swing.JLabel jlblReportCardsGradeLevelText;
+    private javax.swing.JLabel jlblReportCardsSchoolYear;
+    private javax.swing.JLabel jlblReportCardsSchoolYearText;
+    private javax.swing.JLabel jlblReportCardsSection;
+    private javax.swing.JLabel jlblReportCardsSectionNameText;
     private javax.swing.JLabel jlblTotalAmount;
     private javax.swing.JLabel jlblUserCompleteName;
     private javax.swing.JLabel jlblUserRole;
-    private javax.swing.JComboBox<String> jmcbReportCardFilterBySchoolYear;
     private javax.swing.JPanel jpnlBody;
     private javax.swing.JPanel jpnlBody1;
     private javax.swing.JPanel jpnlBody2;
     private javax.swing.JPanel jpnlClassListLogo;
-    private javax.swing.JPanel jpnlClassListLogo1;
     private javax.swing.JPanel jpnlClassListReportSummary;
     private javax.swing.JPanel jpnlClassListTop;
     private javax.swing.JPanel jpnlClassListTop1;
@@ -3305,6 +3435,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel jpnlLogo;
     private javax.swing.JPanel jpnlMiscellaneous;
     private javax.swing.JPanel jpnlOthers;
+    private javax.swing.JPanel jpnlReportCardLogo;
     private javax.swing.JPanel jpnlSectionDetails;
     private javax.swing.JPanel jpnlSectionDetails1;
     private javax.swing.JPanel jpnlStudentDetails;
@@ -3322,6 +3453,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JTable jtblSchedules;
     private javax.swing.JTextField jtfCorSearchBox;
     private javax.swing.JTextField jtfReceiptsSearchBox;
+    private javax.swing.JTextField jtfReportCardGeneralAverage;
     private javax.swing.JTextField jtfReportCardSearchBox;
     private javax.swing.JLabel lbl_name;
     private javax.swing.JLabel lbl_name1;
@@ -3344,10 +3476,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel lbl_name29;
     private javax.swing.JLabel lbl_name3;
     private javax.swing.JLabel lbl_name30;
-    private javax.swing.JLabel lbl_name31;
-    private javax.swing.JLabel lbl_name36;
-    private javax.swing.JLabel lbl_name37;
-    private javax.swing.JLabel lbl_name38;
     private javax.swing.JLabel lbl_name39;
     private javax.swing.JLabel lbl_name4;
     private javax.swing.JLabel lbl_name5;
@@ -3365,7 +3493,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel panel_controls3;
     private javax.swing.JPanel panel_controls4;
     private javax.swing.JPanel panel_controls5;
-    private javax.swing.JPanel panel_controls6;
     private javax.swing.JPanel panel_details;
     private javax.swing.JPanel panel_details1;
     private javax.swing.JPanel panel_details2;

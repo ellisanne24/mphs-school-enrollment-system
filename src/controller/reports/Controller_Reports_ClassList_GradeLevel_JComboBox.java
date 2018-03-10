@@ -10,6 +10,8 @@ import daoimpl.GradeLevelDaoImpl;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.DefaultComboBoxModel;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 import view.reports.Panel_Reports;
 
 /**
@@ -31,11 +33,12 @@ public class Controller_Reports_ClassList_GradeLevel_JComboBox implements ItemLi
     @Override
     public void itemStateChanged(ItemEvent e) {
         if(e.getSource() == view.getJcmbClassListGradeLevel()){
-            if(view.getJcmbClassListGradeLevel().getSelectedIndex() > -1){
-                DefaultComboBoxModel comboModel = sectionJCompModelLoader.getSectionsByGradeLevelNo(view.getJcmbClassListGradeLevel());
-                view.getJcmbClassListSecttion().setModel(comboModel);
+            if(view.getJcmbClassListSectionType().getSelectedIndex() > -1){
+                SchoolYear schoolYear = (SchoolYear) view.getJcmbClassListSchoolYear().getSelectedItem();
+                GradeLevel gradeLevel = (GradeLevel) view.getJcmbClassListGradeLevel().getSelectedItem();
+                String sectionType = view.getJcmbClassListSectionType().getSelectedItem().toString().trim();
+                view.getJcmbClassListSecttion().setModel(sectionJCompModelLoader.getSectionsBy(schoolYear, gradeLevel, sectionType));
                 view.getJcmbClassListSecttion().setEnabled(true);
-                view.getJcmbClassListSchoolYear().setEnabled(false);
             }
         }
     }

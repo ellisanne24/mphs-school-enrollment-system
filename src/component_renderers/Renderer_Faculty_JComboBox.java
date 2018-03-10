@@ -35,7 +35,7 @@ public class Renderer_Faculty_JComboBox extends JLabel implements ListCellRender
             this.setText(""+faculty.getLastName() +", "+faculty.getFirstName()+" "+faculty.getMiddleName());
         }
         else {
-            this.setText("--");
+            this.setText("Select");
         }
 
         if (isSelected) {

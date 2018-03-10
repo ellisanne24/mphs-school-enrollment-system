@@ -78,7 +78,7 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         jbtnRefresh.addActionListener(new Controller_ItemListener_Section_JComboBox(this, currentSchoolYear));
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jbtnPromote.addActionListener(new Controller_Promote_JButton(this, currentSchoolYear, user));
-        jtblStudents.getModel().addTableModelListener(new Controller_Promotion_Students_JTable_TableModel());
+        jtblStudents.getModel().addTableModelListener(new Controller_Promotion_Students_JTable_TableModel(this));
         jtfSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jcmbSections.addItemListener(new Controller_ItemListener_Section_JComboBox(this,currentSchoolYear));
     }
@@ -209,8 +209,11 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jbtnSearch, gridBagConstraints);
 
+        jbtnPromote.setBackground(new java.awt.Color(204, 204, 0));
         jbtnPromote.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnPromote.setText("Promote");
+        jbtnPromote.setBorderPainted(false);
+        jbtnPromote.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;

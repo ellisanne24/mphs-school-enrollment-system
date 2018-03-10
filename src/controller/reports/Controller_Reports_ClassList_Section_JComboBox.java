@@ -1,18 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controller.reports;
 
 import daoimpl.SectionDaoImpl;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import model.student.Student;
+import utility.jtable.JTableUtil;
 import view.reports.Panel_Reports;
 
 /**
@@ -44,18 +42,22 @@ public class Controller_Reports_ClassList_Section_JComboBox implements ItemListe
                 view.getJlblClassListSchoolYear().setText(schoolYear.getYearFrom()+"-"+schoolYear.getYearTo());
                 section.setSchoolYear(schoolYear);
                 
-                List<Student> studentList = sectionDaoImpl.getSectionStudentsBySectionIdAndSchoolYearId(section);
+                List<Student> studentList = sectionDaoImpl.getSectionStudentsOf(section);
+                String[] columns = {"No.", "Student No", "Student Name"};
                 DefaultTableModel tableModel = (DefaultTableModel) view.getJtblClassList().getModel();
+                tableModel.setColumnIdentifiers(columns);
                 tableModel.setRowCount(0);
-                int count = 1;
+                int no = 1;
                 for (Student s : studentList) {
                     Object[] rowData = {
-                        count, s.getStudentNo(), s.getRegistration().getLastName(),
-                        s.getRegistration().getFirstName(), s.getRegistration().getMiddleName()
+                        no, s.getStudentNo(), s.getRegistration().getLastName() + ", "
+                        + s.getRegistration().getFirstName() + " " + s.getRegistration().getMiddleName()
                     };
                     tableModel.addRow(rowData);
-                    count++;
+                    no++;
                 }
+                JTableUtil.applyCustomHeaderRenderer(view.getJtblClassList());
+                JTableUtil.resizeColumnWidthsOf(view.getJtblClassList());
                 view.getJcmbClassListSchoolYear().setEnabled(true);
             }
         }

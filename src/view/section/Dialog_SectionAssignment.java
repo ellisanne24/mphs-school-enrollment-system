@@ -81,7 +81,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         JTableUtil.applyCustomHeaderRenderer(jtblEnrolledStudents);
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jcmbSection.setModel(sectionJCompModelLoader.getAllSectionByStatusAndSchoolYearId(true, currentSchoolYear.getSchoolYearId()));
-        jcmbAdviser.setModel(facultyJCompModelLoader.getAllFaculty());
+        jcmbAdviser.setModel(facultyJCompModelLoader.getAllFacultyAsId());
         jcmbAdviser.setSelectedIndex(-1);
     }
 

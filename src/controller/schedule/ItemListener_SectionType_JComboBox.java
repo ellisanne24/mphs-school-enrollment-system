@@ -4,7 +4,6 @@ package controller.schedule;
 import component_model_loader.SectionJCompModelLoader;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.table.DefaultTableModel;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import view.schedule.Dialog_CreateSchedule;

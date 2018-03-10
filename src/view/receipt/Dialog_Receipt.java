@@ -33,7 +33,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     public Dialog_Receipt(Student student, OfficialReceipt officialReceipt) {
         super(null, ModalityType.APPLICATION_MODAL);
         initComponents();
-        schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.jpg", 200, 200);
+        schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.png", 200, 200);
         
         this.student = student;
         this.officialReceipt = officialReceipt;

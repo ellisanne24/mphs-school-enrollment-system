@@ -2,14 +2,16 @@
 package model.subject;
 
 import java.util.Date;
-import java.util.List;
 import model.grade.Grade;
 import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 
 public class Subject {
-    private List<Grade> grade;
     private int subjectId;
+    private Grade firstGradingPeriodAverage;
+    private Grade secondGradingPeriodAverage;
+    private Grade thirdGradingPeriodAverage;
+    private Grade fourthGradingPeriodAverage;
     private String subjectTitle;
     private String subjectCode;
     private String subjectDescription;
@@ -22,13 +24,39 @@ public class Subject {
     private boolean isActive;
     private GradeLevel gradeLevel;
 
-    public List<Grade> getGrades() {
-        return grade;
+    public Grade getFirstGradingPeriodAverage() {
+        return firstGradingPeriodAverage;
     }
 
-    public void setGrades(List<Grade> grade) {
-        this.grade = grade;
+    public void setFirstGradingPeriodAverage(Grade firstGradingPeriodAverage) {
+        this.firstGradingPeriodAverage = firstGradingPeriodAverage;
     }
+
+    public Grade getSecondGradingPeriodAverage() {
+        return secondGradingPeriodAverage;
+    }
+
+    public void setSecondGradingPeriodAverage(Grade secondGradingPeriodAverage) {
+        this.secondGradingPeriodAverage = secondGradingPeriodAverage;
+    }
+
+    public Grade getThirdGradingPeriodAverage() {
+        return thirdGradingPeriodAverage;
+    }
+
+    public void setThirdGradingPeriodAverage(Grade thirdGradingPeriodAverage) {
+        this.thirdGradingPeriodAverage = thirdGradingPeriodAverage;
+    }
+
+    public Grade getFourthGradingPeriodAverage() {
+        return fourthGradingPeriodAverage;
+    }
+
+    public void setFourthGradingPeriodAverage(Grade fourthGradingPeriodAverage) {
+        this.fourthGradingPeriodAverage = fourthGradingPeriodAverage;
+    }
+    
+    
 
     public SchoolYear getSchoolYearCreated() {
         return schoolYearCreated;

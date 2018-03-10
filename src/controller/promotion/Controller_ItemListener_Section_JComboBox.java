@@ -69,7 +69,7 @@ public class Controller_ItemListener_Section_JComboBox implements ItemListener, 
     private void loadStudentsToTable(Section section){
         DefaultTableModel tableModel = (DefaultTableModel) view.getJtblStudents().getModel();
         tableModel.setRowCount(0);
-        List<Student> students = sectionDaoImpl.getSectionStudentsBySectionIdAndSchoolYearId(section);
+        List<Student> students = sectionDaoImpl.getSectionStudentsOf(section);
         for(Student s : students){
             Object[] rowData = {
                 s.getRegistration().getLastName()+", "+s.getRegistration().getFirstName()+" "+s.getRegistration().getMiddleName(),

@@ -1,7 +1,6 @@
 package controller.grade;
 
 import daoimpl.GradeDaoImpl;
-import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.grade.Grade;
 import model.schoolyear.SchoolYear;
+import model.section.Section;
 import model.student.Student;
 import model.subject.Subject;
 import model.user.User;
@@ -54,12 +54,13 @@ public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionList
     private List<Grade> getPopulatedGrades(){
         DefaultTableModel tableModel = (DefaultTableModel) view.getJtblGradingSheet().getModel();
         Subject subject = (Subject) view.getJcmbSubjectCode().getSelectedItem();
+        Section section = (Section) view.getJcmbSection().getSelectedItem();
         List<Grade> gradeList = new ArrayList<>();
         for (int row = 0; row < tableModel.getRowCount(); row++) {
             Student student = new Student();
             student.setStudentId(Integer.parseInt(tableModel.getValueAt(row, 0).toString().trim()));
             for (int col = 0; col < tableModel.getColumnCount(); col++) {
-                if (tableModel.getValueAt(row, col) != null) {
+                if (tableModel.getValueAt(row, col) != null && !tableModel.getValueAt(row, col).toString().trim().isEmpty()) {
                     if (col == 3 || col == 4 || col == 5 || col == 6) {
                         if (!tableModel.getValueAt(row, col).toString().trim().equals("0")) {
                             Grade grade = new Grade();
@@ -70,6 +71,7 @@ public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionList
                             grade.setGradeType("R");
                             grade.setValue(Integer.parseInt(tableModel.getValueAt(row, col).toString().trim()));
                             grade.setAddedBy(user);
+                            grade.setStudentGradeLevel(section.getGradeLevel());
                             gradeList.add(grade);
                         }
                     }
@@ -83,12 +85,14 @@ public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionList
         boolean isValid = true;
         for (int row = 0; row < view.getJtblGradingSheet().getRowCount(); row++) {
             for (int col = 0; col < view.getJtblGradingSheet().getColumnCount(); col++) {
+                if (view.getJtblGradingSheet().getValueAt(row, col) != null && !view.getJtblGradingSheet().getValueAt(row, col).toString().trim().isEmpty()){
                 if (col == 3 || col == 4 || col == 5 || col == 6) {
                     int value = Integer.parseInt(view.getJtblGradingSheet().getValueAt(row, col).toString().trim());
                     if (value > 100) {
                         isValid = isValid && false;
                         JOptionPane.showMessageDialog(null, "Grade values should not exceed 100");
                     }
+                }
                 }
             }
         }

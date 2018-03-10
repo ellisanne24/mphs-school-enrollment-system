@@ -99,7 +99,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
                     String modeOfPayment = e.getItem().toString().trim();
                     DefaultComboBoxModel comboModel = (DefaultComboBoxModel) jcmbPaymentTerm.getModel();
                     if (modeOfPayment.equalsIgnoreCase("Installment")) {
-                        comboModel.removeElement("Cash");
+                        comboModel.removeAllElements();
                         comboModel.addElement("Quarterly");
                         comboModel.addElement("Semestral");
                         comboModel.addElement("Monthly");

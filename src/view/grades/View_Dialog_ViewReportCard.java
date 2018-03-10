@@ -124,7 +124,7 @@ public class View_Dialog_ViewReportCard extends javax.swing.JDialog implements I
 
         SchoolYear schoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
         DefaultComboBoxModel sectionComboModel = new DefaultComboBoxModel();
-        Section section = sectionDaoImpl.getSectionByStudentAndSchoolYear(student, schoolYear);
+        Section section = sectionDaoImpl.getSectionOf(student, schoolYear);
         sectionComboModel.addElement(section);
         jcmbSection.setModel(sectionComboModel);
 

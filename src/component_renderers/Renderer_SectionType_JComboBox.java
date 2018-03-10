@@ -25,9 +25,9 @@ public class Renderer_SectionType_JComboBox extends JLabel implements ListCellRe
     @Override
     public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value != null) {
-            if (value.toString().equalsIgnoreCase("R")) {
+            if (value.toString().trim().equalsIgnoreCase("R")) {
                 this.setText("Regular");
-            } else if (value.toString().equalsIgnoreCase("S")) {
+            } else if (value.toString().trim().equalsIgnoreCase("S")) {
                 this.setText("Summer");
             }
         } else {

@@ -30,7 +30,7 @@ public class GradeDaoImpl implements IGrade {
     public boolean addStudentGrades(List<Grade> gradeList) {
         boolean isSuccessful = false;
         String SQLa = "{CALL deleteGradesBySubjectIdAndSchoolYearId(?,?)}";
-        String SQLb = "{CALL addGrade(?,?,?,?,?,?,?)}";
+        String SQLb = "{CALL addGrade(?,?,?,?,?,?,?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
             try (CallableStatement csa = con.prepareCall(SQLa);
@@ -47,6 +47,7 @@ public class GradeDaoImpl implements IGrade {
                     csb.setInt(5, g.getSchoolYear().getSchoolYearId());
                     csb.setString(6, g.getGradeType());
                     csb.setInt(7, g.getAddedBy().getUserId());
+                    csb.setInt(8, g.getStudentGradeLevel().getGradeLevelId());
                     csb.executeUpdate();
                 }
                 isSuccessful = true;

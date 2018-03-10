@@ -183,10 +183,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         return jbtnAdvisoryInputGrades;
     }
 
-    public JButton getJbtnOpen() {
-        return jbtnAdvisoryOpen;
-    }
-
     public JButton getJbtnPrint() {
         return jbtnAdvisoryPrint;
     }
@@ -243,7 +239,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jbtnAdvisorySearch = new javax.swing.JButton();
         lbl_show = new javax.swing.JLabel();
         jcmbAdvisorySearchBy = new javax.swing.JComboBox<>();
-        jbtnAdvisoryOpen = new javax.swing.JButton();
         jbtnAdvisoryPromotion = new javax.swing.JButton();
         jbtnAdvisoryViewReportCard = new javax.swing.JButton();
         jbtnAdvisoryRefresh = new javax.swing.JButton();
@@ -340,13 +335,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdvisoryControl.add(jcmbAdvisorySearchBy, gridBagConstraints);
 
-        jbtnAdvisoryOpen.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnAdvisoryOpen.setText("Open");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        jpnlAdvisoryControl.add(jbtnAdvisoryOpen, gridBagConstraints);
-
+        jbtnAdvisoryPromotion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnAdvisoryPromotion.setText("Promotion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -354,6 +343,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdvisoryControl.add(jbtnAdvisoryPromotion, gridBagConstraints);
 
+        jbtnAdvisoryViewReportCard.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnAdvisoryViewReportCard.setText("View Report Card");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
@@ -375,7 +365,8 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlTopMyAdvisory.add(jpnlAdvisoryControl, gridBagConstraints);
 
         jpnlAdvisoryMyAdvisory.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "My Advisory", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
@@ -414,23 +405,34 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdvisoryMyAdvisory.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlTopMyAdvisory.add(jpnlAdvisoryMyAdvisory, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel3.add(jpnlTopMyAdvisory, gridBagConstraints);
 
-        jpnlMA.add(jPanel3, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlMA.add(jPanel3, gridBagConstraints);
 
         jtpTop.addTab("My Advisory", jpnlMA);
 
@@ -585,7 +587,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jpnlSUMMER.setLayout(jpnlSUMMERLayout);
         jpnlSUMMERLayout.setHorizontalGroup(
             jpnlSUMMERLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
+            .addGap(0, 1218, Short.MAX_VALUE)
         );
         jpnlSUMMERLayout.setVerticalGroup(
             jpnlSUMMERLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -600,7 +602,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jpnlADMIN.setLayout(jpnlADMINLayout);
         jpnlADMINLayout.setHorizontalGroup(
             jpnlADMINLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
+            .addGap(0, 1218, Short.MAX_VALUE)
         );
         jpnlADMINLayout.setVerticalGroup(
             jpnlADMINLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -609,7 +611,12 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
         jtpTop.addTab("Admin View of Student Master List", jpnlADMIN);
 
-        add(jtpTop, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        add(jtpTop, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnAdvisoryInputGradesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAdvisoryInputGradesActionPerformed
@@ -626,7 +633,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton jbtnAdvisoryInputGrades;
-    private javax.swing.JButton jbtnAdvisoryOpen;
     private javax.swing.JButton jbtnAdvisoryPrint;
     private javax.swing.JButton jbtnAdvisoryPromotion;
     private javax.swing.JButton jbtnAdvisoryRefresh;

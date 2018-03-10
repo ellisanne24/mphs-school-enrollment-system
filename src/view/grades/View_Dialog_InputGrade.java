@@ -3,7 +3,7 @@ package view.grades;
 import component_model_loader.ClassTypeJCompModelLoader;
 import component_renderers.Renderer_ClassType_JComboBox;
 import component_renderers.Renderer_GradeLevel_JComboBox;
-import component_renderers.Renderer_Grade_Dialog_OverrideGrading_GradingSheet_JTable;
+import component_renderers.Renderer_Grade_Dialog_InputGrade_GradingSheet_JTable;
 import component_renderers.Renderer_Grade_Dialog_OverrideGrading_SubjectCode_JComboBox;
 import component_renderers.Renderer_Section_JComboBox;
 import controller.global.Controller_JButton_ExitJDialog;
@@ -24,6 +24,7 @@ import model.classtype.ClassType;
 import model.schoolyear.SchoolYear;
 import model.user.User;
 import utility.initializer.Initializer;
+import utility.jtable.JTableUtil;
 
 
 public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initializer{
@@ -57,7 +58,7 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
 
     @Override
     public void initRenderers() {
-        jtblGradingSheet.setDefaultRenderer(Object.class, new Renderer_Grade_Dialog_OverrideGrading_GradingSheet_JTable());
+        jtblGradingSheet.setDefaultRenderer(Object.class, new Renderer_Grade_Dialog_InputGrade_GradingSheet_JTable());
         jcmbSection.setRenderer(new Renderer_Section_JComboBox());
         jcmbGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
         jcmbSubjectCode.setRenderer(new Renderer_Grade_Dialog_OverrideGrading_SubjectCode_JComboBox());
@@ -78,12 +79,14 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
             }
         }
         jcmbClassHandled.setModel(originalComboModel);
+        JTableUtil.applyCustomHeaderRenderer(jtblGradingSheet);
+        JTableUtil.resizeColumnWidthsOf(jtblGradingSheet);
     }
 
     @Override
     public void initControllers() {
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
-        jcmbSubjectCode.addItemListener(new ItemListener_Dialog_InputGrade_SubjectCode_JComboBox(this));
+        jcmbSubjectCode.addItemListener(new ItemListener_Dialog_InputGrade_SubjectCode_JComboBox(this,user,currentSchoolYear));
         jbtnSaveAndClose.addActionListener(new ActionListener_Dialog_InputGrade_Save_JButton(this, user,currentSchoolYear));
         jcmbClassHandled.addItemListener(new ItemListener_Dialog_InputGrade_ClassHandled_JComboBox(this, user));
         jcmbSection.addItemListener(new ItemListener_Dialog_InputGrade_Section_JComboBox(this, user));
@@ -105,10 +108,6 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
 
     public JButton getJbtnRefresh() {
         return jbtnRefresh;
-    }
-
-    public JButton getJbtnReset() {
-        return jbtnReset;
     }
 
     public JButton getJbtnSaveAndClose() {
@@ -182,7 +181,6 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         jScrollPane2 = new javax.swing.JScrollPane();
         jpnlTopPanel = new javax.swing.JPanel();
         jpnlControl = new javax.swing.JPanel();
-        jbtnReset = new javax.swing.JButton();
         jlblType = new javax.swing.JLabel();
         jcmbClassHandled = new javax.swing.JComboBox<>();
         jbtnRefresh = new javax.swing.JButton();
@@ -213,19 +211,9 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         jpnlTopPanel.setLayout(new java.awt.GridBagLayout());
 
         jpnlControl.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Control", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
-        jpnlControl.setMinimumSize(new java.awt.Dimension(990, 80));
-        jpnlControl.setPreferredSize(new java.awt.Dimension(990, 80));
+        jpnlControl.setMinimumSize(new java.awt.Dimension(990, 50));
+        jpnlControl.setPreferredSize(new java.awt.Dimension(990, 50));
         jpnlControl.setLayout(new java.awt.GridBagLayout());
-
-        jbtnReset.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnReset.setText("Reset");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        jpnlControl.add(jbtnReset, gridBagConstraints);
 
         jlblType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jlblType.setText("Class Handled :");
@@ -233,7 +221,7 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jlblType, gridBagConstraints);
 
         jcmbClassHandled.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -244,16 +232,18 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jcmbClassHandled, gridBagConstraints);
 
         jbtnRefresh.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnRefresh.setText("Refresh");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 120, 5, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jbtnRefresh, gridBagConstraints);
 
         jlblSection.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -262,7 +252,7 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jlblSection, gridBagConstraints);
 
         jcmbSection.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -271,15 +261,16 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jcmbSection, gridBagConstraints);
 
         jlblGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jlblGradeLevel.setText("Grade Level :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jlblGradeLevel, gridBagConstraints);
 
         jcmbGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -287,27 +278,29 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         jcmbGradeLevel.setMinimumSize(new java.awt.Dimension(130, 25));
         jcmbGradeLevel.setPreferredSize(new java.awt.Dimension(130, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jcmbGradeLevel, gridBagConstraints);
 
         jlblSubjectCode.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jlblSubjectCode.setText("Subject Code :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jlblSubjectCode, gridBagConstraints);
 
         jcmbSubjectCode.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jcmbSubjectCode.setMinimumSize(new java.awt.Dimension(130, 25));
         jcmbSubjectCode.setPreferredSize(new java.awt.Dimension(130, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jcmbSubjectCode, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -332,11 +325,11 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
 
             },
             new String [] {
-                "Student Id", "Student No", "Student Name", "Ist (TG)", "2nd (TG)", "3rd (TG)", "4th (TG)", "Total", "Final Grade", "Gen. Average", "Remedial Grade", "Remarks"
+                "ID", "Student No", "Student Name", "Ist (TG)", "2nd (TG)", "3rd (TG)", "4th (TG)", "Total", "Final Grade", "Remedial Grade", "Remarks"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true, true, true, false, false, false, false, false
+                false, false, false, true, true, true, true, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -429,7 +422,6 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton jbtnCancel;
     private javax.swing.JButton jbtnRefresh;
-    private javax.swing.JButton jbtnReset;
     private javax.swing.JButton jbtnSaveAndClose;
     private javax.swing.JButton jbtnSaveAndNew;
     private javax.swing.JComboBox<String> jcmbClassHandled;
