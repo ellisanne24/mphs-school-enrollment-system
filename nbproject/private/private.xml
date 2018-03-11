@@ -3,9 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/grade/ItemListener_Dialog_InputGrade_SubjectCode_JComboBox.java</file>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/grades/View_Dialog_InputGrade.java</file>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/grades/View_Panel_GradingSystem.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/schoolyear/DialogSchoolYearCrud.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/schoolyear/DisplaySchoolYearCrudDialog.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/schoolyear/Panel_SchoolYear.java</file>
         </group>
     </open-files>
 </project-private>

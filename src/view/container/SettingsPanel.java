@@ -82,7 +82,7 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
 
         jtpManagementTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jpnlSubjectMgmt.setLayout(new java.awt.GridBagLayout());
+        jpnlSubjectMgmt.setLayout(new java.awt.BorderLayout());
         jspSubjectMgmt.setViewportView(jpnlSubjectMgmt);
 
         jtpManagementTabbedPane.addTab("Subjects", jspSubjectMgmt);
@@ -142,7 +142,7 @@ public class SettingsPanel extends javax.swing.JPanel implements Initializer{
 
         jtpManagementTabbedPane.addTab("Lan", jspLanMgmt);
 
-        jpnlSchoolYearMgmt.setLayout(new java.awt.GridBagLayout());
+        jpnlSchoolYearMgmt.setLayout(new java.awt.BorderLayout());
         jspSchoolYearMgmt.setViewportView(jpnlSchoolYearMgmt);
 
         jtpManagementTabbedPane.addTab("School Year", jspSchoolYearMgmt);

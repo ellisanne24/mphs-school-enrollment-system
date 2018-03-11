@@ -3,7 +3,6 @@ package daoimpl;
 import constants.SchoolYearTable;
 import utility.database.DBType;
 import utility.database.DBUtil;
-//import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -232,12 +231,14 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     sy.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
                     sy.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
                     sy.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
+                    sy.setTotalSchoolDays(rs.getInt("totalSchoolDays"));
                     
                     List<Quarter> quarters = new ArrayList<>();
                     Quarter first = new Quarter();
                     first.setQuarterNo(1);
                     first.setStartDate(rs.getDate("Q1Start"));
                     first.setEndDate(rs.getDate("Q1End"));
+                    first.setGradingOpenDate(rs.getDate("Q1GradingOpenDate"));
                     first.setGradingDueDate(rs.getDate("Q1GradingDueDate"));
                     quarters.add(first);
                     
@@ -245,6 +246,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     second.setQuarterNo(2);
                     second.setStartDate(rs.getDate("Q2Start"));
                     second.setEndDate(rs.getDate("Q2End"));
+                    second.setGradingOpenDate(rs.getDate("Q2GradingOpenDate"));
                     second.setGradingDueDate(rs.getDate("Q2GradingDueDate"));
                     quarters.add(second);
                     
@@ -252,6 +254,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     third.setQuarterNo(3);
                     third.setStartDate(rs.getDate("Q3Start"));
                     third.setEndDate(rs.getDate("Q3End"));
+                    third.setGradingOpenDate(rs.getDate("Q3GradingOpenDate"));
                     third.setGradingDueDate(rs.getDate("Q3GradingDueDate"));
                     quarters.add(third);
                     
@@ -259,6 +262,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     fourth.setQuarterNo(4);
                     fourth.setStartDate(rs.getDate("Q4Start"));
                     fourth.setEndDate(rs.getDate("Q4End"));
+                    fourth.setGradingOpenDate(rs.getDate("Q4GradingOpenDate"));
                     fourth.setGradingDueDate(rs.getDate("Q4GradingDueDate"));
                     quarters.add(fourth);
                     
@@ -332,12 +336,14 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     sy.setSummerEnrollmentEndDate(rs.getDate("summer_enroll_end_date"));
                     sy.setSummerClassStartDate(rs.getDate("summer_class_start_date"));
                     sy.setSummerClassEndDate(rs.getDate("summer_class_end_date"));
+                    sy.setTotalSchoolDays(rs.getInt("totalSchoolDays"));
                     
                     List<Quarter> quarters = new ArrayList<>();
                     Quarter first = new Quarter();
                     first.setQuarterNo(1);
                     first.setStartDate(rs.getDate("Q1Start"));
                     first.setEndDate(rs.getDate("Q1End"));
+                    first.setGradingOpenDate(rs.getDate("Q1GradingOpenDate"));
                     first.setGradingDueDate(rs.getDate("Q1GradingDueDate"));
                     quarters.add(first);
                     
@@ -345,6 +351,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     second.setQuarterNo(2);
                     second.setStartDate(rs.getDate("Q2Start"));
                     second.setEndDate(rs.getDate("Q2End"));
+                    second.setGradingOpenDate(rs.getDate("Q2GradingOpenDate"));
                     second.setGradingDueDate(rs.getDate("Q2GradingDueDate"));
                     quarters.add(second);
                     
@@ -352,6 +359,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     third.setQuarterNo(3);
                     third.setStartDate(rs.getDate("Q3Start"));
                     third.setEndDate(rs.getDate("Q3End"));
+                    third.setGradingOpenDate(rs.getDate("Q3GradingOpenDate"));
                     third.setGradingDueDate(rs.getDate("Q3GradingDueDate"));
                     quarters.add(third);
                     
@@ -359,6 +367,7 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                     fourth.setQuarterNo(4);
                     fourth.setStartDate(rs.getDate("Q4Start"));
                     fourth.setEndDate(rs.getDate("Q4End"));
+                    fourth.setGradingOpenDate(rs.getDate("Q4GradingOpenDate"));
                     fourth.setGradingDueDate(rs.getDate("Q4GradingDueDate"));
                     quarters.add(fourth);
                     
@@ -414,11 +423,12 @@ public class SchoolYearDaoImpl implements ISchoolYear{
                 
                 csb.setInt(1,schoolYearId);
                 for(Object o : schoolYear.getQuarters().toArray()){
-                    Quarter q = (Quarter)o;
-                    csb.setInt(2, q.getQuarterNo());
-                    csb.setDate(3, dateUtil.toSqlDate(q.getStartDate()));
-                    csb.setDate(4, dateUtil.toSqlDate(q.getEndDate()));
-                    csb.setDate(5,dateUtil.toSqlDate(q.getGradingDueDate()));
+                    Quarter quarter = (Quarter)o;
+                    csb.setInt(2, quarter.getQuarterNo());
+                    csb.setDate(3, dateUtil.toSqlDate(quarter.getStartDate()));
+                    csb.setDate(4, dateUtil.toSqlDate(quarter.getEndDate()));
+                    csb.setDate(5, dateUtil.toSqlDate(quarter.getGradingOpenDate()));
+                    csb.setDate(6,dateUtil.toSqlDate(quarter.getGradingDueDate()));
                     csb.executeUpdate();
                 }
                 con.commit();
@@ -433,6 +443,52 @@ public class SchoolYearDaoImpl implements ISchoolYear{
         return isAdded;
     }
 
+    @Override
+    public boolean update(SchoolYear schoolYear) {
+        boolean isUpdated = false;
+        String SQLa = "{CALL updateSchoolYear(?,?,?,?,?,?,?,?,?,?,?,?)}";
+        String SQLb = "{CALL updateSchoolYearQuarterSchedule(?,?,?,?,?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+            con.setAutoCommit(false);
+            try (CallableStatement csa = con.prepareCall(SQLa);
+                    CallableStatement csb = con.prepareCall(SQLb);) {
+                csa.setInt(1, schoolYear.getYearFrom());
+                csa.setInt(2, schoolYear.getYearTo());
+                csa.setDate(3, dateUtil.toSqlDate(schoolYear.getSchoolYearStartDate()));
+                csa.setDate(4, dateUtil.toSqlDate(schoolYear.getSchoolYearEndDate()));
+                csa.setDate(5, dateUtil.toSqlDate(schoolYear.getRegularEnrollmentStartDate()));
+                csa.setDate(6, dateUtil.toSqlDate(schoolYear.getRegularEnrollmentEndDate()));
+                csa.setDate(7, dateUtil.toSqlDate(schoolYear.getSummerEnrollmentStartDate()));
+                csa.setDate(8, dateUtil.toSqlDate(schoolYear.getSummerEnrollmentEndDate()));
+                csa.setDate(9, dateUtil.toSqlDate(schoolYear.getSummerClassStartDate()));
+                csa.setDate(10, dateUtil.toSqlDate(schoolYear.getSummerClassEndDate()));
+                csa.setInt(11, schoolYear.getSchoolYearId());
+                csa.setInt(12, schoolYear.getIsActive() == true ? 1 : 0);
+                csa.executeUpdate();
+                
+                csb.setInt(1, schoolYear.getSchoolYearId());
+                for (Object o : schoolYear.getQuarters().toArray()) {
+                    Quarter quarter = (Quarter) o;
+                    csb.setInt(2, quarter.getQuarterNo());
+                    csb.setDate(3, dateUtil.toSqlDate(quarter.getStartDate()));
+                    csb.setDate(4, dateUtil.toSqlDate(quarter.getEndDate()));
+                    csb.setDate(5, dateUtil.toSqlDate(quarter.getGradingOpenDate()));
+                    csb.setDate(6, dateUtil.toSqlDate(quarter.getGradingDueDate()));
+                    csb.executeUpdate();
+                }
+                con.commit();
+                isUpdated = true;
+            } catch (SQLException e) {
+                con.rollback();
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isUpdated;
+    }
+    
+    
     @Override
     public boolean open(SchoolYear schoolYear) {
         boolean isOpened = false;

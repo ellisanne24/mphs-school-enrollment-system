@@ -18,6 +18,7 @@ public interface ISchoolYear {
     int getCurrentSchoolYearId();
     
     boolean add(SchoolYear schoolyear);
+    boolean update(SchoolYear schoolYear);
     boolean isCurrent(SchoolYear schoolyear);
     boolean open(SchoolYear schoolYear);
     boolean close(SchoolYear schoolYear);
