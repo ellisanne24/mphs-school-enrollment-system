@@ -59,8 +59,8 @@ public class SectionJCompModelLoader {
 
     public DefaultComboBoxModel getSectionsByGradeLevelNo(JComboBox jcmbGradeLevel){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
-        List<Section> sectionList = sectionDaoImpl.getSectionsBy(gradeLevelNo);
+        GradeLevel gradeLevel = (GradeLevel)jcmbGradeLevel.getSelectedItem();
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(gradeLevel.getLevelNo());
         for (Section s : sectionList) {
             comboModel.addElement(s);
         }

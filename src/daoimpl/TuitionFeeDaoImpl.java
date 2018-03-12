@@ -36,49 +36,13 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     }
 
     @Override
-    public boolean paySummerFees(Tuition tuitionFee) {
-        boolean isSuccessful = false;
-        DateUtil dateUtil = new DateUtil();
-        String SQLa = "{CALL addBalanceBreakDownFee(?,?,?,?,?,?,?,?)}";
-        PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
-        Student student = tuitionFee.getStudent();
-        int schoolYearId = tuitionFee.getSchoolyearId();
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
-            try (CallableStatement csa = con.prepareCall(SQLa);){
-                for(BalanceBreakDownFee b : tuitionFee.getBalanceBreakDownFees()){
-                    csa.setString(1, b.getName().trim());
-                    csa.setBigDecimal(2, b.getAmount());
-                    csa.setDate(3, dateUtil.toSqlDate(b.getDeadline()));
-                    csa.setString(4, b.getCategory().trim());
-                    csa.setInt(5, student.getStudentId());
-                    csa.setInt(6, paymentTerm.getPaymentTermId());
-                    csa.setInt(7, schoolYearId);
-                    csa.registerOutParameter(8, Types.INTEGER);
-                    csa.executeUpdate();
-                    int balancebreakdownId = csa.getInt(8);
-                }
-                con.commit();
-                isSuccessful = true;
-            } catch (SQLException e) {
-                con.rollback();
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return isSuccessful;
-    }
-
-    
-    
-    @Override
     public boolean add(Tuition tuitionFee) {
         boolean isAdded = false;
         DateUtil dateUtil = new DateUtil();
         String SQLa = "{CALL addBalanceBreakDownFee(?,?,?,?,?,?,?,?)}";
         PaymentTerm paymentTerm = tuitionFee.getPaymentTerm();
         Student student = tuitionFee.getStudent();
-        int schoolYearId = tuitionFee.getSchoolyearId();
+        int schoolYearId = tuitionFee.getSchoolYearId();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             con.setAutoCommit(false);
             try (CallableStatement csa = con.prepareCall(SQLa);) {
@@ -143,7 +107,8 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                     bb.setDeadline(rs.getDate("due_date"));
                     String category = rs.getString("category").equalsIgnoreCase("B")? "Balance" :
                             rs.getString("category").equalsIgnoreCase("D")? "Downpayment" :
-                            rs.getString("category").equalsIgnoreCase("O")? "Other" : "";
+                            rs.getString("category").equalsIgnoreCase("O")? "Other" : 
+                            rs.getString("category").equalsIgnoreCase("S")? "Summer" :"";
                     bb.setCategory(category);
                     bb.setSchoolyearId(rs.getInt("schoolyear_id"));
                     bbFeeList.add(bb);
@@ -240,7 +205,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 int transactionId = csa.getInt(6);
     
                 int studentId = tuitionFee.getStudent().getStudentId();
-                int schoolYearId = tuitionFee.getSchoolyearId();
+                int schoolYearId = tuitionFee.getSchoolYearId();
                 
                 for (Particular p : payment.getParticulars()) {
                     int particularId = getBalanceBreakDownId(p.getName().trim(), studentId, schoolYearId);
@@ -287,7 +252,7 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
     public boolean payPrimary(Tuition tuition) {
         boolean isSuccessful = false;
         DateUtil dateUtil = new DateUtil();
-        int schoolYearId = tuition.getSchoolyearId();
+        int schoolYearId = tuition.getSchoolYearId();
         int gradeLevelId = gradeLevelDaoImpl.getId(tuition.getStudent().getRegistration().getGradeLevelNo());
         Payment payment = tuition.getPayment();
         PaymentTerm paymentTerm = tuition.getPaymentTerm();
@@ -391,6 +356,92 @@ public class TuitionFeeDaoImpl implements ITuitionFee {
                 e.printStackTrace();
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isSuccessful;
+    }
+
+    @Override
+    public boolean paySummerFees(Tuition tuition) {
+        boolean isSuccessful = false;
+        DateUtil dateUtil = new DateUtil();
+        int gradeLevelId = gradeLevelDaoImpl.getId(tuition.getStudent().getRegistration().getGradeLevelNo());
+        String sqlA = "{CALL addBalanceBreakDownFee(?,?,?,?,?,?,?,?)}";
+        String sqlB = "{CALL addTransaction(?,?,?,?,?,?)}";
+        String sqlC = "{CALL addTransactionBalanceBreakDown(?,?,?)}";
+        String sqlD = "{CALL markOrNoAsUsed(?)}";
+        String sqlE = "{CALL addEnrollment(?,?,?,?,?)}";
+        String sqlF = "{CALL markSummerStudentAsEnrolled(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);){
+            con.setAutoCommit(false);
+            try (CallableStatement cs_addBalanceBreakDownFee = con.prepareCall(sqlA);
+                    CallableStatement cs_addTransaction = con.prepareCall(sqlB);
+                    CallableStatement cs_addTransactionBalanceBreakDown = con.prepareCall(sqlC);
+                    CallableStatement cs_markOrNoAsUsed = con.prepareCall(sqlD);
+                    CallableStatement cs_addEnrollment = con.prepareCall(sqlE);
+                    CallableStatement cs_markSummerStudentAsEnrolled = con.prepareCall(sqlF);){
+                
+                Map<Integer,String> breakdownFeeId_and_breakdownFeeName_pair = new HashMap<>();
+                for (BalanceBreakDownFee bbFee : tuition.getBalanceBreakDownFees()) {
+                    cs_addBalanceBreakDownFee.setString(1, bbFee.getName().trim());
+                    cs_addBalanceBreakDownFee.setBigDecimal(2, bbFee.getAmount());
+                    cs_addBalanceBreakDownFee.setDate(3, dateUtil.toSqlDate(bbFee.getDeadline()));
+                    cs_addBalanceBreakDownFee.setString(4, bbFee.getCategory().trim());
+                    cs_addBalanceBreakDownFee.setInt(5, tuition.getStudent().getStudentId());
+                    cs_addBalanceBreakDownFee.setInt(6, tuition.getPaymentTerm().getPaymentTermId());
+                    cs_addBalanceBreakDownFee.setInt(7, tuition.getSchoolYearId());
+                    cs_addBalanceBreakDownFee.registerOutParameter(8, Types.INTEGER);
+                    cs_addBalanceBreakDownFee.executeUpdate();
+                    int balancebreakdownId = cs_addBalanceBreakDownFee.getInt(8);
+                    breakdownFeeId_and_breakdownFeeName_pair.put(balancebreakdownId, bbFee.getName());
+                }
+                
+                cs_addTransaction.setInt(1, tuition.getStudent().getStudentId());
+                cs_addTransaction.setBigDecimal(2, tuition.getPayment().getAmountReceived());
+                cs_addTransaction.setBigDecimal(3, tuition.getPayment().getAmountCharged());
+                cs_addTransaction.setInt(4, tuition.getPayment().getOrNoAttached());
+                cs_addTransaction.setInt(5, tuition.getPayment().getCashier().getUserId());
+                cs_addTransaction.registerOutParameter(6, Types.INTEGER);
+                cs_addTransaction.executeUpdate();
+                int transactionId = cs_addTransaction.getInt(6);
+                
+                for (Particular p : tuition.getPayment().getParticulars()) {
+                    int particularId = 0;
+                    for(Map.Entry<Integer,String> entry : breakdownFeeId_and_breakdownFeeName_pair.entrySet()){
+                        if(entry.getValue().equalsIgnoreCase(p.getName().trim())){
+                            particularId = entry.getKey();
+                            break;
+                        }
+                    }
+                    cs_addTransactionBalanceBreakDown.setInt(1, transactionId);
+                    cs_addTransactionBalanceBreakDown.setInt(2, particularId);
+                    cs_addTransactionBalanceBreakDown.setBigDecimal(3, p.getAmountPaid());
+                    cs_addTransactionBalanceBreakDown.executeUpdate();
+                }
+                
+                cs_markOrNoAsUsed.setInt(1, tuition.getPayment().getOrNoAttached());
+                cs_markOrNoAsUsed.executeUpdate();
+                
+                cs_addEnrollment.setInt(1, tuition.getSchoolYearId());
+                cs_addEnrollment.setInt(2, tuition.getStudent().getStudentId());
+                cs_addEnrollment.setString(3, "S");
+                cs_addEnrollment.setInt(4, gradeLevelId);
+                cs_addEnrollment.registerOutParameter(5, Types.INTEGER);
+                cs_addEnrollment.executeUpdate();
+                int enrollmentId = cs_addEnrollment.getInt(5);
+                
+                cs_markSummerStudentAsEnrolled.setInt(1, tuition.getStudent().getStudentId());
+                cs_markSummerStudentAsEnrolled.setInt(2, tuition.getSchoolYearId());
+                cs_markSummerStudentAsEnrolled.executeUpdate();
+                
+                con.commit();
+                isSuccessful = true;
+            } catch (SQLException e) {
+                con.rollback();
+                con.setAutoCommit(true);
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return isSuccessful;

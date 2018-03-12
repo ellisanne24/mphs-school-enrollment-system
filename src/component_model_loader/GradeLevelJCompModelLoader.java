@@ -73,7 +73,7 @@ public class GradeLevelJCompModelLoader {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<GradeLevel> summerGradeLevels = gradeLevelDaoImpl.getSummerGradeLevelsOf(schoolYear);
         for(GradeLevel summerGradeLevel : summerGradeLevels){
-            comboModel.addElement(summerGradeLevel.getLevelNo());
+            comboModel.addElement(summerGradeLevel);
         }
         comboModel.setSelectedItem(null);
         return comboModel;

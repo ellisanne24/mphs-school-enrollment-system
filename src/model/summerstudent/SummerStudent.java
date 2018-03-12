@@ -16,6 +16,24 @@ public class SummerStudent extends Student{
     private Date dateRecommendedForSummer;
     private User recommendedBy;
     private SchoolYear schoolYearRecommended;
+    private boolean isEnrolledInSummer;
+    private String sectionName;
+
+    public String getSectionName() {
+        return sectionName;
+    }
+
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
+    }
+
+    public boolean getIsEnrolledInSummer() {
+        return isEnrolledInSummer;
+    }
+
+    public void setIsEnrolledInSummer(boolean isEnrolledInSummer) {
+        this.isEnrolledInSummer = isEnrolledInSummer;
+    }
 
     public int getSummerId() {
         return summerId;

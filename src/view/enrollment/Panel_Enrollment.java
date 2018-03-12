@@ -475,6 +475,11 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jpnlContent.setLayout(new java.awt.GridBagLayout());
 
         jtpContainer.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtpContainer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtpContainerMouseClicked(evt);
+            }
+        });
 
         jpnlRegistered.setLayout(new java.awt.GridBagLayout());
 
@@ -853,11 +858,11 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
 
             },
             new String [] {
-                "Student ID", "Student No", "Student Name", "Summer Grade Level", "Date Recommended", "Recommended By"
+                "Student ID", "Student No", "Student Name", "Summer Grade Level", "Date Recommended", "Recommended By", "Is Enrolled For Summer", "Section"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -899,6 +904,13 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jtpContainerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtpContainerMouseClicked
+        int tabindex = jtpContainer.getSelectedIndex();
+        if(tabindex == 3){
+            jtblSummerStudents.setModel(promotionJCompModelLoader.getAllSummerStudentsOf(jtblSummerStudents, currentSchoolYear));
+        }
+    }//GEN-LAST:event_jtpContainerMouseClicked
 
     
         

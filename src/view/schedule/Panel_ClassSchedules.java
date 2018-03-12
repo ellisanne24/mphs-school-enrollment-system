@@ -1,13 +1,16 @@
 package view.schedule;
 
 import component_model_loader.FacultyJCompModelLoader;
+import component_model_loader.GradeLevelJCompModelLoader;
 import component_model_loader.SchoolYearJCompModelLoader;
 import component_renderers.Renderer_Faculty_JComboBox;
+import component_renderers.Renderer_GradeLevel_JComboBox;
 import component_renderers.Renderer_SchoolYear_JComboBox;
 import controller.global.Controller_JTextField_ClearDefaultSearchText;
 import controller.schedule.ActionListener_Schedule_Display_Create_Dialog_JButton;
 import controller.schedule.ItemListener_ScheduleMasterList_Day_JComboBox;
 import controller.schedule.ItemListener_ScheduleMasterRecord_Faculty_JComboBox;
+import controller.schedule.ItemListener_ScheduleMasterRecord_GradeLevel_JComboBox;
 import controller.schedule.KeyListener_ScheduleMasterList_SearchBox_JTextField;
 import daoimpl.SchoolYearDaoImpl;
 import javax.swing.JButton;
@@ -25,6 +28,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
     private SchoolYearJCompModelLoader schoolYearJCompModelLoader;
     private FacultyJCompModelLoader facultyJCompModelLoader;
     private SchoolYearDaoImpl schoolYearDaoImpl;
+    private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     
     public Panel_ClassSchedules() {
         initComponents();
@@ -44,12 +48,14 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
     public void initJCompModelLoaders() {
         schoolYearJCompModelLoader = new SchoolYearJCompModelLoader();
         facultyJCompModelLoader = new FacultyJCompModelLoader();
+        gradeLevelJCompModelLoader = new GradeLevelJCompModelLoader();
     }
 
     @Override
     public void initRenderers() {
         jcmbSchoolYear.setRenderer(new Renderer_SchoolYear_JComboBox());
         jcmbFaculty.setRenderer(new Renderer_Faculty_JComboBox());
+        jcmbGradeLevelFilter.setRenderer(new Renderer_GradeLevel_JComboBox());
     }
 
     @Override
@@ -60,6 +66,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
     public void initViewComponents() {
         jcmbSchoolYear.setModel(schoolYearJCompModelLoader.getCurrentSchoolYear());
         jcmbFaculty.setModel(facultyJCompModelLoader.getAllFacultyByStatus(true));
+        jcmbGradeLevelFilter.setModel(gradeLevelJCompModelLoader.getAllGradeLevelsAsModel());
         jtfSearch.addKeyListener(new KeyListener_ScheduleMasterList_SearchBox_JTextField(this));
     }
 
@@ -68,6 +75,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         jtfSearch.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnCreate.addActionListener(new ActionListener_Schedule_Display_Create_Dialog_JButton());
         jcmbFaculty.addItemListener(new ItemListener_ScheduleMasterRecord_Faculty_JComboBox(this));
+        jcmbGradeLevelFilter.addItemListener(new ItemListener_ScheduleMasterRecord_GradeLevel_JComboBox(this));
         jcmbDay.addItemListener(new ItemListener_ScheduleMasterList_Day_JComboBox(this));
     }
 
@@ -76,6 +84,11 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
 
+    public JComboBox<String> getJcmbGradeLevelFilter() {
+        return jcmbGradeLevelFilter;
+    }
+
+    
     public JComboBox<String> getJcmbDay() {
         return jcmbDay;
     }
@@ -86,10 +99,6 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
 
     public JButton getJbtnCreate() {
         return jbtnCreate;
-    }
-
-    public JButton getJbtnDelete() {
-        return jbtnDelete;
     }
 
     public JButton getJbtnEdit() {
@@ -106,10 +115,6 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
 
     public JButton getJbtnSearch() {
         return jbtnSearch;
-    }
-
-    public JButton getJbtnView() {
-        return jbtnView;
     }
 
     public JComboBox<String> getJcmbFaculty() {
@@ -156,8 +161,6 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         jpnlControls = new javax.swing.JPanel();
         jbtnCreate = new javax.swing.JButton();
         jbtnEdit = new javax.swing.JButton();
-        jbtnView = new javax.swing.JButton();
-        jbtnDelete = new javax.swing.JButton();
         jbtnPrint = new javax.swing.JButton();
         jtfSearch = new javax.swing.JTextField();
         jbtnSearch = new javax.swing.JButton();
@@ -167,6 +170,8 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         jcmbFaculty = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jcmbDay = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jcmbGradeLevelFilter = new javax.swing.JComboBox<>();
         panel_masterrecord = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblScheduleMasterList = new javax.swing.JTable();
@@ -189,6 +194,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jbtnCreate, gridBagConstraints);
 
         jbtnEdit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -197,23 +203,8 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jbtnEdit, gridBagConstraints);
-
-        jbtnView.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnView.setText("View");
-        jbtnView.setActionCommand("view");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        jpnlControls.add(jbtnView, gridBagConstraints);
-
-        jbtnDelete.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnDelete.setText("Delete");
-        jbtnDelete.setActionCommand("delete");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        jpnlControls.add(jbtnDelete, gridBagConstraints);
 
         jbtnPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnPrint.setText("Print");
@@ -221,7 +212,7 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 20);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jbtnPrint, gridBagConstraints);
 
         jtfSearch.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -240,14 +231,15 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jbtnSearch, gridBagConstraints);
 
-        lbl_sy.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_sy.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lbl_sy.setText("School Year :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(lbl_sy, gridBagConstraints);
 
         jcmbSchoolYear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -257,15 +249,15 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jcmbSchoolYear, gridBagConstraints);
 
-        lbl_sy1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_sy1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lbl_sy1.setText("Faculty :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 11;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(lbl_sy1, gridBagConstraints);
 
         jcmbFaculty.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -274,19 +266,39 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 12;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 10);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jcmbFaculty, gridBagConstraints);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Day :");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 15;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jLabel1, gridBagConstraints);
 
+        jcmbDay.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jcmbDay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "T", "W", "TH", "F" }));
         jcmbDay.setSelectedIndex(-1);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 16;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControls.add(jcmbDay, gridBagConstraints);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setText("GradeLevel :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 13;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlControls.add(jLabel2, gridBagConstraints);
+
+        jcmbGradeLevelFilter.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcmbGradeLevelFilter.setMinimumSize(new java.awt.Dimension(50, 25));
+        jcmbGradeLevelFilter.setPreferredSize(new java.awt.Dimension(50, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlControls.add(jcmbGradeLevelFilter, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -358,15 +370,15 @@ public class Panel_ClassSchedules extends javax.swing.JPanel implements Initiali
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtnCreate;
-    private javax.swing.JButton jbtnDelete;
     private javax.swing.JButton jbtnEdit;
     private javax.swing.JButton jbtnPrint;
     private javax.swing.JButton jbtnSearch;
-    private javax.swing.JButton jbtnView;
     private javax.swing.JComboBox<String> jcmbDay;
     private javax.swing.JComboBox<String> jcmbFaculty;
+    private javax.swing.JComboBox<String> jcmbGradeLevelFilter;
     private javax.swing.JComboBox<String> jcmbSchoolYear;
     private javax.swing.JPanel jpnlControls;
     private javax.swing.JTable jtblScheduleMasterList;

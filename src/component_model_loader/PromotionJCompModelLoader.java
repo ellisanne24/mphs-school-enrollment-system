@@ -47,7 +47,8 @@ public class PromotionJCompModelLoader {
             Object[] rowData = {
                 ss.getStudentId(), ss.getStudentNo(), ss.getRegistration().getLastName() + ", " + ss.getRegistration().getFirstName()
                 + " "+ss.getRegistration().getMiddleName(), ss.getSummerGradeLevel().getLevelNo(), ss.getDateRecommendedForSummer(),
-                ss.getRecommendedBy().getLastName()+", "+ss.getRecommendedBy().getFirstName()+" "+ss.getRecommendedBy().getLastName()
+                ss.getRecommendedBy().getLastName()+", "+ss.getRecommendedBy().getFirstName()+" "+ss.getRecommendedBy().getLastName(),
+                ss.getIsEnrolledInSummer()==true? "Yes":"No",ss.getSectionName()
             };
             tableModel.addRow(rowData);
         }

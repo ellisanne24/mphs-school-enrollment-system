@@ -1183,8 +1183,7 @@ public class Dashboard extends javax.swing.JFrame implements Initializer {
         if (evt.getClickCount() >= 1) {
             if (hasGradesAccess) {
                 if (gradingsystem_instance_count <= 0) {
-                    Quarter currentQuarter = quarterDaoImpl.getCurrentQuarterOf(currentSchoolYear);
-                    View_Panel_GradingSystem panel_GradingSystem = new View_Panel_GradingSystem(user,currentSchoolYear,currentQuarter);
+                    View_Panel_GradingSystem panel_GradingSystem = new View_Panel_GradingSystem(user,currentSchoolYear);
                     jtpTopTabbedPane.add("Grades", panel_GradingSystem);
                     jtpTopTabbedPane.setSelectedComponent(panel_GradingSystem);
                     setGradingSystemInstanceCount(1);

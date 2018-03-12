@@ -5,10 +5,13 @@ import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.enrollment.Enrollment;
+import model.gradelevel.GradeLevel;
 import model.registration.Registration;
+import model.schoolyear.SchoolYear;
 import model.student.Student;
 
 /**
@@ -58,15 +61,18 @@ public class EnrollmentJCompModelLoader {
         for (Student s : studentList) {
             Registration r = s.getRegistration();
             Enrollment e = s.getEnrollment();
+           
             Object[] rowData = {
                 s.getStudentId(), s.getStudentNo(), r.getLastName()+"," + r.getFirstName()+" "+ r.getMiddleName(),
                 s.getStudentType() == 1 ? "New" : "Old",
-                s.getGradeLevelNo(), s.getSection().getSectionName(), 
+                s.getGradeLevelNo(), 
+                s.getSection().getSectionName(), 
                 s.getSection().getAdviser().getLastName() +", "+ s.getSection().getAdviser().getFirstName() +" "+
                 s.getSection().getAdviser().getMiddleName(),
                 s.isActive() == true ? "Active" : "Inactive",
                 e.getEnrollmentDate(), e.getEnrollmentType().equalsIgnoreCase("R") ? "Regular" : "Summer"
             };
+            
             tableModel.addRow(rowData);
         }
         return tableModel;
@@ -75,8 +81,31 @@ public class EnrollmentJCompModelLoader {
     public DefaultTableModel getAllEnrolledUnsectionedByGradeLevelIdAndSchoolYearId(JTable table, JComboBox jcmbGradeLevel, int schoolYearId) {
         DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
         tableModel.setRowCount(0);
-        int gradeLevelId = gradeLevelDaoImpl.getId(Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim()));
+        GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
+        int gradeLevelId = gradeLevelDaoImpl.getId(gradeLevel.getLevelNo());
         List<Student> studentList = enrollmentDaoImpl.getAllEnrolledUnsectionedByGradeLevelIdAndSchoolYearId(gradeLevelId, schoolYearId);
+        for (Student s : studentList) {
+            Registration r = s.getRegistration();
+            Enrollment e = s.getEnrollment();
+            Object[] rowData = {
+                s.getStudentId(), s.getStudentNo(), r.getLastName(), r.getFirstName(), r.getMiddleName(),
+                s.getStudentType() == 1 ? "New" : "Old",
+                s.getGradeLevelNo(), "--section--", "--adviser--", s.isActive() == true ? "Active" : "Inactive",
+                e.getEnrollmentDate(), e.getEnrollmentType().equalsIgnoreCase("R") ? "Regular" : "Summer"
+            };
+            tableModel.addRow(rowData);
+        }
+        return tableModel;
+    }
+    
+    
+    public DefaultTableModel getAllUnsectionedSummerEnrolleesBy(JTable table, JComboBox jcmbGradeLevel, SchoolYear schoolYear) {
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        tableModel.setRowCount(0);
+        GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
+        int gradeLevelId = gradeLevelDaoImpl.getId(gradeLevel.getLevelNo());
+        gradeLevel.setGradeLevelID(gradeLevelId);
+        List<Student> studentList = enrollmentDaoImpl.getAllUnsectionedSummerEnrolleesBy(gradeLevel, schoolYear,"S");
         for (Student s : studentList) {
             Registration r = s.getRegistration();
             Enrollment e = s.getEnrollment();

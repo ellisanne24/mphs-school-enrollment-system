@@ -171,7 +171,7 @@ public class Controller_Load_JButton implements ActionListener {
     }
     
     private void initAssignSummerFeeButton() {
-        panelPayment.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(panelPayment, student, currentSchoolYear));
+        panelPayment.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(panelPayment, user,student, currentSchoolYear));
         if (student.getIsRecommendedToTakeSummer()) {
             panelPayment.getJlblRecommendForSummerMessage().setText("Student is recommended for summer.");
             panelPayment.getJbtnAssignSummerFee().setEnabled(true);

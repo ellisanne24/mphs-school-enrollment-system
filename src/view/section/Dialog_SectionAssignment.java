@@ -66,7 +66,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
     public void initRenderers() {
         jtblEnrolledStudents.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(6));
         jtblSectionStudents.setDefaultRenderer(Object.class, new Renderer_Master_GradeLevel_JTableCell(6));
-        jcmbGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
+//        jcmbGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
         jcmbSection.setRenderer(new Renderer_Section_JComboBox());
         jcmbAdviser.setRenderer(new Renderer_Faculty_JComboBox());
     }
@@ -79,7 +79,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
     public void initViewComponents() {
         JTableUtil.applyCustomHeaderRenderer(jtblSectionStudents);
         JTableUtil.applyCustomHeaderRenderer(jtblEnrolledStudents);
-        jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
+        jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevelsAsModel());
         jcmbSection.setModel(sectionJCompModelLoader.getAllSectionByStatusAndSchoolYearId(true, currentSchoolYear.getSchoolYearId()));
         jcmbAdviser.setModel(facultyJCompModelLoader.getAllFacultyAsId());
         jcmbAdviser.setSelectedIndex(-1);

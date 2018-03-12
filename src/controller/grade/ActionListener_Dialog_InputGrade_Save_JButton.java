@@ -14,6 +14,7 @@ import model.student.Student;
 import model.subject.Subject;
 import model.user.User;
 import view.grades.View_Dialog_InputGrade;
+import view.grades.View_Panel_GradingSystem;
 
 /**
  *
@@ -21,15 +22,17 @@ import view.grades.View_Dialog_InputGrade;
  */
 public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionListener {
 
+    private final View_Panel_GradingSystem panelGradingSystem;
     private final View_Dialog_InputGrade view;
     private final GradeDaoImpl gradeDaoImpl;
     private final User user;
     private final SchoolYear currentSchoolYear;
 
-    public ActionListener_Dialog_InputGrade_Save_JButton(View_Dialog_InputGrade view, User user, SchoolYear currentSchoolYear) {
+    public ActionListener_Dialog_InputGrade_Save_JButton(View_Dialog_InputGrade view, User user, SchoolYear currentSchoolYear, View_Panel_GradingSystem panelGradingSystem) {
         this.view = view;
         this.user = user;
         this.currentSchoolYear = currentSchoolYear;
+        this.panelGradingSystem = panelGradingSystem;
         gradeDaoImpl = new GradeDaoImpl();
     }
 
@@ -42,6 +45,7 @@ public class ActionListener_Dialog_InputGrade_Save_JButton implements ActionList
             if (isFormValid()) {
                 if (isSuccessful) {
                     JOptionPane.showMessageDialog(null, "Successfully saved grades.");
+                    panelGradingSystem.refreshRecord();
                     view.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Encountered problems while adding grades. Please contact your support.");

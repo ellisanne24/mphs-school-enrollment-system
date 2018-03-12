@@ -173,9 +173,9 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Official Receipt");
-    setMaximumSize(new java.awt.Dimension(700, 500));
-    setMinimumSize(new java.awt.Dimension(700, 500));
-    setPreferredSize(new java.awt.Dimension(700, 500));
+    setMaximumSize(new java.awt.Dimension(650, 650));
+    setMinimumSize(new java.awt.Dimension(650, 650));
+    setPreferredSize(new java.awt.Dimension(650, 650));
     getContentPane().setLayout(new java.awt.GridBagLayout());
 
     jpnlReceiptContainer.setBackground(new java.awt.Color(255, 255, 255));

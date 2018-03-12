@@ -203,7 +203,7 @@ public class PromotionDaoImpl implements IPromotion {
                     user.setLastName(rs.getString("userLastName"));
                     user.setFirstName(rs.getString("userFirstName"));
                     user.setMiddleName(rs.getString("userMiddleName"));
-
+                    
                     SummerStudent summerStudent = new SummerStudent();
                     summerStudent.setStudentId(rs.getInt("student_id"));
                     summerStudent.setStudentNo(rs.getInt("student_no"));
@@ -212,6 +212,8 @@ public class PromotionDaoImpl implements IPromotion {
                     summerStudent.setSchoolYearRecommended(summerSchoolYear);
                     summerStudent.setRecommendedBy(user);
                     summerStudent.setDateRecommendedForSummer(rs.getDate("dateRecommendedToSummer"));
+                    summerStudent.setIsEnrolledInSummer(rs.getBoolean("is_enrolled_in_summer"));
+                    summerStudent.setSectionName(rs.getString("sectionName"));
                     
                     summerStudents.add(summerStudent);
                 }

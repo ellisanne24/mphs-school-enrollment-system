@@ -74,19 +74,11 @@ public class MyInputGradeTableModel extends DefaultTableModel {
         boolean todayGtOpen = dateToday.after(quarter.getGradingOpenDate());
         boolean todayEqClose = dateToday.compareTo(quarter.getGradingDueDate()) == 0;
         boolean todayLtClose = dateToday.before(quarter.getGradingDueDate());
-        System.out.println("quarterNo: " + quarter.getQuarterNo());
-        System.out.println("Grading Open Date : " + quarter.getGradingOpenDate());
-        System.out.println("Grading Close Date: " + quarter.getGradingDueDate());
-        System.out.println("todayEqOpen: " + todayEqOpen);
-        System.out.println("todayGtOpen: " + todayGtOpen);
-        System.out.println("todayEqClose: " + todayEqClose);
-        System.out.println("todayLtClose: " + todayLtClose);
         if ((todayGtOpen || todayEqOpen) && (todayLtClose || todayEqClose)) {
             isOpen = true;
         } else {
             isOpen = false;
         }
-        System.out.println("isOpen? :" + isOpen);
         return isOpen;
     }
 }

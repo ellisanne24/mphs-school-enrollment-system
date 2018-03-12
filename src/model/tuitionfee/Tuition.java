@@ -29,7 +29,7 @@ public class Tuition {
     
     private Student student;
 
-    public int getSchoolyearId() {
+    public int getSchoolYearId() {
         return schoolyearId;
     }
 

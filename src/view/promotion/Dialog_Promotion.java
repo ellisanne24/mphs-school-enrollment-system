@@ -211,7 +211,7 @@ public class Dialog_Promotion extends javax.swing.JDialog implements Initializer
 
         jbtnPromote.setBackground(new java.awt.Color(204, 204, 0));
         jbtnPromote.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnPromote.setText("Promote");
+        jbtnPromote.setText("Promote / Recommend for Summer");
         jbtnPromote.setBorderPainted(false);
         jbtnPromote.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();

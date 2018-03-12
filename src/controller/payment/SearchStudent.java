@@ -9,20 +9,15 @@ import daoimpl.PaymentTermDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
 import daoimpl.TuitionFeeDaoImpl;
-import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JViewport;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import model.fee.Fee;
@@ -30,6 +25,7 @@ import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.Tuition;
+import model.user.User;
 import service.tuition.TuitionPopulator;
 import view.payment.Panel_Payment;
 
@@ -39,6 +35,7 @@ import view.payment.Panel_Payment;
  */
 public class SearchStudent implements KeyListener {
 
+    private final User user;
     private int studentNo;
     private int currentSchoolYearId;
     private PaymentTerm paymentTerm;
@@ -57,9 +54,10 @@ public class SearchStudent implements KeyListener {
     
     private final Panel_Payment view;
 
-    public SearchStudent(
+    public SearchStudent(User user,
             Panel_Payment view, StudentDaoImpl studentDaoImpl, GradeLevelDaoImpl gradeLevelDaoImpl,
             FeeDaoImpl feeDaoImpl, PaymentTermDaoImpl paymentTermDaoImpl) {
+        this.user = user;
         this.view = view;
         this.studentDaoImpl = studentDaoImpl;
         this.feeDaoImpl = feeDaoImpl;
@@ -123,7 +121,7 @@ public class SearchStudent implements KeyListener {
 
     private void initAssignSummerFeeButton(Student s){
         SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
-        view.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(view,s,currentSchoolYear));
+        view.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(view,user,s,currentSchoolYear));
         if(s.getIsRecommendedToTakeSummer()){
             view.getJlblRecommendForSummerMessage().setText("Student is recommended for summer.");
             view.getJbtnAssignSummerFee().setEnabled(true);

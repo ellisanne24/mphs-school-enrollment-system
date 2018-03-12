@@ -65,7 +65,7 @@ public class ItemListener_Dialog_InputGrade_SubjectCode_JComboBox implements Ite
                     setGradesToColumns(gradeList, row);
                 }
                List<Integer>quarterColumns = Arrays.asList(3,4,5,6);
-               view.getJtblGradingSheet().setModel(new MyInputGradeTableModel(view.getJtblGradingSheet(),quarterColumns, user,currentSchoolYear));
+//               view.getJtblGradingSheet().setModel(new MyInputGradeTableModel(view.getJtblGradingSheet(),quarterColumns, user,currentSchoolYear));
             }
         }
     }

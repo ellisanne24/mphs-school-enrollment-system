@@ -2,14 +2,25 @@
 package view.payment;
 
 import controller.global.Controller_JButton_ExitJDialog;
+import controller.payment.Controller_Summer_Pay_JButton;
 import daoimpl.FeeDaoImpl;
 import daoimpl.SubjectDaoImpl;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import model.fee.Fee;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.subject.Subject;
+import model.user.User;
 import utility.initializer.Initializer;
 
 /**
@@ -18,23 +29,26 @@ import utility.initializer.Initializer;
  */
 public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initializer{
 
+    private final User user;
     private final Student student;
     private final SchoolYear currentSchoolYear;
     private SubjectDaoImpl subjectDaoImpl;
     private FeeDaoImpl feeDaoImpl;
     
-    public Dialog_AddSummerFee(java.awt.Frame parent, boolean modal, Student student, SchoolYear currentSchoolYear) {
+    public Dialog_AddSummerFee(java.awt.Frame parent, boolean modal, Student student, SchoolYear currentSchoolYear, User user) {
         super(parent, modal);
         initComponents();
         
+        this.user = user;
         this.student = student;
         this.currentSchoolYear = currentSchoolYear;
         
         initDaoImpl();
         initJCompModelLoaders();
         initRenderers();
-        initViewComponents();
         initControllers();
+        initViewComponents();
+        
     }
 
     @Override
@@ -66,7 +80,27 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
 
     @Override
     public void initControllers() {
+        jbtnPaySummer.addActionListener(new Controller_Summer_Pay_JButton(this, student, currentSchoolYear,user));
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
+        jtfTendered.getDocument().addDocumentListener(new Controller_Summer_Tendered_Amount_Validator_JTextField(this));
+        jtfAmountCharged.getDocument().addDocumentListener(new Controller_Summer_Tendered_Amount_Validator_JTextField(this));
+        jtblSummerFees.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (jtblSummerFees.getRowCount() > 0) {
+                    BigDecimal sum = new BigDecimal(BigInteger.ZERO);
+                    for (int row = 0; row < jtblSummerFees.getRowCount(); row++) {
+                        for (int col = 0; col < jtblSummerFees.getColumnCount(); col++) {
+                            if (col == 2) {
+                                double amount = Double.parseDouble(jtblSummerFees.getValueAt(row, col).toString().trim());
+                                sum = sum.add(BigDecimal.valueOf(amount));
+                            }
+                        }
+                    }
+                    jtfTotal.setText(""+sum.setScale(2,BigDecimal.ROUND_HALF_UP));
+                }
+            }
+        });
     }
 
     @Override
@@ -89,6 +123,64 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
         }
         jtblSummerFees.setModel(tableModel);
     }
+
+    public JButton getJbtnCancel() {
+        return jbtnCancel;
+    }
+
+    public JButton getJbtnPaySummer() {
+        return jbtnPaySummer;
+    }
+
+    public JLabel getJlblChargedPhp() {
+        return jlblChargedPhp;
+    }
+
+    public JLabel getJlblCurrentSchoolYear() {
+        return jlblCurrentSchoolYear;
+    }
+
+    public JLabel getJlblReceivedPhp() {
+        return jlblReceivedPhp;
+    }
+
+    public JLabel getJlblStudentName() {
+        return jlblStudentName;
+    }
+
+    public JLabel getJlblStudentNo() {
+        return jlblStudentNo;
+    }
+
+    public JLabel getJlblTotalPhp() {
+        return jlblTotalPhp;
+    }
+
+    public JPanel getJpnlControl() {
+        return jpnlControl;
+    }
+
+    public JPanel getJpnlStudentDetails() {
+        return jpnlStudentDetails;
+    }
+
+    public JTable getJtblSummerFees() {
+        return jtblSummerFees;
+    }
+
+    public JTextField getJtfAmountCharged() {
+        return jtfAmountCharged;
+    }
+
+    public JTextField getJtfTendered() {
+        return jtfTendered;
+    }
+
+    public JTextField getJtfTotal() {
+        return jtfTotal;
+    }
+    
+    
     
     
     @SuppressWarnings("unchecked")
@@ -107,21 +199,18 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblSummerFees = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
-        javax.swing.JLabel lbl_datetoday4 = new javax.swing.JLabel();
-        display_lastname3 = new javax.swing.JLabel();
         javax.swing.JLabel jlblTotal = new javax.swing.JLabel();
         jlblTotalPhp = new javax.swing.JLabel();
         javax.swing.JLabel jlblReceived = new javax.swing.JLabel();
         jlblReceivedPhp = new javax.swing.JLabel();
         jtfTendered = new javax.swing.JTextField();
-        jtfSubtotal = new javax.swing.JTextField();
         jtfTotal = new javax.swing.JTextField();
         javax.swing.JLabel jlblCharged = new javax.swing.JLabel();
         jlblChargedPhp = new javax.swing.JLabel();
         jtfAmountCharged = new javax.swing.JTextField();
         jpnlControl = new javax.swing.JPanel();
         jbtnCancel = new javax.swing.JButton();
-        jbtnAssignFees = new javax.swing.JButton();
+        jbtnPaySummer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Assign Summer Fees");
@@ -210,27 +299,6 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
         jPanel1.setPreferredSize(new java.awt.Dimension(250, 130));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        lbl_datetoday4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lbl_datetoday4.setText("Subtotal :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel1.add(lbl_datetoday4, gridBagConstraints);
-
-        display_lastname3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        display_lastname3.setText("Php");
-        display_lastname3.setMaximumSize(new java.awt.Dimension(30, 20));
-        display_lastname3.setMinimumSize(new java.awt.Dimension(30, 20));
-        display_lastname3.setPreferredSize(new java.awt.Dimension(30, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel1.add(display_lastname3, gridBagConstraints);
-
         jlblTotal.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jlblTotal.setForeground(new java.awt.Color(0, 51, 102));
         jlblTotal.setText("Total :");
@@ -286,17 +354,6 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
         gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel1.add(jtfTendered, gridBagConstraints);
-
-        jtfSubtotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jtfSubtotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        jtfSubtotal.setEnabled(false);
-        jtfSubtotal.setMinimumSize(new java.awt.Dimension(100, 25));
-        jtfSubtotal.setPreferredSize(new java.awt.Dimension(100, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel1.add(jtfSubtotal, gridBagConstraints);
 
         jtfTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jtfTotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -376,11 +433,12 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlControl.add(jbtnCancel, gridBagConstraints);
 
-        jbtnAssignFees.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnAssignFees.setText("Pay");
+        jbtnPaySummer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnPaySummer.setText("Pay");
+        jbtnPaySummer.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlControl.add(jbtnAssignFees, gridBagConstraints);
+        jpnlControl.add(jbtnPaySummer, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -399,15 +457,14 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel display_lastname3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton jbtnAssignFees;
     private javax.swing.JButton jbtnCancel;
+    private javax.swing.JButton jbtnPaySummer;
     private javax.swing.JLabel jlblChargedPhp;
     private javax.swing.JLabel jlblCurrentSchoolYear;
     private javax.swing.JLabel jlblReceivedPhp;
@@ -418,7 +475,6 @@ public class Dialog_AddSummerFee extends javax.swing.JDialog implements Initiali
     private javax.swing.JPanel jpnlStudentDetails;
     private javax.swing.JTable jtblSummerFees;
     private javax.swing.JTextField jtfAmountCharged;
-    private javax.swing.JTextField jtfSubtotal;
     private javax.swing.JTextField jtfTendered;
     private javax.swing.JTextField jtfTotal;
     // End of variables declaration//GEN-END:variables

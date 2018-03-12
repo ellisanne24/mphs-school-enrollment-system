@@ -3,6 +3,7 @@ package dao;
 
 import java.util.List;
 import model.faculty.Faculty;
+import model.gradelevel.GradeLevel;
 import model.schedule.Schedule;
 import model.schoolyear.SchoolYear;
 import model.subject.Subject;
@@ -20,4 +21,5 @@ public interface ISchedule {
     List<Schedule> getAllSchedulesBySchoolYearFacultyAndStatus(int schoolYearId, int facultyId, boolean isSchedActive);
     List<Schedule> getSchedulesByWildCardSchoolYearIdAndStatus(String aWildCardChar, int schoolYearId, boolean isActive);
     List<Schedule> getSchedulesByDaySchoolYearAndStatus(String day, int schoolyearId, boolean isActive);
+    List<Schedule> getSchedulesBy(SchoolYear schoolYear, GradeLevel gradeLevel, boolean isActive);
 }

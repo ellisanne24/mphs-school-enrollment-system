@@ -1,6 +1,8 @@
 package dao;
 
 import java.util.List;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 import model.student.Student;
 
 /**
@@ -13,4 +15,5 @@ public interface IEnrollment {
     List<Student> getAllEnrolledBySchoolYearId(int schoolYearId);
     List<Student> getAllEnrolledBySchoolYearIdAndGradeLevelId(int schoolyearId, int gradelevelId);
     List<Student> getAllEnrolledUnsectionedByGradeLevelIdAndSchoolYearId(int gradelevelId, int schoolYearId);
+    List<Student> getAllUnsectionedSummerEnrolleesBy(GradeLevel gradeLevel, SchoolYear schoolYear, String sectionType);
 }

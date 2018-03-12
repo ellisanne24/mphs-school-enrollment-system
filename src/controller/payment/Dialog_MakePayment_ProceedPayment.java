@@ -105,7 +105,6 @@ public class Dialog_MakePayment_ProceedPayment implements ActionListener {
             particularList.add(particular);
         }
         return particularList;
-        
     }
 
     private boolean isValidAmount(String s) {

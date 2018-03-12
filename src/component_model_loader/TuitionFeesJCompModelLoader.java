@@ -32,6 +32,7 @@ public class TuitionFeesJCompModelLoader {
                 b.getCategory(),
                 b.hasPenalty() == true? "Yes" : "No",
             };
+            System.out.println(b.getName()+" : "+b.getCategory());
             tableModel.addRow(rowData);
         }
         return tableModel;
