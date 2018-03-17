@@ -37,8 +37,8 @@ public class Controller_Reports_ClassList_GradeLevel_JComboBox implements ItemLi
                 SchoolYear schoolYear = (SchoolYear) view.getJcmbClassListSchoolYear().getSelectedItem();
                 GradeLevel gradeLevel = (GradeLevel) view.getJcmbClassListGradeLevel().getSelectedItem();
                 String sectionType = view.getJcmbClassListSectionType().getSelectedItem().toString().trim();
-                view.getJcmbClassListSecttion().setModel(sectionJCompModelLoader.getSectionsBy(schoolYear, gradeLevel, sectionType));
-                view.getJcmbClassListSecttion().setEnabled(true);
+                view.getJcmbClassListSection().setModel(sectionJCompModelLoader.getSectionsBy(schoolYear, gradeLevel, sectionType));
+                view.getJcmbClassListSection().setEnabled(true);
             }
         }
     }

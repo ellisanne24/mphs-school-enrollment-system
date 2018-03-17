@@ -31,6 +31,7 @@ import model.quarter.Quarter;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.user.User;
+import renderer.grade.Renderer_MyAdvisory_MasterList;
 import utility.initializer.Initializer;
 import utility.jtable.JTableUtil;
 
@@ -70,6 +71,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
     @Override
     public void initRenderers() {
+        jtblAdvisoryGradesList.setDefaultRenderer(Object.class, new Renderer_MyAdvisory_MasterList(10));
     }
 
     @Override
@@ -78,6 +80,9 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
     @Override
     public void initViewComponents() {
+        jtpTop.remove(jpnlHS);
+        jtpTop.remove(jpnlSUMMER);
+        jlblAdviserName.setText(""+user.getLastName()+", "+user.getFirstName()+" "+user.getMiddleName());
         JTableUtil.applyCustomHeaderRenderer(jtblAdvisoryGradesList);
         if(user.getRole().getRoleName().trim().equalsIgnoreCase("Faculty")){
             Date dateToday = Calendar.getInstance().getTime();
@@ -104,6 +109,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
             for (int tRow = 0; tRow < jtblAdvisoryGradesList.getRowCount(); tRow++) {
                 Student student = new Student();
                 student.setStudentId(Integer.parseInt(jtblAdvisoryGradesList.getValueAt(tRow, 0).toString().trim()));
+                int generalAverage = 0;
                 for (int tCol = 0; tCol < jtblAdvisoryGradesList.getColumnCount(); tCol++) {
                     ArrayList<Integer> quarterCols = new ArrayList<>(Arrays.asList(qtr1Column, qtr2Column, qtr3Column, qtr4Column));
                     for (int colNo : quarterCols) {
@@ -111,9 +117,14 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
                             int gradingPeriod = (colNo - 4);
                             Grade grade = gradeDaoImpl.getGradeByStudentGradingPeriodAndSchoolYear(student, gradingPeriod, schoolYear);
                             jtblAdvisoryGradesList.setValueAt(grade.getValue(), tRow, tCol);
+                            generalAverage += grade.getValue();
                         }
                     }
                 }
+                if((generalAverage/4) > 0){
+                    jtblAdvisoryGradesList.setValueAt(generalAverage/4, tRow, 9);
+                }
+                
             }
         }
     }
@@ -182,16 +193,8 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         return jbtnAdvisoryInputGrades;
     }
 
-    public JButton getJbtnPrint() {
-        return jbtnAdvisoryPrint;
-    }
-
     public JButton getJbtnSearch() {
         return jbtnAdvisorySearch;
-    }
-
-    public JComboBox<String> getJcmbSearchBy() {
-        return jcmbAdvisorySearchBy;
     }
 
     public JPanel getJpnlMyAdvisory() {
@@ -204,10 +207,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
     public JTextField getJtfSearchBox() {
         return jtfAdvisorySearchBox;
-    }
-
-    public JLabel getLbl_show() {
-        return lbl_show;
     }
 
     public JPanel getPanel_control() {
@@ -233,14 +232,12 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jpnlTopMyAdvisory = new javax.swing.JPanel();
         jpnlAdvisoryControl = new javax.swing.JPanel();
         jbtnAdvisoryInputGrades = new javax.swing.JButton();
-        jbtnAdvisoryPrint = new javax.swing.JButton();
         jtfAdvisorySearchBox = new javax.swing.JTextField();
         jbtnAdvisorySearch = new javax.swing.JButton();
-        lbl_show = new javax.swing.JLabel();
-        jcmbAdvisorySearchBy = new javax.swing.JComboBox<>();
         jbtnAdvisoryPromotion = new javax.swing.JButton();
         jbtnAdvisoryViewReportCard = new javax.swing.JButton();
         jbtnAdvisoryRefresh = new javax.swing.JButton();
+        jlblAdviserName = new javax.swing.JLabel();
         jpnlAdvisoryMyAdvisory = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblAdvisoryGradesList = new javax.swing.JTable();
@@ -273,8 +270,8 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jpnlTopMyAdvisory.setLayout(new java.awt.GridBagLayout());
 
         jpnlAdvisoryControl.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jpnlAdvisoryControl.setMinimumSize(new java.awt.Dimension(1200, 40));
-        jpnlAdvisoryControl.setPreferredSize(new java.awt.Dimension(1200, 40));
+        jpnlAdvisoryControl.setMinimumSize(new java.awt.Dimension(1200, 60));
+        jpnlAdvisoryControl.setPreferredSize(new java.awt.Dimension(1200, 60));
         jpnlAdvisoryControl.setLayout(new java.awt.GridBagLayout());
 
         jbtnAdvisoryInputGrades.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -286,16 +283,9 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        jpnlAdvisoryControl.add(jbtnAdvisoryInputGrades, gridBagConstraints);
-
-        jbtnAdvisoryPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnAdvisoryPrint.setText("Print");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlAdvisoryControl.add(jbtnAdvisoryPrint, gridBagConstraints);
+        jpnlAdvisoryControl.add(jbtnAdvisoryInputGrades, gridBagConstraints);
 
         jtfAdvisorySearchBox.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jtfAdvisorySearchBox.setText("Search here");
@@ -303,7 +293,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jtfAdvisorySearchBox.setPreferredSize(new java.awt.Dimension(150, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdvisoryControl.add(jtfAdvisorySearchBox, gridBagConstraints);
 
@@ -311,41 +301,23 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jbtnAdvisorySearch.setText("Search");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 9;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdvisoryControl.add(jbtnAdvisorySearch, gridBagConstraints);
-
-        lbl_show.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_show.setText("Search by :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlAdvisoryControl.add(lbl_show, gridBagConstraints);
-
-        jcmbAdvisorySearchBy.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jcmbAdvisorySearchBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Grade Level", "Sebject Code", "Section" }));
-        jcmbAdvisorySearchBy.setMinimumSize(new java.awt.Dimension(100, 25));
-        jcmbAdvisorySearchBy.setPreferredSize(new java.awt.Dimension(100, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 11;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jpnlAdvisoryControl.add(jcmbAdvisorySearchBy, gridBagConstraints);
 
         jbtnAdvisoryPromotion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnAdvisoryPromotion.setText("Promotion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdvisoryControl.add(jbtnAdvisoryPromotion, gridBagConstraints);
 
         jbtnAdvisoryViewReportCard.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jbtnAdvisoryViewReportCard.setText("View Report Card");
+        jbtnAdvisoryViewReportCard.setText("View Subject Grades");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -354,9 +326,15 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         jbtnAdvisoryRefresh.setText("Refresh");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlAdvisoryControl.add(jbtnAdvisoryRefresh, gridBagConstraints);
+
+        jlblAdviserName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jlblAdviserName.setText("Adviser Name");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlAdvisoryControl.add(jlblAdviserName, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -382,11 +360,11 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
 
             },
             new String [] {
-                "ID", "Student No", "Student Name", "Grade Level", "Section", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Final Grade", "Gen. Average", "Remarks"
+                "ID", "Student No", "Student Name", "Grade Level", "Section", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Gen. Average", "Remarks"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -589,7 +567,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         );
         jpnlSUMMERLayout.setVerticalGroup(
             jpnlSUMMERLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGap(0, 639, Short.MAX_VALUE)
         );
 
         jtpTop.addTab("Summer Class Students", jpnlSUMMER);
@@ -604,7 +582,7 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
         );
         jpnlADMINLayout.setVerticalGroup(
             jpnlADMINLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGap(0, 639, Short.MAX_VALUE)
         );
 
         jtpTop.addTab("Admin View of Student Master List", jpnlADMIN);
@@ -631,7 +609,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton jbtnAdvisoryInputGrades;
-    private javax.swing.JButton jbtnAdvisoryPrint;
     private javax.swing.JButton jbtnAdvisoryPromotion;
     private javax.swing.JButton jbtnAdvisoryRefresh;
     private javax.swing.JButton jbtnAdvisorySearch;
@@ -642,8 +619,8 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     private javax.swing.JButton jbtnNonAdvisoryRefresh;
     private javax.swing.JButton jbtnNonAdvisorySearch;
     private javax.swing.JButton jbtnNonAdvisoryViewAll;
-    private javax.swing.JComboBox<String> jcmbAdvisorySearchBy;
     private javax.swing.JComboBox<String> jcmbNonAdvisorySearchBy;
+    private javax.swing.JLabel jlblAdviserName;
     private javax.swing.JPanel jpnlADMIN;
     private javax.swing.JPanel jpnlAdvisoryControl;
     private javax.swing.JPanel jpnlAdvisoryMyAdvisory;
@@ -658,7 +635,6 @@ public class View_Panel_GradingSystem extends javax.swing.JPanel implements Init
     private javax.swing.JTextField jtfAdvisorySearchBox;
     private javax.swing.JTextField jtfNonAdvisorySearchBox;
     private javax.swing.JTabbedPane jtpTop;
-    private javax.swing.JLabel lbl_show;
     private javax.swing.JLabel lbl_show1;
     // End of variables declaration//GEN-END:variables
 }

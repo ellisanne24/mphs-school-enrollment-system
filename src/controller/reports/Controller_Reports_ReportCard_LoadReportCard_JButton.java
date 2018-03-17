@@ -115,7 +115,7 @@ public class Controller_Reports_ReportCard_LoadReportCard_JButton implements For
             int fourthGp = subject.getFourthGradingPeriodAverage().getValue();
             int average = (firstGp + secondGp + thirdGp + fourthGp) / 4;
             Object[] rowData = {
-                subject.getSubjectTitle(),firstGp, secondGp, thirdGp, fourthGp, average, (average > 75 ? "Passed" : "Failed")
+                subject.getSubjectTitle(),firstGp, secondGp, thirdGp, fourthGp, average, (average > 75 ? "Passed" : "Summer")
             };
             tableModel.addRow(rowData);
             rowCount++;

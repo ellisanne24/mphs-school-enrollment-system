@@ -5,7 +5,7 @@ import daoimpl.SectionDaoImpl;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
-import javax.swing.JTabbedPane;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
@@ -29,15 +29,17 @@ public class Controller_Reports_ClassList_Section_JComboBox implements ItemListe
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if(e.getSource() == view.getJcmbClassListSecttion()){
-            if(view.getJcmbClassListSecttion().getSelectedIndex() > -1){
+        if(e.getSource() == view.getJcmbClassListSection()){
+            if(view.getJcmbClassListSection().getSelectedIndex() > -1){
                 view.clearClassList();
                 
-                Section section = (Section)view.getJcmbClassListSecttion().getSelectedItem();
+                Section section = (Section)view.getJcmbClassListSection().getSelectedItem();
                 view.getJlblClassListAdviserName().setText(section.getAdviser().getLastName()+", "+section.getAdviser().getFirstName());
                 view.getJlblClassListGradeLevelText().setText(section.getGradeLevel().getLevelNo() == 0? "Kindergarten": section.getGradeLevel().getLevelNo()+"");
                 view.getJlblClassListSectionName().setText(section.getSectionName());
-
+                view.getJlblSectionSessionClassList().setText("Session: "+section.getSectionSession());
+                view.getJlblSectionTypeClassList().setText("Section Type: " +(section.getSectionType().equalsIgnoreCase("R")? "Regular":"Summer"));
+                
                 SchoolYear schoolYear  = (SchoolYear) view.getJcmbCorSchoolYear().getSelectedItem();
                 view.getJlblClassListSchoolYear().setText(schoolYear.getYearFrom()+"-"+schoolYear.getYearTo());
                 section.setSchoolYear(schoolYear);

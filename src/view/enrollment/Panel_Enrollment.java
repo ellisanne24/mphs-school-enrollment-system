@@ -909,6 +909,8 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         int tabindex = jtpContainer.getSelectedIndex();
         if(tabindex == 3){
             jtblSummerStudents.setModel(promotionJCompModelLoader.getAllSummerStudentsOf(jtblSummerStudents, currentSchoolYear));
+        }else if(tabindex == 2){
+            jtblPromoted.setModel((promotionJCompModelLoader.getAllPromotedStudentOf(jtblPromoted, currentSchoolYear)));
         }
     }//GEN-LAST:event_jtpContainerMouseClicked
 

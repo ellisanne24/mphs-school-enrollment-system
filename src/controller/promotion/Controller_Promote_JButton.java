@@ -74,9 +74,12 @@ public class Controller_Promote_JButton implements ActionListener {
         JTable t = view.getJtblStudents();
         clearConsole();
         view.getJtaWarningConsole().setText("THE FF. TEACHERS HAVE NOT YET SUBMITTED GRADES FOR THE FF. SUBJECTS : \n\n");
+        
         for (int row = 0; row < t.getRowCount(); row++) {
             Object studentNo = t.getValueAt(row, 1);
+            JOptionPane.showMessageDialog(null,"Student No @ row "+row +": "+studentNo);
             Student student = studentDaoImpl.getStudentByStudentNo(Integer.parseInt(studentNo.toString().trim()));
+            JOptionPane.showMessageDialog(null,"Student Id: "+row +" "+student.getStudentId());
             int gradeLevelFrom = Integer.parseInt(t.getValueAt(row, 2).toString().trim());
             int gradeLevelId = gradeLevelDaoImpl.getId(gradeLevelFrom);
             GradeLevel gradeLevel = gradeLevelDaoImpl.getById(gradeLevelId);
@@ -153,7 +156,7 @@ public class Controller_Promote_JButton implements ActionListener {
             }
         } else {
             clearConsole();
-            view.getJtaWarningConsole().append("Null Fields found.");
+            view.getJtaWarningConsole().append("Incomplete grades found. Average of 0 is not valid.");
         }
         return summerStudents;
     }

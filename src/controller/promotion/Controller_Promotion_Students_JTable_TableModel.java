@@ -21,7 +21,7 @@ public class Controller_Promotion_Students_JTable_TableModel implements TableMod
     @Override
     public void tableChanged(TableModelEvent e) {
         view.getJbtnPromote().setEnabled(view.getJtblStudents().getRowCount() > 0);
-        if(e.getColumn() == 3){
+        if(e.getColumn() == 5){
             TableModel tableModel = (TableModel) e.getSource();
             int passingGrade = 75;
             for(int row = 0; row < tableModel.getRowCount(); row++){

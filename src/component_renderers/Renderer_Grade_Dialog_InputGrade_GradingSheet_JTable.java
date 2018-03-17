@@ -31,14 +31,14 @@ public class Renderer_Grade_Dialog_InputGrade_GradingSheet_JTable extends Defaul
                 cellComponent.setBackground(Color.WHITE);
                 cellComponent.setForeground(Color.BLACK);
             }
-        }else if(column == 10){
+        }else if(column == 9){
             if(value instanceof Object){
                 String remark = value.toString();
                 if(remark.equalsIgnoreCase("Passed")){
                     cellComponent.setBackground(Color.YELLOW);
                     cellComponent.setForeground(Color.BLACK);
                 }
-                else if(remark.equalsIgnoreCase("Failed")){
+                else if(remark.equalsIgnoreCase("Summer")){
                     cellComponent.setBackground(Color.PINK);
                     cellComponent.setForeground(Color.BLACK);
                 }

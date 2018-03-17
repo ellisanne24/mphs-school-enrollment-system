@@ -500,6 +500,12 @@ public class SectionDaoImpl implements ISection {
             cs.setInt(2, faculty.getFacultyID());
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
+                    GradeLevel gradeLevel = new GradeLevel();
+                    gradeLevel.setGradeLevelID(rs.getInt("gradelevel_id"));
+                    gradeLevel.setLevelNo(rs.getInt("grade_level"));
+                    gradeLevel.setAgeFrom(rs.getInt("ageFrom"));
+                    gradeLevel.setAgeTo(rs.getInt("ageTo"));
+                    
                     Section section = new Section();
                     section.setSectionId(rs.getInt("section_id"));
                     section.setSectionName(rs.getString("sectionName"));
@@ -509,6 +515,7 @@ public class SectionDaoImpl implements ISection {
                     section.setCapacity(rs.getInt("capacity"));
                     section.setSectionType(rs.getString("section_type"));
                     section.setSchoolYear(schoolYear);
+                    section.setGradeLevel(gradeLevel);
                     sectionList.add(section);
                 }
             }

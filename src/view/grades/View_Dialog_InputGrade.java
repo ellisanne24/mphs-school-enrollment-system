@@ -202,9 +202,9 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Input Grades Per Subject");
-        setMinimumSize(new java.awt.Dimension(1000, 600));
+        setMinimumSize(new java.awt.Dimension(1000, 500));
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(1000, 600));
+        setPreferredSize(new java.awt.Dimension(1000, 500));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -327,11 +327,11 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
 
             },
             new String [] {
-                "ID", "Student No", "Student Name", "Ist (TG)", "2nd (TG)", "3rd (TG)", "4th (TG)", "Total", "Final Grade", "Remedial Grade", "Remarks"
+                "ID", "Student No", "Student Name", "Ist (TG)", "2nd (TG)", "3rd (TG)", "4th (TG)", "Total", "Final Grade", "Remarks"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true, true, true, false, false, false, false
+                false, false, false, true, true, true, true, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -341,6 +341,9 @@ public class View_Dialog_InputGrade extends javax.swing.JDialog implements Initi
         jtblGradingSheet.setRowHeight(20);
         jtblGradingSheet.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblGradingSheet);
+        if (jtblGradingSheet.getColumnModel().getColumnCount() > 0) {
+            jtblGradingSheet.getColumnModel().getColumn(8).setHeaderValue("Final Grade");
+        }
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

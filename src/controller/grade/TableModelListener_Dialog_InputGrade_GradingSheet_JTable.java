@@ -44,7 +44,7 @@ public class TableModelListener_Dialog_InputGrade_GradingSheet_JTable implements
                     if(divisor != 0){
                         int finalGrade = sum/divisor;
                         tableModel.setValueAt(finalGrade,row,8);
-                        tableModel.setValueAt(finalGrade >= 75? "Passed" : "Failed", row, 10);
+                        tableModel.setValueAt(finalGrade >= 75? "Passed" : "Summer", row,9);
                     }
                 }
             }

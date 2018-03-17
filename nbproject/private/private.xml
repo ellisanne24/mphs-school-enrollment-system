@@ -2,6 +2,16 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/daoimpl/StudentDaoImpl.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/payment/Controller_Load_JButton.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/promotion/Controller_Promotion_Students_JTable_TableModel.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/promotion/Controller_Promote_JButton.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/component_model_loader/TuitionFeesJCompModelLoader.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/promotion/Dialog_Promotion.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/daoimpl/ReportsDaoImpl.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/promotion/Controller_ItemListener_Section_JComboBox.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/grades/View_Panel_GradingSystem.java</file>
+        </group>
     </open-files>
 </project-private>

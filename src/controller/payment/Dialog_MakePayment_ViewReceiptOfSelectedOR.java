@@ -41,7 +41,6 @@ public class Dialog_MakePayment_ViewReceiptOfSelectedOR implements ActionListene
             officialReceipt = officialReceiptDaoImpl.getOfficialReceiptByOrNo(orNo);
             
             Dialog_Receipt dialog = new Dialog_Receipt(student,officialReceipt);
-            dialog.setPreferredSize(new Dimension(800,600));
             dialog.setLocationRelativeTo(null);
             dialog.setVisible(true);
         }

@@ -1693,7 +1693,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer {
 
             },
             new String [] {
-                "Name", "Amount Due", "Balance", "Due Date", "Fully Paid", "Category", "Penalty"
+                "Name", "Amount Due", "Balance", "Due Date", "Fully Paid", "Category", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {

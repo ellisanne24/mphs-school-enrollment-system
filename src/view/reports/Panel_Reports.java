@@ -11,6 +11,7 @@ import component_renderers.Renderer_SchoolYear_JComboBox;
 import component_renderers.Renderer_SectionType_JComboBox;
 import component_renderers.Renderer_Section_JComboBox;
 import controller.global.Controller_JTextField_ClearDefaultSearchText;
+import controller.global.Controller_Print_JButton;
 import controller.reports.Controller_Reports_CORtab_Search_JTextField;
 import controller.reports.Controller_Reports_ClassList_ClassType_JComboBox;
 import controller.reports.Controller_Reports_ClassList_GradeLevel_JComboBox;
@@ -24,6 +25,7 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.print.PageFormat;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -85,7 +87,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
         jcmbCorSchoolYear.setRenderer(new Renderer_SchoolYear_JComboBox());
         jcmbClassListGradeLevel.setRenderer(new Renderer_GradeLevel_JComboBox());
         jcmbClassListSchoolYear.setRenderer(new Renderer_SchoolYear_JComboBox());
-        jcmbClassListSecttion.setRenderer(new Renderer_Section_JComboBox());
+        jcmbClassListSection.setRenderer(new Renderer_Section_JComboBox());
         jcmbClassListFaculty.setRenderer(new Renderer_Faculty_JComboBox());
         jcmbClassListSectionType.setRenderer(new Renderer_SectionType_JComboBox());
     }
@@ -104,17 +106,26 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
         jcmbClassListSchoolYear.setModel(schoolYearJCompModelLoader.getAllSchoolYear());
         jcmbClassListGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevelsAsModel());
         JTableUtil.applyCustomHeaderRenderer(jtblClassList);
-        JTableUtil.applyCustomHeaderRenderer(jtblReportCard);
+//        JTableUtil.applyCustomHeaderRenderer(jtblReportCard);
+        JTableUtil.resizeColumnWidthsOf(jtblReportCard);
         JTableUtil.applyCustomHeaderRenderer(jtblSchedules);
+        jTabbedPane1.remove(panel_facultyreports);
+        jTabbedPane1.remove(panel_accounts);
+        jTabbedPane1.remove(panel_classschedules);
+        jTabbedPane1.remove(panel_settings);
+        jTabbedPane1.remove(panel_receipts);
     }
 
     @Override
     public void initControllers() {
+        jbtnCorPrint.addActionListener(new Controller_Print_JButton(jpnlCorContainer,PageFormat.LANDSCAPE));
+        jbtnClassListPrint.addActionListener(new Controller_Print_JButton(jpnlClassListContainer,PageFormat.PORTRAIT));
+        jbtnReportCardPrint.addActionListener(new Controller_Print_JButton(jpnlReportCardContainer,PageFormat.PORTRAIT));
         jtfCorSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jtfCorSearchBox.addKeyListener(new Controller_Reports_CORtab_Search_JTextField(this,user));
         jtfReportCardSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jcmbClassListGradeLevel.addItemListener(new Controller_Reports_ClassList_GradeLevel_JComboBox(this));
-        jcmbClassListSecttion.addItemListener(new Controller_Reports_ClassList_Section_JComboBox(this));
+        jcmbClassListSection.addItemListener(new Controller_Reports_ClassList_Section_JComboBox(this));
         jcmbClassListSchoolYear.addItemListener(new Controller_Reports_ClassList_SchoolYear_JComboBox(this));
         jcmbClassListSectionType.addItemListener(new Controller_Reports_ClassList_ClassType_JComboBox(this));
         jcbClassListFaculty.addItemListener(new ItemListener() {
@@ -122,18 +133,18 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     clearClassList();
-                    jcmbClassListSecttion.setSelectedIndex(-1);
+                    jcmbClassListSection.setSelectedIndex(-1);
                     jcmbClassListSectionType.setSelectedIndex(-1);
                     jcmbClassListGradeLevel.setSelectedIndex(-1);
                     jcmbClassListGradeLevel.setEnabled(false);
                     jcmbClassListSectionType.setEnabled(false);
-                    jcmbClassListSecttion.setEnabled(false);
+                    jcmbClassListSection.setEnabled(false);
                     jcmbClassListFaculty.setEnabled(true);
                 }else{
                     clearClassList();
                     jcmbClassListGradeLevel.setEnabled(true);
                     jcmbClassListSectionType.setEnabled(true);
-                    jcmbClassListSecttion.setEnabled(true);
+                    jcmbClassListSection.setEnabled(true);
                     jcmbClassListFaculty.setSelectedIndex(-1);
                     jcmbClassListFaculty.setEnabled(false);
                 }
@@ -191,6 +202,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     }
     
     public void clearClassList(){
+        jlblSectionSessionClassList.setText("");
+        jlblSectionTypeClassList.setText("");
         jlblClassListAdviserNameText.setText("");
         jlblClassListGradeLevelText.setText("");
         jlblClassListSchoolYearText.setText("");
@@ -207,6 +220,14 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
         jtfReportCardGeneralAverage.setText("");
     }
 
+    public JLabel getJlblSectionSessionClassList() {
+        return jlblSectionSessionClassList;
+    }
+
+    public JLabel getJlblSectionTypeClassList() {
+        return jlblSectionTypeClassList;
+    }
+    
     public JTextField getJtfReportCardGeneralAverage() {
         return jtfReportCardGeneralAverage;
     }
@@ -295,8 +316,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
         return jcmbClassListSectionType;
     }
 
-    public JComboBox<String> getJcmbClassListSecttion() {
-        return jcmbClassListSecttion;
+    public JComboBox<String> getJcmbClassListSection() {
+        return jcmbClassListSection;
     }
 
     public JLabel getJlblClassListAdviserName() {
@@ -324,7 +345,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     }
 
     public JPanel getJpnlClassListTop() {
-        return jpnlClassListTop;
+        return jpnlClassListContainer;
     }
 
     public JTable getJtblClassList() {
@@ -431,7 +452,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     }
 
     public JPanel getJpnlTop() {
-        return jpnlTop;
+        return jpnlCorContainer;
     }
 
     public JPanel getJpnlTuition() {
@@ -526,12 +547,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
         jcmbCorSchoolYear = new javax.swing.JComboBox<>();
         jtfCorSearchBox = new javax.swing.JTextField();
         btn_Search = new javax.swing.JButton();
-        panel_controls2 = new javax.swing.JPanel();
         jbtnGenerateCOR = new javax.swing.JButton();
         jbtnCorPrint = new javax.swing.JButton();
         jScrollPane11 = new javax.swing.JScrollPane();
         panel_summary2 = new javax.swing.JPanel();
-        jpnlTop = new javax.swing.JPanel();
+        jpnlCorContainer = new javax.swing.JPanel();
         jpnlFooter = new javax.swing.JPanel();
         jpnlStudentDetails = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -628,7 +648,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     lbl_name18 = new javax.swing.JLabel();
     jcmbClassListGradeLevel = new javax.swing.JComboBox<>();
     lbl_name21 = new javax.swing.JLabel();
-    jcmbClassListSecttion = new javax.swing.JComboBox<>();
+    jcmbClassListSection = new javax.swing.JComboBox<>();
     jcmbClassListFaculty = new javax.swing.JComboBox<>();
     jcbClassListFaculty = new javax.swing.JCheckBox();
     panel_controls4 = new javax.swing.JPanel();
@@ -636,7 +656,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jbtnClassListPrint = new javax.swing.JButton();
     jScrollPane12 = new javax.swing.JScrollPane();
     jpnlClassListReportSummary = new javax.swing.JPanel();
-    jpnlClassListTop = new javax.swing.JPanel();
+    jpnlClassListContainer = new javax.swing.JPanel();
     jpnlFooter1 = new javax.swing.JPanel();
     jpnlSectionDetails = new javax.swing.JPanel();
     jlblClassListSection = new javax.swing.JLabel();
@@ -647,6 +667,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jlblClassListAdviserNameText = new javax.swing.JLabel();
     jlblClassListSchoolYear = new javax.swing.JLabel();
     jlblClassListSchoolYearText = new javax.swing.JLabel();
+    jlblSectionTypeClassList = new javax.swing.JLabel();
+    jlblSectionSessionClassList = new javax.swing.JLabel();
     jpnlBody1 = new javax.swing.JPanel();
     jlblCertificateOfRegistration1 = new javax.swing.JLabel();
     jpnlHeader1 = new javax.swing.JPanel();
@@ -659,7 +681,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
             g2d.setComposite(AlphaComposite.getInstance(
                 AlphaComposite.SRC_OVER, 0.8f));
         g2d.drawImage(schoolLogo, 0, 0, getWidth(), getHeight(), null);
-        jpnlClassListTop.repaint();
+        jpnlClassListContainer.repaint();
     }
     };
     jPanel14 = new javax.swing.JPanel();
@@ -698,8 +720,9 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jbtnReportCardsSearchBox = new javax.swing.JButton();
     lbl_name39 = new javax.swing.JLabel();
     combo_gradelevel26 = new javax.swing.JComboBox<>();
+    jbtnReportCardPrint = new javax.swing.JButton();
     panel_summary6 = new javax.swing.JPanel();
-    jpnlClassListTop1 = new javax.swing.JPanel();
+    jpnlReportCardContainer = new javax.swing.JPanel();
     jpnlFooter2 = new javax.swing.JPanel();
     jpnlSectionDetails1 = new javax.swing.JPanel();
     jlblReportCardsSection = new javax.swing.JLabel();
@@ -723,7 +746,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
             g2d.setComposite(AlphaComposite.getInstance(
                 AlphaComposite.SRC_OVER, 0.8f));
         g2d.drawImage(schoolLogo, 0, 0, getWidth(), getHeight(), null);
-        jpnlClassListTop.repaint();
+        jpnlClassListContainer.repaint();
     }
     };
     jPanel15 = new javax.swing.JPanel();
@@ -1261,6 +1284,24 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 30);
     panel_details2.add(btn_Search, gridBagConstraints);
 
+    jbtnGenerateCOR.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jbtnGenerateCOR.setText("Export To PDF");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+    panel_details2.add(jbtnGenerateCOR, gridBagConstraints);
+
+    jbtnCorPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jbtnCorPrint.setText("Print");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_details2.add(jbtnCorPrint, gridBagConstraints);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -1268,59 +1309,30 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.weightx = 0.5;
     panel_COR.add(panel_details2, gridBagConstraints);
 
-    panel_controls2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(187, 187, 187)));
-    panel_controls2.setMinimumSize(new java.awt.Dimension(995, 50));
-    panel_controls2.setPreferredSize(new java.awt.Dimension(995, 50));
-    panel_controls2.setLayout(new java.awt.GridBagLayout());
-
-    jbtnGenerateCOR.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    jbtnGenerateCOR.setText("Export To PDF");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-    panel_controls2.add(jbtnGenerateCOR, gridBagConstraints);
-
-    jbtnCorPrint.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    jbtnCorPrint.setText("Print");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    panel_controls2.add(jbtnCorPrint, gridBagConstraints);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 3);
-    panel_COR.add(panel_controls2, gridBagConstraints);
-
     panel_summary2.setBackground(new java.awt.Color(255, 255, 255));
     panel_summary2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Certificate of Registration", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
     panel_summary2.setLayout(new java.awt.GridBagLayout());
 
-    jpnlTop.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlTop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jpnlTop.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlTop.setPreferredSize(new java.awt.Dimension(800, 599));
-    jpnlTop.setLayout(new java.awt.GridBagLayout());
+    jpnlCorContainer.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlCorContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlCorContainer.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlCorContainer.setMinimumSize(new java.awt.Dimension(600, 500));
+    jpnlCorContainer.setPreferredSize(new java.awt.Dimension(610, 500));
+    jpnlCorContainer.setLayout(new java.awt.GridBagLayout());
 
     jpnlFooter.setBackground(new java.awt.Color(255, 255, 255));
     jpnlFooter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlFooter.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlFooter.setMinimumSize(new java.awt.Dimension(795, 222));
-    jpnlFooter.setPreferredSize(new java.awt.Dimension(1180, 1375));
+    jpnlFooter.setMinimumSize(new java.awt.Dimension(750, 222));
+    jpnlFooter.setPreferredSize(new java.awt.Dimension(750, 1375));
     jpnlFooter.setLayout(new java.awt.GridBagLayout());
 
     jpnlStudentDetails.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlStudentDetails.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlStudentDetails.setForeground(new java.awt.Color(0, 0, 0));
     jpnlStudentDetails.setLayout(new java.awt.GridBagLayout());
 
-    jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel2.setForeground(new java.awt.Color(0, 0, 0));
     jLabel2.setText("School Year :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1329,7 +1341,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel2, gridBagConstraints);
 
-    jlblCORSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORSchoolYear.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORSchoolYear.setText("SY Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1338,7 +1350,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORSchoolYear, gridBagConstraints);
 
-    jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel4.setForeground(new java.awt.Color(0, 0, 0));
     jLabel4.setText("Student No :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1347,7 +1359,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel4, gridBagConstraints);
 
-    jlblCORStudentNo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORStudentNo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORStudentNo.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORStudentNo.setText("Student No Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1356,7 +1368,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORStudentNo, gridBagConstraints);
 
-    jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel9.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel9.setForeground(new java.awt.Color(0, 0, 0));
     jLabel9.setText("Student Type :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1365,7 +1377,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel9, gridBagConstraints);
 
-    jlblCORStudentType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORStudentType.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORStudentType.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORStudentType.setText("Student Type Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1374,7 +1386,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORStudentType, gridBagConstraints);
 
-    jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel11.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel11.setForeground(new java.awt.Color(0, 0, 0));
     jLabel11.setText("Section :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1385,7 +1397,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel11, gridBagConstraints);
 
-    jlblCORSectionName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORSectionName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORSectionName.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORSectionName.setText("Section Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1396,7 +1408,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORSectionName, gridBagConstraints);
 
-    jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel13.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel13.setForeground(new java.awt.Color(0, 0, 0));
     jLabel13.setText("Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1406,7 +1418,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel13, gridBagConstraints);
 
-    jlblCORStudentName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORStudentName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORStudentName.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORStudentName.setText("Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1416,7 +1428,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORStudentName, gridBagConstraints);
 
-    jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel15.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel15.setForeground(new java.awt.Color(0, 0, 0));
     jLabel15.setText("Contact :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1426,7 +1438,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel15, gridBagConstraints);
 
-    jlblCORContact.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORContact.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORContact.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORContact.setText("Contact Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1436,7 +1448,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORContact, gridBagConstraints);
 
-    jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel17.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel17.setForeground(new java.awt.Color(0, 0, 0));
     jLabel17.setText("Grade Level :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1446,7 +1458,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel17, gridBagConstraints);
 
-    jlblCORGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORGradeLevelText.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORGradeLevelText.setText("Grade Level Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1456,7 +1468,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORGradeLevelText, gridBagConstraints);
 
-    jLabel19.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel19.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel19.setForeground(new java.awt.Color(0, 0, 0));
     jLabel19.setText("Date :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1466,7 +1478,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel19, gridBagConstraints);
 
-    jlblCORDateToday.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORDateToday.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORDateToday.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORDateToday.setText("Date Today Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1476,7 +1488,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORDateToday, gridBagConstraints);
 
-    jLabel21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel21.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel21.setForeground(new java.awt.Color(0, 0, 0));
     jLabel21.setText("Address :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1487,7 +1499,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel21, gridBagConstraints);
 
-    jlblCORAddressText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblCORAddressText.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCORAddressText.setForeground(new java.awt.Color(0, 0, 0));
     jlblCORAddressText.setText("Address Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1498,7 +1510,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jlblCORAddressText, gridBagConstraints);
 
-    jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel1.setForeground(new java.awt.Color(0, 0, 0));
     jLabel1.setText("Adviser :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1509,7 +1521,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentDetails.add(jLabel1, gridBagConstraints);
 
-    jlblAdviserName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblAdviserName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblAdviserName.setForeground(new java.awt.Color(0, 0, 0));
     jlblAdviserName.setText("Adviser Name");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1528,6 +1540,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jpnlFooter.add(jpnlStudentDetails, gridBagConstraints);
 
     jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jPanel2.setMinimumSize(new java.awt.Dimension(350, 408));
+    jPanel2.setPreferredSize(new java.awt.Dimension(250, 575));
     jPanel2.setLayout(new java.awt.GridBagLayout());
 
     jPanel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -1538,11 +1552,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jPanel5.setBackground(new java.awt.Color(255, 255, 255));
     jPanel5.setForeground(new java.awt.Color(0, 0, 0));
-    jPanel5.setMinimumSize(new java.awt.Dimension(220, 17));
+    jPanel5.setMinimumSize(new java.awt.Dimension(100, 17));
     jPanel5.setPreferredSize(new java.awt.Dimension(200, 17));
     jPanel5.setLayout(new java.awt.GridBagLayout());
 
-    jlblUserRole.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblUserRole.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblUserRole.setForeground(new java.awt.Color(0, 0, 0));
     jlblUserRole.setText("User Role");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1561,20 +1575,25 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jPanel5.add(jLabel16, gridBagConstraints);
 
     jlblUserCompleteName.setBackground(new java.awt.Color(255, 255, 255));
-    jlblUserCompleteName.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblUserCompleteName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblUserCompleteName.setForeground(new java.awt.Color(0, 0, 0));
     jlblUserCompleteName.setText("User Complete Name");
     jPanel5.add(jlblUserCompleteName, new java.awt.GridBagConstraints());
 
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel4.add(jPanel5, gridBagConstraints);
 
     jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+    jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jPanel6.setForeground(new java.awt.Color(0, 0, 0));
-    jPanel6.setMinimumSize(new java.awt.Dimension(22, 100));
+    jPanel6.setMinimumSize(new java.awt.Dimension(400, 100));
+    jPanel6.setPreferredSize(new java.awt.Dimension(300, 411));
     jPanel6.setLayout(new java.awt.GridBagLayout());
+
+    jScrollPane7.setMinimumSize(new java.awt.Dimension(200, 20));
+    jScrollPane7.setPreferredSize(new java.awt.Dimension(200, 403));
 
     jtblCORPaymentAssessment.setBackground(new java.awt.Color(255, 255, 255));
     jtblCORPaymentAssessment.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -1626,12 +1645,12 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jScrollPane6.setBackground(new java.awt.Color(255, 255, 255));
     jScrollPane6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jScrollPane6.setMinimumSize(new java.awt.Dimension(19, 200));
-    jScrollPane6.setPreferredSize(new java.awt.Dimension(452, 300));
+    jScrollPane6.setMinimumSize(new java.awt.Dimension(300, 150));
+    jScrollPane6.setPreferredSize(new java.awt.Dimension(300, 150));
 
     jtblCORSchedule.setBackground(new java.awt.Color(255, 255, 255));
     jtblCORSchedule.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jtblCORSchedule.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jtblCORSchedule.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jtblCORSchedule.setForeground(new java.awt.Color(0, 0, 0));
     jtblCORSchedule.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
@@ -1674,6 +1693,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jPanel3.setForeground(new java.awt.Color(0, 0, 0));
     jPanel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jPanel3.setMinimumSize(new java.awt.Dimension(150, 45));
+    jPanel3.setPreferredSize(new java.awt.Dimension(150, 1004));
     jPanel3.setLayout(new java.awt.GridBagLayout());
 
     jpnlTuition.setBackground(new java.awt.Color(255, 255, 255));
@@ -1681,7 +1701,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jpnlTuition.setLayout(new java.awt.GridBagLayout());
 
     jLabel10.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jLabel10.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jLabel10.setForeground(new java.awt.Color(0, 0, 0));
     jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     jLabel10.setText("Tuition");
@@ -1698,7 +1718,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jtblCORTuition.setBackground(new java.awt.Color(255, 255, 255));
     jtblCORTuition.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jtblCORTuition.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+    jtblCORTuition.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
     jtblCORTuition.setForeground(new java.awt.Color(0, 0, 0));
     jtblCORTuition.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
@@ -1738,7 +1758,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jpnlMiscellaneous.setLayout(new java.awt.GridBagLayout());
 
     jLabel12.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jLabel12.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jLabel12.setForeground(new java.awt.Color(0, 0, 0));
     jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     jLabel12.setText("Miscellaneous");
@@ -1753,7 +1773,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jtblCORMiscellaneous.setBackground(new java.awt.Color(255, 255, 255));
     jtblCORMiscellaneous.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jtblCORMiscellaneous.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+    jtblCORMiscellaneous.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
     jtblCORMiscellaneous.setForeground(new java.awt.Color(0, 0, 0));
     jtblCORMiscellaneous.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
@@ -1797,7 +1817,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jpnlOthers.setLayout(new java.awt.GridBagLayout());
 
     jLabel14.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel14.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jLabel14.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jLabel14.setForeground(new java.awt.Color(0, 0, 0));
     jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     jLabel14.setText("Others");
@@ -1812,7 +1832,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jtblCOROthers.setBackground(new java.awt.Color(255, 255, 255));
     jtblCOROthers.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jtblCOROthers.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+    jtblCOROthers.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
     jtblCOROthers.setForeground(new java.awt.Color(0, 0, 0));
     jtblCOROthers.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
@@ -1857,7 +1877,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jPanel1.setLayout(new java.awt.GridBagLayout());
 
     jLabel3.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jLabel3.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jLabel3.setForeground(new java.awt.Color(0, 0, 0));
     jLabel3.setText("Total :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1867,7 +1887,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jPanel1.add(jLabel3, gridBagConstraints);
 
     jlblTotalAmount.setBackground(new java.awt.Color(255, 255, 255));
-    jlblTotalAmount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblTotalAmount.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jlblTotalAmount.setForeground(new java.awt.Color(0, 0, 0));
     jlblTotalAmount.setText("TotalAmount");
     jPanel1.add(jlblTotalAmount, new java.awt.GridBagConstraints());
@@ -1885,6 +1905,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlFooter.add(jPanel3, gridBagConstraints);
@@ -1893,15 +1914,16 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlTop.add(jpnlFooter, gridBagConstraints);
+    jpnlCorContainer.add(jpnlFooter, gridBagConstraints);
 
     jpnlBody.setBackground(new java.awt.Color(255, 255, 255));
     jpnlBody.setForeground(new java.awt.Color(0, 0, 0));
     jpnlBody.setLayout(new java.awt.GridBagLayout());
 
-    jlblCertificateOfRegistration.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+    jlblCertificateOfRegistration.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
     jlblCertificateOfRegistration.setForeground(new java.awt.Color(0, 102, 204));
     jlblCertificateOfRegistration.setText("Certificate of Registration");
     jpnlBody.add(jlblCertificateOfRegistration, new java.awt.GridBagConstraints());
@@ -1911,7 +1933,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlTop.add(jpnlBody, gridBagConstraints);
+    jpnlCorContainer.add(jpnlBody, gridBagConstraints);
 
     jpnlHeader.setBackground(new java.awt.Color(255, 255, 255));
     jpnlHeader.setForeground(new java.awt.Color(0, 0, 0));
@@ -1919,22 +1941,23 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jpnlLogo.setBackground(new java.awt.Color(255, 255, 255));
     jpnlLogo.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlLogo.setMinimumSize(new java.awt.Dimension(100, 100));
-    jpnlLogo.setPreferredSize(new java.awt.Dimension(120, 120));
+    jpnlLogo.setMinimumSize(new java.awt.Dimension(70, 70));
+    jpnlLogo.setPreferredSize(new java.awt.Dimension(70, 70));
     jpnlLogo.setLayout(new java.awt.GridBagLayout());
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlHeader.add(jpnlLogo, gridBagConstraints);
 
     jPanel10.setBackground(new java.awt.Color(255, 255, 255));
     jPanel10.setForeground(new java.awt.Color(0, 0, 0));
-    jPanel10.setMinimumSize(new java.awt.Dimension(600, 18));
-    jPanel10.setPreferredSize(new java.awt.Dimension(600, 18));
+    jPanel10.setMinimumSize(new java.awt.Dimension(400, 18));
+    jPanel10.setPreferredSize(new java.awt.Dimension(400, 18));
     jPanel10.setLayout(new java.awt.GridBagLayout());
 
-    jLabel5.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+    jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(0, 102, 204));
     jLabel5.setText("Mother of Perpetual Help School");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1943,7 +1966,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel10.add(jLabel5, gridBagConstraints);
 
-    jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel7.setForeground(new java.awt.Color(51, 51, 51));
     jLabel7.setText("Iris Street Dahlia, West Fairview Quezon City");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1954,7 +1977,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 3);
     jPanel10.add(jLabel7, gridBagConstraints);
 
-    jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel8.setForeground(new java.awt.Color(51, 51, 51));
     jLabel8.setText("1118 Metro Manila, Philippines");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1979,15 +2002,14 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlTop.add(jpnlHeader, gridBagConstraints);
+    jpnlCorContainer.add(jpnlHeader, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    panel_summary2.add(jpnlTop, gridBagConstraints);
+    panel_summary2.add(jpnlCorContainer, gridBagConstraints);
 
     jScrollPane11.setViewportView(panel_summary2);
 
@@ -2284,17 +2306,17 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     panel_details4.add(lbl_name21, gridBagConstraints);
 
-    jcmbClassListSecttion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    jcmbClassListSecttion.setEnabled(false);
-    jcmbClassListSecttion.setMinimumSize(new java.awt.Dimension(150, 25));
-    jcmbClassListSecttion.setPreferredSize(new java.awt.Dimension(150, 25));
+    jcmbClassListSection.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jcmbClassListSection.setEnabled(false);
+    jcmbClassListSection.setMinimumSize(new java.awt.Dimension(150, 25));
+    jcmbClassListSection.setPreferredSize(new java.awt.Dimension(150, 25));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 7;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    panel_details4.add(jcmbClassListSecttion, gridBagConstraints);
+    panel_details4.add(jcmbClassListSection, gridBagConstraints);
 
     jcmbClassListFaculty.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
     jcmbClassListFaculty.setMaximumRowCount(25);
@@ -2358,99 +2380,132 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jpnlClassListReportSummary.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jpnlClassListReportSummary.setLayout(new java.awt.GridBagLayout());
 
-    jpnlClassListTop.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlClassListTop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jpnlClassListTop.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlClassListTop.setPreferredSize(new java.awt.Dimension(700, 599));
-    jpnlClassListTop.setLayout(new java.awt.GridBagLayout());
+    jpnlClassListContainer.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlClassListContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlClassListContainer.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlClassListContainer.setMinimumSize(new java.awt.Dimension(590, 455));
+    jpnlClassListContainer.setPreferredSize(new java.awt.Dimension(560, 599));
+    jpnlClassListContainer.setLayout(new java.awt.GridBagLayout());
 
     jpnlFooter1.setBackground(new java.awt.Color(255, 255, 255));
     jpnlFooter1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlFooter1.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlFooter1.setMinimumSize(new java.awt.Dimension(795, 30));
-    jpnlFooter1.setPreferredSize(new java.awt.Dimension(1180, 30));
+    jpnlFooter1.setMinimumSize(new java.awt.Dimension(795, 50));
+    jpnlFooter1.setPreferredSize(new java.awt.Dimension(1180, 50));
     jpnlFooter1.setLayout(new java.awt.GridBagLayout());
 
     jpnlSectionDetails.setBackground(new java.awt.Color(255, 255, 255));
     jpnlSectionDetails.setForeground(new java.awt.Color(0, 0, 0));
     jpnlSectionDetails.setLayout(new java.awt.GridBagLayout());
 
-    jlblClassListSection.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSection.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListSection.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListSection.setText("Section :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListSection, gridBagConstraints);
 
-    jlblClassListSectionNameText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSectionNameText.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListSectionNameText.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListSectionNameText.setText("Section Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListSectionNameText, gridBagConstraints);
 
-    jlblClassListGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListGradeLevel.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListGradeLevel.setText("Grade Level :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListGradeLevel, gridBagConstraints);
 
-    jlblClassListGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListGradeLevelText.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListGradeLevelText.setText("Grade Level Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 5;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListGradeLevelText, gridBagConstraints);
 
-    jlblClassListAdviser.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListAdviser.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListAdviser.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListAdviser.setText("Adviser :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListAdviser, gridBagConstraints);
 
-    jlblClassListAdviserNameText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListAdviserNameText.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListAdviserNameText.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListAdviserNameText.setText("Adviser Name");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListAdviserNameText, gridBagConstraints);
 
-    jlblClassListSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListSchoolYear.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListSchoolYear.setText("School Year :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 6;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListSchoolYear, gridBagConstraints);
 
-    jlblClassListSchoolYearText.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jlblClassListSchoolYearText.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblClassListSchoolYearText.setForeground(new java.awt.Color(0, 0, 0));
     jlblClassListSchoolYearText.setText("SY Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 7;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails.add(jlblClassListSchoolYearText, gridBagConstraints);
+
+    jlblSectionTypeClassList.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+    jlblSectionTypeClassList.setForeground(new java.awt.Color(0, 0, 0));
+    jlblSectionTypeClassList.setText("Section Type");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails.add(jlblSectionTypeClassList, gridBagConstraints);
+
+    jlblSectionSessionClassList.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+    jlblSectionSessionClassList.setForeground(new java.awt.Color(0, 0, 0));
+    jlblSectionSessionClassList.setText("Section Session");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jpnlSectionDetails.add(jlblSectionSessionClassList, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridwidth = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlFooter1.add(jpnlSectionDetails, gridBagConstraints);
 
@@ -2459,13 +2514,13 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop.add(jpnlFooter1, gridBagConstraints);
+    jpnlClassListContainer.add(jpnlFooter1, gridBagConstraints);
 
     jpnlBody1.setBackground(new java.awt.Color(255, 255, 255));
     jpnlBody1.setForeground(new java.awt.Color(0, 0, 0));
     jpnlBody1.setLayout(new java.awt.GridBagLayout());
 
-    jlblCertificateOfRegistration1.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+    jlblCertificateOfRegistration1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
     jlblCertificateOfRegistration1.setForeground(new java.awt.Color(0, 0, 0));
     jlblCertificateOfRegistration1.setText("OFFICIAL CLASS LIST");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2479,7 +2534,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop.add(jpnlBody1, gridBagConstraints);
+    jpnlClassListContainer.add(jpnlBody1, gridBagConstraints);
 
     jpnlHeader1.setBackground(new java.awt.Color(255, 255, 255));
     jpnlHeader1.setForeground(new java.awt.Color(0, 0, 0));
@@ -2487,8 +2542,8 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jpnlClassListLogo.setBackground(new java.awt.Color(255, 255, 255));
     jpnlClassListLogo.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlClassListLogo.setMinimumSize(new java.awt.Dimension(100, 100));
-    jpnlClassListLogo.setPreferredSize(new java.awt.Dimension(120, 120));
+    jpnlClassListLogo.setMinimumSize(new java.awt.Dimension(70, 70));
+    jpnlClassListLogo.setPreferredSize(new java.awt.Dimension(70, 70));
     jpnlClassListLogo.setLayout(new java.awt.GridBagLayout());
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -2498,11 +2553,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
 
     jPanel14.setBackground(new java.awt.Color(255, 255, 255));
     jPanel14.setForeground(new java.awt.Color(0, 0, 0));
-    jPanel14.setMinimumSize(new java.awt.Dimension(600, 18));
-    jPanel14.setPreferredSize(new java.awt.Dimension(600, 18));
+    jPanel14.setMinimumSize(new java.awt.Dimension(400, 18));
+    jPanel14.setPreferredSize(new java.awt.Dimension(400, 18));
     jPanel14.setLayout(new java.awt.GridBagLayout());
 
-    jLabel34.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+    jLabel34.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel34.setForeground(new java.awt.Color(0, 102, 204));
     jLabel34.setText("Mother of Perpetual Help School");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2511,7 +2566,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel14.add(jLabel34, gridBagConstraints);
 
-    jLabel35.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel35.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jLabel35.setForeground(new java.awt.Color(51, 51, 51));
     jLabel35.setText("Iris Street Dahlia, West Fairview Quezon City");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2519,10 +2574,10 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 1;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 3);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel14.add(jLabel35, gridBagConstraints);
 
-    jLabel36.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel36.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
     jLabel36.setForeground(new java.awt.Color(51, 51, 51));
     jLabel36.setText("1118 Metro Manila, Philippines");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2547,7 +2602,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop.add(jpnlHeader1, gridBagConstraints);
+    jpnlClassListContainer.add(jpnlHeader1, gridBagConstraints);
 
     jPanel7.setBackground(new java.awt.Color(255, 255, 255));
     jPanel7.setMinimumSize(new java.awt.Dimension(600, 300));
@@ -2555,7 +2610,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     jPanel7.setLayout(new java.awt.GridBagLayout());
 
     jtblClassList.setBackground(new java.awt.Color(255, 255, 255));
-    jtblClassList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+    jtblClassList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jtblClassList.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
@@ -2590,7 +2645,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop.add(jPanel7, gridBagConstraints);
+    jpnlClassListContainer.add(jPanel7, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -2598,7 +2653,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
     gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListReportSummary.add(jpnlClassListTop, gridBagConstraints);
+    jpnlClassListReportSummary.add(jpnlClassListContainer, gridBagConstraints);
 
     jScrollPane12.setViewportView(jpnlClassListReportSummary);
 
@@ -2906,6 +2961,13 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 30);
     panel_details6.add(combo_gradelevel26, gridBagConstraints);
 
+    jbtnReportCardPrint.setText("Print");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    panel_details6.add(jbtnReportCardPrint, gridBagConstraints);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -2916,19 +2978,20 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     panel_summary6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Report Summary", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
     panel_summary6.setLayout(new java.awt.GridBagLayout());
 
-    jpnlClassListTop1.setBackground(new java.awt.Color(0, 153, 204));
-    jpnlClassListTop1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jpnlClassListTop1.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlClassListTop1.setPreferredSize(new java.awt.Dimension(700, 599));
-    jpnlClassListTop1.setLayout(new java.awt.GridBagLayout());
+    jpnlReportCardContainer.setBackground(new java.awt.Color(255, 255, 255));
+    jpnlReportCardContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlReportCardContainer.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlReportCardContainer.setMinimumSize(new java.awt.Dimension(570, 550));
+    jpnlReportCardContainer.setPreferredSize(new java.awt.Dimension(570, 550));
+    jpnlReportCardContainer.setLayout(new java.awt.GridBagLayout());
 
-    jpnlFooter2.setBackground(new java.awt.Color(0, 153, 204));
+    jpnlFooter2.setBackground(new java.awt.Color(255, 255, 255));
     jpnlFooter2.setForeground(new java.awt.Color(0, 0, 0));
     jpnlFooter2.setMinimumSize(new java.awt.Dimension(795, 45));
     jpnlFooter2.setPreferredSize(new java.awt.Dimension(1180, 45));
     jpnlFooter2.setLayout(new java.awt.GridBagLayout());
 
-    jpnlSectionDetails1.setBackground(new java.awt.Color(0, 153, 204));
+    jpnlSectionDetails1.setBackground(new java.awt.Color(255, 255, 255));
     jpnlSectionDetails1.setForeground(new java.awt.Color(0, 0, 0));
     jpnlSectionDetails1.setMinimumSize(new java.awt.Dimension(667, 35));
     jpnlSectionDetails1.setPreferredSize(new java.awt.Dimension(667, 30));
@@ -2945,7 +3008,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails1.add(jlblReportCardsSection, gridBagConstraints);
 
-    jlblReportCardsSectionNameText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsSectionNameText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jlblReportCardsSectionNameText.setForeground(new java.awt.Color(0, 0, 0));
     jlblReportCardsSectionNameText.setText("Section Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2966,7 +3029,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails1.add(jlblReportCardsGradeLevel, gridBagConstraints);
 
-    jlblReportCardsGradeLevelText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jlblReportCardsGradeLevelText.setForeground(new java.awt.Color(0, 0, 0));
     jlblReportCardsGradeLevelText.setText("Grade Level Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2983,12 +3046,12 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails1.add(jlblReportCardsAdviser, gridBagConstraints);
 
-    jlblReportCardsAdviserNameText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsAdviserNameText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jlblReportCardsAdviserNameText.setForeground(new java.awt.Color(0, 0, 0));
     jlblReportCardsAdviserNameText.setText("Adviser Name");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -3010,7 +3073,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails1.add(jlblReportCardsSchoolYear, gridBagConstraints);
 
-    jlblReportCardsSchoolYearText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardsSchoolYearText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jlblReportCardsSchoolYearText.setForeground(new java.awt.Color(0, 0, 0));
     jlblReportCardsSchoolYearText.setText("SY Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -3021,7 +3084,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlSectionDetails1.add(jlblReportCardsSchoolYearText, gridBagConstraints);
 
-    jlblReportCardStudentName.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardStudentName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
     jlblReportCardStudentName.setForeground(new java.awt.Color(0, 0, 0));
     jlblReportCardStudentName.setText("Student Name");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -3045,13 +3108,13 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop1.add(jpnlFooter2, gridBagConstraints);
+    jpnlReportCardContainer.add(jpnlFooter2, gridBagConstraints);
 
-    jpnlBody2.setBackground(new java.awt.Color(0, 153, 204));
+    jpnlBody2.setBackground(new java.awt.Color(255, 255, 255));
     jpnlBody2.setForeground(new java.awt.Color(0, 0, 0));
     jpnlBody2.setLayout(new java.awt.GridBagLayout());
 
-    jlblReportCard.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+    jlblReportCard.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
     jlblReportCard.setForeground(new java.awt.Color(0, 0, 0));
     jlblReportCard.setText("REPORT CARD");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -3065,15 +3128,15 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop1.add(jpnlBody2, gridBagConstraints);
+    jpnlReportCardContainer.add(jpnlBody2, gridBagConstraints);
 
-    jpnlHeader2.setBackground(new java.awt.Color(0, 153, 204));
+    jpnlHeader2.setBackground(new java.awt.Color(255, 255, 255));
     jpnlHeader2.setForeground(new java.awt.Color(0, 0, 0));
     jpnlHeader2.setLayout(new java.awt.GridBagLayout());
 
     jpnlReportCardLogo.setBackground(new java.awt.Color(255, 255, 255));
     jpnlReportCardLogo.setForeground(new java.awt.Color(0, 0, 0));
-    jpnlReportCardLogo.setMinimumSize(new java.awt.Dimension(100, 100));
+    jpnlReportCardLogo.setMinimumSize(new java.awt.Dimension(70, 70));
     jpnlReportCardLogo.setOpaque(false);
     jpnlReportCardLogo.setPreferredSize(new java.awt.Dimension(120, 120));
     jpnlReportCardLogo.setLayout(new java.awt.GridBagLayout());
@@ -3083,13 +3146,13 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlHeader2.add(jpnlReportCardLogo, gridBagConstraints);
 
-    jPanel15.setBackground(new java.awt.Color(0, 153, 204));
+    jPanel15.setBackground(new java.awt.Color(255, 255, 255));
     jPanel15.setForeground(new java.awt.Color(0, 0, 0));
-    jPanel15.setMinimumSize(new java.awt.Dimension(600, 18));
-    jPanel15.setPreferredSize(new java.awt.Dimension(600, 18));
+    jPanel15.setMinimumSize(new java.awt.Dimension(450, 18));
+    jPanel15.setPreferredSize(new java.awt.Dimension(450, 18));
     jPanel15.setLayout(new java.awt.GridBagLayout());
 
-    jLabel37.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+    jLabel37.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
     jLabel37.setForeground(new java.awt.Color(0, 0, 0));
     jLabel37.setText("Mother of Perpetual Help School");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -3098,7 +3161,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel15.add(jLabel37, gridBagConstraints);
 
-    jLabel38.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel38.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel38.setForeground(new java.awt.Color(51, 51, 51));
     jLabel38.setText("Iris Street Dahlia, West Fairview Quezon City");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -3109,7 +3172,7 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 3);
     jPanel15.add(jLabel38, gridBagConstraints);
 
-    jLabel39.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel39.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jLabel39.setForeground(new java.awt.Color(51, 51, 51));
     jLabel39.setText("1118 Metro Manila, Philippines");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -3134,20 +3197,23 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop1.add(jpnlHeader2, gridBagConstraints);
+    jpnlReportCardContainer.add(jpnlHeader2, gridBagConstraints);
 
-    jPanel8.setBackground(new java.awt.Color(0, 153, 204));
+    jPanel8.setBackground(new java.awt.Color(255, 255, 255));
     jPanel8.setMinimumSize(new java.awt.Dimension(600, 300));
     jPanel8.setPreferredSize(new java.awt.Dimension(500, 300));
     jPanel8.setLayout(new java.awt.GridBagLayout());
 
-    jtblReportCard.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jspReportCard.setMinimumSize(new java.awt.Dimension(550, 350));
+    jspReportCard.setPreferredSize(new java.awt.Dimension(453, 350));
+
+    jtblReportCard.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jtblReportCard.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
         },
         new String [] {
-            "Subject", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Final Grade", "Remarks"
+            "Learning Area", "1st ", "2nd ", "3rd ", "4th ", "Final Grade", "Remarks"
         }
     ) {
         boolean[] canEdit = new boolean [] {
@@ -3167,27 +3233,25 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jspReportCard, gridBagConstraints);
 
     jlblReportCardGeneralAverage.setBackground(new java.awt.Color(255, 255, 255));
-    jlblReportCardGeneralAverage.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblReportCardGeneralAverage.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
     jlblReportCardGeneralAverage.setForeground(new java.awt.Color(0, 0, 0));
     jlblReportCardGeneralAverage.setText("General Average :");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
     gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jlblReportCardGeneralAverage, gridBagConstraints);
 
     jtfReportCardGeneralAverage.setBackground(new java.awt.Color(255, 255, 255));
-    jtfReportCardGeneralAverage.setColumns(8);
-    jtfReportCardGeneralAverage.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jtfReportCardGeneralAverage.setColumns(4);
+    jtfReportCardGeneralAverage.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jtfReportCardGeneralAverage.setForeground(new java.awt.Color(0, 0, 0));
     jtfReportCardGeneralAverage.setDisabledTextColor(new java.awt.Color(0, 0, 0));
     jtfReportCardGeneralAverage.setEnabled(false);
@@ -3195,38 +3259,42 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jtfReportCardGeneralAverage, gridBagConstraints);
 
-    jPanel9.setBackground(new java.awt.Color(0, 153, 204));
+    jPanel9.setBackground(new java.awt.Color(255, 255, 255));
     jPanel9.setForeground(new java.awt.Color(0, 0, 0));
-    jPanel9.setMinimumSize(new java.awt.Dimension(500, 30));
-    jPanel9.setPreferredSize(new java.awt.Dimension(500, 13));
+    jPanel9.setMinimumSize(new java.awt.Dimension(450, 40));
+    jPanel9.setPreferredSize(new java.awt.Dimension(450, 40));
     jPanel9.setLayout(new java.awt.GridBagLayout());
 
-    jLabel6.setFont(new java.awt.Font("Tahoma", 2, 9)); // NOI18N
+    jLabel6.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
     jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel6.setText("Outstanding 90-100 (Passed), Very Satisfactory 85-89 (Passed) Did not meet expectations Below 75 (Failed)");
+    jLabel6.setText("Outstanding 90-100 (Passed), Very Satisfactory 85-89 (Passed) Didn't meet expectations Below 75 (Failed)");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
     jPanel9.add(jLabel6, gridBagConstraints);
 
-    jLabel18.setFont(new java.awt.Font("Tahoma", 2, 9)); // NOI18N
+    jLabel18.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
     jLabel18.setForeground(new java.awt.Color(0, 0, 0));
     jLabel18.setText("Satisfactory 80-84 (Passed), Fairly Satisfactory 75-79 (Passed), ");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weighty = 0.5;
     jPanel9.add(jLabel18, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel8.add(jPanel9, gridBagConstraints);
 
@@ -3237,15 +3305,14 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    jpnlClassListTop1.add(jPanel8, gridBagConstraints);
+    jpnlReportCardContainer.add(jPanel8, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-    gridBagConstraints.weighty = 0.5;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-    panel_summary6.add(jpnlClassListTop1, gridBagConstraints);
+    panel_summary6.add(jpnlReportCardContainer, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -3377,13 +3444,14 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton jbtnClassListPrint;
     private javax.swing.JButton jbtnCorPrint;
     private javax.swing.JButton jbtnGenerateCOR;
+    private javax.swing.JButton jbtnReportCardPrint;
     private javax.swing.JButton jbtnReportCardsSearchBox;
     private javax.swing.JCheckBox jcbClassListFaculty;
     private javax.swing.JComboBox<String> jcmbClassListFaculty;
     private javax.swing.JComboBox<String> jcmbClassListGradeLevel;
     private javax.swing.JComboBox<String> jcmbClassListSchoolYear;
+    private javax.swing.JComboBox<String> jcmbClassListSection;
     private javax.swing.JComboBox<String> jcmbClassListSectionType;
-    private javax.swing.JComboBox<String> jcmbClassListSecttion;
     private javax.swing.JComboBox<String> jcmbCorSchoolYear;
     private javax.swing.JLabel jlblAdviserName;
     private javax.swing.JLabel jlblCORAddressText;
@@ -3416,16 +3484,18 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel jlblReportCardsSchoolYearText;
     private javax.swing.JLabel jlblReportCardsSection;
     private javax.swing.JLabel jlblReportCardsSectionNameText;
+    private javax.swing.JLabel jlblSectionSessionClassList;
+    private javax.swing.JLabel jlblSectionTypeClassList;
     private javax.swing.JLabel jlblTotalAmount;
     private javax.swing.JLabel jlblUserCompleteName;
     private javax.swing.JLabel jlblUserRole;
     private javax.swing.JPanel jpnlBody;
     private javax.swing.JPanel jpnlBody1;
     private javax.swing.JPanel jpnlBody2;
+    private javax.swing.JPanel jpnlClassListContainer;
     private javax.swing.JPanel jpnlClassListLogo;
     private javax.swing.JPanel jpnlClassListReportSummary;
-    private javax.swing.JPanel jpnlClassListTop;
-    private javax.swing.JPanel jpnlClassListTop1;
+    private javax.swing.JPanel jpnlCorContainer;
     private javax.swing.JPanel jpnlFooter;
     private javax.swing.JPanel jpnlFooter1;
     private javax.swing.JPanel jpnlFooter2;
@@ -3435,11 +3505,11 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel jpnlLogo;
     private javax.swing.JPanel jpnlMiscellaneous;
     private javax.swing.JPanel jpnlOthers;
+    private javax.swing.JPanel jpnlReportCardContainer;
     private javax.swing.JPanel jpnlReportCardLogo;
     private javax.swing.JPanel jpnlSectionDetails;
     private javax.swing.JPanel jpnlSectionDetails1;
     private javax.swing.JPanel jpnlStudentDetails;
-    private javax.swing.JPanel jpnlTop;
     private javax.swing.JPanel jpnlTuition;
     private javax.swing.JScrollPane jspReportCard;
     private javax.swing.JTable jtblCORMiscellaneous;
@@ -3489,7 +3559,6 @@ public class Panel_Reports extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel panel_classschedules;
     private javax.swing.JPanel panel_controls;
     private javax.swing.JPanel panel_controls1;
-    private javax.swing.JPanel panel_controls2;
     private javax.swing.JPanel panel_controls3;
     private javax.swing.JPanel panel_controls4;
     private javax.swing.JPanel panel_controls5;
