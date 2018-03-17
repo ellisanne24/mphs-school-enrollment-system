@@ -7,6 +7,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import model.schoolyear.SchoolYear;
 import view.enrollment.Panel_Enrollment;
 
 /**
@@ -19,12 +20,13 @@ public class DisplayAllEnrolledOnGradeLevelFilter implements ItemListener {
     private SchoolYearDaoImpl schoolYearDaoImpl;
     private EnrollmentDaoImpl enrollmentDaoImpl;
     private EnrollmentJCompModelLoader enrollmentJCompModelLoader;
-
-    public DisplayAllEnrolledOnGradeLevelFilter(Panel_Enrollment view) {
+    private SchoolYear currentSchoolYear;
+    
+    public DisplayAllEnrolledOnGradeLevelFilter(Panel_Enrollment view,SchoolYear currentSchoolYear) {
         this.view = view;
-        schoolYearDaoImpl = new SchoolYearDaoImpl();
+        this.currentSchoolYear = currentSchoolYear;
         enrollmentDaoImpl = new EnrollmentDaoImpl();
-        enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(enrollmentDaoImpl);
+        enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(currentSchoolYear);
     }
 
     @Override

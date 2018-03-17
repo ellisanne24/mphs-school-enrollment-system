@@ -246,7 +246,7 @@ DROP TABLE IF EXISTS `curriculum_subject_lt`;
 CREATE TABLE `curriculum_subject_lt` (
   `curriculum_id` int(11) NOT NULL,
   `subject_id` int(11) NOT NULL,
-  `subject_hours` decimal(10,2) NOT NULL,
+  `subject_hours` int(11) NOT NULL,
   KEY `fk_curriculum_subject_ltTABLE_curriculum_idCOL_idx` (`curriculum_id`),
   KEY `fk_curriculum_subject_ltTABLE_subject_idCOL_idx` (`subject_id`),
   CONSTRAINT `fk_curriculum_subject_ltTABLE_curriculum_idCOL` FOREIGN KEY (`curriculum_id`) REFERENCES `curriculum_mt` (`curriculum_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -260,7 +260,7 @@ CREATE TABLE `curriculum_subject_lt` (
 
 LOCK TABLES `curriculum_subject_lt` WRITE;
 /*!40000 ALTER TABLE `curriculum_subject_lt` DISABLE KEYS */;
-INSERT INTO `curriculum_subject_lt` VALUES (1,667,1.00),(1,671,2.00),(1,682,2.00),(1,693,2.00),(1,701,1.00),(1,709,2.00),(1,710,2.00),(1,711,2.00);
+INSERT INTO `curriculum_subject_lt` VALUES (1,667,1),(1,671,2),(1,682,2),(1,693,2),(1,701,1),(1,709,2),(1,710,2);
 /*!40000 ALTER TABLE `curriculum_subject_lt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1451,7 +1451,7 @@ CREATE TABLE `section_student` (
   CONSTRAINT `fk_section_studentTABLE_section_idCOL` FOREIGN KEY (`section_id`) REFERENCES `section_mt` (`section_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_section_studentTABLE_sectionedby_user_idCOL` FOREIGN KEY (`sectionedby_user_id`) REFERENCES `user_mt` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_section_studentTABLE_student_idCOL` FOREIGN KEY (`student_id`) REFERENCES `student_mt` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1460,7 +1460,7 @@ CREATE TABLE `section_student` (
 
 LOCK TABLES `section_student` WRITE;
 /*!40000 ALTER TABLE `section_student` DISABLE KEYS */;
-INSERT INTO `section_student` VALUES (15,39,105,432,'',NULL,'2018-03-14 02:49:26'),(16,41,105,432,'',NULL,'2018-03-14 02:49:26'),(17,42,105,432,'',NULL,'2018-03-14 02:49:26'),(18,43,105,432,'',NULL,'2018-03-14 02:49:26'),(19,44,105,432,'',NULL,'2018-03-14 02:49:26'),(20,45,105,432,'',NULL,'2018-03-14 02:49:26'),(21,46,105,432,'',NULL,'2018-03-14 02:49:26'),(22,47,105,432,'',NULL,'2018-03-14 02:49:26'),(23,48,105,432,'',NULL,'2018-03-14 02:49:26'),(24,49,105,432,'',NULL,'2018-03-14 02:49:26'),(25,50,105,432,'',NULL,'2018-03-14 02:49:26'),(26,51,105,432,'',NULL,'2018-03-14 02:49:27'),(39,64,102,432,'',NULL,'2018-03-14 03:26:20'),(40,65,102,432,'',NULL,'2018-03-14 03:26:20'),(41,66,102,432,'',NULL,'2018-03-14 03:26:20'),(42,67,102,432,'',NULL,'2018-03-14 03:26:20'),(43,68,102,432,'',NULL,'2018-03-14 03:26:20'),(44,69,102,432,'',NULL,'2018-03-14 03:26:20'),(45,70,102,432,'',NULL,'2018-03-14 03:26:20'),(46,71,102,432,'',NULL,'2018-03-14 03:26:20'),(47,72,102,432,'',NULL,'2018-03-14 03:26:20'),(48,73,102,432,'',NULL,'2018-03-14 03:26:20'),(49,74,111,432,'',NULL,'2018-03-14 03:26:38'),(50,75,111,432,'',NULL,'2018-03-14 03:26:38'),(51,76,111,432,'',NULL,'2018-03-14 03:26:38'),(52,77,111,432,'',NULL,'2018-03-14 03:26:38'),(53,79,111,432,'',NULL,'2018-03-14 03:26:38'),(54,80,111,432,'',NULL,'2018-03-14 03:26:38'),(55,81,111,432,'',NULL,'2018-03-14 03:26:38'),(56,82,111,432,'',NULL,'2018-03-14 03:26:38'),(57,83,111,432,'',NULL,'2018-03-14 03:26:38'),(58,84,111,432,'',NULL,'2018-03-14 03:26:38'),(59,85,113,432,'',NULL,'2018-03-14 03:26:59'),(60,86,113,432,'',NULL,'2018-03-14 03:26:59'),(61,87,113,432,'',NULL,'2018-03-14 03:26:59'),(62,88,113,432,'',NULL,'2018-03-14 03:26:59'),(63,89,114,432,'',NULL,'2018-03-14 03:27:17'),(64,90,114,432,'',NULL,'2018-03-14 03:27:18'),(65,91,114,432,'',NULL,'2018-03-14 03:27:18'),(66,92,114,432,'',NULL,'2018-03-14 03:27:18'),(67,93,114,432,'',NULL,'2018-03-14 03:27:18'),(68,98,125,432,'',NULL,'2018-03-14 03:39:48'),(69,100,125,432,'',NULL,'2018-03-14 03:39:48'),(70,101,125,432,'',NULL,'2018-03-14 03:39:48'),(71,102,125,432,'',NULL,'2018-03-14 03:39:48'),(72,103,125,432,'',NULL,'2018-03-14 03:39:48'),(73,105,125,432,'',NULL,'2018-03-14 03:39:48'),(74,106,125,432,'',NULL,'2018-03-14 03:39:48'),(75,99,126,432,'',NULL,'2018-03-14 03:54:35'),(76,108,126,432,'',NULL,'2018-03-14 03:54:35'),(77,109,126,432,'',NULL,'2018-03-14 03:54:35'),(78,110,126,432,'',NULL,'2018-03-14 03:54:35'),(79,111,126,432,'',NULL,'2018-03-14 03:54:35'),(80,112,127,432,'',NULL,'2018-03-14 03:56:50'),(81,113,127,432,'',NULL,'2018-03-14 03:56:50'),(82,114,127,432,'',NULL,'2018-03-14 03:56:51'),(83,115,127,432,'',NULL,'2018-03-14 03:56:51'),(84,116,127,432,'',NULL,'2018-03-14 03:56:51'),(94,52,107,432,'',NULL,'2018-03-14 09:44:07'),(95,53,107,432,'',NULL,'2018-03-14 09:44:07'),(96,54,107,432,'',NULL,'2018-03-14 09:44:07'),(97,55,107,432,'',NULL,'2018-03-14 09:44:07'),(98,56,107,432,'',NULL,'2018-03-14 09:44:07'),(99,57,107,432,'',NULL,'2018-03-14 09:44:07'),(100,78,107,432,'',NULL,'2018-03-14 09:44:07'),(101,104,107,432,'',NULL,'2018-03-14 09:44:07'),(102,58,108,432,'',NULL,'2018-03-14 09:45:09'),(103,59,108,432,'',NULL,'2018-03-14 09:45:09'),(104,60,108,432,'',NULL,'2018-03-14 09:45:09'),(105,61,108,432,'',NULL,'2018-03-14 09:45:09'),(106,62,108,432,'',NULL,'2018-03-14 09:45:09'),(107,63,108,432,'',NULL,'2018-03-14 09:45:09'),(108,118,108,432,'',NULL,'2018-03-14 09:45:09');
+INSERT INTO `section_student` VALUES (39,64,102,432,'',NULL,'2018-03-14 03:26:20'),(40,65,102,432,'',NULL,'2018-03-14 03:26:20'),(41,66,102,432,'',NULL,'2018-03-14 03:26:20'),(42,67,102,432,'',NULL,'2018-03-14 03:26:20'),(43,68,102,432,'',NULL,'2018-03-14 03:26:20'),(44,69,102,432,'',NULL,'2018-03-14 03:26:20'),(45,70,102,432,'',NULL,'2018-03-14 03:26:20'),(46,71,102,432,'',NULL,'2018-03-14 03:26:20'),(47,72,102,432,'',NULL,'2018-03-14 03:26:20'),(48,73,102,432,'',NULL,'2018-03-14 03:26:20'),(49,74,111,432,'',NULL,'2018-03-14 03:26:38'),(50,75,111,432,'',NULL,'2018-03-14 03:26:38'),(51,76,111,432,'',NULL,'2018-03-14 03:26:38'),(52,77,111,432,'',NULL,'2018-03-14 03:26:38'),(53,79,111,432,'',NULL,'2018-03-14 03:26:38'),(54,80,111,432,'',NULL,'2018-03-14 03:26:38'),(55,81,111,432,'',NULL,'2018-03-14 03:26:38'),(56,82,111,432,'',NULL,'2018-03-14 03:26:38'),(57,83,111,432,'',NULL,'2018-03-14 03:26:38'),(58,84,111,432,'',NULL,'2018-03-14 03:26:38'),(59,85,113,432,'',NULL,'2018-03-14 03:26:59'),(60,86,113,432,'',NULL,'2018-03-14 03:26:59'),(61,87,113,432,'',NULL,'2018-03-14 03:26:59'),(62,88,113,432,'',NULL,'2018-03-14 03:26:59'),(63,89,114,432,'',NULL,'2018-03-14 03:27:17'),(64,90,114,432,'',NULL,'2018-03-14 03:27:18'),(65,91,114,432,'',NULL,'2018-03-14 03:27:18'),(66,92,114,432,'',NULL,'2018-03-14 03:27:18'),(67,93,114,432,'',NULL,'2018-03-14 03:27:18'),(68,98,125,432,'',NULL,'2018-03-14 03:39:48'),(69,100,125,432,'',NULL,'2018-03-14 03:39:48'),(70,101,125,432,'',NULL,'2018-03-14 03:39:48'),(71,102,125,432,'',NULL,'2018-03-14 03:39:48'),(72,103,125,432,'',NULL,'2018-03-14 03:39:48'),(73,105,125,432,'',NULL,'2018-03-14 03:39:48'),(74,106,125,432,'',NULL,'2018-03-14 03:39:48'),(75,99,126,432,'',NULL,'2018-03-14 03:54:35'),(76,108,126,432,'',NULL,'2018-03-14 03:54:35'),(77,109,126,432,'',NULL,'2018-03-14 03:54:35'),(78,110,126,432,'',NULL,'2018-03-14 03:54:35'),(79,111,126,432,'',NULL,'2018-03-14 03:54:35'),(80,112,127,432,'',NULL,'2018-03-14 03:56:50'),(81,113,127,432,'',NULL,'2018-03-14 03:56:50'),(82,114,127,432,'',NULL,'2018-03-14 03:56:51'),(83,115,127,432,'',NULL,'2018-03-14 03:56:51'),(84,116,127,432,'',NULL,'2018-03-14 03:56:51'),(94,52,107,432,'',NULL,'2018-03-14 09:44:07'),(95,53,107,432,'',NULL,'2018-03-14 09:44:07'),(96,54,107,432,'',NULL,'2018-03-14 09:44:07'),(97,55,107,432,'',NULL,'2018-03-14 09:44:07'),(98,56,107,432,'',NULL,'2018-03-14 09:44:07'),(99,57,107,432,'',NULL,'2018-03-14 09:44:07'),(100,78,107,432,'',NULL,'2018-03-14 09:44:07'),(101,104,107,432,'',NULL,'2018-03-14 09:44:07'),(102,58,108,432,'',NULL,'2018-03-14 09:45:09'),(103,59,108,432,'',NULL,'2018-03-14 09:45:09'),(104,60,108,432,'',NULL,'2018-03-14 09:45:09'),(105,61,108,432,'',NULL,'2018-03-14 09:45:09'),(106,62,108,432,'',NULL,'2018-03-14 09:45:09'),(107,63,108,432,'',NULL,'2018-03-14 09:45:09'),(108,118,108,432,'',NULL,'2018-03-14 09:45:09'),(109,39,105,432,'',NULL,'2018-03-17 22:49:59'),(110,41,105,432,'',NULL,'2018-03-17 22:49:59'),(111,42,105,432,'',NULL,'2018-03-17 22:49:59'),(112,43,105,432,'',NULL,'2018-03-17 22:49:59'),(113,44,105,432,'',NULL,'2018-03-17 22:49:59'),(114,45,105,432,'',NULL,'2018-03-17 22:49:59'),(115,46,105,432,'',NULL,'2018-03-17 22:49:59'),(116,47,105,432,'',NULL,'2018-03-17 22:49:59'),(117,48,105,432,'',NULL,'2018-03-17 22:49:59'),(118,49,105,432,'',NULL,'2018-03-17 22:49:59');
 /*!40000 ALTER TABLE `section_student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1895,7 +1895,7 @@ CREATE TABLE `user_mt` (
 
 LOCK TABLES `user_mt` WRITE;
 /*!40000 ALTER TABLE `user_mt` DISABLE KEYS */;
-INSERT INTO `user_mt` VALUES (46,'admin','admin',1,0,'Default','Admin','Login','2018-07-14 10:05:22','2017-08-19 10:13:26','DB Administrator'),(48,'registrar','registrar',1,0,'Registrar','Registrar','Registrar','2018-03-14 09:07:17','2018-01-23 16:16:37',''),(51,'jordan','jordan123',1,0,'Antonio','John Ferdinand','Maala','2018-03-13 01:06:27','2018-02-12 20:35:42',''),(52,'leatan','faculty123',1,0,'Tan','Lea','S','2018-03-14 04:45:34','2018-02-12 20:52:06',''),(53,'ericmasigla','faculty123',1,0,'Masigla','Eric','E','2018-02-13 22:19:10','2018-02-13 22:18:53',''),(54,'mirabertud','faculty123',1,0,'Bertud','Mira','A','2018-03-14 08:14:47','2018-02-13 23:45:43',''),(55,'elenacruz','faculty123',1,0,'Cruz','Elena','E','2018-02-17 21:20:15','2018-02-17 21:20:15',''),(56,'pinkyamador','faculty123',1,0,'Amador','Pinky','P','2018-02-17 21:20:52','2018-02-17 21:20:52',''),(57,'cecilretalia','faculty123',1,0,'Retalia','Cecil','Y','2018-02-17 21:21:39','2018-02-17 21:21:39',''),(58,'glennong','faculty123',1,0,'Ong','Glenn','O','2018-02-18 20:51:00','2018-02-18 18:46:29',''),(59,'lanisalud','faculty123',1,0,'Salud','Lani','V','2018-02-18 18:49:59','2018-02-18 18:49:59',''),(60,'maecordova','faculty123',1,0,'Cordova','Mae','L.','2018-03-14 04:43:23','2018-02-18 18:50:32',''),(61,'rolandreyes','faculty123',1,0,'Reyes','Roland','D','2018-03-14 04:46:32','2018-02-18 18:51:17',''),(62,'chinitaakot','faculty123',1,0,'Akot','Chinita','P','2018-02-27 21:24:43','2018-02-18 21:44:39',''),(63,'corachuan','faculty123',1,0,'Chuan','Cora','Q','2018-02-21 13:21:09','2018-02-21 12:00:52',''),(64,'paul','paulpaul',1,0,'Napadao','Paul Neo','A.','2018-03-14 09:30:50','2018-02-27 15:46:09',''),(65,'rickgrimes','faculty123',1,0,'Grimes','Rick','L.','2018-07-14 10:13:55','2018-03-14 04:41:51',''),(66,'ganda','superganda',1,0,'Loresco','Julie','Ganda','2018-03-14 09:36:29','2018-03-14 09:09:19','');
+INSERT INTO `user_mt` VALUES (46,'admin','admin',1,0,'Default','Admin','Login','2018-03-17 23:08:35','2017-08-19 10:13:26','DB Administrator'),(48,'registrar','registrar',1,0,'Registrar','Registrar','Registrar','2018-03-14 09:07:17','2018-01-23 16:16:37',''),(51,'jordan','jordan123',1,0,'Antonio','John Ferdinand','Maala','2018-03-13 01:06:27','2018-02-12 20:35:42',''),(52,'leatan','faculty123',1,0,'Tan','Lea','S','2018-03-14 04:45:34','2018-02-12 20:52:06',''),(53,'ericmasigla','faculty123',1,0,'Masigla','Eric','E','2018-02-13 22:19:10','2018-02-13 22:18:53',''),(54,'mirabertud','faculty123',1,0,'Bertud','Mira','A','2018-03-14 08:14:47','2018-02-13 23:45:43',''),(55,'elenacruz','faculty123',1,0,'Cruz','Elena','E','2018-02-17 21:20:15','2018-02-17 21:20:15',''),(56,'pinkyamador','faculty123',1,0,'Amador','Pinky','P','2018-02-17 21:20:52','2018-02-17 21:20:52',''),(57,'cecilretalia','faculty123',1,0,'Retalia','Cecil','Y','2018-02-17 21:21:39','2018-02-17 21:21:39',''),(58,'glennong','faculty123',1,0,'Ong','Glenn','O','2018-02-18 20:51:00','2018-02-18 18:46:29',''),(59,'lanisalud','faculty123',1,0,'Salud','Lani','V','2018-02-18 18:49:59','2018-02-18 18:49:59',''),(60,'maecordova','faculty123',1,0,'Cordova','Mae','L.','2018-03-14 04:43:23','2018-02-18 18:50:32',''),(61,'rolandreyes','faculty123',1,0,'Reyes','Roland','D','2018-03-14 04:46:32','2018-02-18 18:51:17',''),(62,'chinitaakot','faculty123',1,0,'Akot','Chinita','P','2018-02-27 21:24:43','2018-02-18 21:44:39',''),(63,'corachuan','faculty123',1,0,'Chuan','Cora','Q','2018-02-21 13:21:09','2018-02-21 12:00:52',''),(64,'paul','paulpaul',1,0,'Napadao','Paul Neo','A.','2018-03-14 09:30:50','2018-02-27 15:46:09',''),(65,'rickgrimes','faculty123',1,0,'Grimes','Rick','L.','2018-07-14 10:13:55','2018-03-14 04:41:51',''),(66,'ganda','superganda',1,0,'Loresco','Julie','Ganda','2018-03-14 09:36:29','2018-03-14 09:09:19','');
 /*!40000 ALTER TABLE `user_mt` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5468,8 +5468,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllEnrolledBySchoolYearIdAndGradeLevelId`(aSchoolYearId INT, aGradeLevelId INT)
 BEGIN
 
-SELECT
-r.*,
+SELECT r.*,
 a.admission_id,
 a.isComplete AS isAdmissionComplete,
 s.student_id,s.student_no,s.isActive AS isStudentActive,
@@ -5479,7 +5478,22 @@ e.enrollment_id,
 e.schoolyear_id AS enrolledSchoolYearId, 
 DATE(e.enrollment_date) AS dateEnrolled,
 e.isEnrollmentWithdrawn,
-e.enrollment_type
+e.enrollment_type, 
+(SELECT secmt.sectionName FROM section_mt secmt LEFT JOIN section_student secstu ON secmt.section_id = secstu.section_id
+LEFT JOIN section_settings_lt secset ON secmt.section_id = secset.section_id WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND secset.section_type = 'R') AS sectionName,
+
+(SELECT f.lastName FROM section_student secstu LEFT JOIN section_settings_lt sslt ON secstu.section_id = sslt.section_id
+LEFT JOIN faculty_mt f ON sslt.adviser_id = f.faculty_id
+WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND sslt.section_type = 'R') AS faculty_lastName,
+
+(SELECT f.firstName FROM section_student secstu LEFT JOIN section_settings_lt sslt ON secstu.section_id = sslt.section_id
+LEFT JOIN faculty_mt f ON sslt.adviser_id = f.faculty_id
+WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND sslt.section_type = 'R') AS faculty_firstName,
+
+(SELECT f.middlename FROM section_student secstu LEFT JOIN section_settings_lt sslt ON secstu.section_id = sslt.section_id
+LEFT JOIN faculty_mt f ON sslt.adviser_id = f.faculty_id
+WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND sslt.section_type = 'R') AS faculty_middleName
+
 FROM registration_mt r
 LEFT JOIN admission_mt a ON r.registration_id = a.registration_id
 LEFT JOIN student_mt s ON a.admission_id = s.admission_id
@@ -5487,6 +5501,62 @@ LEFT JOIN schoolyear_student_lt ss ON s.student_id = ss.student_id
 LEFT JOIN gradelevel_mt g ON ss.gradelevel_id = g.gradelevel_id
 LEFT JOIN enrollment e ON s.student_id = e.student_id
 WHERE s.isActive = 1 AND e.schoolyear_id = aSchoolYearId AND g.gradelevel_id = aGradeLevelId;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getAllEnrolledBySchoolYearIdAndWildCard` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllEnrolledBySchoolYearIdAndWildCard`(aSchoolYearId INT, aWildCardChar VARCHAR(255))
+BEGIN
+
+SELECT r.*,
+a.admission_id,
+a.isComplete AS isAdmissionComplete,
+s.student_id,s.student_no,s.isActive AS isStudentActive,
+s.student_type AS finalStudentType,
+g.grade_level AS currentGradeLevel, 
+e.enrollment_id, 
+e.schoolyear_id AS enrolledSchoolYearId, 
+DATE(e.enrollment_date) AS dateEnrolled,
+e.isEnrollmentWithdrawn,
+e.enrollment_type, 
+(SELECT secmt.sectionName FROM section_mt secmt LEFT JOIN section_student secstu ON secmt.section_id = secstu.section_id
+LEFT JOIN section_settings_lt secset ON secmt.section_id = secset.section_id WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND secset.section_type = 'R') AS sectionName,
+
+(SELECT f.lastName FROM section_student secstu LEFT JOIN section_settings_lt sslt ON secstu.section_id = sslt.section_id
+LEFT JOIN faculty_mt f ON sslt.adviser_id = f.faculty_id
+WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND sslt.section_type = 'R') AS faculty_lastName,
+
+(SELECT f.firstName FROM section_student secstu LEFT JOIN section_settings_lt sslt ON secstu.section_id = sslt.section_id
+LEFT JOIN faculty_mt f ON sslt.adviser_id = f.faculty_id
+WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND sslt.section_type = 'R') AS faculty_firstName,
+
+(SELECT f.middlename FROM section_student secstu LEFT JOIN section_settings_lt sslt ON secstu.section_id = sslt.section_id
+LEFT JOIN faculty_mt f ON sslt.adviser_id = f.faculty_id
+WHERE secstu.student_id = s.student_id AND secstu.schoolyear_id = aSchoolYearId AND sslt.section_type = 'R') AS faculty_middleName
+
+FROM registration_mt r
+LEFT JOIN admission_mt a ON r.registration_id = a.registration_id
+LEFT JOIN student_mt s ON a.admission_id = s.admission_id
+LEFT JOIN schoolyear_student_lt ss ON s.student_id = ss.student_id
+LEFT JOIN gradelevel_mt g ON ss.gradelevel_id = g.gradelevel_id
+LEFT JOIN enrollment e ON s.student_id = e.student_id
+WHERE 
+(s.student_no LIKE CONCAT('%',aWildCardChar,'%') AND s.isActive = 1 AND e.schoolyear_id = aSchoolYearId)
+OR 
+(r.lastname LIKE CONCAT('%',aWildCardChar,'%') AND s.isActive = 1 AND e.schoolyear_id = aSchoolYearId);
 
 END ;;
 DELIMITER ;
@@ -15445,4 +15515,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-17 13:15:06
+-- Dump completed on 2018-03-17 23:22:06

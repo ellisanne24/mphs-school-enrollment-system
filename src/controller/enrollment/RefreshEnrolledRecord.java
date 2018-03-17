@@ -24,7 +24,7 @@ public class RefreshEnrolledRecord implements ActionListener {
         this.view = view;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         enrollmentDaoImpl = new EnrollmentDaoImpl();
-        enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(enrollmentDaoImpl);
+        enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(schoolYearDaoImpl.getCurrentSchoolYear());
     }
 
     @Override

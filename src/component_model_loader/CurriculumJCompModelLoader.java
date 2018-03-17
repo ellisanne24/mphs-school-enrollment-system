@@ -33,7 +33,7 @@ public class CurriculumJCompModelLoader {
                 c.getDescription(), 
                 (schoolYearDaoImpl.getSchoolYearById(c.getSchoolYearId()).getYearFrom()),
                 c.getDateCreated(),
-                c.getIsActive() == true? "Yes" : "No"
+                c.getIsActive() == true? "Active" : "Inactive"
             };
             tableModel.addRow(rowData);
         }

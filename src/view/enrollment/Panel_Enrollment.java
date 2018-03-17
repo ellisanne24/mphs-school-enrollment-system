@@ -8,6 +8,7 @@ import component_renderers.Renderer_Enrolled_GradeLevel_JTable;
 import component_renderers.Renderer_GradeLevel_JComboBox;
 import component_renderers.Renderer_Master_GradeLevel_JTableCell;
 import controller.enrollment.Controller_ItemListener_RegisteredMasterList_GradeLevel_JComboBox;
+import controller.enrollment.Controller_JButton_SearchEnrolledRecordByKeyword;
 import controller.enrollment.DisplayAllEnrolledOnGradeLevelFilter;
 import controller.enrollment.DisplayDialogSectionAssignment;
 import controller.enrollment.RefreshEnrolledRecord;
@@ -67,7 +68,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
     @Override
     public void initJCompModelLoaders() {
         registrationJCompModelLoader = new RegistrationJCompModelLoader();
-        enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(enrollmentDaoImpl);
+        enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(currentSchoolYear);
         gradeLevelJCompModelLoader = new GradeLevelJCompModelLoader();
         promotionJCompModelLoader = new PromotionJCompModelLoader();
     }
@@ -127,11 +128,12 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
         jtfEnrolledSearchBox.addMouseListener(new Controller_JTextField_ClearDefaultSearchText());
         jbtnSectioning.addActionListener(new DisplayDialogSectionAssignment(this,currentSchoolYear));
         jbtnRefreshEnrolledRecords.addActionListener(new RefreshEnrolledRecord(this));
-        jcmbEnrolledFilterGradeLevel.addItemListener(new DisplayAllEnrolledOnGradeLevelFilter(this));
+        jcmbEnrolledFilterGradeLevel.addItemListener(new DisplayAllEnrolledOnGradeLevelFilter(this,currentSchoolYear));
         jcmbFilterRegistered.addItemListener(new Controller_JComboBox_DisplayRegistrationRecordByAdmissionStatus(jtblRegisteredMasterList, jcmbFilterRegistered));
         jbtnEditRegistration.addActionListener(new Controller_JButton_DisplayRegistrationJDialog(this,jtblRegisteredMasterList, jbtnEditRegistration.getActionCommand()));
         jbtnRefreshRegistrationList.addActionListener(new Controller_JButton_RefreshRegistrationList(jtblRegisteredMasterList));
         jbtnSearchRegistered.addActionListener(new Controller_JButton_SearchRegistrationRecordByKeyword(jtfSearchRegistered, jtblRegisteredMasterList));
+        jbtnEnrolledSearch.addActionListener(new Controller_JButton_SearchEnrolledRecordByKeyword(this,currentSchoolYear));
         jcmbRegistrationGradeLevel.addItemListener(new Controller_ItemListener_RegisteredMasterList_GradeLevel_JComboBox(this, currentSchoolYear));
     }
 
@@ -611,7 +613,7 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
             }
         });
         jtblRegisteredMasterList.setMinimumSize(new java.awt.Dimension(1185, 3000));
-        jtblRegisteredMasterList.setPreferredSize(new java.awt.Dimension(1185, 3000));
+        jtblRegisteredMasterList.setPreferredSize(new java.awt.Dimension(1185, 6000));
         jtblRegisteredMasterList.setRowHeight(35);
         jtblRegisteredMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblRegisteredMasterList);
@@ -783,8 +785,8 @@ public class Panel_Enrollment extends javax.swing.JPanel implements Initializer{
                 return canEdit [columnIndex];
             }
         });
-        jtblEnrolledMasterList.setMinimumSize(new java.awt.Dimension(1185, 1500));
-        jtblEnrolledMasterList.setPreferredSize(new java.awt.Dimension(1185, 1500));
+        jtblEnrolledMasterList.setMinimumSize(new java.awt.Dimension(1185, 3000));
+        jtblEnrolledMasterList.setPreferredSize(new java.awt.Dimension(1185, 6000));
         jtblEnrolledMasterList.setRowHeight(35);
         jtblEnrolledMasterList.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jtblEnrolledMasterList);

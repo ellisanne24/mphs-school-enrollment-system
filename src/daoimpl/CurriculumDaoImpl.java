@@ -60,17 +60,12 @@ public class CurriculumDaoImpl implements ICurriculum {
                 csa.executeUpdate();
                 int curriculumId = csa.getInt(4);
 
-                System.out.println("Curriculum Id: " + curriculumId);
-
                 csb.setInt(1, curriculumId);
                 Object[] subjectList = curriculum.getSubjects().toArray();
-                System.out.println("SubjectList length: " + subjectList.length);
                 for (Object o : subjectList) {
                     Subject s = (Subject) o;
                     csb.setInt(2, s.getSubjectId());
                     csb.setDouble(3, s.getSubjectHours());
-                    System.out.println("SubjectId : " + s.getSubjectId());
-                    System.out.println("SubjectHours : " + s.getSubjectHours());
                     csb.executeUpdate();
                 }
                 con.commit();
@@ -189,7 +184,7 @@ public class CurriculumDaoImpl implements ICurriculum {
                     s.setSubjectId(rs.getInt("subject_id"));
                     s.setSubjectTitle(rs.getString("title"));
                     s.setSubjectCode(rs.getString("code"));
-                    s.setSubjectHours(rs.getDouble("subject_hours"));
+                    s.setSubjectMinutes(rs.getInt("subject_hours"));
                     GradeLevel gradeLevel = new GradeLevel();
                     gradeLevel.setLevelNo(rs.getInt("grade_level"));
                     s.setGradeLevel(gradeLevel);

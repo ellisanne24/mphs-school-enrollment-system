@@ -353,6 +353,10 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_subjtable.add(jScrollPane2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -381,6 +385,11 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         jbtnMoveSubjects.setMaximumSize(new java.awt.Dimension(50, 40));
         jbtnMoveSubjects.setMinimumSize(new java.awt.Dimension(50, 40));
         jbtnMoveSubjects.setPreferredSize(new java.awt.Dimension(50, 40));
+        jbtnMoveSubjects.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnMoveSubjectsActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -401,6 +410,9 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toopanel.add(panel_centercontrol, gridBagConstraints);
 
@@ -422,7 +434,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
 
             },
             new String [] {
-                "Subject Id", "Name", "Code", "Grade Level", "Hours"
+                "Subject Id", "Name", "Code", "Grade Level", "mins / week"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -518,7 +530,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setText("Total Hours :");
+        jLabel1.setText("Total Minutes :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel1.add(jLabel1, gridBagConstraints);
@@ -540,10 +552,17 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(panel_toopanel, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jbtnMoveSubjectsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnMoveSubjectsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbtnMoveSubjectsActionPerformed
 
     
 

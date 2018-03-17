@@ -16,7 +16,7 @@ public class Subject {
     private String subjectCode;
     private String subjectDescription;
     private String addedBy;
-    private double subjectHours;
+    private int subjectMinutes;
     private double totalHours;
     private Date dateAdded;
     private Date dateCreated;
@@ -142,23 +142,14 @@ public class Subject {
         this.isActive = isActive;
     }
     
-    public void setSubjectHours(double subjectHours)
+    public void setSubjectMinutes(int subjectMinutes)
     {
-        this.subjectHours = subjectHours;
+        this.subjectMinutes = subjectMinutes;
     }
     
     public double getSubjectHours()
     {
-        return subjectHours;
+        return subjectMinutes;
     }
     
-    private void setTotalHours(double totalHours)
-    {
-        this.totalHours = totalHours;
-    }
-    
-    public double getTotalHours()
-    {
-        return totalHours;
-    }
 }

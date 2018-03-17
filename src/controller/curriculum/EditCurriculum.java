@@ -74,7 +74,7 @@ public class EditCurriculum implements ActionListener {
         for (int i = 0; i < jtblCurrentSubjects.getRowCount(); i++) {
             Subject s = new Subject();
             s.setSubjectId(Integer.parseInt(jtblCurrentSubjects.getValueAt(i, 0).toString().trim()));
-            s.setSubjectHours(Double.parseDouble(jtblCurrentSubjects.getValueAt(i, 4).toString().trim()));
+            s.setSubjectMinutes(Integer.parseInt(jtblCurrentSubjects.getValueAt(i, 4).toString().trim()));
             curriculumSubjects.add(s);
         }
         return curriculumSubjects;

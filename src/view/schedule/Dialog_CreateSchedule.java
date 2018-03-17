@@ -138,6 +138,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         jbtnClearSchedule = new javax.swing.JButton();
         jbtnCreate = new javax.swing.JButton();
         jbtnLoadToSummary = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -551,11 +552,11 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
 
             },
             new String [] {
-                "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
+                "Day", "Start Time", "End Time", "Subject", "Faculty", "Room", "Session"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -681,6 +682,13 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
         gridBagConstraints.gridx = 3;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jpnlSubmitSchedule.add(jbtnLoadToSummary, gridBagConstraints);
+
+        jButton1.setText("New Load");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlSubmitSchedule.add(jButton1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1030,6 +1038,7 @@ public class Dialog_CreateSchedule extends javax.swing.JDialog implements Initia
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
