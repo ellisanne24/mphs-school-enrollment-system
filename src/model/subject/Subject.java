@@ -17,7 +17,6 @@ public class Subject {
     private String subjectDescription;
     private String addedBy;
     private int subjectMinutes;
-    private double totalHours;
     private Date dateAdded;
     private Date dateCreated;
     private SchoolYear schoolYearCreated;
@@ -147,7 +146,7 @@ public class Subject {
         this.subjectMinutes = subjectMinutes;
     }
     
-    public double getSubjectHours()
+    public int getSubjectMinutes()
     {
         return subjectMinutes;
     }

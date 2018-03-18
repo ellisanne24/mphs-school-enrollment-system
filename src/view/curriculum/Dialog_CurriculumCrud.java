@@ -15,6 +15,7 @@ import daoimpl.GradeLevelDaoImpl;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import model.curriculum.Curriculum;
+import renderer.curriculum.Renderer_Subject_GradeLevel_TableCell;
 import tablecelleditor.curriculum.SubjectHourColumnCellEditor;
 import utility.initializer.Initializer;
 
@@ -71,6 +72,8 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
     @Override
     public void initRenderers() {
         gradeLevelJComboBoxRenderer = new Renderer_GradeLevel_JComboBox();
+        jtblSubjectList.setDefaultRenderer(Object.class, new Renderer_Subject_GradeLevel_TableCell(3));
+        jtblCurrentSubjects.setDefaultRenderer(Object.class, new Renderer_Subject_GradeLevel_TableCell(3));
     }
     
     @Override
@@ -99,7 +102,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         if(action.equalsIgnoreCase("create")){
             jlblStatus.setVisible(false);
             jcmbStatus.setVisible(false);
-            jlblTotalHours.setText("");
+            jlblTotalMinutes.setText("");
         }else if(action.equalsIgnoreCase("edit")){
             
         }else if(action.equalsIgnoreCase("view")){
@@ -135,7 +138,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         }
 
         jtblCurrentSubjects.getModel()
-                .addTableModelListener(new CurrentSubjectsTableModelListener(jlblTotalHours, jtblCurrentSubjects));
+                .addTableModelListener(new CurrentSubjectsTableModelListener(jlblTotalMinutes,jlblTotalHrs, jtblCurrentSubjects));
     }
 
     @Override
@@ -187,12 +190,15 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         jbtnSaveAndNew = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jlblTotalHours = new javax.swing.JLabel();
+        jlblTotalMinutes = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jlblTotalHrs = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Create New Curriculum");
-        setMinimumSize(new java.awt.Dimension(800, 600));
+        setMinimumSize(new java.awt.Dimension(900, 600));
         setModal(true);
+        setPreferredSize(new java.awt.Dimension(900, 606));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -377,7 +383,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_toopanel.add(panel_subjectlist, gridBagConstraints);
 
-        panel_centercontrol.setMinimumSize(new java.awt.Dimension(40, 400));
+        panel_centercontrol.setMinimumSize(new java.awt.Dimension(56, 400));
         panel_centercontrol.setLayout(new java.awt.GridBagLayout());
 
         jbtnMoveSubjects.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
@@ -530,16 +536,35 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setText("Total Minutes :");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setText("Total (mins):");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel1.add(jLabel1, gridBagConstraints);
 
-        jlblTotalHours.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jlblTotalHours.setText("totalHoursLabel");
+        jlblTotalMinutes.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jlblTotalMinutes.setText("totalInMins");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        jPanel1.add(jlblTotalHours, gridBagConstraints);
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanel1.add(jlblTotalMinutes, gridBagConstraints);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setText("Total (hrs) :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanel1.add(jLabel2, gridBagConstraints);
+
+        jlblTotalHrs.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jlblTotalHrs.setText("totalInHrs");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanel1.add(jlblTotalHrs, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -568,6 +593,7 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -583,7 +609,8 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
     private javax.swing.JComboBox<String> jcmbStatus;
     private javax.swing.JLabel jlblGradeLevel;
     private javax.swing.JLabel jlblStatus;
-    private javax.swing.JLabel jlblTotalHours;
+    private javax.swing.JLabel jlblTotalHrs;
+    private javax.swing.JLabel jlblTotalMinutes;
     private javax.swing.JTextArea jtaCurriculumDescription;
     private javax.swing.JTable jtblCurrentSubjects;
     private javax.swing.JTable jtblSubjectList;

@@ -68,7 +68,7 @@ public class CurriculumJCompModelLoader {
             Object[] rowData = {
                 s.getSubjectId(), s.getSubjectTitle(),
                 s.getSubjectCode(), s.getGradeLevel().getLevelNo(),
-                s.getSubjectHours()
+                s.getSubjectMinutes()
             };
             tableModel.addRow(rowData);
         }

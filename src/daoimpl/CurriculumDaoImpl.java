@@ -65,7 +65,7 @@ public class CurriculumDaoImpl implements ICurriculum {
                 for (Object o : subjectList) {
                     Subject s = (Subject) o;
                     csb.setInt(2, s.getSubjectId());
-                    csb.setDouble(3, s.getSubjectHours());
+                    csb.setDouble(3, s.getSubjectMinutes());
                     csb.executeUpdate();
                 }
                 con.commit();
@@ -107,7 +107,7 @@ public class CurriculumDaoImpl implements ICurriculum {
                 for(Object o : curriculumSubjects){
                     Subject s = (Subject)o;
                     csc.setInt(2, s.getSubjectId());
-                    csc.setDouble(3,s.getSubjectHours());
+                    csc.setDouble(3,s.getSubjectMinutes());
                     csc.executeUpdate();
                 }
                 con.commit();

@@ -15,33 +15,33 @@ import javax.swing.table.TableModel;
  */
 public class CurrentSubjectsTableModelListener implements TableModelListener{
 
-    private JLabel jlblTotalHours;
-    private JTable jtblCurrentSubjects;
+    private final JLabel jlblTotalHours;
+    private final JLabel jlblTotalMinutes;
+    private final JTable jtblCurrentSubjects;
     
-    public CurrentSubjectsTableModelListener(JLabel jlblTotalHours,JTable jtblCurrentSubjects){
+    public CurrentSubjectsTableModelListener(JLabel jlblTotalMinutes,JLabel jlblTotalHours,JTable jtblCurrentSubjects){
         this.jlblTotalHours = jlblTotalHours;
+        this.jlblTotalMinutes = jlblTotalMinutes;
         this.jtblCurrentSubjects = jtblCurrentSubjects;
     }
     
     @Override
     public void tableChanged(TableModelEvent e) {
         TableModel tableModel = (TableModel) e.getSource();
-        setTotalHours(getTotalHours(tableModel));
+        int total = (getTotal(tableModel));
+        int hr = total/60;
+        int mins = total%60;
+        jlblTotalHours.setText(""+hr);
+        jlblTotalMinutes.setText(""+mins);
     }
     
-    private Double getTotalHours(TableModel tableModel) {
-        double totalHours = 0.00;
+    private int getTotal(TableModel tableModel) {
+        int total = 0;
         for (int row = 0; row < tableModel.getRowCount(); row++) {
             if (tableModel.getValueAt(row, 4) != null) {
-                totalHours += Double.parseDouble(tableModel.getValueAt(row, 4).toString().trim());
+                total += Integer.parseInt(tableModel.getValueAt(row, 4).toString().trim());
             }
         }
-        double roundedValue = Math.round(totalHours * 100D) / 100D;
-        return roundedValue;
-    }
-
-    private void setTotalHours(double totalHours) {
-        DecimalFormat df = new DecimalFormat("0.00");
-        jlblTotalHours.setText(df.format(totalHours));
+        return total;
     }
 }

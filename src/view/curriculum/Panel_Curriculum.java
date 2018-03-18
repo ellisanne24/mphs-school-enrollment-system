@@ -173,7 +173,7 @@ public class Panel_Curriculum extends javax.swing.JPanel implements Initializer{
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1185, 530));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1185, 530));
 
-        jtblCurriculumMasterRecord.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jtblCurriculumMasterRecord.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblCurriculumMasterRecord.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -192,7 +192,7 @@ public class Panel_Curriculum extends javax.swing.JPanel implements Initializer{
         });
         jtblCurriculumMasterRecord.setMinimumSize(new java.awt.Dimension(1185, 530));
         jtblCurriculumMasterRecord.setPreferredSize(new java.awt.Dimension(1185, 530));
-        jtblCurriculumMasterRecord.setRowHeight(20);
+        jtblCurriculumMasterRecord.setRowHeight(35);
         jtblCurriculumMasterRecord.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jtblCurriculumMasterRecord);
 
