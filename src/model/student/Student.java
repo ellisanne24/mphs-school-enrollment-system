@@ -3,7 +3,6 @@ package model.student;
 
 import model.tuitionfee.Tuition;
 import java.util.Date;
-import java.util.List;
 import model.admission.Admission;
 import model.enrollment.Enrollment;
 import model.paymentterm.PaymentTerm;
@@ -17,7 +16,7 @@ public class Student {
     private int studentId;
     private int studentNo;
     private int studentType;
-    private List<Subject> subjects;
+    public int gradeLevelNo; //current gradelevelNo
     private Registration registration;
     private Admission admission;
     private PaymentTerm paymentTerm;
@@ -31,6 +30,15 @@ public class Student {
     private Date dateGraduated;
     private Tuition tuitionFee;
     private Promotion promotion;
+    private Subject subject;
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
 
     public boolean getIsRecommendedToTakeSummer() {
         return isRecommendedToTakeSummer;
@@ -46,16 +54,6 @@ public class Student {
 
     public void setPromotion(Promotion promotion) {
         this.promotion = promotion;
-    }
-
-    public int gradeLevelNo; //current gradelevelNo
-
-    public List<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
     }
     
     public Section getSection() {

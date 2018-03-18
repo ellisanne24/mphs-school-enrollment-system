@@ -33,6 +33,7 @@ public class Controller_SectionAssignment_Summer_JCheckBox implements ActionList
             }else{
                 DefaultComboBoxModel comboModel = gradeLevelJCompModelLoader.getAllActiveGradeLevel();
                 view.getJcmbGradeLevel().setModel(comboModel);
+                view.getJcmbSection().setSelectedIndex(-1);
             }
         }
     }

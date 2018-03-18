@@ -9,7 +9,7 @@ import component_renderers.Renderer_SectionType_JComboBox;
 import component_renderers.Renderer_Section_Session_JComboBox;
 import controller.global.Controller_JButton_ExitJDialog;
 import controller.section.CreateSection;
-import controller.section.EditSection;
+import controller.section.UpdateSection;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.SectionDaoImpl;
 import javax.swing.JButton;
@@ -23,8 +23,11 @@ import utility.initializer.Initializer;
 
 public class DialogSectionCrud extends javax.swing.JDialog implements Initializer {
 
+    private final Panel_Sections panelSections;
+    
     private int sectionIdOfSelected;
-    private String action;
+    private final String action;
+    private final SchoolYear currentSchoolYear;
     private SectionJCompModelLoader sectionJCompModelLoader;
 
     private Renderer_GradeLevel_JComboBox gradeLevelJComboBoxRenderer;
@@ -32,14 +35,15 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     private FacultyJCompModelLoader facultyJCompModelLoader;
     private Renderer_Faculty_JComboBox facultyJComboBoxRenderer;
     
-    private SchoolYearDaoImpl schoolYearDaoImpl;
     private SectionDaoImpl sectionDaoImpl;
 
-    public DialogSectionCrud(java.awt.Frame parent, boolean modal, String action) {
+    public DialogSectionCrud(java.awt.Frame parent, boolean modal,Panel_Sections panelSections, String action, SchoolYear currentSchoolYear) {
         super(parent, modal);
         initComponents();
-
+        this.panelSections = panelSections;
+        
         this.action = action;
+        this.currentSchoolYear = currentSchoolYear;
 
         initDaoImpl();
         initJCompModelLoaders();
@@ -59,11 +63,14 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
      * @param action
      * @param sectionIdOfSelected
      */
-    public DialogSectionCrud(java.awt.Frame parent, boolean model, String action, int sectionIdOfSelected) {
+    public DialogSectionCrud(java.awt.Frame parent, boolean model,Panel_Sections panelSections, String action, int sectionIdOfSelected, SchoolYear currentSchoolYear) {
         super(parent, model);
         initComponents();
+        this.panelSections = panelSections;
+        
         this.action = action;
         this.sectionIdOfSelected = sectionIdOfSelected;
+        this.currentSchoolYear = currentSchoolYear;
 
         initDaoImpl();
         initJCompModelLoaders();
@@ -362,8 +369,6 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
 
     @Override
     public void initViewComponents() {
-        SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
-        
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jcmbAdviser.setModel(facultyJCompModelLoader.getAllFacultyIdHandlingAdvisory(currentSchoolYear));
 
@@ -385,15 +390,14 @@ public class DialogSectionCrud extends javax.swing.JDialog implements Initialize
     public void initControllers() {
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         if (action.equalsIgnoreCase("create")) {
-            jbtnSave.addActionListener(new CreateSection(this));
+            jbtnSave.addActionListener(new CreateSection(panelSections,this,currentSchoolYear));
         } else if (action.equalsIgnoreCase("edit")) {
-            jbtnSave.addActionListener(new EditSection(sectionIdOfSelected, this));
+            jbtnSave.addActionListener(new UpdateSection(sectionIdOfSelected,panelSections, this,currentSchoolYear));
         }
     }
 
     @Override
     public void initDaoImpl() {
-        schoolYearDaoImpl = new SchoolYearDaoImpl();
         sectionDaoImpl = new SectionDaoImpl();
     }
 

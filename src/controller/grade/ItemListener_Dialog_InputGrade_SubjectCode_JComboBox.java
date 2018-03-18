@@ -10,13 +10,14 @@ import daoimpl.SchoolYearDaoImpl;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import model.grade.Grade;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.subject.Subject;
+import model.user.User;
 import view.grades.View_Dialog_InputGrade;
 
 /**
@@ -28,9 +29,13 @@ public class ItemListener_Dialog_InputGrade_SubjectCode_JComboBox implements Ite
     private final View_Dialog_InputGrade view;
     private final GradeDaoImpl gradeDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
+    private final User user;
+    private final SchoolYear currentSchoolYear;
     
-    public ItemListener_Dialog_InputGrade_SubjectCode_JComboBox(View_Dialog_InputGrade view) {
+    public ItemListener_Dialog_InputGrade_SubjectCode_JComboBox(View_Dialog_InputGrade view, User user, SchoolYear currentSchoolYear) {
         this.view = view;
+        this.user = user;
+        this.currentSchoolYear = currentSchoolYear;
         gradeDaoImpl = new GradeDaoImpl();
         schoolYearDaoImpl = new SchoolYearDaoImpl();
     }
@@ -51,9 +56,10 @@ public class ItemListener_Dialog_InputGrade_SubjectCode_JComboBox implements Ite
                     gradeList = gradeDaoImpl.getGradesOf(student, subject, schoolYear);
                     setGradesToColumns(gradeList, row);
                 }
+               List<Integer>quarterColumns = Arrays.asList(3,4,5,6);
+//               view.getJtblGradingSheet().setModel(new MyInputGradeTableModel(view.getJtblGradingSheet(),quarterColumns, user,currentSchoolYear));
             }
         }
-        
     }
     
     private void setGradesToColumns(List<Grade> gradeList, int row) {
@@ -76,7 +82,7 @@ public class ItemListener_Dialog_InputGrade_SubjectCode_JComboBox implements Ite
         for(int row = 0; row < view.getJtblGradingSheet().getRowCount(); row++){
             for(int col = 0; col < view.getJtblGradingSheet().getColumnCount(); col++){
                 if(col == 3 || col == 4 || col == 5 || col == 6){
-                    view.getJtblGradingSheet().setValueAt(0, row, col);
+                    view.getJtblGradingSheet().setValueAt("", row, col);
                 }
             }
         }

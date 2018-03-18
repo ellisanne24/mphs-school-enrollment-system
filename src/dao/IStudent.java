@@ -15,4 +15,15 @@ public interface IStudent {
     Student getStudentByStudentNo(int studentNo);
     boolean studentExist(int studentNo);
     boolean hasTuitionRecord(int studentNo, int schoolyearId);
+    
+    /**
+     * This method can be used to search student by wild card character.
+     * Student ID, Admission ID, Registration ID, Last name, First name, or Middle name can be used to 
+     * search student.
+     * This returns a list of Student where the user can select a specific student.
+     * This method is used commonly in Payment Module.
+     * @param keyword
+     * @return 
+     */
+    List<Student> getStudentsByKeyword(String keyword);
 }

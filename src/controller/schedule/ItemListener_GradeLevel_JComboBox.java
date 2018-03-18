@@ -51,6 +51,7 @@ public class ItemListener_GradeLevel_JComboBox implements ItemListener {
             resetForm();
             loadSubjectsByGradeLevel();
             loadGradeLevelToScheduleHeader();
+            enableSectionTypeCombo();
         }
     }
     
@@ -63,6 +64,10 @@ public class ItemListener_GradeLevel_JComboBox implements ItemListener {
     private void loadGradeLevelToScheduleHeader() {
         GradeLevel gradeLevel = (GradeLevel) jcmbGradeLevel.getSelectedItem();
         view.getJtfGradeLevel().setText(gradeLevel.getLevelNo() == 0 ? "Kindergarten" : gradeLevel.getLevelNo() + "");
+    }
+    
+    private void enableSectionTypeCombo(){
+        view.getJcmbSectionType().setEnabled(true);
     }
 
     private void resetForm(){

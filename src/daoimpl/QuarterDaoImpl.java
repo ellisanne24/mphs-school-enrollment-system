@@ -26,75 +26,49 @@ import dao.IQuarter;
  */
 public class QuarterDaoImpl implements IQuarter{
 
-    //HAS
-    SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
+    private SchoolYearDaoImpl schoolYearDaoImpl;
+    
+    public QuarterDaoImpl(){
+        schoolYearDaoImpl = new SchoolYearDaoImpl();
+    }
 
     @Override
-    public boolean addQuarter(Quarter aQuarter) {
-        boolean isSuccessful = false;
-        String SQL = "{CALL addQuarter()}";
+    public Quarter getQuarterBy(int quarterNo, SchoolYear schoolYear) {
+        Quarter quarter = new Quarter();
+        String SQL = "{CALL getQuarterBy(?,?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
                 CallableStatement cs = con.prepareCall(SQL);){
-            
-        } catch (SQLException e) {
-            isSuccessful = false;
-            e.printStackTrace();
-        }
-        return isSuccessful;
-    }
-    
-    
-    
-    @Override
-    public List<Quarter> getAllQuarters() {
-        List<Quarter> quarterList = new ArrayList<>();
-        String SQL = "{CALL getAllQuarters()}";
-        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,quarterNo);
+            cs.setInt(2,schoolYear.getSchoolYearId());
             try(ResultSet rs = cs.executeQuery();){
                 while(rs.next()){
-                    SchoolYear schoolYear = new SchoolYear();
-                    Quarter quarter = new Quarter();
-                    quarter.setQuarterId(rs.getInt(QuarterTable.QUARTERID));
-                    quarter.setQuarterNo(rs.getInt(QuarterTable.QUARTERNO));
-                    quarter.setDateAdded(rs.getDate(QuarterTable.DATEADDED));
-                    quarter.setIsActive(rs.getBoolean(QuarterTable.ISACTIVE));
-                    quarter.setDescription(rs.getString(QuarterTable.DESCRIPTION));
-                    quarter.setIsCurrentQuarter(rs.getBoolean(QuarterTable.SchoolYearQuarter.ISCURRENTQUARTER));
-                    quarter.setStartDate(rs.getDate(QuarterTable.SchoolYearQuarter.STARTDATE));
-                    quarter.setEndDate(rs.getDate(QuarterTable.SchoolYearQuarter.ENDATE));
-                    schoolYear.setYearFrom(rs.getInt(SchoolYearTable.YEARFROM));
-                    schoolYear.setYearTo(rs.getInt(SchoolYearTable.YEARTO));
-                    schoolYear.setSchoolYearId(rs.getInt(SchoolYearTable.SCHOOLYEARID));
-                    quarter.setSchoolYear(schoolYear);
-                    
-                    quarterList.add(quarter);
+                    quarter.setQuarterNo(rs.getInt("quarter_no"));
+                    quarter.setStartDate(rs.getDate("start_date"));
+                    quarter.setEndDate(rs.getDate("end_date"));
+                    quarter.setGradingOpenDate(rs.getDate("grading_open_date"));
+                    quarter.setGradingDueDate(rs.getDate("grading_due_date"));
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.getErrorCode()+"\n"+e.getMessage());
+            e.printStackTrace();
         }
-        return quarterList;
+        return quarter;
     }
-
-    @Override
-    public List<Quarter> getQuarterBySchoolYear(SchoolYear aSchoolYear) {
-        List<Quarter> quarterList = new ArrayList<>();
-        return quarterList;
-    }
-
+    
+    
     @Override
     public Quarter getCurrentQuarterOf(SchoolYear schoolYear) {
         Quarter currentQuarter = new Quarter();
         String SQL = "{CALL getCurrentQuarterOf(?)}";
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);
-                CallableStatement cs = con.prepareCall(SQL);){
-            cs.setInt(1,schoolYear.getSchoolYearId());
-            try(ResultSet rs = cs.executeQuery();){
-                while(rs.next()){
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, schoolYear.getSchoolYearId());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
                     currentQuarter.setQuarterNo(rs.getInt("quarter_no"));
                     currentQuarter.setStartDate(rs.getDate("start_date"));
                     currentQuarter.setEndDate(rs.getDate("end_date"));
+                    currentQuarter.setGradingOpenDate(rs.getDate("grading_open_date"));
                     currentQuarter.setGradingDueDate(rs.getDate("grading_due_date"));
                 }
             }

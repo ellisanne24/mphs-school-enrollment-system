@@ -33,7 +33,7 @@ public class ItemListener_Dialog_InputGrade_ClassHandled_JComboBox implements It
         this.view = view;
         this.user = user;
         this.schoolYearDaoImpl = new SchoolYearDaoImpl();
-        this.facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        this.facultyDaoImpl = new FacultyDaoImpl();
         this.classTypeDaoImpl = new ClassTypeDaoImpl();
         this.sectionJCompModelLoader = new SectionJCompModelLoader();
     }

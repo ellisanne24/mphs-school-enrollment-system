@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import view.schoolyear.DialogSchoolYearCrud;
-import view.section.DialogSectionCrud;
+import view.schoolyear.Panel_SchoolYear;
 
 /**
  *
@@ -14,11 +14,12 @@ import view.section.DialogSectionCrud;
  */
 public class DisplaySchoolYearCrudDialog implements ActionListener{
 
-    private final JTable jtblSchoolYearMasterList;
-    
-    public DisplaySchoolYearCrudDialog(JTable jtblSchoolYearMasterList){
-        this.jtblSchoolYearMasterList = jtblSchoolYearMasterList;
+    private final Panel_SchoolYear panelSchoolYear;
+
+    public DisplaySchoolYearCrudDialog(Panel_SchoolYear panelSchoolYear) {
+        this.panelSchoolYear = panelSchoolYear;
     }
+    
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -50,7 +51,7 @@ public class DisplaySchoolYearCrudDialog implements ActionListener{
 
     private boolean hasSchoolYearSelected() {
         boolean hasSchoolYearSelected = false;
-        if (jtblSchoolYearMasterList.getSelectedRow() > -1) {
+        if (panelSchoolYear.getJtblSchoolYearMasterList().getSelectedRow() > -1) {
             hasSchoolYearSelected = true;
         }
         return hasSchoolYearSelected;
@@ -68,16 +69,16 @@ public class DisplaySchoolYearCrudDialog implements ActionListener{
         if (action.equals("edit") || action.equals("view")) {
             if (hasSchoolYearSelected()) {
                 int schoolyearId = 0;
-                int rowSelected = jtblSchoolYearMasterList.getSelectedRow();
-                int schoolYearId = Integer.parseInt(jtblSchoolYearMasterList.getValueAt(rowSelected, schoolyearId).toString());
-                DialogSchoolYearCrud dialogSchoolYearCrud = new DialogSchoolYearCrud(null, true, action, schoolYearId);
+                int rowSelected = panelSchoolYear.getJtblSchoolYearMasterList().getSelectedRow();
+                int schoolYearId = Integer.parseInt(panelSchoolYear.getJtblSchoolYearMasterList().getValueAt(rowSelected, schoolyearId).toString());
+                DialogSchoolYearCrud dialogSchoolYearCrud = new DialogSchoolYearCrud(null, true, action, schoolYearId,panelSchoolYear);
                 dialogSchoolYearCrud.setTitle(dialogTitle);
                 dialogSchoolYearCrud.pack();
                 dialogSchoolYearCrud.setLocationRelativeTo(null);
                 dialogSchoolYearCrud.setVisible(true);
             }
         } else {
-            DialogSchoolYearCrud dialogSchoolYearCrud = new DialogSchoolYearCrud(null, true, action);
+            DialogSchoolYearCrud dialogSchoolYearCrud = new DialogSchoolYearCrud(null, true, action,panelSchoolYear);
             dialogSchoolYearCrud.setTitle(dialogTitle);
             dialogSchoolYearCrud.pack();
             dialogSchoolYearCrud.setLocationRelativeTo(null);

@@ -1,6 +1,7 @@
 package model.grade;
 
 import java.util.Date;
+import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.user.User;
 
@@ -15,6 +16,7 @@ public class Grade {
     private int subjectId;
     private int gradeValue;
     private int gradingPeriod;
+    private GradeLevel studentGradeLevel;
     private String gradeType; //summer or regular
     private SchoolYear schoolYear;
     private Date dateSubmitted;
@@ -22,6 +24,14 @@ public class Grade {
     private boolean isPass;
     private boolean isFail;
 
+    public GradeLevel getStudentGradeLevel() {
+        return studentGradeLevel;
+    }
+
+    public void setStudentGradeLevel(GradeLevel studentGradeLevel) {
+        this.studentGradeLevel = studentGradeLevel;
+    }
+    
     public boolean isIsPass() {
         return isPass;
     }

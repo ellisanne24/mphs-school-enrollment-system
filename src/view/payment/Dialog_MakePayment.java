@@ -18,25 +18,29 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import model.balancebreakdownfee.BalanceBreakDownFee;
 import model.tuitionfee.Tuition;
+import model.user.User;
 import utility.initializer.Initializer;
 
 public class Dialog_MakePayment extends javax.swing.JDialog implements Initializer {
 
     private final boolean hasTuitionRecord;
     private final Tuition tuition;
+    private final User user;
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
     private final OfficialReceiptDaoImpl orNoDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
 
-    public Dialog_MakePayment(boolean hasTuitionRecord, Tuition tuition) {
+    public Dialog_MakePayment(boolean hasTuitionRecord, Tuition tuition, User user) {
         this.hasTuitionRecord = hasTuitionRecord;
         this.tuition = tuition;
+        this.user = user;
         this.tuitionFeeDaoImpl = new TuitionFeeDaoImpl();
         this.orNoDaoImpl = new OfficialReceiptDaoImpl();
         this.schoolYearDaoImpl = new SchoolYearDaoImpl();
@@ -71,6 +75,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime now = LocalDateTime.now();
         jlblDateToday.setText(""+dtf.format(now));
+        jlblCashierName.setText(user.getLastName()+", "+user.getFirstName()+" "+user.getMiddleName());
     }
 
     private void initBalanceJCombo() {
@@ -123,7 +128,8 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
         jbtnRemove.addActionListener(new Dialog_MakePayment_RemoveItemToPay(this));
         jtblPaymentBreakDown.getModel().addTableModelListener(new Dialog_MakePayment_PaymentBreakDown_TableModelListener(this));
-        jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(hasTuitionRecord,this,tuition, tuitionFeeDaoImpl));
+        
+        jbtnProceedPayment.addActionListener(new Dialog_MakePayment_ProceedPayment(hasTuitionRecord,this,tuition, tuitionFeeDaoImpl,user));
     }
 
     @Override
@@ -230,10 +236,6 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         return jcmbBalance;
     }
 
-    public JComboBox<String> getJcmbModeOfPayment() {
-        return jcmbModeOfPayment;
-    }
-
     public JComboBox<String> getJcmbOthers() {
         return jcmbOthers;
     }
@@ -309,8 +311,6 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         jlblDateToday = new javax.swing.JLabel();
         javax.swing.JLabel lbl_datetoday1 = new javax.swing.JLabel();
         jlblOrNo = new javax.swing.JLabel();
-        javax.swing.JLabel lbl_datetoday2 = new javax.swing.JLabel();
-        jcmbModeOfPayment = new javax.swing.JComboBox<>();
         javax.swing.JLabel lbl_datetoday3 = new javax.swing.JLabel();
         jlblCashierName = new javax.swing.JLabel();
         panel_datetodaycontainer1 = new javax.swing.JPanel();
@@ -406,25 +406,6 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         panel_datetodaycontainer.add(jlblOrNo, gridBagConstraints);
-
-        lbl_datetoday2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lbl_datetoday2.setText("Mode of Payment :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        panel_datetodaycontainer.add(lbl_datetoday2, gridBagConstraints);
-
-        jcmbModeOfPayment.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jcmbModeOfPayment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Cash" }));
-        jcmbModeOfPayment.setMinimumSize(new java.awt.Dimension(150, 25));
-        jcmbModeOfPayment.setPreferredSize(new java.awt.Dimension(150, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        panel_datetodaycontainer.add(jcmbModeOfPayment, gridBagConstraints);
 
         lbl_datetoday3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_datetoday3.setText("Cashier :");
@@ -819,6 +800,7 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
 
         jbtnProceedPayment.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jbtnProceedPayment.setText("Proceed Payment");
+        jbtnProceedPayment.setActionCommand("proceedpayment");
         jbtnProceedPayment.setMaximumSize(new java.awt.Dimension(200, 40));
         jbtnProceedPayment.setMinimumSize(new java.awt.Dimension(200, 40));
         jbtnProceedPayment.setPreferredSize(new java.awt.Dimension(200, 40));
@@ -859,7 +841,6 @@ public class Dialog_MakePayment extends javax.swing.JDialog implements Initializ
     private javax.swing.JCheckBox jcbDownPayment;
     private javax.swing.JCheckBox jcbOthers;
     private javax.swing.JComboBox<String> jcmbBalance;
-    private javax.swing.JComboBox<String> jcmbModeOfPayment;
     private javax.swing.JComboBox<String> jcmbOthers;
     private javax.swing.JLabel jlblCashierName;
     private javax.swing.JLabel jlblChargedPhp;

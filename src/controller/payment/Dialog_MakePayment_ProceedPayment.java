@@ -1,7 +1,5 @@
 package controller.payment;
 
-import daoimpl.EnrollmentDaoImpl;
-import daoimpl.SchoolYearDaoImpl;
 import daoimpl.TuitionFeeDaoImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +12,7 @@ import javax.swing.JTable;
 import model.particulars.Particular;
 import model.payment.Payment;
 import model.tuitionfee.Tuition;
+import model.user.User;
 import view.payment.Dialog_MakePayment;
 
 /**
@@ -26,12 +25,14 @@ public class Dialog_MakePayment_ProceedPayment implements ActionListener {
     private final Dialog_MakePayment view;
     private final Tuition tuition;
     private final TuitionFeeDaoImpl tuitionFeeDaoImpl;
+    private final User user;
 
-    public Dialog_MakePayment_ProceedPayment(boolean hasTuitionRecord,Dialog_MakePayment view, Tuition tuition, TuitionFeeDaoImpl tuitionFeeDaoImpl) {
+    public Dialog_MakePayment_ProceedPayment(boolean hasTuitionRecord,Dialog_MakePayment view, Tuition tuition, TuitionFeeDaoImpl tuitionFeeDaoImpl, User user) {
         this.hasTuitionRecord = hasTuitionRecord;
         this.view = view;
         this.tuition = tuition;
         this.tuitionFeeDaoImpl = tuitionFeeDaoImpl;
+        this.user = user;
     }
 
     @Override
@@ -52,32 +53,23 @@ public class Dialog_MakePayment_ProceedPayment implements ActionListener {
             tuition.setPayment(payment);
             
             if (!hasTuitionRecord) {
-                boolean isAdded = tuitionFeeDaoImpl.add(tuition);
-                boolean isPaid = tuitionFeeDaoImpl.pay(tuition);
-                if (isAdded && isPaid) {
-                    SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
-                    EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
-                    isSuccessful = enrollmentDaoImpl.enroll(tuition.getStudent());
-                }
+                  isSuccessful = tuitionFeeDaoImpl.payPrimary(tuition);
             } else {
-                boolean isPaid = tuitionFeeDaoImpl.pay(tuition);
-                if (isPaid) {
-                    isSuccessful = true;
-//                }
-                }
+                isSuccessful = tuitionFeeDaoImpl.pay(tuition);
             }            
         }
         return isSuccessful;
     }
 
     private Payment getPayment() {
-        String orNoAttached = view.getJlblOrNo().getText().trim();
         Payment payment = new Payment();
         if (paymentInputAreValid()) {
-            payment.setParticulars(getParticulars());
-            payment.setAmountReceived(getAmountReceived());
-            payment.setAmountCharged(getAmountCharged());
-            payment.setOrNo(Integer.parseInt(orNoAttached.trim()));
+            int orNo = Integer.parseInt(view.getJlblOrNo().getText().trim());
+            payment.setParticulars(particulars());
+            payment.setAmountReceived(amountReceived());
+            payment.setAmountCharged(amountCharged());
+            payment.setOrNo(orNo);
+            payment.setCashier(user);
         }
         return payment;
     }
@@ -92,28 +84,27 @@ public class Dialog_MakePayment_ProceedPayment implements ActionListener {
         return isValid;
     }
     
-    private BigDecimal getAmountReceived(){
+    private BigDecimal amountReceived(){
         String amountReceived = view.getJtfTendered().getText().trim();
         return BigDecimal.valueOf(Double.parseDouble(amountReceived)).setScale(2, RoundingMode.HALF_UP);
     }
     
-    private BigDecimal getAmountCharged() {
+    private BigDecimal amountCharged() {
         String amountCharged = view.getJtfAmountCharged().getText().trim();
         return BigDecimal.valueOf(Double.parseDouble(amountCharged)).setScale(2, RoundingMode.HALF_UP);
     }
 
-    private List<Particular> getParticulars() {
+    private List<Particular> particulars() {
         List<Particular> particularList = new ArrayList<>();
         JTable t = view.getJtblPaymentBreakDown();
         for (int i = 0; i < t.getRowCount(); i++) {
             String balancebreakdownName = t.getValueAt(i, 0).toString().trim();
             Particular particular = new Particular();
             particular.setName(balancebreakdownName);
-            particular.setAmountPaid(getAmountCharged());
+            particular.setAmountPaid(amountCharged());
             particularList.add(particular);
         }
         return particularList;
-        
     }
 
     private boolean isValidAmount(String s) {

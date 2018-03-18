@@ -13,6 +13,24 @@ public class GradeLevel {
     private Integer level;
     private boolean isActive;
     private List<Credential> credentialRequirements;
+    private int ageFrom;
+    private int ageTo;
+
+    public int getAgeFrom() {
+        return ageFrom;
+    }
+
+    public void setAgeFrom(int ageFrom) {
+        this.ageFrom = ageFrom;
+    }
+
+    public int getAgeTo() {
+        return ageTo;
+    }
+
+    public void setAgeTo(int ageTo) {
+        this.ageTo = ageTo;
+    }
 
     public List<Credential> getCredentialRequirements() {
         return credentialRequirements;

@@ -23,15 +23,24 @@ public class TuitionFeesJCompModelLoader {
         tableModel.setRowCount(0);
         Tuition tuition = tuitionFeeDaoImpl.getBy(studentId, schoolYearId);
         for(BalanceBreakDownFee b : tuition.getBalanceBreakDownFees()){
-            Object[] rowData = {
+//            Object[] rowData = {
+//                b.getName(),
+//                b.getAmount(),
+//                b.getBalance(),
+//                b.getDeadline(),
+//                b.isFullyPaid() == true? "Yes" : "No",
+//                b.getCategory(),
+//                b.hasPenalty() == true? "Yes" : "No",
+//            };
+                Object[] rowData = {
                 b.getName(),
                 b.getAmount(),
                 b.getBalance(),
                 b.getDeadline(),
-                b.isFullyPaid() == true? "Yes" : "No",
+                b.isFullyPaid() == true ? "Yes" : "No",
                 b.getCategory(),
-                b.hasPenalty() == true? "Yes" : "No",
-            };
+                };
+            System.out.println(b.getName()+" : "+b.getCategory());
             tableModel.addRow(rowData);
         }
         return tableModel;

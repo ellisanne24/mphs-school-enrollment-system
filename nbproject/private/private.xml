@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/reports/Panel_Reports.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/component_model_loader/CurriculumJCompModelLoader.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/daoimpl/CurriculumDaoImpl.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/controller/curriculum/EditCurriculum.java</file>
+            <file>file:/C:/Users/Jordan/Documents/NetBeansProjects/mphs-school-enrollment-system/src/view/curriculum/Dialog_CurriculumCrud.java</file>
         </group>
     </open-files>
 </project-private>

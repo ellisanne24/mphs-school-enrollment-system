@@ -24,6 +24,17 @@ public class SchoolYear {
     private Date summerClassEnd;
     private boolean isActive;
     private List<Quarter> quarters;
+    private int totalSchoolDays;
+
+    public int getTotalSchoolDays() {
+        return totalSchoolDays;
+    }
+
+    public void setTotalSchoolDays(int totalSchoolDays) {
+        this.totalSchoolDays = totalSchoolDays;
+    }
+    
+    
 
     public Date getSummerClassStartDate() {
         return summerClassStartDate;

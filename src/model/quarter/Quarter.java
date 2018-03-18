@@ -17,12 +17,20 @@ public class Quarter {
     private int quarterNo;
     private Date startDate;
     private Date endDate;
+    private Date gradingOpenDate;
     private Date gradingDueDate;
     private boolean isActive;
-    
     private boolean isCurrentQuarter;
     private Date dateAdded;
 
+    public Date getGradingOpenDate() {
+        return gradingOpenDate;
+    }
+
+    public void setGradingOpenDate(Date gradingOpenDate) {
+        this.gradingOpenDate = gradingOpenDate;
+    }
+    
     public Date getGradingDueDate() {
         return gradingDueDate;
     }

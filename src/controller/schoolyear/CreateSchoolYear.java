@@ -6,16 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
 import model.quarter.Quarter;
 import model.schoolyear.SchoolYear;
-import org.jdatepicker.JDatePicker;
 import org.jdatepicker.impl.JDatePickerImpl;
 import utility.date.DateUtil;
+import view.schoolyear.DialogSchoolYearCrud;
+import view.schoolyear.Panel_SchoolYear;
 
 /**
  *
@@ -23,81 +20,14 @@ import utility.date.DateUtil;
  */
 public class CreateSchoolYear implements ActionListener{
     
-    private JDialog dialogSchoolYearCrud;
-    
-    private final JDatePickerImpl dpSchoolYearStartDate;
-    private final JDatePickerImpl dpSchoolYearEndDate;
-    
-    private final JDatePickerImpl dpRegularEnrollmentStartDate;
-    private final JDatePickerImpl dpRegularEnrollmentEndDate;
-    private final JDatePickerImpl dpSummerEnrollmentStartDate;
-    private final JDatePickerImpl dpSummerEnrollmentEndDate;
-    
-    private final JDatePickerImpl dpSummerClassStart;
-    private final JDatePickerImpl dpSummerClassEnd;
-    
-    private final JDatePickerImpl dp1stQtrStartDate;
-    private final JDatePickerImpl dp1stQtrEndDate;
-    private final JDatePickerImpl dp1stQtrGradingDueDate;
-    
-    private final JDatePickerImpl dp2ndQtrStartDate;
-    private final JDatePickerImpl dp2ndQtrEndDate;
-    private final JDatePickerImpl dp2ndQtrGradingDueDate;
-    
-    private final JDatePickerImpl dp3rdQtrStartDate;
-    private final JDatePickerImpl dp3rdQtrEndDate;
-    private final JDatePickerImpl dp3rdQtrGradingDueDate;
-    
-    private final JDatePickerImpl dp4thQtrStartDate;
-    private final JDatePickerImpl dp4thQtrEndDate;
-    private final JDatePickerImpl dp4thQtrGradingDueDate;
-    
-    private final JLabel jlblStatus;
-    private final JComboBox jcmbStatus;
-    private final JSpinner jsprYearFrom;
-    private final JSpinner jsprYearTo;
-    
-    private SchoolYearDaoImpl schoolYearDaoImpl;
-    private DateUtil dateUtil;
+    private final Panel_SchoolYear panelSchoolYear;
+    private final DialogSchoolYearCrud view;
+    private final SchoolYearDaoImpl schoolYearDaoImpl;
+    private final DateUtil dateUtil;
 
-    public CreateSchoolYear(JDialog dialogSchoolYearCrud, JDatePickerImpl dpSchoolYearStartDate, 
-            JDatePickerImpl dpSchoolYearEndDate, JDatePickerImpl dpRegularEnrollmentStartDate, 
-            JDatePickerImpl dpRegularEnrollmentEndDate, JDatePickerImpl dpSummerEnrollmentStartDate, 
-            JDatePickerImpl dpSummerEnrollmentEndDate, JDatePickerImpl dp1stQtrStartDate, 
-            JDatePickerImpl dp1stQtrEndDate, JDatePickerImpl dp1stQtrGradingDuedate, 
-            JDatePickerImpl dp2ndQtrStartDate, JDatePickerImpl dp2ndQtrEndDate, 
-            JDatePickerImpl dp2ndQtrGradingDueDate, JDatePickerImpl dp3rdQtrStartDate, 
-            JDatePickerImpl dp3rdQtrEndDate, JDatePickerImpl dp3rdQtrGradingDueDate, 
-            JDatePickerImpl dp4thQtrStartDate, JDatePickerImpl dp4thQtrEndDate, 
-            JDatePickerImpl dp4thQtrGradingDueDate, JLabel jlblStatus, JComboBox jcmbStatus, 
-            JSpinner jsprYearFrom, JSpinner jsprYearTo, JDatePickerImpl dpSummerClassStart, 
-            JDatePickerImpl dpSummerClassEnd) {
-        this.dialogSchoolYearCrud = dialogSchoolYearCrud;
-        this.dpSchoolYearStartDate = dpSchoolYearStartDate;
-        this.dpSchoolYearEndDate = dpSchoolYearEndDate;
-        this.dpRegularEnrollmentStartDate = dpRegularEnrollmentStartDate;
-        this.dpRegularEnrollmentEndDate = dpRegularEnrollmentEndDate;
-        this.dpSummerEnrollmentStartDate = dpSummerEnrollmentStartDate;
-        this.dpSummerEnrollmentEndDate = dpSummerEnrollmentEndDate;
-        this.dp1stQtrStartDate = dp1stQtrStartDate;
-        this.dp1stQtrEndDate = dp1stQtrEndDate;
-        this.dp1stQtrGradingDueDate = dp1stQtrGradingDuedate;
-        this.dp2ndQtrStartDate = dp2ndQtrStartDate;
-        this.dp2ndQtrEndDate = dp2ndQtrEndDate;
-        this.dp2ndQtrGradingDueDate = dp2ndQtrGradingDueDate;
-        this.dp3rdQtrStartDate = dp3rdQtrStartDate;
-        this.dp3rdQtrEndDate = dp3rdQtrEndDate;
-        this.dp3rdQtrGradingDueDate = dp3rdQtrGradingDueDate;
-        this.dp4thQtrStartDate = dp4thQtrStartDate;
-        this.dp4thQtrEndDate = dp4thQtrEndDate;
-        this.dp4thQtrGradingDueDate = dp4thQtrGradingDueDate;
-        this.jlblStatus = jlblStatus;
-        this.jcmbStatus = jcmbStatus;
-        this.jsprYearFrom = jsprYearFrom;
-        this.jsprYearTo = jsprYearTo;
-        this.dpSummerClassStart = dpSummerClassStart;
-        this.dpSummerClassEnd = dpSummerClassEnd;
-        
+    public CreateSchoolYear(DialogSchoolYearCrud view,Panel_SchoolYear panelSchoolYear) {
+        this.view = view;
+        this.panelSchoolYear = panelSchoolYear;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
         dateUtil = new DateUtil();
     }
@@ -109,6 +39,8 @@ public class CreateSchoolYear implements ActionListener{
         if(choice == JOptionPane.YES_OPTION){
             if(add()){
                 JOptionPane.showMessageDialog(null,"Successfully saved School Year!");
+                view.dispose();
+                panelSchoolYear.loadSchoolYearMasterList();
             }else{
                 JOptionPane.showMessageDialog(null,"Failed to save School Year");
             }
@@ -126,17 +58,17 @@ public class CreateSchoolYear implements ActionListener{
     private SchoolYear getSchoolYear() {
         SchoolYear schoolYear = new SchoolYear();
         try {
-            schoolYear.setYearFrom(Integer.parseInt(jsprYearFrom.getValue().toString().trim()));
-            schoolYear.setYearTo(Integer.parseInt(jsprYearTo.getValue().toString().trim()));
-            schoolYear.setSchoolYearStartDate(dateUtil.toDate(dpSchoolYearStartDate.getJFormattedTextField().getText().trim()));
-            schoolYear.setSchoolYearEndDate(dateUtil.toDate(dpSchoolYearEndDate.getJFormattedTextField().getText().trim()));
-            schoolYear.setRegularEnrollmentStartDate(dateUtil.toDate(dpRegularEnrollmentStartDate.getJFormattedTextField().getText().trim()));
-            schoolYear.setRegularEnrollmentEndDate(dateUtil.toDate(dpRegularEnrollmentEndDate.getJFormattedTextField().getText().trim()));
-            schoolYear.setSummerEnrollmentStartDate(dateUtil.toDate(dpSummerEnrollmentStartDate.getJFormattedTextField().getText().trim()));
-            schoolYear.setSummerEnrollmentEndDate(dateUtil.toDate(dpSummerEnrollmentEndDate.getJFormattedTextField().getText().trim()));
+            schoolYear.setYearFrom(Integer.parseInt(view.getJsprYearFrom().getValue().toString().trim()));
+            schoolYear.setYearTo(Integer.parseInt(view.getJsprYearTo().getValue().toString().trim()));
+            schoolYear.setSchoolYearStartDate(dateUtil.toDate(stringDateOf(view.getDpSchoolYearStartDate())));
+            schoolYear.setSchoolYearEndDate(dateUtil.toDate(stringDateOf(view.getDpSchoolYearEndDate())));
+            schoolYear.setRegularEnrollmentStartDate(dateUtil.toDate(stringDateOf(view.getDpRegularEnrollmentStartDate())));
+            schoolYear.setRegularEnrollmentEndDate(dateUtil.toDate(stringDateOf(view.getDpRegularEnrollmentEndDate())));
+            schoolYear.setSummerEnrollmentStartDate(dateUtil.toDate(stringDateOf(view.getDpSummerEnrollmentStartDate())));
+            schoolYear.setSummerEnrollmentEndDate(dateUtil.toDate(stringDateOf(view.getDpSummerEnrollmentEndDate())));
             schoolYear.setQuarters(getQuarters());
-            schoolYear.setSummerClassStartDate(dateUtil.toDate(dpSummerClassStart.getJFormattedTextField().getText().trim()));
-            schoolYear.setSummerClassEndDate(dateUtil.toDate(dpSummerClassEnd.getJFormattedTextField().getText().trim()));
+            schoolYear.setSummerClassStartDate(dateUtil.toDate(stringDateOf(view.getDpSummerClassStart())));
+            schoolYear.setSummerClassEndDate(dateUtil.toDate(stringDateOf(view.getDpSummerClassEnd())));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,40 +76,49 @@ public class CreateSchoolYear implements ActionListener{
     }
     
     private List<Quarter> getQuarters() {
-        List<Quarter> quarterList = new ArrayList<>();
+        List<Quarter> quarters = new ArrayList<>();
         try {
             Quarter firstQuarter = new Quarter();
             firstQuarter.setQuarterNo(1);
-            firstQuarter.setStartDate(dateUtil.toDate(dp1stQtrStartDate.getJFormattedTextField().getText().trim()));
-            firstQuarter.setEndDate(dateUtil.toDate(dp1stQtrEndDate.getJFormattedTextField().getText().trim()));
-            firstQuarter.setGradingDueDate(dateUtil.toDate(dp1stQtrGradingDueDate.getJFormattedTextField().getText().trim()));
-            quarterList.add(firstQuarter);
+            firstQuarter.setStartDate(dateUtil.toDate(stringDateOf(view.getDp1stQtrStartDate())));
+            firstQuarter.setEndDate(dateUtil.toDate(stringDateOf(view.getDp1stQtrEndDate())));
+            firstQuarter.setGradingOpenDate(dateUtil.toDate(stringDateOf(view.getDp1stQtrGradingOpenDate())));
+            firstQuarter.setGradingDueDate(dateUtil.toDate(stringDateOf(view.getDp1stQtrGradingDuedate())));
+            quarters.add(firstQuarter);
             
             Quarter secondQuarter = new Quarter();
             secondQuarter.setQuarterNo(2);
-            secondQuarter.setStartDate(dateUtil.toDate(dp2ndQtrStartDate.getJFormattedTextField().getText().trim()));
-            secondQuarter.setEndDate(dateUtil.toDate(dp2ndQtrEndDate.getJFormattedTextField().getText().trim()));
-            secondQuarter.setGradingDueDate(dateUtil.toDate(dp2ndQtrGradingDueDate.getJFormattedTextField().getText().trim()));
-            quarterList.add(secondQuarter);
+            secondQuarter.setStartDate(dateUtil.toDate(stringDateOf(view.getDp2ndQtrStartDate())));
+            secondQuarter.setEndDate(dateUtil.toDate(stringDateOf(view.getDp2ndQtrEndDate())));
+            secondQuarter.setGradingOpenDate(dateUtil.toDate(stringDateOf(view.getDp2ndQtrGradingOpenDate())));
+            secondQuarter.setGradingDueDate(dateUtil.toDate(stringDateOf(view.getDp2ndQtrGradingDueDate())));
+            quarters.add(secondQuarter);
             
             Quarter thirdQuarter = new Quarter();
             thirdQuarter.setQuarterNo(3);
-            thirdQuarter.setStartDate(dateUtil.toDate(dp3rdQtrStartDate.getJFormattedTextField().getText().trim()));
-            thirdQuarter.setEndDate(dateUtil.toDate(dp3rdQtrEndDate.getJFormattedTextField().getText().trim()));
-            thirdQuarter.setGradingDueDate(dateUtil.toDate(dp3rdQtrGradingDueDate.getJFormattedTextField().getText().trim()));
-            quarterList.add(thirdQuarter);
+            thirdQuarter.setStartDate(dateUtil.toDate(stringDateOf(view.getDp3rdQtrStartDate())));
+            thirdQuarter.setEndDate(dateUtil.toDate(stringDateOf(view.getDp3rdQtrEndDate())));
+            thirdQuarter.setGradingOpenDate(dateUtil.toDate(stringDateOf(view.getDp3rdQtrGradingOpenDate())));
+            thirdQuarter.setGradingDueDate(dateUtil.toDate(stringDateOf(view.getDp3rdQtrGradingDueDate())));
+            quarters.add(thirdQuarter);
             
             Quarter fourthQuarter = new Quarter();
             fourthQuarter.setQuarterNo(4);
-            fourthQuarter.setStartDate(dateUtil.toDate(dp4thQtrStartDate.getJFormattedTextField().getText().trim()));
-            fourthQuarter.setEndDate(dateUtil.toDate(dp4thQtrEndDate.getJFormattedTextField().getText().trim()));
-            fourthQuarter.setGradingDueDate(dateUtil.toDate(dp4thQtrGradingDueDate.getJFormattedTextField().getText().trim()));
-            quarterList.add(fourthQuarter);
+            fourthQuarter.setStartDate(dateUtil.toDate(stringDateOf(view.getDp4thQtrStartDate())));
+            fourthQuarter.setEndDate(dateUtil.toDate(stringDateOf(view.getDp4thQtrEndDate())));
+            fourthQuarter.setGradingOpenDate(dateUtil.toDate(stringDateOf(view.getDp4thQtrGradingOpenDate())));
+            fourthQuarter.setGradingDueDate(dateUtil.toDate(stringDateOf(view.getDp4thQtrGradingDueDate())));
+            quarters.add(fourthQuarter);
             
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return quarterList;
+        return quarters;
+    }
+    
+    private String stringDateOf(JDatePickerImpl datePicker){
+        String strDate = datePicker.getJFormattedTextField().getText().trim();
+        return strDate;
     }
     
 }

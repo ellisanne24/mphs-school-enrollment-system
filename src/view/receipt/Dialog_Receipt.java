@@ -1,5 +1,6 @@
 package view.receipt;
 
+import controller.global.Controller_Print_JButton;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
 import utility.component.ImageUtil;
@@ -8,9 +9,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.print.PageFormat;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import model.officialreceipt.OfficialReceipt;
@@ -33,7 +36,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     public Dialog_Receipt(Student student, OfficialReceipt officialReceipt) {
         super(null, ModalityType.APPLICATION_MODAL);
         initComponents();
-        schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.jpg", 200, 200);
+        schoolLogo = new ImageUtil().getResourceAsImage("assets/logo.png", 200, 200);
         
         this.student = student;
         this.officialReceipt = officialReceipt;
@@ -72,7 +75,8 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
         jlblSchoolYearText.setText("" + officialReceipt.getSchoolYear().getYearFrom() + " - " + officialReceipt.getSchoolYear().getYearTo());
         jlblStudentNoText.setText(""+student.getStudentNo());
         jlblStudentNameText.setText(lastName+", "+firstName+" "+middleName);
-        jlblDateOfPayment.setText(""+officialReceipt.getPayment().getDateOfPayment());
+        String formattedDateOfPayment = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(officialReceipt.getPayment().getDateOfPayment());
+        jlblDateOfPayment.setText(formattedDateOfPayment);
         
         jlblCashReceivedText.setText(""+officialReceipt.getPayment().getAmountReceived());
         jlblAmountChargedText.setText(""+officialReceipt.getPayment().getAmountCharged());
@@ -86,6 +90,8 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
             tableModel.addRow(rowData);
         }
         jtblParticulars.setModel(tableModel);
+        
+        jlblCashierName.setText(officialReceipt.getPayment().getCashier().getLastName()+", "+officialReceipt.getPayment().getCashier().getFirstName());
     }
 
     @Override
@@ -100,6 +106,8 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
                 jlblTotalPaymentDueText.setText("" + totalPaymentDue);
             }
         });
+        
+        jmiPrintReceipt.addActionListener(new Controller_Print_JButton(jpnlReceiptContainer,PageFormat.LANDSCAPE));
     }
 
     @Override
@@ -161,6 +169,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jlblGradeLevelText = new javax.swing.JLabel();
     jPanel5 = new javax.swing.JPanel();
     jlblReceivedByCashierName = new javax.swing.JLabel();
+    jlblCashierName = new javax.swing.JLabel();
     jPanel3 = new javax.swing.JPanel();
     jLabel2 = new javax.swing.JLabel();
     jMenuBar1 = new javax.swing.JMenuBar();
@@ -170,13 +179,15 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Official Receipt");
-    setMaximumSize(new java.awt.Dimension(700, 500));
-    setMinimumSize(new java.awt.Dimension(700, 500));
-    setPreferredSize(new java.awt.Dimension(700, 500));
+    setMaximumSize(new java.awt.Dimension(420, 650));
+    setMinimumSize(new java.awt.Dimension(420, 500));
+    setPreferredSize(new java.awt.Dimension(420, 500));
     getContentPane().setLayout(new java.awt.GridBagLayout());
 
     jpnlReceiptContainer.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlReceiptContainer.setPreferredSize(new java.awt.Dimension(650, 750));
+    jpnlReceiptContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    jpnlReceiptContainer.setMinimumSize(new java.awt.Dimension(500, 550));
+    jpnlReceiptContainer.setPreferredSize(new java.awt.Dimension(500, 550));
     jpnlReceiptContainer.setLayout(new java.awt.GridBagLayout());
 
     jpnlHeader.setBackground(new java.awt.Color(255, 255, 255));
@@ -184,8 +195,8 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jpnlHeader.setLayout(new java.awt.GridBagLayout());
 
     jpnlLogo.setBackground(new java.awt.Color(255, 255, 255));
-    jpnlLogo.setMinimumSize(new java.awt.Dimension(100, 100));
-    jpnlLogo.setPreferredSize(new java.awt.Dimension(120, 120));
+    jpnlLogo.setMinimumSize(new java.awt.Dimension(70, 70));
+    jpnlLogo.setPreferredSize(new java.awt.Dimension(70, 70));
     jpnlLogo.setLayout(new java.awt.GridBagLayout());
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -194,10 +205,11 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jpnlHeader.add(jpnlLogo, gridBagConstraints);
 
     jPanel10.setBackground(new java.awt.Color(255, 255, 255));
-    jPanel10.setPreferredSize(new java.awt.Dimension(420, 18));
+    jPanel10.setMinimumSize(new java.awt.Dimension(250, 57));
+    jPanel10.setPreferredSize(new java.awt.Dimension(290, 18));
     jPanel10.setLayout(new java.awt.GridBagLayout());
 
-    jLabel5.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+    jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(0, 114, 188));
     jLabel5.setText("Mother of Perpetual Help School");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -206,7 +218,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jPanel10.add(jLabel5, gridBagConstraints);
 
-    jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jLabel7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel7.setForeground(new java.awt.Color(51, 51, 51));
     jLabel7.setText("Iris Street Dahlia, West Fairview Quezon City");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -217,7 +229,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 3);
     jPanel10.add(jLabel7, gridBagConstraints);
 
-    jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jLabel8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel8.setForeground(new java.awt.Color(51, 51, 51));
     jLabel8.setText("1118 Metro Manila, Philippines");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -233,6 +245,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
     jpnlHeader.add(jPanel10, gridBagConstraints);
 
@@ -240,7 +253,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jpnlRegistrationNo.setLayout(new java.awt.GridBagLayout());
 
     jlblOrNoAttached.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-    jlblOrNoAttached.setForeground(new java.awt.Color(51, 51, 51));
+    jlblOrNoAttached.setForeground(new java.awt.Color(102, 51, 0));
     jlblOrNoAttached.setText("No.");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -263,7 +276,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jPanel2.setBackground(new java.awt.Color(255, 255, 255));
     jPanel2.setLayout(new java.awt.GridBagLayout());
 
-    jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
     jLabel1.setForeground(new java.awt.Color(0, 0, 0));
     jLabel1.setText("OFFICIAL RECEIPT");
     jPanel2.add(jLabel1, new java.awt.GridBagConstraints());
@@ -278,13 +291,14 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jpnlContainer.setBackground(new java.awt.Color(255, 255, 255));
     jpnlContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
     jpnlContainer.setForeground(new java.awt.Color(0, 0, 0));
+    jpnlContainer.setPreferredSize(new java.awt.Dimension(350, 496));
     jpnlContainer.setLayout(new java.awt.GridBagLayout());
 
     jPanel4.setBackground(new java.awt.Color(255, 255, 255));
     jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jPanel4.setLayout(new java.awt.GridBagLayout());
 
-    jlblCashReceived.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblCashReceived.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblCashReceived.setForeground(new java.awt.Color(0, 0, 0));
     jlblCashReceived.setText("Cash Received");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -293,7 +307,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
     jPanel4.add(jlblCashReceived, gridBagConstraints);
 
-    jlblAmountCharged.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblAmountCharged.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblAmountCharged.setForeground(new java.awt.Color(0, 0, 0));
     jlblAmountCharged.setText("Amount Charged");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -304,7 +318,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
     jPanel4.add(jlblAmountCharged, gridBagConstraints);
 
-    jlblChange.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblChange.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblChange.setForeground(new java.awt.Color(0, 0, 0));
     jlblChange.setText("Change");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -315,7 +329,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
     jPanel4.add(jlblChange, gridBagConstraints);
 
-    jlblCashReceivedText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblCashReceivedText.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jlblCashReceivedText.setForeground(new java.awt.Color(0, 0, 0));
     jlblCashReceivedText.setText("CashReceivedText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -324,7 +338,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 10);
     jPanel4.add(jlblCashReceivedText, gridBagConstraints);
 
-    jlblAmountChargedText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblAmountChargedText.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jlblAmountChargedText.setForeground(new java.awt.Color(0, 0, 0));
     jlblAmountChargedText.setText("AmountChargedText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -335,7 +349,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 10);
     jPanel4.add(jlblAmountChargedText, gridBagConstraints);
 
-    jlblChangeText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblChangeText.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jlblChangeText.setForeground(new java.awt.Color(0, 0, 0));
     jlblChangeText.setText("ChangeText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -360,11 +374,11 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
 
     jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
     jScrollPane1.setForeground(new java.awt.Color(0, 0, 0));
-    jScrollPane1.setPreferredSize(new java.awt.Dimension(453, 300));
+    jScrollPane1.setPreferredSize(new java.awt.Dimension(453, 400));
 
     jtblParticulars.setAutoCreateRowSorter(true);
     jtblParticulars.setBackground(new java.awt.Color(255, 255, 255));
-    jtblParticulars.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jtblParticulars.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jtblParticulars.setForeground(new java.awt.Color(0, 0, 0));
     jtblParticulars.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
@@ -394,11 +408,11 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 0.5;
     gridBagConstraints.weighty = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 10);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlPaymentInformation.add(jScrollPane1, gridBagConstraints);
 
     jLabel12.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel12.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jLabel12.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jLabel12.setForeground(new java.awt.Color(0, 0, 0));
     jLabel12.setText("Total Payment Due :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -408,7 +422,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jpnlPaymentInformation.add(jLabel12, gridBagConstraints);
 
     jlblTotalPaymentDueText.setBackground(new java.awt.Color(255, 255, 255));
-    jlblTotalPaymentDueText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jlblTotalPaymentDueText.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
     jlblTotalPaymentDueText.setForeground(new java.awt.Color(0, 0, 0));
     jlblTotalPaymentDueText.setText("TotalPaymentDueText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -431,7 +445,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jpnlStudentInformation.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     jpnlStudentInformation.setLayout(new java.awt.GridBagLayout());
 
-    jlblStudentNoText.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jlblStudentNoText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
     jlblStudentNoText.setForeground(new java.awt.Color(0, 0, 0));
     jlblStudentNoText.setText("Student No Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -441,7 +455,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInformation.add(jlblStudentNoText, gridBagConstraints);
 
-    jlblName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblName.setForeground(new java.awt.Color(0, 0, 0));
     jlblName.setText("Name :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -451,7 +465,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
     jpnlStudentInformation.add(jlblName, gridBagConstraints);
 
-    jlblStudentNameText.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jlblStudentNameText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
     jlblStudentNameText.setForeground(new java.awt.Color(0, 0, 0));
     jlblStudentNameText.setText("Name Text");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -461,7 +475,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInformation.add(jlblStudentNameText, gridBagConstraints);
 
-    jlblSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblSchoolYear.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblSchoolYear.setForeground(new java.awt.Color(0, 0, 0));
     jlblSchoolYear.setText("School Year");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -471,7 +485,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInformation.add(jlblSchoolYear, gridBagConstraints);
 
-    jlblSchoolYearText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblSchoolYearText.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblSchoolYearText.setForeground(new java.awt.Color(0, 0, 0));
     jlblSchoolYearText.setText("SchoolYearText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -482,7 +496,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInformation.add(jlblSchoolYearText, gridBagConstraints);
 
-    jlblDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblDate.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblDate.setForeground(new java.awt.Color(0, 0, 0));
     jlblDate.setText("Date");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -492,7 +506,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
     jpnlStudentInformation.add(jlblDate, gridBagConstraints);
 
-    jlblDateOfPayment.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblDateOfPayment.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblDateOfPayment.setForeground(new java.awt.Color(0, 0, 0));
     jlblDateOfPayment.setText("DateOfPaymentText");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -502,7 +516,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInformation.add(jlblDateOfPayment, gridBagConstraints);
 
-    jlblStudentNo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblStudentNo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblStudentNo.setForeground(new java.awt.Color(0, 0, 0));
     jlblStudentNo.setText("Student No :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -512,7 +526,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
     jpnlStudentInformation.add(jlblStudentNo, gridBagConstraints);
 
-    jlblGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblGradeLevel.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblGradeLevel.setForeground(new java.awt.Color(0, 0, 0));
     jlblGradeLevel.setText("Grade Level :");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -522,7 +536,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     jpnlStudentInformation.add(jlblGradeLevel, gridBagConstraints);
 
-    jlblGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblGradeLevelText.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblGradeLevelText.setForeground(new java.awt.Color(0, 0, 0));
     jlblGradeLevelText.setText("jLabel3");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -544,14 +558,21 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     jPanel5.setForeground(new java.awt.Color(0, 0, 0));
     jPanel5.setLayout(new java.awt.GridBagLayout());
 
-    jlblReceivedByCashierName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    jlblReceivedByCashierName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
     jlblReceivedByCashierName.setForeground(new java.awt.Color(0, 0, 0));
-    jlblReceivedByCashierName.setText("Received By: ");
+    jlblReceivedByCashierName.setText("Processed By :");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel5.add(jlblReceivedByCashierName, gridBagConstraints);
+
+    jlblCashierName.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+    jlblCashierName.setForeground(new java.awt.Color(0, 0, 0));
+    jlblCashierName.setText("CashierName");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 0.5;
-    gridBagConstraints.insets = new java.awt.Insets(3, 10, 3, 3);
-    jPanel5.add(jlblReceivedByCashierName, gridBagConstraints);
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    jPanel5.add(jlblCashierName, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -571,7 +592,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
 
     jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-    jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    jLabel2.setFont(new java.awt.Font("Tahoma", 0, 9)); // NOI18N
     jLabel2.setForeground(new java.awt.Color(0, 114, 188));
     jLabel2.setText("Kindly count your change, check your name and amount paid before leaving the counter");
     jPanel3.add(jLabel2);
@@ -626,6 +647,7 @@ public class Dialog_Receipt extends javax.swing.JDialog implements Initializer{
     private javax.swing.JLabel jlblAmountChargedText;
     private javax.swing.JLabel jlblCashReceived;
     private javax.swing.JLabel jlblCashReceivedText;
+    private javax.swing.JLabel jlblCashierName;
     private javax.swing.JLabel jlblChange;
     private javax.swing.JLabel jlblChangeText;
     private javax.swing.JLabel jlblDate;

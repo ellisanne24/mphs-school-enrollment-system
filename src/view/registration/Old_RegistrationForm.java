@@ -1422,7 +1422,7 @@ public class Old_RegistrationForm extends javax.swing.JPanel {
             gradeLevel.setLevelNo(aGradeLevel);
             int aGradeLevelId = gradeLevelDaoImpl.getId(gradeLevel);
 
-            jlstCredentialRequirements.setModel(credentialGUIUtil.getAllCredentialNamesByGradeLevelId(aGradeLevelId));
+//            jlstCredentialRequirements.setModel(credentialGUIUtil.getAllCredentialNamesByGradeLevelId(aGradeLevelId));
         }
     }//GEN-LAST:event_jcmbGradeLevelItemStateChanged
 

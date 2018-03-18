@@ -13,9 +13,8 @@ import java.util.List;
 import model.officialreceipt.OfficialReceipt;
 import model.particulars.Particular;
 import model.payment.Payment;
-import model.registration.Registration;
 import model.schoolyear.SchoolYear;
-import model.student.Student;
+import model.user.User;
 
 /**
  *
@@ -97,6 +96,16 @@ public class OfficialReceiptDaoImpl implements IOfficialReceipt{
             csb.setInt(1, orNo);
             try(ResultSet rsb = csb.executeQuery();){
                 while(rsb.next()){
+                    User cashier = new User();
+                    cashier.setUserID(rsb.getInt("user_id"));
+                    cashier.setUsername(rsb.getString("username"));
+                    cashier.setPassword(rsb.getString("password"));
+                    cashier.setIsActive(rsb.getBoolean("isActive"));
+                    cashier.setIsLocked(rsb.getBoolean("isLocked"));
+                    cashier.setLastName(rsb.getString("lastname"));
+                    cashier.setFirstName(rsb.getString("firstname"));
+                    cashier.setMiddleName(rsb.getString("middlename"));
+                    
                     schoolYear.setSchoolYearId(rsb.getInt("schoolyear_id"));
                     schoolYear.setYearFrom(rsb.getInt("yearFrom"));
                     schoolYear.setYearTo(rsb.getInt("yearTo"));
@@ -105,6 +114,7 @@ public class OfficialReceiptDaoImpl implements IOfficialReceipt{
                     payment.setChange(rsb.getBigDecimal("change_amount"));
                     payment.setDateOfPayment(rsb.getTimestamp("date_charged"));
                     payment.setOrNo(rsb.getInt("or_no_attached"));
+                    payment.setCashier(cashier);
                 }
             }
             payment.setParticulars(particularList);
@@ -152,5 +162,40 @@ public class OfficialReceiptDaoImpl implements IOfficialReceipt{
         return officialReceiptList;
     }
     
+    
+    @Override
+    public List<OfficialReceipt> getAllOfficialReceiptsByStudentId(int studentId) {
+        List<OfficialReceipt> officialReceiptList = new ArrayList<>();
+        String SQL = "{CALL getAllOfficialReceiptsByStudentId(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1,studentId);
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                    OfficialReceipt OR = new OfficialReceipt();
+                    Payment payment = new Payment();
+                    SchoolYear schoolYear = new SchoolYear();
+                    schoolYear.setSchoolYearId(rs.getInt("schoolyear_id"));
+                    schoolYear.setYearFrom(rs.getInt("yearfrom"));
+                    schoolYear.setYearTo(rs.getInt("yearTo"));
+                    payment.setAmountReceived(rs.getBigDecimal("amount_received"));
+                    payment.setAmountCharged(rs.getBigDecimal("amount_charged"));
+                    payment.setChange(rs.getBigDecimal("change_amount"));
+                    payment.setDateOfPayment(rs.getDate("date_charged"));
+                    payment.setOrNo(rs.getInt("or_no_attached"));
+                    System.out.println(rs.getInt("or_no_id"));
+                    System.out.println(schoolYear.getYearFrom()+"-"+schoolYear.getYearTo());
+                    OR.setId(rs.getInt("or_no_id"));
+                    OR.setSchoolYear(schoolYear);
+                    OR.setPayment(payment);
+                    
+                    officialReceiptList.add(OR);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return officialReceiptList;
+    }
     
 }

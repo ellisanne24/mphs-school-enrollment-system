@@ -32,7 +32,7 @@ public class SectionJCompModelLoader {
                 s.getSectionId(), s.getSectionName(), s.getGradeLevel().getLevelNo(),
                 s.getAdviser().getLastName() + ", " + s.getAdviser().getFirstName() + " " + s.getAdviser().getMiddleName(),
                 s.getSectionSession(), s.getSchoolYear().getYearFrom(),
-                s.getIsActive() == true ? "Active" : "Inactive"
+                s.getIsActive() == true ? "Active" : "Inactive",s.getSectionType()
             };
             tableModel.addRow(rowData);
         }
@@ -43,14 +43,14 @@ public class SectionJCompModelLoader {
         DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
         tableModel.setRowCount(0);
         String wildCardChar = jtfSearchBox.getText().trim();
-        Object[] sectionList = sectionDaoImpl.getSectionsByWildCard(wildCardChar).toArray();
+        Object[] sectionList = sectionDaoImpl.getSectionsBy(wildCardChar).toArray();
         for (Object o : sectionList) {
             Section s = (Section) o;
             Object[] rowData = {
                 s.getSectionId(), s.getSectionName(), s.getGradeLevel().getLevelNo(),
                 s.getAdviser().getLastName() + ", " + s.getAdviser().getFirstName() + " " + s.getAdviser().getMiddleName(),
                 s.getSectionSession(), s.getSchoolYear().getYearFrom(),
-                s.getIsActive() == true ? "Yes" : "No"
+                s.getIsActive() == true ? "Yes" : "No",s.getSectionType()
             };
             tableModel.addRow(rowData);
         }
@@ -59,8 +59,8 @@ public class SectionJCompModelLoader {
 
     public DefaultComboBoxModel getSectionsByGradeLevelNo(JComboBox jcmbGradeLevel){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
-        List<Section> sectionList = sectionDaoImpl.getSectionsByGradeLevelNo(gradeLevelNo);
+        GradeLevel gradeLevel = (GradeLevel)jcmbGradeLevel.getSelectedItem();
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(gradeLevel.getLevelNo());
         for (Section s : sectionList) {
             comboModel.addElement(s);
         }
@@ -72,13 +72,13 @@ public class SectionJCompModelLoader {
         DefaultTableModel tableModel = (DefaultTableModel)table.getModel();
         tableModel.setRowCount(0);
         int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
-        List<Section> sectionList = sectionDaoImpl.getSectionsByGradeLevelNo(gradeLevelNo);
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(gradeLevelNo);
         for (Section s : sectionList) {
             Object[] rowData = {
                 s.getSectionId(), s.getSectionName(), s.getGradeLevel().getLevelNo(),
                 s.getAdviser().getLastName() + ", " + s.getAdviser().getFirstName() + " " + s.getAdviser().getMiddleName(),
                 s.getSectionSession(), s.getSchoolYear().getYearFrom(),
-                s.getIsActive() == true ? "Yes" : "No"
+                s.getIsActive() == true ? "Yes" : "No",s.getSectionType()
             };
             tableModel.addRow(rowData);
         }
@@ -102,7 +102,7 @@ public class SectionJCompModelLoader {
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
         int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
         int schoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
-        Object[] sectionList = sectionDaoImpl.getSectionsByGradeLevelNoAndSchoolYearId(gradeLevelNo, schoolYearId).toArray();
+        Object[] sectionList = sectionDaoImpl.getSectionsBy(gradeLevelNo, schoolYearId).toArray();
         for (Object o : sectionList) {
             Section s = (Section) o;
             Object[] rowData = {
@@ -121,7 +121,7 @@ public class SectionJCompModelLoader {
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
         int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
         int schoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
-        List<Section> sectionList = sectionDaoImpl.getSectionsByGradeLevelNoAndSchoolYearId(gradeLevelNo, schoolYearId);
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(gradeLevelNo, schoolYearId);
         for (Section s : sectionList) {
             comboModel.addElement(s.getSectionId());
         }
@@ -133,7 +133,7 @@ public class SectionJCompModelLoader {
         SchoolYearDaoImpl schoolYearDaoImpl = new SchoolYearDaoImpl();
         int gradeLevelNo = Integer.parseInt(jcmbGradeLevel.getSelectedItem().toString().trim());
         int schoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
-        List<Section> sectionList = sectionDaoImpl.getSectionsByGradeLevelNoAndSchoolYearId(gradeLevelNo, schoolYearId);
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(gradeLevelNo, schoolYearId);
         for (Section s : sectionList) {
             comboModel.addElement(s);
         }
@@ -142,7 +142,7 @@ public class SectionJCompModelLoader {
 
     public DefaultComboBoxModel getAllSectionIDByStatusAndSchoolYearId(boolean status, int schoolYearId) {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        List<Section> sectionList = sectionDaoImpl.getAllSectionsByStatusAndSchoolYearId(status, schoolYearId);
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(status, schoolYearId);
         for (Section s : sectionList) {
             comboModel.addElement(s.getSectionId());
         }
@@ -151,7 +151,7 @@ public class SectionJCompModelLoader {
     
     public DefaultComboBoxModel getAllSectionByStatusAndSchoolYearId(boolean status, int schoolYearId) {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        List<Section> sectionList = sectionDaoImpl.getAllSectionsByStatusAndSchoolYearId(status, schoolYearId);
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(status, schoolYearId);
         for (Section s : sectionList) {
             comboModel.addElement(s);
         }
@@ -167,7 +167,7 @@ public class SectionJCompModelLoader {
         schoolYear.setSchoolYearId(schoolYearId);
         section.setSectionId(section.getSectionId());
         section.setSchoolYear(schoolYear);
-        List<Student> studentList = sectionDaoImpl.getSectionStudentsBySectionIdAndSchoolYearId(section);
+        List<Student> studentList = sectionDaoImpl.getSectionStudentsOf(section);
         for (Student s : studentList) {
             Object[] rowData = {
                 s.getStudentId(), s.getStudentNo(), s.getRegistration().getLastName(),
@@ -221,7 +221,7 @@ public class SectionJCompModelLoader {
     
     public DefaultComboBoxModel getNonAdvisorySectionsOfFaculty(Faculty faculty, SchoolYear schoolYear){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        List<Section> sectionList = sectionDaoImpl.getNonAdvisorySectionsOfFaculty(faculty,schoolYear);
+        List<Section> sectionList = sectionDaoImpl.getNonAdvisorySectionsOf(faculty,schoolYear);
         for (Section section : sectionList) {
             comboModel.addElement(section);
         }
@@ -231,8 +231,18 @@ public class SectionJCompModelLoader {
     
     public DefaultComboBoxModel getAdvisorySectionsOfFaculty(Faculty faculty, SchoolYear schoolYear){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-        List<Section> sectionList = sectionDaoImpl.getAdvisorySectionsOfFaculty(faculty,schoolYear);
+        List<Section> sectionList = sectionDaoImpl.getAdvisorySectionsOf(faculty,schoolYear);
         for (Section section : sectionList) {
+            comboModel.addElement(section);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
+    
+    public DefaultComboBoxModel getSectionsBy(SchoolYear schoolYear, GradeLevel gradeLevel, String sectionType){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Section> sectionList = sectionDaoImpl.getSectionsBy(gradeLevel, sectionType, schoolYear);
+        for(Section section : sectionList){
             comboModel.addElement(section);
         }
         comboModel.setSelectedItem(null);

@@ -4,6 +4,7 @@ package dao;
 import java.util.List;
 import model.faculty.Faculty;
 import model.schoolyear.SchoolYear;
+import model.section.Section;
 import model.subjectcategory.SubjectCategory;
 import model.user.User;
 
@@ -24,7 +25,8 @@ public interface IFaculty {
     List<Faculty> getAllFaculty();
     List<Faculty> getAllFacultyByStatus(boolean isAtive);
     List<Faculty> getAllFacultyHandlingSubjectBySubjectCode(String subjectCode, int schoolyearId);
-    int getFacultyIdByName(String lastName, String firstName, String middleName);
     Faculty getFacultyById(int facultyId);
     Faculty getFacultyByUser(User user);
+    boolean isFacultyAvailableAdviserFor(Section section, Faculty faculty, SchoolYear schoolYear);
+    boolean isFacultyAvailableAdviserFor(String sectionSession, Faculty faculty, SchoolYear schoolYear);
 }

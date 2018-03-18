@@ -1,4 +1,3 @@
-
 package controller.settings;
 
 import java.awt.event.MouseEvent;
@@ -6,7 +5,12 @@ import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import model.schoolyear.SchoolYear;
+import model.user.User;
+import view.container.SettingsPanel;
+import view.credential.Panel_Credential;
 import view.curriculum.Panel_Curriculum;
+import view.discount.Panel_Discount;
 import view.faculty.Panel_Faculty;
 import view.fees.Panel_FeeRecord;
 import view.paymentsetting.PaymentScheduleSettings;
@@ -23,94 +27,66 @@ import view.subjectcategory.Panel_SubjectCategory;
  */
 public class AddSettingsPanelToTabbedPaneOnMouseClick implements MouseListener {
 
-    private final JTabbedPane jtpManagementTabbedPane;
-    private final JPanel jpnlSubjectMgmt;
-    private final JPanel jpnlSubjectCatMgmt;
-    private final JPanel jpnlCurriculumMgmt;
-    private final JPanel jpnlFacultyMgmt;
-    private final JPanel jpnlSectionMgmt;
-    private final JPanel jpnlRoomMgmt;
-    private final JPanel jpnlScheduleMgmt;
-    private final JPanel jpnlFeesMgmt;
-    private final JPanel jpnlCredentialsMgmt;
-    private final JPanel jpnlPaymentSchedulesMgmt;
-    private final JPanel jpnlDiscountsMgmt;
-    private final JPanel jpnlLanMgmt;
-    private final JPanel jpnlSchoolYearManagement;
-    
-    public AddSettingsPanelToTabbedPaneOnMouseClick(
-            JTabbedPane jtpManagementTabbedPane, JPanel jpnlSubjectMgmt, JPanel jpnlSubjectCatMgmt,
-            JPanel jpnlCurriculumMgmt, JPanel jpnlFacultyMgmt, JPanel jpnlSectionMgmt, JPanel jpnlRoomMgmt,
-            JPanel jpnlScheduleMgmt, JPanel jpnlFeesMgmt, JPanel jpnlCredentialsMgmt, JPanel jpnlPaymentSchedulesMgmt,
-            JPanel jpnlDiscountsMgmt, JPanel jpnlLanMgmt, JPanel jpnlSchoolYearManagement
-    ) {
-        this.jtpManagementTabbedPane = jtpManagementTabbedPane;
-        this.jpnlSubjectMgmt = jpnlSubjectMgmt;
-        this.jpnlSubjectCatMgmt = jpnlSubjectCatMgmt;
-        this.jpnlCurriculumMgmt = jpnlCurriculumMgmt;
-        this.jpnlFacultyMgmt = jpnlFacultyMgmt;
-        this.jpnlSectionMgmt = jpnlSectionMgmt;
-        this.jpnlRoomMgmt = jpnlRoomMgmt;
-        this.jpnlScheduleMgmt = jpnlScheduleMgmt;
-        this.jpnlFeesMgmt = jpnlFeesMgmt;
-        this.jpnlCredentialsMgmt = jpnlCredentialsMgmt;
-        this.jpnlPaymentSchedulesMgmt = jpnlPaymentSchedulesMgmt;
-        this.jpnlDiscountsMgmt = jpnlDiscountsMgmt;
-        this.jpnlLanMgmt = jpnlLanMgmt;
-        this.jpnlSchoolYearManagement = jpnlSchoolYearManagement;
+    private final SettingsPanel view;
+    private final SchoolYear currentSchoolYear;
+    private final User user;
+
+    public AddSettingsPanelToTabbedPaneOnMouseClick(SettingsPanel view, SchoolYear currentSchoolYear, User user) {
+        this.view = view;
+        this.currentSchoolYear = currentSchoolYear;
+        this.user = user;
     }
 
-    private void addPanelToTabbedPane(JPanel jpnlContainerPanel, JPanel jpnlPanelToAdd) {
-        jpnlContainerPanel.removeAll();
-        jpnlContainerPanel.add(jpnlPanelToAdd);
-        jtpManagementTabbedPane.repaint();
+    private void addPanelToTabbedPane(JPanel panelContainer, JPanel panelToAdd) {
+        panelContainer.removeAll();
+        panelContainer.add(panelToAdd);
+        view.getJtpManagementTabbedPane().repaint();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-            int selectedTab = jtpManagementTabbedPane.getSelectedIndex();
+            int selectedTab = view.getJtpManagementTabbedPane().getSelectedIndex();
             switch (selectedTab) {
                 case 0:
-                    addPanelToTabbedPane(jpnlSubjectMgmt, new Panel_Subjects());
+                    addPanelToTabbedPane(view.getJpnlSubjectMgmt(), new Panel_Subjects());
                     break;
                 case 1:
-                    addPanelToTabbedPane(jpnlSubjectCatMgmt, new Panel_SubjectCategory());
+                    addPanelToTabbedPane(view.getJpnlSubjectCatMgmt(), new Panel_SubjectCategory());
                     break;
                 case 2:
-                    addPanelToTabbedPane(jpnlCurriculumMgmt, new Panel_Curriculum());
+                    addPanelToTabbedPane(view.getJpnlCurriculumMgmt(), new Panel_Curriculum());
                     break;
                 case 3:
-                    addPanelToTabbedPane(jpnlFacultyMgmt, new Panel_Faculty());
+                    addPanelToTabbedPane(view.getJpnlFacultyMgmt(), new Panel_Faculty());
                     break;
                 case 4:
-                    addPanelToTabbedPane(jpnlSectionMgmt, new Panel_Sections());
+                    addPanelToTabbedPane(view.getJpnlSectionMgmt(), new Panel_Sections(currentSchoolYear,user));
                     break;
                 case 5:
-                    addPanelToTabbedPane(jpnlRoomMgmt, new Panel_Rooms());
+                    addPanelToTabbedPane(view.getJpnlRoomMgmt(), new Panel_Rooms());
                     break;
                 case 6:
-                    addPanelToTabbedPane(jpnlScheduleMgmt, new Panel_ClassSchedules());
+                    addPanelToTabbedPane(view.getJpnlScheduleMgmt(), new Panel_ClassSchedules());
                     break;
                 case 7:
-                    addPanelToTabbedPane(jpnlFeesMgmt, new Panel_FeeRecord());
+                    addPanelToTabbedPane(view.getJpnlFeesMgmt(), new Panel_FeeRecord());
                     break;
                 case 8:
-                    addPanelToTabbedPane(jpnlCredentialsMgmt, null); //replace null with the correct panel used as UI
+                    addPanelToTabbedPane(view.getJpnlCredentialsMgmt(), new Panel_Credential(currentSchoolYear,user)); //replace null with the correct panel used as UI
                     break;
                 case 9:
-                    addPanelToTabbedPane(jpnlPaymentSchedulesMgmt, new PaymentScheduleSettings());
+                    addPanelToTabbedPane(view.getJpnlPaymentScheduleMgmt(), new PaymentScheduleSettings());
                     break;
                 case 10:
-//                    addPanelToTabbedPane(jpnlDiscountsMgmt, null);
-                    JOptionPane.showMessageDialog(null,"Settings for Discounts is still under development.");
+                    addPanelToTabbedPane(view.getJpnlDiscountsMgmt(), new Panel_Discount(currentSchoolYear, user));
                     break;
                 case 11:
 //                    addPanelToTabbedPane(jpnlLanMgmt, null);
-                    JOptionPane.showMessageDialog(null,"Settings for LAN Management is still under development.");
+                    JOptionPane.showMessageDialog(null, "Settings for LAN Management is still under development.");
                     break;
                 case 12:
-                    addPanelToTabbedPane(jpnlSchoolYearManagement, new Panel_SchoolYear());
+                    addPanelToTabbedPane(view.getJpnlSchoolYearMgmt(), new Panel_SchoolYear());
                     break;
                 default:
                     break;

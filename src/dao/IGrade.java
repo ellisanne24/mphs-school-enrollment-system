@@ -17,7 +17,6 @@ import model.subject.Subject;
  * @author John Ferdinand Antonio
  */
 public interface IGrade {
-    int getCountofFailedGradesOf(Student student, SchoolYear schoolYear);
     boolean addStudentGrades(List<Grade> gradeList);
     Map<Faculty,Subject> getFacultySubjectPairOfSubjectsNotGradedYet(Student student, GradeLevel gradeLevel, SchoolYear schoolYear);
     List<Grade> getGradesOf(Student student, Subject subject, SchoolYear schoolYear);

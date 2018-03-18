@@ -1,15 +1,19 @@
 package view.payment;
 
+import controller.payment.Controller_Display_Dialog_AddDiscount;
+import controller.payment.Controller_PaymentPanel_Discount_JCheckBox;
 import controller.payment.Dialog_MakePayment_ViewReceiptOfSelectedOR;
 import controller.payment.Display_Dialog_MakePayment;
-import controller.payment.SearchStudent;
-import daoimpl.FeeDaoImpl;
-import daoimpl.GradeLevelDaoImpl;
-import daoimpl.PaymentTermDaoImpl;
-import daoimpl.StudentDaoImpl;
+import controller.payment.SearchStudentByKeyword;
+import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -19,28 +23,37 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
+import javax.swing.table.DefaultTableModel;
+import model.discount.Discount;
+import model.fee.Fee;
 import model.schoolyear.SchoolYear;
+import model.student.Student;
 import model.user.User;
+import renderer.payment.Renderer_Payment_PanelPayment_BalanceBreakDown_JTable;
 import utility.initializer.Initializer;
 
+public class Panel_Payment extends javax.swing.JPanel implements Initializer {
 
-public class Panel_Payment extends javax.swing.JPanel implements Initializer{
-    
-    private final User user;
+    private boolean hasStudentNo;
+    private Student student;
+    private List<Fee> feeList;
+    private List<Discount> discounts;
+    private DefaultTableModel tableModelAppliedDiscount;
     private final SchoolYear currentSchoolYear;
-    private StudentDaoImpl studentDaoImpl;
-    private GradeLevelDaoImpl gradeLevelDaoImpl;
-    private FeeDaoImpl feeDaoImpl;
-    private PaymentTermDaoImpl paymentTermDaoImpl;
+    private final User user;
 
     public Panel_Payment(User user, SchoolYear currentSchoolYear) {
         initComponents();
+        this.discounts = new ArrayList<>();
+        
         this.user = user;
         this.currentSchoolYear = currentSchoolYear;
-        
+
         initDaoImpl();
-        initControllers();
+        initRenderers();
         initViewComponents();
+        initControllers();
     }
 
     @Override
@@ -55,7 +68,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
     @Override
     public void initRenderers() {
-
+        jtblBalanceBreakDown.setDefaultRenderer(Object.class, new Renderer_Payment_PanelPayment_BalanceBreakDown_JTable(3));
     }
 
     @Override
@@ -69,27 +82,139 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         Date dateToday = Calendar.getInstance().getTime();
         jlblDateToday.setText(sdf.format(dateToday));
         jlblRecommendForSummerMessage.setText("");
+        jbtnSelectDiscount.setEnabled(false);
     }
 
     @Override
     public void initControllers() {
-        jtfSearchBoxMakePayment.addKeyListener(new SearchStudent(this, studentDaoImpl, gradeLevelDaoImpl, feeDaoImpl, paymentTermDaoImpl));
+        jtfSearchBoxMakePayment.addKeyListener(new SearchStudentByKeyword(this));
         jbtnMakePayment.addActionListener(new Display_Dialog_MakePayment(this));
-        jbtnReceiptsView.addActionListener(new Dialog_MakePayment_ViewReceiptOfSelectedOR(jtblReceiptsMasterList,jtfStudentNo));
+        jbtnReceiptsView.addActionListener(new Dialog_MakePayment_ViewReceiptOfSelectedOR(this));
+        jcbDiscount.addActionListener(new Controller_PaymentPanel_Discount_JCheckBox(this));
+        jbtnSelectDiscount.addActionListener(new Controller_Display_Dialog_AddDiscount(this));
+        jcmbModeOfPayment.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String modeOfPayment = e.getItem().toString().trim();
+                    DefaultComboBoxModel comboModel = (DefaultComboBoxModel) jcmbPaymentTerm.getModel();
+                    if (modeOfPayment.equalsIgnoreCase("Installment")) {
+                        comboModel.removeAllElements();
+                        comboModel.addElement("Quarterly");
+                        comboModel.addElement("Semestral");
+                        comboModel.addElement("Monthly");
+                    } else if (modeOfPayment.equalsIgnoreCase("Cash")) {
+                        comboModel.removeAllElements();
+                        comboModel.addElement("Cash");
+                    }
+                } else {
+
+                }
+            }
+        });
     }
 
     @Override
     public void initDaoImpl() {
-        studentDaoImpl = new StudentDaoImpl();
-        gradeLevelDaoImpl = new GradeLevelDaoImpl();
-        feeDaoImpl = new FeeDaoImpl();
-        paymentTermDaoImpl = new PaymentTermDaoImpl();
+        
+    }
+    
+    public void clearForm() {
+        List<Component[]> compArr = new ArrayList<>();
+        compArr.add(jpnlStudentDetails.getComponents());
+        compArr.add(jpnlDownpayment.getComponents());
+        compArr.add(jpnlMiscellaneous.getComponents());
+        compArr.add(jpnlBasic.getComponents());
+        compArr.add(jpnlOthers.getComponents());
+        compArr.add(jpnlBalanceBreakdown.getComponents());
+        compArr.add(jpnlCurrentSchoolYearTuition.getComponents());
+        compArr.add(jpnlReceiptsMasterList.getComponents());
+        for (int i = 0; i < compArr.size(); i++) {
+            for (Component c : compArr.get(i)) {
+                if (c instanceof JTextField) {
+                    ((JTextField) c).setText("");
+                } else if (c instanceof JScrollPane) {
+                    JViewport jViewPort = ((JScrollPane) c).getViewport();
+                    DefaultTableModel tableModel = new DefaultTableModel();
+                    if (((JTable) jViewPort.getView()) instanceof JTable) {
+                        tableModel = (DefaultTableModel) ((JTable) jViewPort.getView()).getModel();
+                        tableModel.setRowCount(0);
+                        ((JTable) jViewPort.getView()).setModel(tableModel);
+                    }
+                } else if (c instanceof JComboBox) {
+                    ((JComboBox) c).setSelectedIndex(-1);
+                }
+            }
+        }
+        jlblRecommendForSummerMessage.setText("");
+        jlblRemainingBalanceText.setText("");
+        jlblTotalPaidText.setText("");
+        jcbDiscount.setSelected(false);
+        tableModelAppliedDiscount = new DefaultTableModel();
     }
 
+    public JComboBox<String> getJcmbModeOfPayment() {
+        return jcmbModeOfPayment;
+    }
+    
+    public DefaultTableModel getTableModelAppliedDiscount() {
+        return tableModelAppliedDiscount;
+    }
+
+    public void setTableModelAppliedDiscount(DefaultTableModel tableModelAppliedDiscount) {
+        this.tableModelAppliedDiscount = tableModelAppliedDiscount;
+    }
+
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(List<Discount> discounts) {
+        this.discounts = discounts;
+    }
+
+    public JTable getJtblReceiptsMasterList() {
+        return jtblReceiptsMasterList;
+    }
+
+    public SchoolYear getCurrentSchoolYear() {
+        return currentSchoolYear;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Fee> getFeeList() {
+        return feeList;
+    }
+
+    public void setFeeList(List<Fee> feeList) {
+        this.feeList = feeList;
+    }
+
+    public boolean getHasStudentNo() {
+        return hasStudentNo;
+    }
+
+    public void setHasStudentNo(boolean hasStudentNo) {
+        this.hasStudentNo = hasStudentNo;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    
+    
     public JLabel getJlblRecommendForSummerMessage() {
         return jlblRecommendForSummerMessage;
     }
-    
+
     public JButton getJbtnAssignSummerFee() {
         return jbtnAssignSummerFee;
     }
@@ -110,12 +235,8 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return btn_Search15;
     }
 
-    public JButton getBtn_addDiscount() {
-        return btn_addDiscount;
-    }
-
-    public JButton getBtn_removeDiscount() {
-        return btn_removeDiscount;
+    public JButton getJbtnSelectDiscount() {
+        return jbtnSelectDiscount;
     }
 
     public JComboBox<String> getCombo_filter5() {
@@ -258,10 +379,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return jcmbAdjustmentsSearchBy;
     }
 
-    public JComboBox<String> getJcmbDiscount() {
-        return jcmbDiscount;
-    }
-
     public JComboBox<String> getJcmbPaymentHistorySearchBy() {
         return jcmbPaymentHistorySearchBy;
     }
@@ -272,10 +389,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
     public JComboBox<String> getJcmbReceiptsSearchBy() {
         return jcmbReceiptsSearchBy;
-    }
-
-    public JLabel getJlblDiscountPercentText() {
-        return jlblDiscountPercentText;
     }
 
     public JLabel getJlblRemainingBalanceText() {
@@ -490,10 +603,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return lbl_paymentterm;
     }
 
-    public JLabel getLbl_percent() {
-        return lbl_percent;
-    }
-
     public JLabel getLbl_remainingbalance() {
         return lbl_remainingbalance;
     }
@@ -586,10 +695,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return panel_searchcontainer;
     }
 
-    public JPanel getPanel_separator() {
-        return panel_separator;
-    }
-
     public JPanel getPanel_statuscontainer() {
         return panel_statuscontainer;
     }
@@ -642,12 +747,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         return tabpanel_paymenthistory;
     }
 
-    
-    
-    
-    
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -664,7 +763,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         panel_studentdetailscontainer = new javax.swing.JPanel();
         panel_studentdetails = new javax.swing.JPanel();
         jpnlPhotoContainer = new javax.swing.JPanel();
-        panel_separator = new javax.swing.JPanel();
         jpnlStudentDetails = new javax.swing.JPanel();
         jlblStudentNo = new javax.swing.JLabel();
         lbl_type = new javax.swing.JLabel();
@@ -683,6 +781,8 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jtfStatus = new javax.swing.JTextField();
         jtfMiddleName = new javax.swing.JTextField();
         jlblRecommendForSummerMessage = new javax.swing.JLabel();
+        javax.swing.JLabel lbl_datetoday2 = new javax.swing.JLabel();
+        jcmbModeOfPayment = new javax.swing.JComboBox<>();
         jScrollPane12 = new javax.swing.JScrollPane();
         jpnlCurrentSchoolYearTuition = new javax.swing.JPanel();
         lbl_basicfee = new javax.swing.JLabel();
@@ -704,12 +804,8 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         lbl_totalpaid = new javax.swing.JLabel();
         jlblTotalPaidText = new javax.swing.JLabel();
         jpnlDiscount = new javax.swing.JPanel();
-        jcmbDiscount = new javax.swing.JComboBox<>();
-        jlblDiscountPercentText = new javax.swing.JLabel();
-        lbl_percent = new javax.swing.JLabel();
-        btn_removeDiscount = new javax.swing.JButton();
         jcbDiscount = new javax.swing.JCheckBox();
-        btn_addDiscount = new javax.swing.JButton();
+        jbtnSelectDiscount = new javax.swing.JButton();
         panel_tabscontainer = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         tabpanel_makepayment = new javax.swing.JPanel();
@@ -878,26 +974,14 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         panel_studentdetails.setLayout(new java.awt.GridBagLayout());
 
         jpnlPhotoContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jpnlPhotoContainer.setMinimumSize(new java.awt.Dimension(110, 110));
-        jpnlPhotoContainer.setPreferredSize(new java.awt.Dimension(110, 110));
+        jpnlPhotoContainer.setMinimumSize(new java.awt.Dimension(150, 150));
+        jpnlPhotoContainer.setPreferredSize(new java.awt.Dimension(150, 150));
         jpnlPhotoContainer.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         panel_studentdetails.add(jpnlPhotoContainer, gridBagConstraints);
-
-        panel_separator.setBackground(new java.awt.Color(187, 187, 187));
-        panel_separator.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        panel_separator.setMinimumSize(new java.awt.Dimension(3, 120));
-        panel_separator.setPreferredSize(new java.awt.Dimension(3, 120));
-        panel_separator.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        panel_studentdetails.add(panel_separator, gridBagConstraints);
 
         jpnlStudentDetails.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jpnlStudentDetails.setMinimumSize(new java.awt.Dimension(750, 110));
@@ -969,80 +1053,103 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         lbl_paymentterm.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_paymentterm.setText("Payment Term :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(lbl_paymentterm, gridBagConstraints);
 
         jcmbPaymentTerm.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcmbPaymentTerm.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jcmbPaymentTerm, gridBagConstraints);
 
-        jtfStudentNo.setColumns(10);
-        jtfStudentNo.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfStudentNo.setColumns(8);
+        jtfStudentNo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtfStudentNo.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfStudentNo.setEnabled(false);
+        jtfStudentNo.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStudentNo, gridBagConstraints);
 
-        jtfLastName.setColumns(10);
-        jtfLastName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfLastName.setColumns(8);
+        jtfLastName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtfLastName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfLastName.setEnabled(false);
+        jtfLastName.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfLastName, gridBagConstraints);
 
-        jtfGradeLevel.setColumns(10);
-        jtfGradeLevel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfGradeLevel.setColumns(8);
+        jtfGradeLevel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtfGradeLevel.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfGradeLevel.setEnabled(false);
+        jtfGradeLevel.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfGradeLevel, gridBagConstraints);
 
-        jtfStudentType.setColumns(10);
-        jtfStudentType.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfStudentType.setColumns(8);
+        jtfStudentType.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtfStudentType.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfStudentType.setEnabled(false);
+        jtfStudentType.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStudentType, gridBagConstraints);
 
-        jtfFirstName.setColumns(10);
-        jtfFirstName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfFirstName.setColumns(8);
+        jtfFirstName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtfFirstName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfFirstName.setEnabled(false);
+        jtfFirstName.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfFirstName, gridBagConstraints);
 
-        jtfStatus.setColumns(10);
-        jtfStatus.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfStatus.setColumns(8);
+        jtfStatus.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtfStatus.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfStatus.setEnabled(false);
+        jtfStatus.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfStatus, gridBagConstraints);
 
-        jtfMiddleName.setColumns(10);
-        jtfMiddleName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfMiddleName.setColumns(8);
+        jtfMiddleName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jtfMiddleName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfMiddleName.setEnabled(false);
+        jtfMiddleName.setMinimumSize(new java.awt.Dimension(50, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jtfMiddleName, gridBagConstraints);
 
@@ -1052,11 +1159,31 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jlblRecommendForSummerMessage.setText("Recommended For Summer Text");
         jlblRecommendForSummerMessage.setOpaque(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jpnlStudentDetails.add(jlblRecommendForSummerMessage, gridBagConstraints);
+
+        lbl_datetoday2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbl_datetoday2.setText("Mode of Payment :");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudentDetails.add(lbl_datetoday2, gridBagConstraints);
+
+        jcmbModeOfPayment.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcmbModeOfPayment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Installment" }));
+        jcmbModeOfPayment.setSelectedIndex(-1);
+        jcmbModeOfPayment.setEnabled(false);
+        jcmbModeOfPayment.setMinimumSize(new java.awt.Dimension(150, 25));
+        jcmbModeOfPayment.setPreferredSize(new java.awt.Dimension(150, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        jpnlStudentDetails.add(jcmbModeOfPayment, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -1134,6 +1261,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
         jtfDownPayment.setColumns(5);
         jtfDownPayment.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfDownPayment.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfDownPayment.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1144,6 +1272,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
         jtfBasicFee.setColumns(5);
         jtfBasicFee.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfBasicFee.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfBasicFee.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1155,6 +1284,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
         jtfMiscellaneous.setColumns(5);
         jtfMiscellaneous.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfMiscellaneous.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfMiscellaneous.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1166,6 +1296,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
         jtfOtherFees.setColumns(5);
         jtfOtherFees.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfOtherFees.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfOtherFees.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1177,6 +1308,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
         jtfDiscount.setColumns(5);
         jtfDiscount.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfDiscount.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfDiscount.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1188,6 +1320,7 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
 
         jtfTotal.setColumns(5);
         jtfTotal.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jtfTotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jtfTotal.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1281,69 +1414,26 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jpnlDiscount.setPreferredSize(new java.awt.Dimension(600, 50));
         jpnlDiscount.setLayout(new java.awt.GridBagLayout());
 
-        jcmbDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jcmbDiscount.setMinimumSize(new java.awt.Dimension(150, 25));
-        jcmbDiscount.setPreferredSize(new java.awt.Dimension(150, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jpnlDiscount.add(jcmbDiscount, gridBagConstraints);
-
-        jlblDiscountPercentText.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jlblDiscountPercentText.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jlblDiscountPercentText.setMaximumSize(new java.awt.Dimension(30, 30));
-        jlblDiscountPercentText.setMinimumSize(new java.awt.Dimension(30, 30));
-        jlblDiscountPercentText.setPreferredSize(new java.awt.Dimension(30, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jpnlDiscount.add(jlblDiscountPercentText, gridBagConstraints);
-
-        lbl_percent.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lbl_percent.setText("%");
-        lbl_percent.setMaximumSize(new java.awt.Dimension(20, 30));
-        lbl_percent.setMinimumSize(new java.awt.Dimension(20, 30));
-        lbl_percent.setPreferredSize(new java.awt.Dimension(30, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jpnlDiscount.add(lbl_percent, gridBagConstraints);
-
-        btn_removeDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_removeDiscount.setText("Remove");
-        btn_removeDiscount.setMaximumSize(new java.awt.Dimension(100, 30));
-        btn_removeDiscount.setMinimumSize(new java.awt.Dimension(100, 30));
-        btn_removeDiscount.setPreferredSize(new java.awt.Dimension(100, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 90);
-        jpnlDiscount.add(btn_removeDiscount, gridBagConstraints);
-
         jcbDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jcbDiscount.setText("Discount");
+        jcbDiscount.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         jpnlDiscount.add(jcbDiscount, gridBagConstraints);
 
-        btn_addDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btn_addDiscount.setText("Add");
-        btn_addDiscount.setActionCommand("add");
-        btn_addDiscount.setMaximumSize(new java.awt.Dimension(80, 30));
-        btn_addDiscount.setMinimumSize(new java.awt.Dimension(80, 30));
-        btn_addDiscount.setPreferredSize(new java.awt.Dimension(80, 30));
+        jbtnSelectDiscount.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jbtnSelectDiscount.setText("Select");
+        jbtnSelectDiscount.setActionCommand("add");
+        jbtnSelectDiscount.setMaximumSize(new java.awt.Dimension(80, 30));
+        jbtnSelectDiscount.setMinimumSize(new java.awt.Dimension(80, 30));
+        jbtnSelectDiscount.setPreferredSize(new java.awt.Dimension(80, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jpnlDiscount.add(btn_addDiscount, gridBagConstraints);
+        jpnlDiscount.add(jbtnSelectDiscount, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1597,14 +1687,13 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jScrollPane5.setMinimumSize(new java.awt.Dimension(840, 275));
         jScrollPane5.setPreferredSize(new java.awt.Dimension(840, 275));
 
-        jtblBalanceBreakDown.setAutoCreateRowSorter(true);
         jtblBalanceBreakDown.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblBalanceBreakDown.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Name", "Amount Due", "Balance", "Due Date", "Paid", "Category", "Penalty"
+                "Name", "Amount Due", "Balance", "Due Date", "Fully Paid", "Category", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -1840,24 +1929,24 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
         jScrollPane8.setName(""); // NOI18N
         jScrollPane8.setPreferredSize(new java.awt.Dimension(1182, 360));
 
+        jtblDiscounts.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jtblDiscounts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "School Year", "Discount Type", "Percentage", "Amount", "Date Applied"
+                "School Year", "Discount Type", "Percentage", "Amount", "Provision", "Date Applied"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jtblDiscounts.setIntercellSpacing(new java.awt.Dimension(20, 1));
-        jtblDiscounts.setRowHeight(20);
+        jtblDiscounts.setRowHeight(30);
         jtblDiscounts.getTableHeader().setReorderingAllowed(false);
         jScrollPane8.setViewportView(jtblDiscounts);
 
@@ -2351,8 +2440,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton btn_Search10;
     private javax.swing.JButton btn_Search14;
     private javax.swing.JButton btn_Search15;
-    private javax.swing.JButton btn_addDiscount;
-    private javax.swing.JButton btn_removeDiscount;
     private javax.swing.JComboBox<String> combo_filter5;
     private javax.swing.JLabel display_remainingbalance2;
     private javax.swing.JLabel jLabel1;
@@ -2387,14 +2474,14 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JButton jbtnReceiptsSearch;
     private javax.swing.JButton jbtnReceiptsView;
     private javax.swing.JButton jbtnSearch;
+    private javax.swing.JButton jbtnSelectDiscount;
     private javax.swing.JCheckBox jcbDiscount;
     private javax.swing.JComboBox<String> jcmbAdjustmentsSearchBy;
-    private javax.swing.JComboBox<String> jcmbDiscount;
+    private javax.swing.JComboBox<String> jcmbModeOfPayment;
     private javax.swing.JComboBox<String> jcmbPaymentHistorySearchBy;
     private javax.swing.JComboBox<String> jcmbPaymentTerm;
     private javax.swing.JComboBox<String> jcmbReceiptsSearchBy;
     private javax.swing.JLabel jlblDateToday;
-    private javax.swing.JLabel jlblDiscountPercentText;
     private javax.swing.JLabel jlblRecommendForSummerMessage;
     private javax.swing.JLabel jlblRemainingBalanceText;
     private javax.swing.JLabel jlblStudentNo;
@@ -2450,7 +2537,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JLabel lbl_misc;
     private javax.swing.JLabel lbl_otherfees;
     private javax.swing.JLabel lbl_paymentterm;
-    private javax.swing.JLabel lbl_percent;
     private javax.swing.JLabel lbl_remainingbalance;
     private javax.swing.JLabel lbl_remainingbalance2;
     private javax.swing.JLabel lbl_show;
@@ -2473,7 +2559,6 @@ public class Panel_Payment extends javax.swing.JPanel implements Initializer{
     private javax.swing.JPanel panel_historydetails2;
     private javax.swing.JPanel panel_historydetails5;
     private javax.swing.JPanel panel_searchcontainer;
-    private javax.swing.JPanel panel_separator;
     private javax.swing.JPanel panel_statuscontainer;
     private javax.swing.JPanel panel_studentdetails;
     private javax.swing.JPanel panel_studentdetailscontainer;

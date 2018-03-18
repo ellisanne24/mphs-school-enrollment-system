@@ -23,13 +23,13 @@ public class Tuition {
     private boolean exists;
     private BigDecimal totalPaid;
     private BigDecimal remainingBalance;
-    private Discount discount;
+    private List<Discount> discounts;
     
     private List<BalanceBreakDownFee> balanceBreakDownFees; //composed only of (basic + miscellaneous)/paymentterm
     
     private Student student;
 
-    public int getSchoolyearId() {
+    public int getSchoolYearId() {
         return schoolyearId;
     }
 
@@ -101,12 +101,12 @@ public class Tuition {
         this.paymentTerm = paymentTerm;
     }
 
-    public Discount getDiscount() {
-        return discount;
+    public List<Discount> getDiscounts() {
+        return discounts;
     }
 
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
+    public void setDiscounts(List<Discount> discounts) {
+        this.discounts = discounts;
     }
 
     public List<BalanceBreakDownFee> getBalanceBreakDownFees() {

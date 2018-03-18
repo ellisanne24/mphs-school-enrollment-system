@@ -19,7 +19,7 @@ public class FacultyJCompModelLoader {
     private final FacultyDaoImpl facultyDaoImpl;
     
     public FacultyJCompModelLoader(){
-        facultyDaoImpl = new FacultyDaoImpl(new SchoolYearDaoImpl());
+        facultyDaoImpl = new FacultyDaoImpl();
     }
     
     private Object[] columnNames() {
@@ -35,12 +35,22 @@ public class FacultyJCompModelLoader {
         return comboModel;
     }
 
-    public DefaultComboBoxModel getAllFaculty() {
+    public DefaultComboBoxModel getAllFacultyAsId() {
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<Faculty> list = facultyDaoImpl.getAllFaculty();
         for (Faculty f : list) {
             comboModel.addElement(f.getFacultyID());
         }
+        return comboModel;
+    }
+    
+    public DefaultComboBoxModel getAllFacultyAsModel() {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<Faculty> list = facultyDaoImpl.getAllFaculty();
+        for (Faculty faculty : list) {
+            comboModel.addElement(faculty);
+        }
+        comboModel.setSelectedItem(null);
         return comboModel;
     }
     

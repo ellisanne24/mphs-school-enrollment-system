@@ -10,8 +10,6 @@ import model.quarter.Quarter;
  * @author Acer
  */
 public interface IQuarter {
-    List<Quarter> getAllQuarters();
+    Quarter getQuarterBy(int quarterNo,SchoolYear schoolYear);
     Quarter getCurrentQuarterOf(SchoolYear schoolYear);
-    List<Quarter> getQuarterBySchoolYear(SchoolYear aSchoolYear);
-    boolean addQuarter(Quarter aQuarter);
 }

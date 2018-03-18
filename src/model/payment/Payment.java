@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import model.particulars.Particular;
+import model.user.User;
 
 /**
  *
@@ -17,6 +18,15 @@ public class Payment {
     private Date dateCharged;
     private int orNoAttached;
     private List<Particular> particulars;
+    private User cashier;
+
+    public User getCashier() {
+        return cashier;
+    }
+
+    public void setCashier(User cashier) {
+        this.cashier = cashier;
+    }
 
     public BigDecimal getAmountReceived() {
         return amountReceived;

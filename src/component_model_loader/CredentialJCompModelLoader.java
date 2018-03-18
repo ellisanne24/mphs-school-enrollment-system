@@ -1,33 +1,27 @@
 package component_model_loader;
 
 import daoimpl.CredentialDaoImpl;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import model.credential.Credential;
 
 public class CredentialJCompModelLoader {
    
-    private final CredentialDaoImpl credentialDaoImpl = new CredentialDaoImpl();
+    private final CredentialDaoImpl credentialDaoImpl;
     
-    public DefaultListModel getAllCredentialNames(){
-        DefaultListModel listModel = new DefaultListModel();
-        Object[] credentialList = credentialDaoImpl.getAllCredentials().toArray();
-        for(Object o : credentialList){
-            Credential c = (Credential)o;
-            listModel.addElement(c.getCredentialName());
-        }
-        return listModel;
+    public CredentialJCompModelLoader(){
+        credentialDaoImpl = new CredentialDaoImpl();
     }
     
-    public DefaultComboBoxModel getAllCredentialNamesByGradeLevelId(int aGradeLevelId){
-        DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
-        Object[] credentialList = credentialDaoImpl.getCredentialByGradeLevelId(aGradeLevelId).toArray();
-        for(Object o : credentialList){
-            Credential c = (Credential)o;
-            comboBoxModel.addElement(c.getCredentialName());
+    public DefaultTableModel getAllCredentialsFor(JTable table){
+        DefaultTableModel tableModel = (DefaultTableModel)table.getModel();
+        tableModel.setRowCount(0);
+        List<Credential> credentialList = credentialDaoImpl.getAllCredentials();
+        for(Credential c : credentialList){
+            Object[] rowData ={c,c.getIsActive()==true?"Active":"Inactive",c.getDateAdded()};
+            tableModel.addRow(rowData);
         }
-        return comboBoxModel;
+        return tableModel;
     }
-    
 }

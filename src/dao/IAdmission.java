@@ -9,4 +9,5 @@ import model.admission.Admission;
  */
 public interface IAdmission {
     boolean completeAdmission(Admission admission);
+    boolean isAdmissionCompleteFor(int registrationId);
 }
