@@ -89,9 +89,9 @@ public class Dialog_CurriculumCrud extends javax.swing.JDialog implements Initia
 
     @Override
     public void initViewComponents() {
-        TableColumnModel tableColModel = jtblCurrentSubjects.getColumnModel();
-        TableColumn subjectHoursColumn = tableColModel.getColumn(4);
-        subjectHoursColumn.setCellEditor(new SubjectHourColumnCellEditor());
+//        TableColumnModel tableColModel = jtblCurrentSubjects.getColumnModel();
+//        TableColumn subjectHoursColumn = tableColModel.getColumn(4);
+//        subjectHoursColumn.setCellEditor(new SubjectHourColumnCellEditor());
         
         jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
         jcmbGradeLevel.setRenderer(gradeLevelJComboBoxRenderer);

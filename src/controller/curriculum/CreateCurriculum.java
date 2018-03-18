@@ -67,7 +67,6 @@ public class CreateCurriculum implements ActionListener{
             Subject s = new Subject();
             s.setSubjectId(Integer.parseInt(tableModel.getValueAt(row, 0).toString().trim()));
             s.setSubjectMinutes(Integer.parseInt(tableModel.getValueAt(row, 4).toString()));
-            
             subjectList.add(s);
         }
         return subjectList;
