@@ -5,6 +5,7 @@ import model.schoolyear.SchoolYear;
 import java.util.Date;
 import java.util.List;
 import model.gradelevel.GradeLevel;
+import model.user.User;
 
 
 public class Credential {
@@ -15,7 +16,33 @@ public class Credential {
     private List<GradeLevel> gradeLevelsAssigned;
     private SchoolYear yearCreated;
     private String credentialDescription;
+    private User createdBy;
+    private boolean isActive;
 
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public SchoolYear getYearCreated() {
+        return yearCreated;
+    }
+
+    public void setYearCreated(SchoolYear yearCreated) {
+        this.yearCreated = yearCreated;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+    
     public String getCredentialDescription() {
         return credentialDescription;
     }
@@ -63,15 +90,4 @@ public class Credential {
     public void setGradeLevelsAssigned(List<GradeLevel> gradeLevelsAssigned) {
         this.gradeLevelsAssigned = gradeLevelsAssigned;
     }
-
-    public SchoolYear getSchoolYearCreated() {
-        return yearCreated;
-    }
-
-    public void setSchoolYearCreated(SchoolYear schoolYear) {
-        this.yearCreated = schoolYear;
-    }
-    
-    
-   
 }

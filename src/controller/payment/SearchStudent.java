@@ -9,20 +9,15 @@ import daoimpl.PaymentTermDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
 import daoimpl.StudentDaoImpl;
 import daoimpl.TuitionFeeDaoImpl;
-import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JViewport;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import model.fee.Fee;
@@ -30,6 +25,7 @@ import model.paymentterm.PaymentTerm;
 import model.schoolyear.SchoolYear;
 import model.student.Student;
 import model.tuitionfee.Tuition;
+import model.user.User;
 import service.tuition.TuitionPopulator;
 import view.payment.Panel_Payment;
 
@@ -39,6 +35,7 @@ import view.payment.Panel_Payment;
  */
 public class SearchStudent implements KeyListener {
 
+    private final User user;
     private int studentNo;
     private int currentSchoolYearId;
     private PaymentTerm paymentTerm;
@@ -57,9 +54,10 @@ public class SearchStudent implements KeyListener {
     
     private final Panel_Payment view;
 
-    public SearchStudent(
+    public SearchStudent(User user,
             Panel_Payment view, StudentDaoImpl studentDaoImpl, GradeLevelDaoImpl gradeLevelDaoImpl,
             FeeDaoImpl feeDaoImpl, PaymentTermDaoImpl paymentTermDaoImpl) {
+        this.user = user;
         this.view = view;
         this.studentDaoImpl = studentDaoImpl;
         this.feeDaoImpl = feeDaoImpl;
@@ -95,7 +93,7 @@ public class SearchStudent implements KeyListener {
         if (inputIsValid()) {
             studentNo = Integer.parseInt(view.getJtfSearchBoxMakePayment().getText().trim());
             if (studentExist()) {
-                clearForm();
+                view.clearForm();
                 initializeStudent();//should execute first
                 initAssignSummerFeeButton(student);
                 initializeFees();
@@ -114,7 +112,7 @@ public class SearchStudent implements KeyListener {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Student not found.");
-                clearForm();
+                view.clearForm();
             }
         } else {
             JOptionPane.showMessageDialog(null, "You have entered an invalid input.");
@@ -123,7 +121,7 @@ public class SearchStudent implements KeyListener {
 
     private void initAssignSummerFeeButton(Student s){
         SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
-        view.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(view,s,currentSchoolYear));
+        view.getJbtnAssignSummerFee().addActionListener(new Controller_Display_Dialog_AssignSummerFees_JButton(view,user,s,currentSchoolYear));
         if(s.getIsRecommendedToTakeSummer()){
             view.getJlblRecommendForSummerMessage().setText("Student is recommended for summer.");
             view.getJbtnAssignSummerFee().setEnabled(true);
@@ -237,38 +235,6 @@ public class SearchStudent implements KeyListener {
             }
             table.setModel(tableModel);
         }
-    }
-
-    private void clearForm() {
-        List<Component[]> compArr = new ArrayList<>();
-        compArr.add(view.getJpnlStudentDetails().getComponents());
-        compArr.add(view.getJpnlDownpayment().getComponents());
-        compArr.add(view.getJpnlMiscellaneous().getComponents());
-        compArr.add(view.getJpnlBasic().getComponents());
-        compArr.add(view.getJpnlOthers().getComponents());
-        compArr.add(view.getJpnlBalanceBreakdown().getComponents());
-        compArr.add(view.getJpnlCurrentSchoolYearTuition().getComponents());
-        compArr.add(view.getJpnlReceiptsMasterList().getComponents());
-        for (int i = 0; i < compArr.size(); i++) {
-            for (Component c : compArr.get(i)) {
-                if (c instanceof JTextField) {
-                    ((JTextField) c).setText("");
-                } else if (c instanceof JScrollPane) {
-                    JViewport jViewPort = ((JScrollPane) c).getViewport();
-                    DefaultTableModel tableModel = new DefaultTableModel();
-                    if (((JTable) jViewPort.getView()) instanceof JTable) {
-                        tableModel = (DefaultTableModel) ((JTable) jViewPort.getView()).getModel();
-                        tableModel.setRowCount(0);
-                        ((JTable) jViewPort.getView()).setModel(tableModel);
-                    }
-                } else if (c instanceof JComboBox) {
-                    ((JComboBox) c).setSelectedIndex(-1);
-                }
-            }
-        }
-        view.getJlblRecommendForSummerMessage().setText("");
-        view.getJlblRemainingBalanceText().setText("");
-        view.getJlblTotalPaidText().setText("");
     }
 
     private boolean studentExist() {

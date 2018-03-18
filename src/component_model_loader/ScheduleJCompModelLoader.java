@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.faculty.Faculty;
+import model.gradelevel.GradeLevel;
 import model.schedule.Schedule;
 import model.schoolyear.SchoolYear;
 
@@ -27,6 +28,22 @@ public class ScheduleJCompModelLoader {
         int schoolYearId = schoolYear.getSchoolYearId();
         int facultyId = faculty.getFacultyID();
         List<Schedule> schedList = scheduleDaoImpl.getAllSchedulesBySchoolYearFacultyAndStatus(schoolYearId, facultyId, isActive);
+        for(Schedule s : schedList){
+            Object[] rowData = {
+                s.getScheduleID(),s.getDay(),intToTimeFormat(s.getStartTime()), intToTimeFormat(s.getEndTime()),
+                s.getSection().getSectionName(),s.getSubject().getSubjectCode(),s.getRoom().getRoomName(),
+                s.getFaculty().getLastName()+", "+s.getFaculty().getFirstName()+" "+ s.getFaculty().getMiddleName(),
+                s.getScheduleSession()
+            };
+            tableModel.addRow(rowData);
+        }
+        return tableModel;
+    }
+    
+    public DefaultTableModel getSchedulesBySchoolYearGradeLevelAndStatus(JTable table, SchoolYear schoolYear, GradeLevel gradeLevel,boolean isActive){
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        tableModel.setRowCount(0);
+        List<Schedule> schedList = scheduleDaoImpl.getSchedulesBy(schoolYear, gradeLevel, isActive);
         for(Schedule s : schedList){
             Object[] rowData = {
                 s.getScheduleID(),s.getDay(),intToTimeFormat(s.getStartTime()), intToTimeFormat(s.getEndTime()),

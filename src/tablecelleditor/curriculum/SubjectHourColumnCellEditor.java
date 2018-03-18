@@ -26,7 +26,7 @@ public class SubjectHourColumnCellEditor extends DefaultCellEditor{
     public SubjectHourColumnCellEditor(){
         super(new JTextField());
         decimalFormat = new DecimalFormat("0.00");
-        spinnerNumberModel = new SpinnerNumberModel(1.000, 1.000, 5.000, 0.300);
+        spinnerNumberModel = new SpinnerNumberModel(1, 1, 300, 1);
         spinnerHours = new JSpinner(spinnerNumberModel);
         spinnerEditor = (JSpinner.NumberEditor)spinnerHours.getEditor();
         
@@ -56,8 +56,8 @@ public class SubjectHourColumnCellEditor extends DefaultCellEditor{
 
     @Override
     public Object getCellEditorValue() {
-        double value = ((Double)spinnerHours.getValue());
-        return decimalFormat.format(value);
+        int value = Integer.parseInt(spinnerHours.getValue().toString().trim());
+        return value;
     }
 
     

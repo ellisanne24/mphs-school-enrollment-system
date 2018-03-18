@@ -11,6 +11,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import model.gradelevel.GradeLevel;
+import model.schoolyear.SchoolYear;
 import view.section.Dialog_SectionAssignment;
 
 /**
@@ -42,18 +44,32 @@ public class DialogSectionAssignment_OnGradeLevelItemStateChange implements Item
 
     private void loadSectionsByGradeLevelSelected() {
         SectionJCompModelLoader sectionJCompModelLoader = new SectionJCompModelLoader();
-        view.getJcmbSection().setModel(sectionJCompModelLoader.getSectionsByGradeLevelNo(view.getJcmbGradeLevel()));
-        view.getJcmbSection().setSelectedIndex(-1);
+        if (view.getJcbSummer().isSelected()) {
+            SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+            GradeLevel gradeLevel = (GradeLevel) view.getJcmbGradeLevel().getSelectedItem();
+            String sectionType = "S";
+            view.getJcmbSection().setModel(sectionJCompModelLoader.getSectionsBy(currentSchoolYear, gradeLevel, sectionType));
+            view.getJcmbSection().setSelectedIndex(-1);
+        } else {
+            view.getJcmbSection().setModel(sectionJCompModelLoader.getSectionsByGradeLevelNo(view.getJcmbGradeLevel()));
+            view.getJcmbSection().setSelectedIndex(-1);
+        }
     }
 
-    private void loadStudentsByGradeLevelSelected(){
-        EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl(schoolYearDaoImpl);
-        EnrollmentJCompModelLoader enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(enrollmentDaoImpl);
+    private void loadStudentsByGradeLevelSelected() {
+        EnrollmentDaoImpl enrollmentDaoImpl = new EnrollmentDaoImpl();
+        EnrollmentJCompModelLoader enrollmentJCompModelLoader = new EnrollmentJCompModelLoader(schoolYearDaoImpl.getCurrentSchoolYear());
         JTable table = view.getJtblEnrolledStudents();
         JComboBox jcmbGradeLevel = view.getJcmbGradeLevel();
-        int schoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
-        DefaultTableModel tableModel = (DefaultTableModel)enrollmentJCompModelLoader.getAllEnrolledUnsectionedByGradeLevelIdAndSchoolYearId(table, jcmbGradeLevel,schoolYearId);
-        view.getJtblEnrolledStudents().setModel(tableModel);
+        if (view.getJcbSummer().isSelected()) {
+            SchoolYear currentSchoolYear = schoolYearDaoImpl.getCurrentSchoolYear();
+            DefaultTableModel summerStudents = (DefaultTableModel) enrollmentJCompModelLoader.getAllUnsectionedSummerEnrolleesBy(table, jcmbGradeLevel, currentSchoolYear);
+            view.getJtblEnrolledStudents().setModel(summerStudents);
+        } else {
+            int schoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
+            DefaultTableModel tableModel = (DefaultTableModel) enrollmentJCompModelLoader.getAllEnrolledUnsectionedByGradeLevelIdAndSchoolYearId(table, jcmbGradeLevel, schoolYearId);
+            view.getJtblEnrolledStudents().setModel(tableModel);
+        }
     }
     
     private void clearForm() {

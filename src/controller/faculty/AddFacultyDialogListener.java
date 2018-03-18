@@ -25,7 +25,7 @@ public class AddFacultyDialogListener implements ActionListener, FormValidator {
     public AddFacultyDialogListener(Dialog_FacultyAdd view) {
         this.view = view;
         this.schoolYearDaoImpl = new SchoolYearDaoImpl();
-        this.facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        this.facultyDaoImpl = new FacultyDaoImpl();
     }
 
     @Override

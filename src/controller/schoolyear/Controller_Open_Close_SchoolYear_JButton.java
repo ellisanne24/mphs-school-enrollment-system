@@ -29,6 +29,7 @@ public class Controller_Open_Close_SchoolYear_JButton implements ActionListener 
                 if (choice == JOptionPane.YES_OPTION) {
                     if (openSchoolYear()) {
                         JOptionPane.showMessageDialog(null, "Successfully opened schoolyear.");
+                        view.loadSchoolYearMasterList();
                     } else {
                         JOptionPane.showMessageDialog(null, "Encountered problems opening schoolyear. Please contact your support.");
                     }
@@ -38,6 +39,7 @@ public class Controller_Open_Close_SchoolYear_JButton implements ActionListener 
                 if (choice == JOptionPane.YES_OPTION) {
                     if (closeSchoolYear()) {
                         JOptionPane.showMessageDialog(null, "Successfully closed schoolyear.");
+                        view.loadSchoolYearMasterList();
                     } else {
                         JOptionPane.showMessageDialog(null, "Encountered problems closing schoolyear. Please contact your support.");
                     }

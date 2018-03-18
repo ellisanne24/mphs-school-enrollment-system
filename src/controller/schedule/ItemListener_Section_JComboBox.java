@@ -44,9 +44,14 @@ public class ItemListener_Section_JComboBox implements ItemListener {
             applyStartandEndTimeCellEditors(section);
             loadSectionInformationToScheduleHeader();
             loadSessionToTable();
+            enableRoomCombo();
         }
     }
 
+    private void enableRoomCombo(){
+        view.getJcmbRoom().setEnabled(true);
+    }
+    
     private void initializeSection() {
         Section s = (Section) jcmbSections.getSelectedItem();
         section = sectionDaoImpl.getSectionById(s.getSectionId());

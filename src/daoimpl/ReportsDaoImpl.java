@@ -10,11 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import model.enrollment.Enrollment;
 import model.faculty.Faculty;
+import model.grade.Grade;
+import model.gradelevel.GradeLevel;
 import model.registration.Registration;
-import model.schedule.Schedule;
+import model.reportcard.ReportCard;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import model.student.Student;
+import model.subject.Subject;
 import utility.database.DBType;
 import utility.database.DBUtil;
 
@@ -113,6 +116,86 @@ public class ReportsDaoImpl implements IReports{
         return student;
     }
 
+    @Override
+    public List<Student> getClassListOf(Faculty faculty, SchoolYear schoolYear) {
+        List<Student> students = new ArrayList<>();
+        String SQL = "{CALL getClassListOf(?,?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);) {
+            cs.setInt(1, faculty.getFacultyID());
+            cs.setInt(2, schoolYear.getSchoolYearId());
+            try (ResultSet rs = cs.executeQuery();) {
+                while (rs.next()) {
+                    Registration registration = new Registration();
+                    registration.setLastName(rs.getString("lastname"));
+                    registration.setFirstName(rs.getString("firstname"));
+                    registration.setMiddleName(rs.getString("middlename"));
+
+                    Section section = new Section();
+                    section.setSectionId(rs.getInt("section_id"));
+                    section.setSectionName(rs.getString("sectionName"));
+
+                    Subject subject = new Subject();
+                    subject.setSubjectId(rs.getInt("subject_id"));
+                    subject.setSubjectCode(rs.getString("code"));
+                    subject.setSubjectTitle(rs.getString("title"));
+                    subject.setSubjectDescription(rs.getString("description"));
+
+                    Student student = new Student();
+                    student.setStudentNo(rs.getInt("student_no"));
+                    student.setRegistration(registration);
+                    student.setSection(section);
+                    student.setSubject(subject);
+                    students.add(student);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    @Override
+    public ReportCard getReportCardOf(Student student, GradeLevel gradeLevel, SchoolYear schoolYear) {
+        String SQL = "{CALL getGradesForReportCardOf(?,?,?)}";
+        ReportCard reportCard = new ReportCard();
+        List<Subject> subjects = new ArrayList<>();
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);
+                CallableStatement cs = con.prepareCall(SQL);){
+            cs.setInt(1, student.getStudentId());
+            cs.setInt(2, gradeLevel.getGradeLevelId());
+            cs.setInt(3, schoolYear.getSchoolYearId());
+            try(ResultSet rs = cs.executeQuery();){
+                while(rs.next()){
+                   Grade firstGp = new Grade();
+                   firstGp.setValue(rs.getInt("firstGp"));
+                   Grade secondGp = new Grade();
+                   secondGp.setValue(rs.getInt("secondGp"));
+                   Grade thirdGp = new Grade();
+                   thirdGp.setValue(rs.getInt("thirdGp"));
+                   Grade fourthGp = new Grade();
+                   fourthGp.setValue(rs.getInt("fourthGp"));
+                    
+                   Subject subject = new Subject();
+                   subject.setSubjectId(rs.getInt("subject_id"));
+                   subject.setSubjectTitle(rs.getString("title"));
+                   subject.setFirstGradingPeriodAverage(firstGp);
+                   subject.setSecondGradingPeriodAverage(secondGp);
+                   subject.setThirdGradingPeriodAverage(thirdGp);
+                   subject.setFourthGradingPeriodAverage(fourthGp);
+                   
+                   subjects.add(subject);
+                }
+                reportCard.setSubjects(subjects);
+                reportCard.setStudent(student);
+                reportCard.setGradeLevel(gradeLevel);
+                reportCard.setSchoolYear(schoolYear);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reportCard;
+    }
     
     
 }

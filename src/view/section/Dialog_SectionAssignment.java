@@ -16,7 +16,6 @@ import controller.enrollment.DialogSectionAssignment_Save;
 import controller.global.Controller_JButton_ExitJDialog;
 import controller.section.Controller_SectionAssignment_Summer_JCheckBox;
 import controller.section.DialogSectionAssignment_SectionStudentTableModelListener;
-import daoimpl.SchoolYearDaoImpl;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -28,17 +27,20 @@ import javax.swing.JTextField;
 import model.schoolyear.SchoolYear;
 import utility.initializer.Initializer;
 import utility.jtable.JTableUtil;
+import view.enrollment.Panel_Enrollment;
 
 public class Dialog_SectionAssignment extends javax.swing.JDialog implements Initializer {
     
+    private final Panel_Enrollment panelEnrollment;
     private GradeLevelJCompModelLoader gradeLevelJCompModelLoader;
     private SectionJCompModelLoader sectionJCompModelLoader;
     private FacultyJCompModelLoader facultyJCompModelLoader;
     private final SchoolYear currentSchoolYear;
     
-    public Dialog_SectionAssignment(java.awt.Frame parent, boolean modal, SchoolYear currentSchoolYear) {
+    public Dialog_SectionAssignment(java.awt.Frame parent, boolean modal,Panel_Enrollment panelEnrollment, SchoolYear currentSchoolYear) {
         super(parent, modal);
         initComponents();
+        this.panelEnrollment = panelEnrollment;
         this.currentSchoolYear = currentSchoolYear;
         
         initDaoImpl();
@@ -77,9 +79,9 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
     public void initViewComponents() {
         JTableUtil.applyCustomHeaderRenderer(jtblSectionStudents);
         JTableUtil.applyCustomHeaderRenderer(jtblEnrolledStudents);
-        jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevels());
+        jcmbGradeLevel.setModel(gradeLevelJCompModelLoader.getAllGradeLevelsAsModel());
         jcmbSection.setModel(sectionJCompModelLoader.getAllSectionByStatusAndSchoolYearId(true, currentSchoolYear.getSchoolYearId()));
-        jcmbAdviser.setModel(facultyJCompModelLoader.getAllFaculty());
+        jcmbAdviser.setModel(facultyJCompModelLoader.getAllFacultyAsId());
         jcmbAdviser.setSelectedIndex(-1);
     }
 
@@ -93,7 +95,7 @@ public class Dialog_SectionAssignment extends javax.swing.JDialog implements Ini
         jtfCapacityDenominator.getDocument().addDocumentListener(new DialogSectionAssignment_CapacityDenominatorDocumentPropertyListener(this));
         jbtnClear.addActionListener(new DialogSectionAssignment_Clear(this));
         jbtnCancel.addActionListener(new Controller_JButton_ExitJDialog(this));
-        jbtnSave.addActionListener(new DialogSectionAssignment_Save(this));
+        jbtnSave.addActionListener(new DialogSectionAssignment_Save(panelEnrollment,this));
     }
 
     @Override

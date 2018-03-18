@@ -30,6 +30,16 @@ public class GradeLevelJCompModelLoader {
         return comboModel;
     }
     
+    public DefaultComboBoxModel getAllGradeLevelsAsModel() {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        List<GradeLevel> gradeLevelList = gradeLevelDaoImpl.getAllGradeLevelsInfo();
+        for (GradeLevel gradeLevel : gradeLevelList) {
+            comboModel.addElement(gradeLevel);
+        }
+        comboModel.setSelectedItem(null);
+        return comboModel;
+    }
+    
     public DefaultComboBoxModel getAllActiveGradeLevelNo(){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<GradeLevel> gradeLevelList = gradeLevelDaoImpl.getAllActiveGradeLevels();
@@ -59,22 +69,11 @@ public class GradeLevelJCompModelLoader {
         return comboModel;
     }
 
-    public DefaultComboBoxModel getAllRegisteredSubjectGradeLevel() {
-        DefaultComboBoxModel dcm = new DefaultComboBoxModel();
-        List<GradeLevel> gradeLevelList = gradeLevelDaoImpl.getAllRegisteredSubjectGradeLevel();
-        Object[] obj = gradeLevelList.toArray();
-        for (Object o : obj) {
-            GradeLevel g = (GradeLevel) o;
-            dcm.addElement(g.getLevelNo());
-        }
-        return dcm;
-    }
-    
     public DefaultComboBoxModel getSummerGradeLevelsOf(SchoolYear schoolYear){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         List<GradeLevel> summerGradeLevels = gradeLevelDaoImpl.getSummerGradeLevelsOf(schoolYear);
         for(GradeLevel summerGradeLevel : summerGradeLevels){
-            comboModel.addElement(summerGradeLevel.getLevelNo());
+            comboModel.addElement(summerGradeLevel);
         }
         comboModel.setSelectedItem(null);
         return comboModel;

@@ -28,22 +28,22 @@ public class Renderer_Promotion_Students_JTable extends DefaultTableCellRenderer
             }
         }
         
-        if (isSelected) {
-            cellComponent.setBackground(Color.BLUE);
-            ((JLabel) cellComponent).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        } else {
-            validateGrade(cellComponent, table, row, 3);
-            ((JLabel) cellComponent).setBorder(BorderFactory.createLineBorder(Color.BLACK, 0));
-        }
+//        if (isSelected) {
+////            cellComponent.setBackground(Color.BLUE);
+////            ((JLabel) cellComponent).setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+//        } else {
+//            validateGrade(cellComponent, table, row, 3);
+////            ((JLabel) cellComponent).setBorder(BorderFactory.createLineBorder(Color.BLACK, 0));
+//        }
         return this;
     }
 
     private void validateGrade(Component cellComponent, JTable table, int row, int col) {
         int grade = Integer.parseInt(table.getValueAt(row, col).toString().trim());
         if (grade >= 75) {
-            cellComponent.setBackground(Color.GREEN);
+//            cellComponent.setBackground(Color.GREEN);
         } else {
-            cellComponent.setBackground(Color.PINK);
+//            cellComponent.setBackground(Color.PINK);
         }
     }
 }

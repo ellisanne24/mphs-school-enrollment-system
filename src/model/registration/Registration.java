@@ -3,6 +3,8 @@ package model.registration;
 
 import model.schoolyear.SchoolYear;
 import java.util.Date;
+import java.util.List;
+import model.credential.Credential;
 
 
 public class Registration {
@@ -54,6 +56,24 @@ public class Registration {
     private boolean exists; 
     private int gradeLevelNo;
     private int schoolYearYearFrom;
+    private boolean isRegistrationActive;
+    private List<Credential> credentials;
+
+    public List<Credential> getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(List<Credential> credentials) {
+        this.credentials = credentials;
+    }
+
+    public boolean getIsRegistrationActive() {
+        return isRegistrationActive;
+    }
+
+    public void setIsRegistrationActive(boolean isRegistrationActive) {
+        this.isRegistrationActive = isRegistrationActive;
+    }
 
     public int getStudentNo() {
         return studentNo;

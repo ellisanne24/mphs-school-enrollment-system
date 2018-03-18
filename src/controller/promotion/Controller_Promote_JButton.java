@@ -47,7 +47,7 @@ public class Controller_Promote_JButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int choice = JOptionPane.showConfirmDialog(null, "Promote passed students?", "Promotion confirmation", JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(null, "Clicking YES will execute PROMOTION of passed students and recommend those for SUMMER.\nProceed?", "Promotion confirmation", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             List<Student> allStudents = getAllStudents();
             if (subjectGradesComplete(allStudents)) {
@@ -55,12 +55,12 @@ public class Controller_Promote_JButton implements ActionListener {
                 List<SummerStudent> studentsForSummer = getStudentsForSummer();
                 boolean isSuccessful = promotionDaoImpl.promoteStudents(studentsToPromote,studentsForSummer,user);
                 if (isSuccessful) {
-                    JOptionPane.showMessageDialog(null, "Promotion Successful!");
+                    JOptionPane.showMessageDialog(null, "Request successful!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Encountered problems processing request. Please contact your support.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Some students have incomplete grades.\nYou can only proceed with promotion once all subjects are graded.");
+                JOptionPane.showMessageDialog(null, "Some students have incomplete grades.\nYou can only proceed once all subjects are graded.");
                 displayWarnings();
             }
         }
@@ -74,9 +74,12 @@ public class Controller_Promote_JButton implements ActionListener {
         JTable t = view.getJtblStudents();
         clearConsole();
         view.getJtaWarningConsole().setText("THE FF. TEACHERS HAVE NOT YET SUBMITTED GRADES FOR THE FF. SUBJECTS : \n\n");
+        
         for (int row = 0; row < t.getRowCount(); row++) {
             Object studentNo = t.getValueAt(row, 1);
+            JOptionPane.showMessageDialog(null,"Student No @ row "+row +": "+studentNo);
             Student student = studentDaoImpl.getStudentByStudentNo(Integer.parseInt(studentNo.toString().trim()));
+            JOptionPane.showMessageDialog(null,"Student Id: "+row +" "+student.getStudentId());
             int gradeLevelFrom = Integer.parseInt(t.getValueAt(row, 2).toString().trim());
             int gradeLevelId = gradeLevelDaoImpl.getId(gradeLevelFrom);
             GradeLevel gradeLevel = gradeLevelDaoImpl.getById(gradeLevelId);
@@ -153,7 +156,7 @@ public class Controller_Promote_JButton implements ActionListener {
             }
         } else {
             clearConsole();
-            view.getJtaWarningConsole().append("Null Fields found.");
+            view.getJtaWarningConsole().append("Incomplete grades found. Average of 0 is not valid.");
         }
         return summerStudents;
     }

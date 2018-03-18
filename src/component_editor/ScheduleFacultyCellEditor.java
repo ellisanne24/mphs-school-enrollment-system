@@ -34,7 +34,7 @@ public class ScheduleFacultyCellEditor extends DefaultCellEditor {
         this.jtblSchedule = jtblSchedule;
         this.createScheduleDialog = createScheduleDialog;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
-        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        facultyDaoImpl = new FacultyDaoImpl();
         jcmbFaculty = new JComboBox();
         jcmbFaculty.setFont(new Font("Tahoma", 1, 14));
         facultyModel = getFacultyModel();

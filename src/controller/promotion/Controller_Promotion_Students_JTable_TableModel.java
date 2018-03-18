@@ -1,10 +1,10 @@
 
 package controller.promotion;
 
-import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import view.promotion.Dialog_Promotion;
 
 /**
  *
@@ -12,11 +12,16 @@ import javax.swing.table.TableModel;
  */
 public class Controller_Promotion_Students_JTable_TableModel implements TableModelListener{
 
-    
+    private final Dialog_Promotion view;
+
+    public Controller_Promotion_Students_JTable_TableModel(Dialog_Promotion view) {
+        this.view = view;
+    }
     
     @Override
     public void tableChanged(TableModelEvent e) {
-        if(e.getColumn() == 3){
+        view.getJbtnPromote().setEnabled(view.getJtblStudents().getRowCount() > 0);
+        if(e.getColumn() == 5){
             TableModel tableModel = (TableModel) e.getSource();
             int passingGrade = 75;
             for(int row = 0; row < tableModel.getRowCount(); row++){
@@ -25,11 +30,9 @@ public class Controller_Promotion_Students_JTable_TableModel implements TableMod
                     int finalGrade = Integer.parseInt(tableModel.getValueAt(row,3).toString().trim());
                     if(finalGrade >= passingGrade){
                         tableModel.setValueAt("Passed", row, 4);
-//                        tableModel.setValueAt("Yes", row, 5);
                         tableModel.setValueAt(currentGradeLevelNo+1, row, 6);
                     }else{
                         tableModel.setValueAt("Failed", row, 4);
-//                        tableModel.setValueAt("No", row, 5);
                         tableModel.setValueAt("Summer", row, 6);
                     }
                 }

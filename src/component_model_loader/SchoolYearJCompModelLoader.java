@@ -32,17 +32,33 @@ public class SchoolYearJCompModelLoader {
                 sy.getYearFrom() + " - " + sy.getYearTo(),
                 sy.getSchoolYearStartDate(),
                 sy.getSchoolYearEndDate(),
-                sy.getRegularEnrollmentStartDate(), 
+                sy.getTotalSchoolDays() +" days",
+                sy.getRegularEnrollmentStartDate(),
                 sy.getRegularEnrollmentEndDate(),
-                sy.getSummerEnrollmentStartDate(), 
+                sy.getSummerEnrollmentStartDate(),
                 sy.getSummerEnrollmentEndDate(),
-                sy.getSummerClassStartDate(), 
+                sy.getSummerClassStartDate(),
                 sy.getSummerClassEndDate(),
-                sy.getQuarters().get(0).getStartDate(),sy.getQuarters().get(0).getEndDate(),
-                sy.getQuarters().get(1).getStartDate(),sy.getQuarters().get(1).getEndDate(),
-                sy.getQuarters().get(2).getStartDate(),sy.getQuarters().get(2).getEndDate(),
-                sy.getQuarters().get(3).getStartDate(),sy.getQuarters().get(3).getEndDate(),
-                };
+                sy.getQuarters().get(0).getStartDate(), 
+                sy.getQuarters().get(0).getGradingOpenDate(),
+                sy.getQuarters().get(0).getGradingDueDate(),
+                sy.getQuarters().get(0).getEndDate(), 
+                
+                sy.getQuarters().get(1).getStartDate(), 
+                sy.getQuarters().get(1).getGradingOpenDate(),
+                sy.getQuarters().get(1).getGradingDueDate(),
+                sy.getQuarters().get(1).getEndDate(),
+                
+                sy.getQuarters().get(2).getStartDate(), 
+                sy.getQuarters().get(2).getGradingOpenDate(),
+                sy.getQuarters().get(2).getGradingDueDate(),
+                sy.getQuarters().get(2).getEndDate(), 
+                
+                sy.getQuarters().get(3).getStartDate(), 
+                sy.getQuarters().get(3).getGradingOpenDate(),
+                sy.getQuarters().get(3).getGradingDueDate(),
+                sy.getQuarters().get(3).getEndDate(),
+            };
             tableModel.addRow(rowData);
         }
         return tableModel;

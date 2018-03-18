@@ -58,12 +58,34 @@ public class RegistrationJCompModelLoader {
                 r.getGradeLevelNo() == 0 ? "Kindergarten" : r.getGradeLevelNo(),
                 r.getRegistrationDate(),
                 r.getIsAdmissionComplete() == true? "Completed" : "Pending",
-                r.getStudentNo() == 0? "None assigned yet" : r.getStudentNo()
+                r.getStudentNo() == 0? "" : r.getStudentNo()
             };
             tableModel.addRow(rowData);
         }
         return tableModel;
     }
+    
+    public DefaultTableModel getAllRegisteredApplicants(int yearFrom, int gradeLevelNo, JTable jTable){
+        DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
+        tableModel.setRowCount(0);
+        Object[] registrationList = registrationDaoImpl.getAllRegistrationInfoBy(yearFrom,gradeLevelNo).toArray();
+        for (Object o : registrationList) {
+            Registration r = (Registration) o;
+            Object[] rowData = {
+                r.getRegistrationId(),
+                r.getLastName(),
+                r.getFirstName(),
+                r.getMiddleName(),
+                r.getGradeLevelNo() == 0 ? "Kindergarten" : r.getGradeLevelNo(),
+                r.getRegistrationDate(),
+                r.getIsAdmissionComplete() == true? "Completed" : "Pending",
+                r.getStudentNo() == 0? "" : r.getStudentNo()
+            };
+            tableModel.addRow(rowData);
+        }
+        return tableModel;
+    }
+    
     
     public DefaultTableModel getAllRegisteredApplicantsByKeyword(JTextField jtfSearchBox,JTable jTable, int schoolYearFrom){
         DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();

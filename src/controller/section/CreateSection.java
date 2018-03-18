@@ -1,6 +1,7 @@
 
 package controller.section;
 
+import component_model_loader.SectionJCompModelLoader;
 import daoimpl.FacultyDaoImpl;
 import daoimpl.GradeLevelDaoImpl;
 import daoimpl.SchoolYearDaoImpl;
@@ -13,8 +14,8 @@ import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 import utility.form.FormValidator;
-import utility.string.StringUtil;
 import view.section.DialogSectionCrud;
+import view.section.Panel_Sections;
 
 /**
  *
@@ -22,18 +23,24 @@ import view.section.DialogSectionCrud;
  */
 public class CreateSection implements ActionListener, FormValidator{
     
-    private final DialogSectionCrud view;
+    private final SchoolYear currentSchoolYear;
+    private final Panel_Sections panelSections;
+    private final DialogSectionCrud dialog;
     private final FacultyDaoImpl facultyDaoImpl;
     private final SchoolYearDaoImpl schoolYearDaoImpl;
     private final GradeLevelDaoImpl gradeLevelDaoImpl;
     private final SectionDaoImpl sectionDaoImpl;
+    private final SectionJCompModelLoader sectionJCompModelLoader;
     
-    public CreateSection(DialogSectionCrud view){
-        this.view = view;
+    public CreateSection(Panel_Sections panelSections,DialogSectionCrud dialog,SchoolYear currentSchoolYear){
+        this.currentSchoolYear = currentSchoolYear;
+        this.panelSections = panelSections;
+        this.dialog = dialog;
         schoolYearDaoImpl = new SchoolYearDaoImpl();
-        facultyDaoImpl = new FacultyDaoImpl(schoolYearDaoImpl);
+        facultyDaoImpl = new FacultyDaoImpl();
         gradeLevelDaoImpl = new GradeLevelDaoImpl();
         sectionDaoImpl = new SectionDaoImpl();
+        sectionJCompModelLoader = new SectionJCompModelLoader();
     }
 
     @Override
@@ -43,12 +50,17 @@ public class CreateSection implements ActionListener, FormValidator{
             if (formIsValid()) {
                 if (addSection()) {
                     JOptionPane.showMessageDialog(null, "Successfully added Section!");
-                    view.dispose();
+                    refreshSectionMasterList();
+                    dialog.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Failed to add Section");
                 }
             }
         }
+    }
+    
+    private void refreshSectionMasterList(){
+        sectionJCompModelLoader.getAllSections(panelSections.getJtblSectionMasterList());
     }
     
     private boolean addSection() {
@@ -57,24 +69,24 @@ public class CreateSection implements ActionListener, FormValidator{
         schoolYear.setSchoolYearId(schoolYearDaoImpl.getCurrentSchoolYearId());
 
         GradeLevel gradeLevel = new GradeLevel();
-        int level = Integer.parseInt(view.getJcmbGradeLevel().getSelectedItem().toString().trim());
+        int level = Integer.parseInt(dialog.getJcmbGradeLevel().getSelectedItem().toString().trim());
         gradeLevel.setGradeLevelID(gradeLevelDaoImpl.getId(level));
         
         Section section = new Section();
-        section.setSectionName(view.getJtfSectionName().getText().trim());
+        section.setSectionName(dialog.getJtfSectionName().getText().trim());
         section.setSchoolYear(schoolYear);
         section.setGradeLevel(gradeLevel);
         section.setAdviser(getFacultyAdviser());
-        section.setSectionSession(view.getJcmbSession().getSelectedItem().toString().trim());
-        section.setCapacity(Integer.parseInt(view.getJtfCapacity().getText().trim()));
-        section.setSectionType(view.getJcmbSectionType().getSelectedItem().toString().equalsIgnoreCase("Regular")? "R":"S");
+        section.setSectionSession(dialog.getJcmbSession().getSelectedItem().toString().trim());
+        section.setCapacity(Integer.parseInt(dialog.getJtfCapacity().getText().trim()));
+        section.setSectionType(dialog.getJcmbSectionType().getSelectedItem().toString().equalsIgnoreCase("Regular")? "R":"S");
         isAdded = sectionDaoImpl.addSection(section);
 
         return isAdded;
     }
     
     private Faculty getFacultyAdviser(){
-        String selectedAdviser = view.getJcmbAdviser().getSelectedItem().toString().trim();
+        String selectedAdviser = dialog.getJcmbAdviser().getSelectedItem().toString().trim();
         int adviserId = Integer.parseInt(selectedAdviser);
         Faculty f = new Faculty();
         f.setFacultyID(adviserId);
@@ -84,14 +96,15 @@ public class CreateSection implements ActionListener, FormValidator{
     @Override
     public boolean formIsValid() {
         boolean isValid = true;
-        String selectedAdviser = view.getJcmbAdviser().getSelectedItem().toString().trim();
-        int adviserId = Integer.parseInt(selectedAdviser);
-        int currentSchoolYearId = schoolYearDaoImpl.getCurrentSchoolYearId();
-        if(facultyDaoImpl.facultyHasAdvisory(adviserId, currentSchoolYearId)){
+        String sectionSession = dialog.getJcmbSession().getSelectedItem().toString().trim();
+        int adviserId = Integer.parseInt(dialog.getJcmbAdviser().getSelectedItem().toString().trim());
+        Faculty adviser = new Faculty();
+        adviser.setFacultyID(adviserId);
+        if (!facultyDaoImpl.isFacultyAvailableAdviserFor(sectionSession, adviser, currentSchoolYear)) {
             isValid = false;
             JOptionPane.showMessageDialog(null, "Faculty already has an advisory class.");
         }
-        if(sectionDaoImpl.sectionExists(view.getJtfSectionName().getText().trim())){
+        if (sectionDaoImpl.sectionExists(dialog.getJtfSectionName().getText().trim())) {
             isValid = false;
             JOptionPane.showMessageDialog(null, "Section name is already taken.\n Please try a different name.");
         }

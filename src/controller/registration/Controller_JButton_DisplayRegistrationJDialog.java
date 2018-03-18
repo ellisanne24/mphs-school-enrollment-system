@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import view.enrollment.Panel_Enrollment;
 import view.registration.View_Panel_Registration;
 
 /**
@@ -17,11 +18,13 @@ import view.registration.View_Panel_Registration;
  */
 public class Controller_JButton_DisplayRegistrationJDialog implements ActionListener{
 
+    private final Panel_Enrollment panelEnrollment;
     private JDialog dialog;
     private JTable jtblRegistrationMasterList;
     private final String actionCommand;
 
-    public Controller_JButton_DisplayRegistrationJDialog(JTable jtblRegistrationMasterList, String actionCommand) {
+    public Controller_JButton_DisplayRegistrationJDialog(Panel_Enrollment panelEnrollment,JTable jtblRegistrationMasterList, String actionCommand) {
+        this.panelEnrollment = panelEnrollment;
         this.jtblRegistrationMasterList = jtblRegistrationMasterList;
         this.actionCommand = actionCommand;
     }
@@ -51,7 +54,7 @@ public class Controller_JButton_DisplayRegistrationJDialog implements ActionList
         dialog = new JDialog();
         dialog.setLayout(new GridBagLayout());
         dialog.setModal(true);
-        View_Panel_Registration panel_Registration = new View_Panel_Registration(actionCommand, getRegistrationId());
+        View_Panel_Registration panel_Registration = new View_Panel_Registration(panelEnrollment,actionCommand, getRegistrationId());
         dialog.add(panel_Registration, setPosition(0, 0, 0.5, 0.5, GridBagConstraints.BOTH));
         dialog.pack();
         dialog.setLocationRelativeTo(null);

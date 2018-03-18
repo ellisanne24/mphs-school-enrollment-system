@@ -11,10 +11,8 @@ import model.student.Student;
 import dao.IStudent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+import model.admission.Admission;
 import model.faculty.Faculty;
-import model.grade.Grade;
-import model.gradelevel.GradeLevel;
 import model.schoolyear.SchoolYear;
 import model.section.Section;
 
@@ -70,66 +68,150 @@ public class StudentDaoImpl implements IStudent {
     }
 
     @Override
+    public List<Student> getStudentsByKeyword(String keyword) {
+        List<Student> students = new ArrayList<>();
+        String SQL = "{CALL getStudentsByKeyword(?)}";
+        try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
+            try (CallableStatement csA = con.prepareCall(SQL);) {
+                csA.setString(1, keyword);
+                try (ResultSet rs = csA.executeQuery();) {
+                    while (rs.next()) {
+                        Student student = new Student();
+                        Registration registration = new Registration();
+                        registration.setRegistrationId(rs.getInt("registration_id"));
+                        registration.setStudentType(rs.getString("student_type"));
+                        registration.setLastName(rs.getString("lastname"));
+                        registration.setFirstName(rs.getString("firstname"));
+                        registration.setMiddleName(rs.getString("middlename"));
+                        registration.setBirthday(rs.getDate("dob"));
+                        registration.setPlaceOfBirth(rs.getString("pob"));
+                        registration.setNationality(rs.getString("nationality"));
+                        registration.setReligion(rs.getString("religion"));
+                        registration.setGender(rs.getInt("gender") == 1 ? "Male" : "Female");
+                        registration.setFatherFirstName(rs.getString("father_firstname"));
+                        registration.setFatherMiddleName(rs.getString("father_middlename"));
+                        registration.setFatherLastName(rs.getString("father_lastname"));
+                        registration.setFatherOccupation(rs.getString("father_occupation"));
+                        registration.setFatherOfficePhoneNo(rs.getString("father_officephone_no"));
+                        registration.setFatherMobileNo(rs.getString("father_mobile_no"));
+                        registration.setIsFatherContactInCaseEmergency(rs.getBoolean("isFatherContactInCaseEmergency"));
+                        registration.setMotherFirstName(rs.getString("mother_firstname"));
+                        registration.setMotherMiddleName(rs.getString("mother_middlename"));
+                        registration.setMotherLastName(rs.getString("mother_lastname"));
+                        registration.setMotherOccupation(rs.getString("mother_occupation"));
+                        registration.setMotherOfficePhoneNo(rs.getString("mother_officephone_no"));
+                        registration.setMotherMobileNo(rs.getString("mother_mobile_no"));
+                        registration.setIsMotherContactInCaseEmergency(rs.getBoolean("isMotherContactInCaseEmergency"));
+                        registration.setGuardianLastName(rs.getString("guardian_lastname"));
+                        registration.setGuardianFirstName(rs.getString("guardian_firstname"));
+                        registration.setGuardianMiddleName(rs.getString("guardian_middlename"));
+                        registration.setGuardianOccupation(rs.getString("guardian_occupation"));
+                        registration.setGuardianMobileNo(rs.getString("guardian_mobile_no"));
+                        registration.setGuardianRelationToStudent(rs.getString("guardian_relation_to_student"));
+                        registration.setIsGuardianContactInCaseEmergency(rs.getBoolean("isGuardianContactInCaseEmergency"));
+                        registration.setSchoolLastAttended(rs.getString("school_last_attended"));
+                        registration.setSchoolLastAttendedAddress(rs.getString("school_last_attended_address"));
+                        registration.setAddressRoomOrHouseNo(rs.getString("room_or_house_no"));
+                        registration.setAddressStreet(rs.getString("street"));
+                        registration.setAddressBrgyOrSubd(rs.getString("brgy_or_subd"));
+                        registration.setAddressCity(rs.getString("city"));
+                        registration.setRegion(rs.getString("region"));
+                        registration.setGradeLevelNo(rs.getInt("gradelevel_no"));
+                        registration.setSchoolYearYearFrom(rs.getInt("schoolyear_yearfrom"));
+                        registration.setRegistrationDate(rs.getDate("date_registered"));
+                        registration.setIsRegistrationActive(rs.getBoolean("is_registration_active"));
+
+                        String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
+                        registration.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("1") ? true : false);
+
+                        Admission admission = new Admission();
+                        admission.setAdmissionId(rs.getInt("admission_id"));
+                        admission.setIsCompleted(rs.getBoolean("isAdmissionComplete"));
+                        
+                        student.setStudentId(rs.getInt("student_id"));
+                        student.setStudentNo(rs.getInt("student_no"));
+                        student.setIsActive(rs.getBoolean("isStudentActive"));
+                        student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O") == true ? 0 : 1);
+                        student.setGradeLevelNo(rs.getInt("currentGradeLevel"));
+                        student.setRegistration(registration);
+                        student.setAdmission(admission);
+                        
+                        students.add(student);
+                    }
+                }
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return students;
+    }
+
+    @Override
     public Student getStudentByStudentId(int studentId) {
         String SQLa = "{CALL getStudentByStudentId(?)}";
         Student student = new Student();
-        Registration r = new Registration();
+        Registration registration = new Registration();
         try (Connection con = DBUtil.getConnection(DBType.MYSQL);) {
             try (CallableStatement csA = con.prepareCall(SQLa);) {
                 csA.setInt(1, studentId);
                 try (ResultSet rs = csA.executeQuery();) {
                     while (rs.next()) {
-                        r.setRegistrationId(rs.getInt("registration_id"));
-                        r.setStudentType(rs.getString("student_type"));
-                        r.setLastName(rs.getString("lastname"));
-                        r.setFirstName(rs.getString("firstname"));
-                        r.setMiddleName(rs.getString("middlename"));
-                        r.setBirthday(rs.getDate("dob"));
-                        r.setPlaceOfBirth(rs.getString("pob"));
-                        r.setNationality(rs.getString("nationality"));
-                        r.setReligion(rs.getString("religion"));
-                        r.setGender(rs.getInt("gender") == 1 ? "Male" : "Female");
-                        r.setFatherFirstName(rs.getString("father_firstname"));
-                        r.setFatherMiddleName(rs.getString("father_middlename"));
-                        r.setFatherLastName(rs.getString("father_lastname"));
-                        r.setFatherOccupation(rs.getString("father_occupation"));
-                        r.setFatherOfficePhoneNo(rs.getString("father_officephone_no"));
-                        r.setFatherMobileNo(rs.getString("father_mobile_no"));
-                        r.setIsFatherContactInCaseEmergency(rs.getBoolean("isFatherContactInCaseEmergency"));
-                        r.setMotherFirstName(rs.getString("mother_firstname"));
-                        r.setMotherMiddleName(rs.getString("mother_middlename"));
-                        r.setMotherLastName(rs.getString("mother_lastname"));
-                        r.setMotherOccupation(rs.getString("mother_occupation"));
-                        r.setMotherOfficePhoneNo(rs.getString("mother_officephone_no"));
-                        r.setMotherMobileNo(rs.getString("mother_mobile_no"));
-                        r.setIsMotherContactInCaseEmergency(rs.getBoolean("isMotherContactInCaseEmergency"));
-                        r.setGuardianLastName(rs.getString("guardian_lastname"));
-                        r.setGuardianFirstName(rs.getString("guardian_firstname"));
-                        r.setGuardianMiddleName(rs.getString("guardian_middlename"));
-                        r.setGuardianOccupation(rs.getString("guardian_occupation"));
-                        r.setGuardianMobileNo(rs.getString("guardian_mobile_no"));
-                        r.setGuardianRelationToStudent(rs.getString("guardian_relation_to_student"));
-                        r.setIsGuardianContactInCaseEmergency(rs.getBoolean("isGuardianContactInCaseEmergency"));
-                        r.setSchoolLastAttended(rs.getString("school_last_attended"));
-                        r.setSchoolLastAttendedAddress(rs.getString("school_last_attended_address"));
-                        r.setAddressRoomOrHouseNo(rs.getString("room_or_house_no"));
-                        r.setAddressStreet(rs.getString("street"));
-                        r.setAddressBrgyOrSubd(rs.getString("brgy_or_subd"));
-                        r.setAddressCity(rs.getString("city"));
-                        r.setRegion(rs.getString("region"));
-                        r.setGradeLevelNo(rs.getInt("gradelevel_no"));
-                        r.setSchoolYearYearFrom(rs.getInt("schoolyear_yearfrom"));
-                        r.setRegistrationDate(rs.getDate("date_registered"));
+                        registration.setRegistrationId(rs.getInt("registration_id"));
+                        registration.setStudentType(rs.getString("student_type"));
+                        registration.setLastName(rs.getString("lastname"));
+                        registration.setFirstName(rs.getString("firstname"));
+                        registration.setMiddleName(rs.getString("middlename"));
+                        registration.setBirthday(rs.getDate("dob"));
+                        registration.setPlaceOfBirth(rs.getString("pob"));
+                        registration.setNationality(rs.getString("nationality"));
+                        registration.setReligion(rs.getString("religion"));
+                        registration.setGender(rs.getInt("gender") == 1 ? "Male" : "Female");
+                        registration.setFatherFirstName(rs.getString("father_firstname"));
+                        registration.setFatherMiddleName(rs.getString("father_middlename"));
+                        registration.setFatherLastName(rs.getString("father_lastname"));
+                        registration.setFatherOccupation(rs.getString("father_occupation"));
+                        registration.setFatherOfficePhoneNo(rs.getString("father_officephone_no"));
+                        registration.setFatherMobileNo(rs.getString("father_mobile_no"));
+                        registration.setIsFatherContactInCaseEmergency(rs.getBoolean("isFatherContactInCaseEmergency"));
+                        registration.setMotherFirstName(rs.getString("mother_firstname"));
+                        registration.setMotherMiddleName(rs.getString("mother_middlename"));
+                        registration.setMotherLastName(rs.getString("mother_lastname"));
+                        registration.setMotherOccupation(rs.getString("mother_occupation"));
+                        registration.setMotherOfficePhoneNo(rs.getString("mother_officephone_no"));
+                        registration.setMotherMobileNo(rs.getString("mother_mobile_no"));
+                        registration.setIsMotherContactInCaseEmergency(rs.getBoolean("isMotherContactInCaseEmergency"));
+                        registration.setGuardianLastName(rs.getString("guardian_lastname"));
+                        registration.setGuardianFirstName(rs.getString("guardian_firstname"));
+                        registration.setGuardianMiddleName(rs.getString("guardian_middlename"));
+                        registration.setGuardianOccupation(rs.getString("guardian_occupation"));
+                        registration.setGuardianMobileNo(rs.getString("guardian_mobile_no"));
+                        registration.setGuardianRelationToStudent(rs.getString("guardian_relation_to_student"));
+                        registration.setIsGuardianContactInCaseEmergency(rs.getBoolean("isGuardianContactInCaseEmergency"));
+                        registration.setSchoolLastAttended(rs.getString("school_last_attended"));
+                        registration.setSchoolLastAttendedAddress(rs.getString("school_last_attended_address"));
+                        registration.setAddressRoomOrHouseNo(rs.getString("room_or_house_no"));
+                        registration.setAddressStreet(rs.getString("street"));
+                        registration.setAddressBrgyOrSubd(rs.getString("brgy_or_subd"));
+                        registration.setAddressCity(rs.getString("city"));
+                        registration.setRegion(rs.getString("region"));
+                        registration.setGradeLevelNo(rs.getInt("gradelevel_no"));
+                        registration.setSchoolYearYearFrom(rs.getInt("schoolyear_yearfrom"));
+                        registration.setRegistrationDate(rs.getDate("date_registered"));
 
                         String isAdmissionComplete = rs.getString("isAdmissionComplete").trim();
-                        r.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes") ? true : false);
+                        registration.setIsAdmissionComplete(isAdmissionComplete.equalsIgnoreCase("Yes") ? true : false);
 
                         student.setStudentId(rs.getInt("student_id"));
                         student.setStudentNo(rs.getInt("student_no"));
                         student.setIsActive(rs.getBoolean("isStudentActive"));
                         student.setStudentType(rs.getString("finalStudentType").equalsIgnoreCase("O") == true ? 0 : 1);
                         student.setGradeLevelNo(rs.getInt("currentGradeLevel"));
-                        student.setRegistration(r);
+                        student.setRegistration(registration);
+                        
                     }
                 }
 

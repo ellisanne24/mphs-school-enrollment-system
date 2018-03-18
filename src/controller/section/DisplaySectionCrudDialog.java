@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import model.schoolyear.SchoolYear;
 import view.section.DialogSectionCrud;
+import view.section.Panel_Sections;
 
 /**
  *
@@ -13,10 +15,12 @@ import view.section.DialogSectionCrud;
  */
 public class DisplaySectionCrudDialog implements ActionListener{
 
-    private final JTable jtblSectionMasterList;
+    private final Panel_Sections panelSections;
+    private final SchoolYear currentSchoolYear;
     
-    public DisplaySectionCrudDialog(JTable jtblSectionMasterList){
-        this.jtblSectionMasterList = jtblSectionMasterList;
+    public DisplaySectionCrudDialog(Panel_Sections panelSections, SchoolYear currentSchoolYear){
+        this.panelSections = panelSections;
+        this.currentSchoolYear = currentSchoolYear;
     }
     
     @Override
@@ -49,7 +53,7 @@ public class DisplaySectionCrudDialog implements ActionListener{
 
     private boolean hasSectionSelected() {
         boolean hasSectionSelected = false;
-        if (jtblSectionMasterList.getSelectedRow() > -1) {
+        if (panelSections.getJtblSectionMasterList().getSelectedRow() > -1) {
             hasSectionSelected = true;
         }
         return hasSectionSelected;
@@ -67,15 +71,15 @@ public class DisplaySectionCrudDialog implements ActionListener{
         if (action.equals("edit") || action.equals("view")) {
             if (hasSectionSelected()) {
                 int sectionIdColIdx = 0;
-                int rowSelected = jtblSectionMasterList.getSelectedRow();
-                int sectionId = Integer.parseInt(jtblSectionMasterList.getValueAt(rowSelected, sectionIdColIdx).toString());
-                DialogSectionCrud dialogSectionCrud = new DialogSectionCrud(null, true, action, sectionId);
+                int rowSelected = panelSections.getJtblSectionMasterList().getSelectedRow();
+                int sectionId = Integer.parseInt(panelSections.getJtblSectionMasterList().getValueAt(rowSelected, sectionIdColIdx).toString());
+                DialogSectionCrud dialogSectionCrud = new DialogSectionCrud(null, true,panelSections, action, sectionId, currentSchoolYear);
                 dialogSectionCrud.setTitle(dialogTitle);
                 dialogSectionCrud.setLocationRelativeTo(null);
                 dialogSectionCrud.setVisible(true);
             }
         } else {
-            DialogSectionCrud dialogSectionCrud = new DialogSectionCrud(null, true, action);
+            DialogSectionCrud dialogSectionCrud = new DialogSectionCrud(null, false, panelSections,action,currentSchoolYear);
             dialogSectionCrud.setTitle(dialogTitle);
             dialogSectionCrud.setLocationRelativeTo(null);
             dialogSectionCrud.setVisible(true);
